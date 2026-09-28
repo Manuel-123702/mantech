@@ -1,0 +1,691 @@
+// MANTECH Nexus Enterprise Prisma Schema
+// Architecture: Next.js + TypeScript + Clerk + PostgreSQL (Neon) + Prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  STUDENT
+  COMPANY
+  UNIVERSITY
+  SUPERVISOR
+  ADMIN
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  SUSPENDED
+}
+
+enum ModerationStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  PUBLISHED
+  SUSPENDED
+  EXPIRED
+  ARCHIVED
+  REJECTED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  SHORTLISTED
+  INTERVIEW
+  SELECTED
+  PLACEMENT_PENDING
+  PLACED
+  INTERNSHIP_ACTIVE
+  COMPLETED
+  REJECTED
+  WITHDRAWN
+  CANCELLED
+}
+
+enum PlacementStatus {
+  PENDING
+  CONFIRMED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum WorkMode {
+  ONSITE
+  HYBRID
+  REMOTE
+}
+
+enum ApplicationMethod {
+  MANTECH
+  COMPANY_WEBSITE
+  EXTERNAL
+}
+
+enum ReportType {
+  WEEKLY
+  MONTHLY
+  MIDTERM
+  FINAL
+}
+
+enum EvaluationType {
+  SUPERVISOR
+  COMPANY
+  STUDENT_REFLECTION
+}
+
+enum HealthStatus {
+  HEALTHY
+  ATTENTION_NEEDED
+  AT_RISK
+}
+
+// ------------------------------------------------------------------------
+// USER & IDENTITY (Anchored by Clerk authentication)
+// ------------------------------------------------------------------------
+
+model User {
+  id             String    @id @default(uuid())
+  clerkId        String    @unique
+  email          String    @unique
+  fullName       String
+  avatarUrl      String?
+  role           UserRole  @default(STUDENT)
+  subRole        String?
+  phone          String?
+  bio            String?
+  status         String    @default("active") // active, suspended, pending
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  studentProfile  StudentProfile?
+  companyMembers  CompanyMember[]
+  universityMembers UniversityMember[]
+  supervisorProfile Supervisor?
+  careerPassport  CareerPassportProfile?
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+
+  @@index([email])
+  @@index([clerkId])
+  @@index([role])
+}
+
+// ------------------------------------------------------------------------
+// STUDENT PROFILE
+// ------------------------------------------------------------------------
+
+model StudentProfile {
+  id               String    @id @default(uuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  universityId     String?
+  university       University? @relation(fields: [universityId], references: [id])
+  matricule        String?
+  fieldOfStudy     String?
+  specialization   String?
+  academicLevel    String?   // HND 1, HND 2, BSc 1, BSc 2, BSc 3, MSc 1, MSc 2
+  city             String?
+  region           String?   // Centre, Littoral, South-West, etc.
+  cvUrl            String?
+  portfolioUrl     String?
+  githubUrl        String?
+  linkedinUrl      String?
+  readinessScore   Int       @default(20) // 0 - 100 calculated preparation score
+  profileCompleted Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  educationRecords EducationRecord[]
+  skills           StudentSkill[]
+  applications     Application[]
+  placements       Placement[]
+  savedInternships SavedInternship[]
+  alerts           Alert[]
+
+  @@index([universityId])
+  @@index([fieldOfStudy])
+  @@index([region])
+}
+
+model EducationRecord {
+  id              String   @id @default(uuid())
+  studentId       String
+  student         StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  institution     String
+  qualification   String   // HND, BSc, BEng, Master, etc.
+  field           String
+  startYear       Int
+  endYear         Int?
+  isCurrent       Boolean  @default(false)
+  grade           String?
+  createdAt       DateTime @default(now())
+}
+
+model StudentSkill {
+  id              String   @id @default(uuid())
+  studentId       String
+  student         StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  skillName       String
+  category        String   // Programming, Cloud, Security, Design, Network
+  proficiency     String   @default("intermediate") // beginner, intermediate, advanced
+
+  @@unique([studentId, skillName])
+}
+
+// ------------------------------------------------------------------------
+// ENTERPRISE: COMPANY & UNIVERSITY ORGANIZATIONS
+// ------------------------------------------------------------------------
+
+model Company {
+  id                 String             @id @default(uuid())
+  name               String
+  slug               String             @unique
+  industry           String?
+  description        String?
+  website            String?
+  email              String?
+  phone              String?
+  logoUrl            String?
+  region             String?
+  city               String?
+  address            String?
+  size               String?            // 1-10, 11-50, 51-200, 201-500, 500+
+  verificationStatus VerificationStatus @default(PENDING)
+  verifiedAt         DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  members            CompanyMember[]
+  opportunities      InternshipOpportunity[]
+  placements         Placement[]
+  supervisors        Supervisor[]
+
+  @@index([slug])
+  @@index([region])
+  @@index([verificationStatus])
+}
+
+model CompanyMember {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobTitle    String?
+  isOwner     Boolean  @default(false)
+  joinedAt    DateTime @default(now())
+
+  @@unique([companyId, userId])
+}
+
+model University {
+  id                 String             @id @default(uuid())
+  name               String
+  slug               String             @unique
+  type               String?            // Public State University, Private Higher Institute, Polytechnic
+  description        String?
+  website            String?
+  email              String?
+  phone              String?
+  logoUrl            String?
+  region             String?
+  city               String?
+  address            String?
+  verificationStatus VerificationStatus @default(PENDING)
+  verifiedAt         DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  members            UniversityMember[]
+  students           StudentProfile[]
+  placements         Placement[]
+  supervisors        Supervisor[]
+
+  @@index([slug])
+  @@index([region])
+}
+
+model UniversityMember {
+  id           String     @id @default(uuid())
+  universityId String
+  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department   String?
+  jobTitle     String?
+  isDeanOrHead Boolean    @default(false)
+  joinedAt     DateTime   @default(now())
+
+  @@unique([universityId, userId])
+}
+
+model Supervisor {
+  id           String      @id @default(uuid())
+  userId       String      @unique
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyId    String?
+  company      Company?    @relation(fields: [companyId], references: [id])
+  universityId String?
+  university   University? @relation(fields: [universityId], references: [id])
+  department   String?
+  title        String?
+  maxInterns   Int         @default(5)
+  createdAt    DateTime    @default(now())
+
+  placements   Placement[]
+  reviews      ReportReview[]
+  evaluations  Evaluation[]
+}
+
+// ------------------------------------------------------------------------
+// DYNAMIC IT/ICT TAXONOMY (Manageable by Admin without code changes)
+// ------------------------------------------------------------------------
+
+model ITFieldOfStudy {
+  id            String            @id @default(uuid())
+  name          String            @unique
+  slug          String            @unique
+  description   String?
+  category      String            // Computer Science, Software Engineering, Networks, Cyber, etc.
+  isCameroonHND Boolean           @default(false)
+  isActive      Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+
+  specializations ITSpecialization[]
+  opportunities   InternshipOpportunity[]
+}
+
+model ITSpecialization {
+  id          String         @id @default(uuid())
+  fieldId     String
+  field       ITFieldOfStudy @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String
+  description String?
+  isActive    Boolean        @default(true)
+
+  @@unique([fieldId, name])
+}
+
+model Skill {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  category  String   // Frontend, Backend, Cloud, DevOps, Cyber, Mobile, Data
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// ------------------------------------------------------------------------
+// INTERNSHIP OPPORTUNITY MANAGEMENT (3 Application Methods)
+// ------------------------------------------------------------------------
+
+model InternshipOpportunity {
+  id                 String            @id @default(uuid())
+  companyId          String
+  company            Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  title              String
+  slug               String            @unique
+  description        String
+  department         String?
+  fieldOfStudyId     String?
+  fieldOfStudy       ITFieldOfStudy?   @relation(fields: [fieldOfStudyId], references: [id])
+  requiredSkills     String[]          @default([])
+  preferredSkills    String[]          @default([])
+  educationLevel     String?           // HND, Bachelor, Master
+  region             String            // Cameroon Region: Littoral, Centre, South-West, etc.
+  city               String            // Douala, Yaoundé, Buea, etc.
+  location           String?
+  workMode           WorkMode          @default(ONSITE)
+  durationMonths     Int               @default(3)
+  startDate          DateTime?
+  endDate            DateTime?
+  deadline           DateTime
+  isPaid             Boolean           @default(false)
+  allowanceXAF       Int?              @default(0) // Monthly allowance in FCFA
+  positions          Int               @default(1)
+  applicationMethod  ApplicationMethod @default(MANTECH)
+  applicationUrl     String?           // For company_website or external
+  externalPlatform   String?           // e.g. LinkedIn, Job Portal
+  instructions       String?
+  contactEmail       String?
+  isFeatured         Boolean           @default(false)
+  moderationStatus   ModerationStatus  @default(PENDING_REVIEW)
+  rejectionReason    String?
+  moderatedAt        DateTime?
+  viewCount          Int               @default(0)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  applications       Application[]
+  savedByStudents    SavedInternship[]
+
+  @@index([slug])
+  @@index([companyId])
+  @@index([region, city])
+  @@index([moderationStatus])
+  @@index([workMode])
+}
+
+// ------------------------------------------------------------------------
+// APPLICATION LIFECYCLE & TIMELINE
+// ------------------------------------------------------------------------
+
+model Application {
+  id                 String            @id @default(uuid())
+  studentId          String
+  student            StudentProfile    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  internshipId       String
+  internship         InternshipOpportunity @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  applicationMethod  ApplicationMethod @default(MANTECH)
+  status             ApplicationStatus @default(SUBMITTED)
+  coverLetter        String?
+  resumeUrl          String?
+  portfolioUrl       String?
+  readinessAtApply   Int               @default(0)
+  internalNotes      String?           // Private to company recruiters
+  rejectionReason    String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  documents          ApplicationDocument[]
+  timelines          ApplicationTimeline[]
+  interviews         Interview[]
+  placement          Placement?
+
+  @@unique([studentId, internshipId])
+  @@index([internshipId])
+  @@index([studentId])
+  @@index([status])
+}
+
+model ApplicationDocument {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  documentType  String      // CV, Cover Letter, Recommendation, Student ID
+  fileUrl       String
+  fileName      String
+  fileSize      Int?
+  uploadedAt    DateTime    @default(now())
+}
+
+model ApplicationTimeline {
+  id            String            @id @default(uuid())
+  applicationId String
+  application   Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  status        ApplicationStatus
+  note          String?
+  actorName     String?
+  createdAt     DateTime          @default(now())
+}
+
+// ------------------------------------------------------------------------
+// INTERVIEW MANAGEMENT
+// ------------------------------------------------------------------------
+
+model Interview {
+  id              String      @id @default(uuid())
+  applicationId   String
+  application     Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  scheduledAt     DateTime
+  durationMinutes Int         @default(45)
+  type            String      @default("online") // online, on-site, phone
+  meetingLink     String?     // Google Meet, Zoom, MS Teams
+  locationAddress String?     // If on-site
+  interviewerName String?
+  instructions    String?
+  status          String      @default("scheduled") // scheduled, completed, cancelled, rescheduled
+  feedbackNotes   String?     // Private company notes
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+// ------------------------------------------------------------------------
+// PLACEMENT, ONBOARDING & ACTIVE INTERNSHIP MONITORING
+// ------------------------------------------------------------------------
+
+model Placement {
+  id              String          @id @default(uuid())
+  applicationId   String          @unique
+  application     Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  studentId       String
+  student         StudentProfile  @relation(fields: [studentId], references: [id])
+  companyId       String
+  company         Company         @relation(fields: [companyId], references: [id])
+  universityId    String?
+  university      University?     @relation(fields: [universityId], references: [id])
+  supervisorId    String?
+  supervisor      Supervisor?     @relation(fields: [supervisorId], references: [id])
+  status          PlacementStatus @default(PENDING)
+  healthStatus    HealthStatus    @default(HEALTHY)
+  startDate       DateTime
+  endDate         DateTime
+  objectives      String?
+  agreementDocUrl String?
+  completionCertUrl String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  onboardingItems OnboardingItem[]
+  reports         InternshipReport[]
+  evaluations     Evaluation[]
+
+  @@index([companyId])
+  @@index([universityId])
+  @@index([supervisorId])
+  @@index([studentId])
+  @@index([status])
+}
+
+model OnboardingItem {
+  id          String    @id @default(uuid())
+  placementId String
+  placement   Placement @relation(fields: [placementId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  isRequired  Boolean   @default(true)
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+}
+
+// ------------------------------------------------------------------------
+// INTERNSHIP LOGBOOK & REPORTS
+// ------------------------------------------------------------------------
+
+model InternshipReport {
+  id                 String       @id @default(uuid())
+  placementId        String
+  placement          Placement    @relation(fields: [placementId], references: [id], onDelete: Cascade)
+  studentId          String
+  reportType         ReportType   @default(WEEKLY)
+  weekNumber         Int?
+  periodStart        DateTime
+  periodEnd          DateTime
+  summary            String
+  activities         String
+  challengesFaced    String?
+  skillsApplied      String[]     @default([])
+  nextWeekGoals      String?
+  fileUrl            String?
+  status             String       @default("submitted") // submitted, approved, revisions_requested
+  submittedAt        DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  reviews            ReportReview[]
+
+  @@index([placementId])
+}
+
+model ReportReview {
+  id           String           @id @default(uuid())
+  reportId     String
+  report       InternshipReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  supervisorId String
+  supervisor   Supervisor       @relation(fields: [supervisorId], references: [id])
+  approved     Boolean          @default(true)
+  feedback     String?
+  reviewedAt   DateTime         @default(now())
+}
+
+// ------------------------------------------------------------------------
+// MULTI-DIMENSIONAL EVALUATIONS
+// ------------------------------------------------------------------------
+
+model Evaluation {
+  id                   String         @id @default(uuid())
+  placementId          String
+  placement            Placement      @relation(fields: [placementId], references: [id], onDelete: Cascade)
+  evaluationType       EvaluationType @default(SUPERVISOR)
+  evaluatorId          String
+  evaluatorRole        String         // supervisor, company, student
+  technicalScore       Int            // 1 - 5
+  communicationScore   Int            // 1 - 5
+  punctualityScore     Int            // 1 - 5
+  initiativeScore      Int            // 1 - 5
+  overallScore         Int            // 1 - 5
+  qualitativeFeedback  String
+  recommendations      String?
+  submittedAt          DateTime       @default(now())
+
+  supervisorRef        Supervisor?    @relation(fields: [evaluatorId], references: [userId])
+
+  @@index([placementId])
+}
+
+// ------------------------------------------------------------------------
+// CAREER PASSPORT (Authenticated Companion Application)
+// ------------------------------------------------------------------------
+
+model CareerPassportProfile {
+  id                    String    @id @default(uuid())
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  passportNumber        String    @unique // e.g. MTN-CM-2026-9481
+  headline              String?
+  bio                   String?
+  totalHoursCompleted   Int       @default(0)
+  completionBadgeIssued Boolean   @default(false)
+  issuedAt              DateTime?
+  updatedAt             DateTime  @updatedAt
+
+  achievements          CareerPassportAchievement[]
+  experiences           CareerPassportExperience[]
+
+  @@index([passportNumber])
+}
+
+model CareerPassportAchievement {
+  id          String                @id @default(uuid())
+  passportId  String
+  passport    CareerPassportProfile @relation(fields: [passportId], references: [id], onDelete: Cascade)
+  title       String
+  category    String                // verified_internship, award, certification, project
+  issuer      String                // ManTech Nexus / MTN Cameroon / ENSPY
+  issueDate   DateTime
+  description String?
+  badgeColor  String?
+}
+
+model CareerPassportExperience {
+  id                 String                @id @default(uuid())
+  passportId         String
+  passport           CareerPassportProfile @relation(fields: [passportId], references: [id], onDelete: Cascade)
+  companyName        String
+  roleTitle          String
+  durationMonths     Int
+  location           String
+  skillsVerified     String[]              @default([])
+  endorsementComment String?
+  supervisorName     String?
+  verifiedAt         DateTime              @default(now())
+}
+
+// ------------------------------------------------------------------------
+// NOTIFICATIONS & AUDIT LOGS
+// ------------------------------------------------------------------------
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  category  String   // application, interview, placement, report, evaluation, system
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id])
+  actorRole  String?
+  action     String   // ROLE_CHANGED, INTERNSHIP_PUBLISHED, EVALUATION_SUBMITTED, etc.
+  entityType String
+  entityId   String
+  details    String?  // JSON formatted details
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([action])
+  @@index([entityType, entityId])
+}
+
+model SecurityEvent {
+  id          String   @id @default(uuid())
+  eventType   String   // RATE_LIMIT_TRIGGERED, UNAUTHORIZED_ACCESS_ATTEMPT, SUSPICIOUS_IP
+  severity    String   // low, medium, high, critical
+  description String
+  ipAddress   String?
+  userAgent   String?
+  metadata    String?
+  createdAt   DateTime @default(now())
+
+  @@index([eventType])
+  @@index([severity])
+}
+
+// ------------------------------------------------------------------------
+// SAVED OPPORTUNITIES & ALERTS
+// ------------------------------------------------------------------------
+
+model SavedInternship {
+  id           String                @id @default(uuid())
+  studentId    String
+  student      StudentProfile        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  internshipId String
+  internship   InternshipOpportunity @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  savedAt      DateTime              @default(now())
+
+  @@unique([studentId, internshipId])
+}
+
+model Alert {
+  id          String         @id @default(uuid())
+  studentId   String
+  student     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  keyword     String?
+  field       String?
+  region      String?
+  workMode    WorkMode?
+  emailNotify Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+}
