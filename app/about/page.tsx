@@ -7,7 +7,7 @@ import { Target, Eye, Users, Shield, TrendingUp, Globe, ArrowRight, CheckCircle2
 import { Button } from '@/components/ui/button';
 import { SectionHeader, FadeIn, StaggerContainer, StaggerItem } from '@/components/shared/section-animations';
 
-const aboutImage = 'https://images.pexels.com/photos/23496662/pexels-photo-23496662.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
+const aboutImage = 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=compress&cs=tinysrgb&h=650&w=940';
 
 const values = [
   { icon: Shield, title: 'Security First', description: 'Server-enforced authorization protects every record, every request, every user.' },
@@ -19,7 +19,7 @@ const values = [
 export default function AboutPage() {
   return (
     <div className="overflow-hidden">
-      <section className="relative pt-32 pb-20">
+      <section className="relative pt-8 pb-20">
         <div className="absolute inset-0 z-0">
           <Image src={aboutImage} alt="About MANTECH" fill className="object-cover" sizes="100vw" />
           <div className="absolute inset-0 bg-hero-overlay" />

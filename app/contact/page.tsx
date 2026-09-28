@@ -24,11 +24,15 @@ export default function ContactPage() {
 
   return (
     <div className="overflow-hidden">
-      <section className="pt-32 pb-12 bg-gradient-mantech-light">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-8 pb-12">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900" />
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+        <div className="container-mantech relative z-10 px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
-            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Contact MANTECH</h1>
-            <p className="mt-4 text-lg text-muted-foreground">We&apos;re here to help with any questions about internships, partnerships, or services.</p>
+            <h1 className="font-heading text-4xl font-bold tracking-tight text-white sm:text-5xl">Contact MANTECH</h1>
+            <p className="mt-4 text-lg text-white/80">We&apos;re here to help with any questions about internships, partnerships, or services.</p>
           </motion.div>
         </div>
       </section>

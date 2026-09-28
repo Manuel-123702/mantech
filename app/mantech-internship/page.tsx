@@ -51,36 +51,40 @@ export default function MantechInternshipPortalPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-20">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-b from-blue-900 via-blue-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-blue-800/40">
-        <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero Section with Background Image */}
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/95 via-indigo-900/90 to-slate-900/95" />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold mb-4 border border-blue-400/30">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-white text-xs font-semibold mb-4 border border-white/20 backdrop-blur-sm">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Specialized Cameroon IT/ICT Internship Portal</span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-heading leading-tight">
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-heading leading-tight text-white">
                 Discover Verified Technology Internships in Cameroon
               </h1>
-              <p className="mt-4 text-base sm:text-lg text-slate-300">
+              <p className="mt-4 text-base sm:text-lg text-white/90">
                 Connect with leading technology employers across Douala, Yaoundé, Buea, and all 10 regions.
                 From opportunity discovery to verified completion, ManTech Nexus orchestrates the complete lifecycle.
               </p>
 
               {/* Search Bar */}
-              <div className="mt-8 flex flex-col sm:flex-row gap-2 bg-white/10 p-2 rounded-2xl backdrop-blur-md border border-white/20">
+              <div className="mt-8 flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-2xl shadow-xl">
                 <div className="relative flex-1">
-                  <Search className="w-5 h-5 text-slate-300 absolute left-3.5 top-3" />
+                  <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-3" />
                   <Input
                     placeholder="Search role, skills, or city (Douala, Buea, Yaoundé)..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-11 bg-white text-slate-900 placeholder:text-slate-500 border-none h-11"
+                    className="pl-11 bg-transparent text-slate-900 placeholder:text-slate-500 border-none h-11"
                   />
                 </div>
-                <Button className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold h-11 px-6">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6">
                   Search Roles
                 </Button>
               </div>
@@ -89,7 +93,7 @@ export default function MantechInternshipPortalPage() {
             {/* Student Readiness Callout Banner */}
             <div className="w-full lg:w-96 bg-white/10 border border-white/15 rounded-2xl p-6 backdrop-blur-lg">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-semibold uppercase tracking-wider text-blue-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-white/80">
                   Preparation Checklist
                 </span>
                 <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-400/30">
@@ -97,10 +101,10 @@ export default function MantechInternshipPortalPage() {
                 </span>
               </div>
               <h3 className="text-lg font-bold text-white mb-2">Student Readiness System</h3>
-              <p className="text-xs text-slate-300 mb-4">
+              <p className="text-xs text-white/80 mb-4">
                 Enhance your placement likelihood with our transparent readiness criteria before applying to top firms.
               </p>
-              <div className="space-y-2 text-xs text-slate-200 mb-5">
+              <div className="space-y-2 text-xs text-white/90 mb-5">
                 <div className="flex items-center justify-between">
                   <span>Profile & Academic Verification</span>
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -123,22 +127,22 @@ export default function MantechInternshipPortalPage() {
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-blue-800/60 text-center">
+          <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-white/20 text-center">
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-white">100%</div>
-              <div className="text-xs text-slate-400 mt-1">Verified IT Organizations</div>
+              <div className="text-xs text-white/70 mt-1">Verified IT Organizations</div>
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-amber-400">150,000 XAF</div>
-              <div className="text-xs text-slate-400 mt-1">Top Monthly Allowance</div>
+              <div className="text-xs text-white/70 mt-1">Top Monthly Allowance</div>
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-white">10 Regions</div>
-              <div className="text-xs text-slate-400 mt-1">Nationwide Coverage</div>
+              <div className="text-xs text-white/70 mt-1">Nationwide Coverage</div>
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-emerald-400">3 Methods</div>
-              <div className="text-xs text-slate-400 mt-1">Direct, Website & External</div>
+              <div className="text-xs text-white/70 mt-1">Direct, Website & External</div>
             </div>
           </div>
         </div>
@@ -155,7 +159,7 @@ export default function MantechInternshipPortalPage() {
               className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedTrack === track.id
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                  : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                  : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'
               }`}
             >
               {track.label}
@@ -170,7 +174,7 @@ export default function MantechInternshipPortalPage() {
             return (
               <div
                 key={opp.id}
-                className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between group"
+                className="bg-white rounded-2xl border border-slate-300 p-6 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-3">

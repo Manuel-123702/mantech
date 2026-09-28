@@ -16,7 +16,7 @@ const features = [
 export default function AccessibilityPage() {
   return (
     <div className="overflow-hidden">
-      <section className="pt-32 pb-12 bg-gradient-mantech-light">
+      <section className="pt-8 pb-12 bg-gradient-mantech-light">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="font-heading text-4xl font-bold tracking-tight text-foreground">Accessibility</motion.h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">MANTECH Nexus is committed to making internship management accessible to all users across Cameroon.</p>

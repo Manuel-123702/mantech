@@ -251,7 +251,7 @@ export default function OpportunityDetailPage() {
                     Deadline:
                   </span>
                   <span className="font-semibold text-slate-900">
-                    {new Date(opportunity.deadline).toLocaleDateString('en-GB')}
+                    {opportunity.deadline ? new Date(opportunity.deadline).toLocaleDateString('en-GB') : 'N/A'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">

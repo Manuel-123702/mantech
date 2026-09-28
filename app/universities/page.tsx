@@ -3,18 +3,57 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap, MapPin, Globe, Loader2, Inbox, BadgeCheck } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import type { University } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
+
+interface University {
+  id: string;
+  name: string;
+  type?: string;
+  description?: string;
+  city?: string;
+  website?: string;
+  verificationStatus: string;
+}
 
 export default function UniversitiesPage() {
   const [universities, setUniversities] = useState<University[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Simulate data loading - in production, this would fetch from API
     async function load() {
-      const { data } = await supabase.from('universities').select('*').eq('verification_status', 'verified').order('name');
-      setUniversities((data || []) as University[]);
+      // Placeholder data until API is connected
+      const mockUniversities: University[] = [
+        {
+          id: '1',
+          name: 'University of Yaoundé I',
+          type: 'Public State University',
+          description: 'Leading university in Cameroon with strong engineering and computer science programs.',
+          city: 'Yaoundé',
+          website: 'https://www.uy1.uninet.cm',
+          verificationStatus: 'VERIFIED',
+        },
+        {
+          id: '2',
+          name: 'ENSPY',
+          type: 'Polytechnic School',
+          description: 'National Advanced School of Engineering specializing in telecommunications and networks.',
+          city: 'Yaoundé',
+          website: 'https://www.enspy.cm',
+          verificationStatus: 'VERIFIED',
+        },
+        {
+          id: '3',
+          name: 'University of Buea',
+          type: 'Public State University',
+          description: 'Premier university in the Southwest region with excellent ICT programs.',
+          city: 'Buea',
+          website: 'https://www.ubuea.cm',
+          verificationStatus: 'VERIFIED',
+        },
+      ];
+      
+      setUniversities(mockUniversities);
       setLoading(false);
     }
     load();
@@ -22,7 +61,7 @@ export default function UniversitiesPage() {
 
   return (
     <div className="overflow-hidden">
-      <section className="pt-32 pb-12 bg-gradient-mantech-light">
+      <section className="pt-8 pb-12 bg-gradient-mantech-light">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
             <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Partner universities</h1>

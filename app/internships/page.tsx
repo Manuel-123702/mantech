@@ -36,11 +36,15 @@ export default function InternshipsPage() {
 
   return (
     <div className="overflow-hidden">
-      <section className="pt-32 pb-12 bg-gradient-mantech-light">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-8 pb-12">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900" />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+        <div className="container-mantech relative z-10 px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
-            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Find your internship</h1>
-            <p className="mt-4 text-lg text-muted-foreground">Discover IT internships across Cameroon&apos;s 10 regions.</p>
+            <h1 className="font-heading text-4xl font-bold tracking-tight text-white sm:text-5xl">Find your internship</h1>
+            <p className="mt-4 text-lg text-white/80">Discover IT internships across Cameroon&apos;s 10 regions.</p>
           </motion.div>
         </div>
       </section>
@@ -50,18 +54,18 @@ export default function InternshipsPage() {
           <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-4 shadow-card md:flex-row md:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search internships..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+              <Input placeholder="Search internships..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 bg-white" />
             </div>
             <Select value={region} onValueChange={setRegion}>
-              <SelectTrigger className="w-full md:w-44"><SelectValue placeholder="Region" /></SelectTrigger>
+              <SelectTrigger className="w-full md:w-44 bg-white"><SelectValue placeholder="Region" /></SelectTrigger>
               <SelectContent>{regions.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
             </Select>
             <Select value={workMode} onValueChange={setWorkMode}>
-              <SelectTrigger className="w-full md:w-36"><SelectValue placeholder="Work mode" /></SelectTrigger>
+              <SelectTrigger className="w-full md:w-36 bg-white"><SelectValue placeholder="Work mode" /></SelectTrigger>
               <SelectContent>{workModes.map((w) => <SelectItem key={w} value={w}>{w === 'All' ? 'All modes' : w}</SelectItem>)}</SelectContent>
             </Select>
             <Select value={paid} onValueChange={setPaid}>
-              <SelectTrigger className="w-full md:w-36"><SelectValue placeholder="Paid/Unpaid" /></SelectTrigger>
+              <SelectTrigger className="w-full md:w-36 bg-white"><SelectValue placeholder="Paid/Unpaid" /></SelectTrigger>
               <SelectContent>{paidOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
             </Select>
           </div>

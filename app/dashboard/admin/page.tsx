@@ -69,7 +69,7 @@ export default function AdminControlCenterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 pt-20 pb-16">
+    <div className="min-h-screen bg-slate-900 text-slate-100 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Admin Header */}
         <div className="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-xl">

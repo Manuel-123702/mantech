@@ -19,7 +19,7 @@ const resources = [
 export default function ResourcesPage() {
   return (
     <div className="overflow-hidden">
-      <section className="pt-32 pb-12 bg-gradient-mantech-light">
+      <section className="pt-8 pb-12 bg-gradient-mantech-light">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
             <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Resource Center</h1>

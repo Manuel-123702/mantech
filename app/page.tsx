@@ -101,9 +101,12 @@ export default function HomePage() {
   return (
     <div className="overflow-hidden">
       {/* ───── HERO SECTION ───── */}
-      <section className="relative min-h-screen flex items-center pt-16 bg-[#050d1f] overflow-hidden">
-        {/* Background animated gradient orbs */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Background with overlay */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900" />
+          <div className="absolute inset-0 bg-black/60" />
+          {/* Animated gradient orbs */}
           <div className="absolute top-1/4 -left-1/4 w-[700px] h-[700px] rounded-full bg-blue-600/20 blur-[120px]" />
           <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-indigo-700/20 blur-[120px]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-cyan-500/10 blur-[90px]" />

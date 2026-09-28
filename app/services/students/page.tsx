@@ -13,7 +13,7 @@ const supervisorFeatures = ['Assigned intern management', 'Progress timeline tra
 export default function StudentServicesPage() {
   return (
     <div className="overflow-hidden">
-      <section className="pt-32 pb-20 bg-gradient-mantech-light">
+      <section className="pt-8 pb-20 bg-gradient-mantech-light">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl">
             <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-mantech text-white"><GraduationCap className="h-8 w-8" /></div>

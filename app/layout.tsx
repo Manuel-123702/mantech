@@ -4,6 +4,8 @@ import { Inter, Sora } from 'next/font/google';
 import { AuthProvider } from '@/lib/auth-context';
 import { Navbar } from '@/components/shared/navbar';
 import { Footer } from '@/components/shared/footer';
+import { LoadingScreen } from '@/components/shared/loading-screen';
+import { WhatsAppFloat } from '@/components/shared/whatsapp-float';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const sora = Sora({ subsets: ['latin'], variable: '--font-sora' });
@@ -23,6 +25,9 @@ export const metadata: Metadata = {
     'student internships',
     'enterprise internship platform',
   ],
+  icons: {
+    icon: '/favicon.ico',
+  },
   openGraph: {
     title: 'MANTECH Nexus — Enterprise Internship Management System',
     description:
@@ -46,9 +51,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${sora.variable}`}>
       <body className="font-sans antialiased">
         <AuthProvider>
+          <LoadingScreen />
           <Navbar />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen pt-24">{children}</main>
           <Footer />
+          <WhatsAppFloat />
         </AuthProvider>
       </body>
     </html>
