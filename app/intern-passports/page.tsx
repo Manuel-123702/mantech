@@ -97,13 +97,15 @@ export default async function InternPassportsPage(props: PageProps) {
   // phone numbers) enforce their own verification checks downstream.
   if (!user) redirect("/dashboard");
 
-  // Build filters
+  // Build filters. Radix Select forbids empty-string item values, so the
+  // "All"/"Any" options submit the sentinel "all" — treat it as "no filter".
+  const pick = (v: string | undefined) => (v && v !== "all" ? v : "");
   const keyword = (sp.q || "").trim();
-  const fieldId = sp.fieldId || "";
-  const regionId = sp.regionId || "";
-  const qualification = sp.qualification || "";
-  const workMode = sp.workMode || "";
-  const availability = sp.availability || "";
+  const fieldId = pick(sp.fieldId);
+  const regionId = pick(sp.regionId);
+  const qualification = pick(sp.qualification);
+  const workMode = pick(sp.workMode);
+  const availability = pick(sp.availability);
   const sort = SORTS.find((s) => s.value === sp.sort) ? sp.sort! : "readiness";
 
   const where: any = { isCvSearchable: true, profileCompleted: true };
@@ -363,12 +365,12 @@ export default async function InternPassportsPage(props: PageProps) {
                     <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       Field of study
                     </label>
-                    <Select name="fieldId" defaultValue={fieldId}>
+                    <Select name="fieldId" defaultValue={fieldId || "all"}>
                       <SelectTrigger className="mt-1 h-10 bg-white">
                         <SelectValue placeholder="Any field" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All fields</SelectItem>
+                        <SelectItem value="all">All fields</SelectItem>
                         {fields.map((f: any) => (
                           <SelectItem key={f.id} value={f.id}>
                             {f.name}
@@ -382,12 +384,12 @@ export default async function InternPassportsPage(props: PageProps) {
                     <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       Region
                     </label>
-                    <Select name="regionId" defaultValue={regionId}>
+                    <Select name="regionId" defaultValue={regionId || "all"}>
                       <SelectTrigger className="mt-1 h-10 bg-white">
                         <SelectValue placeholder="Any region" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All regions</SelectItem>
+                        <SelectItem value="all">All regions</SelectItem>
                         {regions.map((r: any) => (
                           <SelectItem key={r.id} value={r.id}>
                             {r.name}
@@ -401,12 +403,12 @@ export default async function InternPassportsPage(props: PageProps) {
                     <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       Qualification
                     </label>
-                    <Select name="qualification" defaultValue={qualification}>
+                    <Select name="qualification" defaultValue={qualification || "all"}>
                       <SelectTrigger className="mt-1 h-10 bg-white">
                         <SelectValue placeholder="Any qualification" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All qualifications</SelectItem>
+                        <SelectItem value="all">All qualifications</SelectItem>
                         {qualificationGroups.map((q) => (
                           <SelectItem key={q.value} value={q.value}>
                             {q.value} ({q.count})
@@ -420,12 +422,12 @@ export default async function InternPassportsPage(props: PageProps) {
                     <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       Work mode
                     </label>
-                    <Select name="workMode" defaultValue={workMode}>
+                    <Select name="workMode" defaultValue={workMode || "all"}>
                       <SelectTrigger className="mt-1 h-10 bg-white">
                         <SelectValue placeholder="Any mode" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any</SelectItem>
+                        <SelectItem value="all">Any</SelectItem>
                         {WORK_MODES.map((m) => (
                           <SelectItem key={m} value={m}>
                             {m.replace("_", " ")}
@@ -439,12 +441,12 @@ export default async function InternPassportsPage(props: PageProps) {
                     <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       Availability
                     </label>
-                    <Select name="availability" defaultValue={availability}>
+                    <Select name="availability" defaultValue={availability || "all"}>
                       <SelectTrigger className="mt-1 h-10 bg-white">
                         <SelectValue placeholder="Any availability" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any</SelectItem>
+                        <SelectItem value="all">Any</SelectItem>
                         {AVAILABILITY_OPTIONS.map((a) => (
                           <SelectItem key={a} value={a}>
                             {a.replace(/_/g, " ")}

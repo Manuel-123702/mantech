@@ -7,15 +7,14 @@ import { SubscriptionProcess } from "@/components/pricing/member-plan-section";
 import { APP_CONFIG } from "@/lib/config";
 
 /**
- * Each column carries its own accent so the footer does not read as one flat
- * grey block. The heading takes the colour outright, the links take it on hover,
- * and the little rule that grows on hover matches. Colours stay muted on
- * purpose: they are labels, not decoration competing with the logo.
+ * Four evenly weighted link columns. On the deep-navy footer they share one
+ * muted treatment — blue-tinted headings, soft blue links that turn white on
+ * hover — so the columns read as structure rather than decoration.
  */
 const footerLinks = {
   Platform: {
-    accent: 'group-hover:text-blue-700',
-    heading: 'text-blue-700',
+    accent: 'group-hover:text-white',
+    heading: 'text-blue-100',
     links: [
       { href: "/about", label: "About Us" },
       { href: "/how-it-works", label: "How It Works" },
@@ -24,8 +23,8 @@ const footerLinks = {
     ],
   },
   Discover: {
-    accent: 'group-hover:text-emerald-700',
-    heading: 'text-emerald-700',
+    accent: 'group-hover:text-white',
+    heading: 'text-blue-100',
     links: [
       { href: "/internships", label: "Find Internships" },
       { href: "/companies", label: "Companies" },
@@ -34,8 +33,8 @@ const footerLinks = {
     ],
   },
   Resources: {
-    accent: 'group-hover:text-violet-700',
-    heading: 'text-violet-700',
+    accent: 'group-hover:text-white',
+    heading: 'text-blue-100',
     links: [
       { href: "/resources", label: "Resource Center" },
       { href: "/success-stories", label: "Success Stories" },
@@ -44,8 +43,8 @@ const footerLinks = {
     ],
   },
   Legal: {
-    accent: 'group-hover:text-amber-700',
-    heading: 'text-amber-700',
+    accent: 'group-hover:text-white',
+    heading: 'text-blue-100',
     links: [
       { href: "/security", label: "Security" },
       { href: "/privacy", label: "Privacy Policy" },
@@ -67,13 +66,13 @@ export function Footer() {
         it is the piece that was missing: prices alone do not tell a visitor what
         to do next.
       */}
-      <section className="border-t border-border bg-slate-100">
+      <section className="border-t border-blue-950/10 bg-gradient-to-b from-white to-blue-50/60">
         <div className="container-mantech px-4 py-14 sm:px-6 lg:px-8">
           <SubscriptionProcess />
         </div>
       </section>
 
-      <footer className="border-t border-border bg-white">
+      <footer className="border-t border-blue-950/10 bg-blue-950">
         <div className="container-mantech px-4 py-16 sm:px-6 lg:px-8">
           {/* The brand gets a full column of its own on wide screens, so the
               four link groups line up in an even row beside it. */}
@@ -81,17 +80,17 @@ export function Footer() {
             <div className="col-span-2 lg:col-span-2">
               <Link
                 href="/"
-                className="flex items-center"
+                className="inline-flex items-center rounded-2xl bg-white p-2.5 shadow-sm"
                 aria-label="ManTech Nexus Home"
               >
-                <Logo size={260} />
+                <Logo size={220} />
               </Link>
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-600">
+              <p className="mt-4 max-w-xs text-sm leading-relaxed text-blue-100/75">
                 The professional internship marketplace connecting interns,
                 companies, and institutions across Cameroon.
               </p>
               {/* The one promise worth repeating. */}
-              <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
+              <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-200 ring-1 ring-emerald-400/25">
                 Internships are free for members
               </p>
             <div className="mt-6 flex gap-3">
@@ -100,7 +99,7 @@ export function Footer() {
                 href={SOCIAL.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0077B5] text-white transition-colors hover:bg-[#005885]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-blue-100 transition-colors hover:bg-white/20"
                 aria-label="LinkedIn"
               >
                 <svg
@@ -119,7 +118,7 @@ export function Footer() {
                 href={SOCIAL.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1877F2] text-white transition-colors hover:bg-[#145dbf]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-blue-100 transition-colors hover:bg-white/20"
                 aria-label="Facebook"
               >
                 <svg
@@ -138,7 +137,7 @@ export function Footer() {
                 href={SOCIAL.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#E4405F] to-[#C13584] text-white transition-colors hover:from-[#d1304e] hover:to-[#a8266d]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-blue-100 transition-colors hover:bg-white/20"
                 aria-label="Instagram"
               >
                 <svg
@@ -157,7 +156,7 @@ export function Footer() {
                 href={SOCIAL.youtube}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FF0000] text-white transition-colors hover:bg-[#cc0000]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-blue-100 transition-colors hover:bg-white/20"
                 aria-label="YouTube"
               >
                 <svg
@@ -176,7 +175,7 @@ export function Footer() {
                 href={SOCIAL.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#333] text-white transition-colors hover:bg-[#24292e]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-blue-100 transition-colors hover:bg-white/20"
                 aria-label="GitHub"
               >
                 <svg
@@ -193,7 +192,7 @@ export function Footer() {
               {/* Email */}
               <a
                 href={`mailto:${SUPPORT.email}`}
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary text-foreground/60 transition-colors hover:bg-primary hover:text-primary-foreground"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-blue-100 transition-colors hover:bg-white/20"
                 aria-label="Email"
               >
                 <Mail className="h-4 w-4" />
@@ -213,7 +212,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className={`group inline-flex items-center text-sm text-slate-600 transition-colors hover:text-slate-900 ${group.accent}`}
+                      className={`group inline-flex items-center text-sm text-blue-200/80 transition-colors hover:text-white ${group.accent}`}
                     >
                       {/* A short rule grows on hover, so the link reads as
                           clickable without adding noise to the column. */}
@@ -230,15 +229,15 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
-          <p className="text-sm text-slate-500">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
+          <p className="text-sm text-blue-200/60">
             &copy; {new Date().getFullYear()} MANTECH Nexus. All rights
             reserved.
           </p>
-          <div className="flex items-center gap-4 text-sm text-slate-500">
+          <div className="flex items-center gap-4 text-sm text-blue-200/60">
             <a
               href={`mailto:${SUPPORT.email}`}
-              className="transition-colors hover:text-blue-700"
+              className="transition-colors hover:text-white"
             >
               {SUPPORT.email}
             </a>

@@ -11,9 +11,12 @@ const contactSchema = z.object({
   email: z.string().email('Please provide a valid email address.').max(200),
   subject: z.string().min(2, 'Please provide a subject.').max(200),
   message: z.string().min(10, 'Please write a longer message.').max(5000),
-  // Honeypot: real users never fill a hidden field. Bots do.
-  // Empty/absent/unset is normal; any truthy content (after trimming) is spam.
-  website: z.string().max(0).optional().or(z.literal('')),
+  // Honeypot: real users never fill a hidden field. Bots (and stray browser
+  // autofill on a field named "website") do. We ACCEPT any content here so a
+  // filled honeypot does NOT fail validation — the handler below then silently
+  // discards it (returns ok:true without sending). Rejecting it here would turn
+  // the "pretend success" path into dead code and wrongly return 400 to bots.
+  website: z.string().max(500).optional(),
 });
 
 export async function POST(request: Request) {
@@ -35,7 +38,7 @@ export async function POST(request: Request) {
       );
     }
     // Honeypot filled => pretend success so bots get no signal, but send nothing.
-    if (parsed.data.website) {
+    if (parsed.data.website && parsed.data.website.trim()) {
       return NextResponse.json({ ok: true });
     }
 

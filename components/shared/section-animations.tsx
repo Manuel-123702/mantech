@@ -1,8 +1,19 @@
 'use client';
 
-import { motion, type Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+
+/**
+ * The site-wide motion language.
+ *
+ * Every section shares one easing curve — expo-out: a quick start that
+ * glides to a gentle stop — and small, disciplined distances. Content
+ * fades up out of a slight blur, as if coming into focus, instead of
+ * sliding around the viewport. Staggers stay short so grids resolve as
+ * one calm, organised wave rather than a busy parade.
+ */
+const EXPO_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 interface SectionHeaderProps {
   eyebrow?: string;
@@ -29,30 +40,30 @@ export function SectionHeader({
     >
       {eyebrow && (
         <motion.span
-          initial={{ opacity: 0, y: 12, scale: 0.95 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.55, ease: EXPO_OUT }}
           className="mb-3 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary border border-primary/15 shadow-sm"
         >
           {eyebrow}
         </motion.span>
       )}
       <motion.h2
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 18, filter: 'blur(8px)' }}
+        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         viewport={{ once: true }}
-        transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.7, delay: 0.07, ease: EXPO_OUT }}
         className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
       >
         {title}
       </motion.h2>
       {description && (
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 14, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: true }}
-          transition={{ duration: 0.55, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.65, delay: 0.13, ease: EXPO_OUT }}
           className={cn(
             'mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed',
             align === 'center' ? 'mx-auto' : ''
@@ -74,10 +85,10 @@ interface FadeInProps {
 export function FadeIn({ children, delay = 0, className }: FadeInProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.7, delay, ease: EXPO_OUT }}
       className={className}
     >
       {children}
@@ -95,12 +106,12 @@ export function StaggerContainer({ children, className }: StaggerContainerProps)
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-50px' }}
+      viewport={{ once: true, margin: '-60px' }}
       variants={{
         hidden: { opacity: 0 },
         visible: {
           opacity: 1,
-          transition: { staggerChildren: 0.1 },
+          transition: { staggerChildren: 0.07, delayChildren: 0.04 },
         },
       }}
       className={className}
@@ -114,8 +125,13 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+        hidden: { opacity: 0, y: 20, filter: 'blur(6px)' },
+        visible: {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          transition: { duration: 0.65, ease: EXPO_OUT },
+        },
       }}
       className={className}
     >
@@ -137,76 +153,101 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
  * - flip3D: subtle perspective flip for feature and category cards
  */
 export const SECTION_MOTION = {
-  /** Headings and prose. Rises gently. */
+  /** Headings and prose. Rises gently into focus. */
   rise: {
-    hidden: { opacity: 0, y: 26 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+    hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 0.68, ease: EXPO_OUT },
+    },
   },
 
-  /** Card grids. Fan in from the left, one after another. */
+  /** Card grids. Glide in softly from the left, one after another. */
   slideLeft: {
-    hidden: { opacity: 0, x: -44 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+    hidden: { opacity: 0, x: -26, filter: 'blur(5px)' },
+    visible: {
+      opacity: 1,
+      x: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 0.7, ease: EXPO_OUT },
+    },
   },
 
-  /** Alternate cards. Fan in from the right edge. */
+  /** Alternate cards. Glide in softly from the right edge. */
   slideRight: {
-    hidden: { opacity: 0, x: 44 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+    hidden: { opacity: 0, x: 26, filter: 'blur(5px)' },
+    visible: {
+      opacity: 1,
+      x: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 0.7, ease: EXPO_OUT },
+    },
   },
 
   /** Grids that mirror left and right. Fan in from both edges. */
   spread: {
-    hidden: { opacity: 0, x: 44 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+    hidden: { opacity: 0, x: 22, filter: 'blur(5px)' },
+    visible: {
+      opacity: 1,
+      x: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 0.7, ease: EXPO_OUT },
+    },
   },
 
   /** Statistics and prices. Settle into place with a soft scale. */
   scaleIn: {
-    hidden: { opacity: 0, scale: 0.88, y: 16 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+    hidden: { opacity: 0, scale: 0.94, y: 10 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { duration: 0.65, ease: EXPO_OUT },
+    },
   },
-
   /** Step-by-step content. Wipes in as it grows taller. */
   wipe: {
     hidden: { opacity: 0, clipPath: 'inset(0 100% 0 0)' },
     visible: {
       opacity: 1,
       clipPath: 'inset(0 0% 0 0)',
-      transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.8, ease: EXPO_OUT },
     },
   },
 
-  /** Bouncy spring entrance for interactive badges and cards. */
+  /** Soft spring entrance for interactive badges and cards. */
   pop: {
-    hidden: { opacity: 0, scale: 0.82, y: 22 },
+    hidden: { opacity: 0, scale: 0.9, y: 14 },
     visible: {
       opacity: 1,
       scale: 1,
       y: 0,
-      transition: { type: 'spring', damping: 16, stiffness: 260 },
+      transition: { type: 'spring', damping: 20, stiffness: 230 },
     },
   },
 
-  /** Modern blur-to-sharp high-definition reveal. */
+  /** Cinematic blur-to-sharp focus reveal. */
   blurReveal: {
-    hidden: { opacity: 0, filter: 'blur(10px)', y: 24 },
+    hidden: { opacity: 0, filter: 'blur(14px)', y: 14 },
     visible: {
       opacity: 1,
       filter: 'blur(0px)',
       y: 0,
-      transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.75, ease: EXPO_OUT },
     },
   },
 
-  /** 3D perspective flip for category tiles and cards. */
+  /** Gentle perspective lift for category tiles and cards. */
   flip3D: {
-    hidden: { opacity: 0, rotateX: 20, y: 32 },
+    hidden: { opacity: 0, rotateX: 12, y: 18, transformPerspective: 1100 },
     visible: {
       opacity: 1,
       rotateX: 0,
       y: 0,
-      transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+      transformPerspective: 1100,
+      transition: { duration: 0.75, ease: EXPO_OUT },
     },
   },
 } as const;
@@ -225,14 +266,14 @@ interface MotionSectionProps {
 export function MotionSection({
   children,
   motion: style = 'rise',
-  stagger = 0.08,
+  stagger = 0.07,
   className,
 }: MotionSectionProps) {
   return (
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: true, margin: '-70px' }}
       variants={{
         hidden: {},
         visible: { transition: { staggerChildren: stagger } },
@@ -271,8 +312,8 @@ export function AnimatedCard({
 }) {
   return (
     <motion.div
-      whileHover={{ y: -5, transition: { duration: 0.2, ease: 'easeOut' } }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ y: -5, transition: { duration: 0.28, ease: 'easeOut' } }}
+      whileTap={{ scale: 0.985 }}
       className={className}
     >
       {children}
@@ -281,7 +322,8 @@ export function AnimatedCard({
 }
 
 /**
- * Continuous subtle floating badge for "Live", "Verified", or "New".
+ * Barely-there floating for "Live", "Verified", or "New" chips — a slow
+ * breath rather than an attention-grabbing bob.
  */
 export function FloatingBadge({
   children,
@@ -292,8 +334,8 @@ export function FloatingBadge({
 }) {
   return (
     <motion.span
-      animate={{ y: [0, -3, 0] }}
-      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+      animate={{ y: [0, -2, 0] }}
+      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
       className={cn('inline-flex items-center', className)}
     >
       {children}

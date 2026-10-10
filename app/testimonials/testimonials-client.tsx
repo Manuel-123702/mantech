@@ -28,6 +28,7 @@ import {
   TESTIMONIAL_ROLES,
   OTHER_OPTION,
 } from '@/lib/testimonial-fields';
+import { MotionSection, MotionItem } from '@/components/shared/section-animations';
 
 type Testimonial = {
   id: string;
@@ -761,11 +762,14 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
           </p>
         </div>
       ) : (
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <MotionSection
+          stagger={0.08}
+          className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {items.map((item) => (
+            <MotionItem key={item.id} className="min-w-0">
             <figure
-              key={item.id}
-              className={`group relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg ${
+              className={`group relative flex h-full min-w-0 flex-col rounded-2xl border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg ${
                 item.pending
                   ? 'border-amber-200 bg-amber-50/40 hover:border-amber-300'
                   : 'border-slate-200 hover:border-blue-200'
@@ -786,7 +790,7 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
                 <Stars rating={item.rating} />
               )}
 
-              <blockquote className="mt-4 flex-1 text-sm font-medium leading-relaxed text-slate-800">
+              <blockquote className="mt-4 flex-1 break-words whitespace-pre-wrap text-sm font-medium leading-relaxed text-slate-800">
                 {item.message}
               </blockquote>
 
@@ -795,7 +799,7 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
                 <summary className="cursor-pointer list-none text-xs font-semibold text-blue-700 hover:text-blue-800">
                   Read the full story
                 </summary>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.details}</p>
+                <p className="mt-2 break-words whitespace-pre-wrap text-sm leading-relaxed text-slate-600">{item.details}</p>
               </details>
 
               <div className="mt-4 flex flex-wrap gap-1.5">
@@ -831,8 +835,9 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
                 </div>
               </figcaption>
             </figure>
+            </MotionItem>
           ))}
-        </div>
+        </MotionSection>
       )}
     </section>
   );

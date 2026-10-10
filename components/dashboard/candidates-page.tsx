@@ -234,14 +234,16 @@ export default function CandidatesPage() {
               <div>
                 <Label>Field</Label>
                 <Select
-                  onValueChange={(value) => setFilters((f) => ({ ...f, fieldId: value }))}
-                  value={filters.fieldId}
+                  onValueChange={(value) =>
+                    setFilters((f) => ({ ...f, fieldId: value === 'all' ? '' : value }))
+                  }
+                  value={filters.fieldId || 'all'}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="All fields" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All fields</SelectItem>
+                    <SelectItem value="all">All fields</SelectItem>
                     {fields.map((f) => (
                       <SelectItem key={f.id} value={f.id}>
                         {f.name}
@@ -253,14 +255,16 @@ export default function CandidatesPage() {
               <div>
                 <Label>Region</Label>
                 <Select
-                  onValueChange={(value) => setFilters((f) => ({ ...f, regionId: value }))}
-                  value={filters.regionId}
+                  onValueChange={(value) =>
+                    setFilters((f) => ({ ...f, regionId: value === 'all' ? '' : value }))
+                  }
+                  value={filters.regionId || 'all'}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="All regions" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All regions</SelectItem>
+                    <SelectItem value="all">All regions</SelectItem>
                     {regions.map((r) => (
                       <SelectItem key={r.id} value={r.id}>
                         {r.name}
@@ -272,14 +276,16 @@ export default function CandidatesPage() {
               <div>
                 <Label>Work mode</Label>
                 <Select
-                  onValueChange={(value) => setFilters((f) => ({ ...f, workMode: value }))}
-                  value={filters.workMode}
+                  onValueChange={(value) =>
+                    setFilters((f) => ({ ...f, workMode: value === 'all' ? '' : value }))
+                  }
+                  value={filters.workMode || 'all'}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Any</SelectItem>
+                    <SelectItem value="all">Any</SelectItem>
                     <SelectItem value="ONSITE">On-site</SelectItem>
                     <SelectItem value="HYBRID">Hybrid</SelectItem>
                     <SelectItem value="REMOTE">Remote</SelectItem>

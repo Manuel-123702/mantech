@@ -1507,7 +1507,7 @@ export default function HomePage() {
                         <Star key={i} className="w-4 h-4 fill-amber-400" />
                       ))}
                     </div>
-                    <p className="text-sm text-slate-800 font-medium leading-relaxed italic">
+                    <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
                       &ldquo;{t.message}&rdquo;
                     </p>
                   </div>
@@ -1528,7 +1528,7 @@ export default function HomePage() {
                         <Star key={i} className="w-4 h-4 fill-amber-400" />
                       ))}
                     </div>
-                    <p className="text-sm text-slate-800 font-medium leading-relaxed italic">
+                    <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
                       &ldquo;With my Intern Passport, an engineering enterprise in Douala shortlisted me within 4 days. The process was direct and transparent.&rdquo;
                     </p>
                   </div>
@@ -1547,7 +1547,7 @@ export default function HomePage() {
                         <Star key={i} className="w-4 h-4 fill-amber-400" />
                       ))}
                     </div>
-                    <p className="text-sm text-slate-800 font-medium leading-relaxed italic">
+                    <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
                       &ldquo;Filtering candidates by specific competencies and viewing authorized Intern Passports saved our recruitment team weeks of manual screening.&rdquo;
                     </p>
                   </div>
@@ -1566,7 +1566,7 @@ export default function HomePage() {
                         <Star key={i} className="w-4 h-4 fill-amber-400" />
                       ))}
                     </div>
-                    <p className="text-sm text-slate-800 font-medium leading-relaxed italic">
+                    <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
                       &ldquo;Our university faculty now has live visibility over student placements across host companies without administrative paperwork.&rdquo;
                     </p>
                   </div>

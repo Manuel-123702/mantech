@@ -350,7 +350,7 @@ export async function BillingView({ organization }: { organization: BillingOrgan
             <CardTitle className="text-base">Subscription requests & billing history</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-hidden rounded-xl border">
+            <div className="overflow-x-auto rounded-xl border">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-slate-600">
                   <tr>

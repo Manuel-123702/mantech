@@ -14,7 +14,7 @@ export default function PrivacyPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="font-heading text-4xl font-bold tracking-tight text-foreground"
+            className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
           >
             Privacy Policy
           </motion.h1>
