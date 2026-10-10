@@ -184,94 +184,92 @@ export function SubscriptionProcess({
 }) {
   return (
     <div
-      className={`rounded-3xl border border-slate-200 bg-white p-7 shadow-card sm:p-9 ${className}`}
+      className={`rounded-3xl border border-slate-200/90 bg-white p-7 shadow-lg sm:p-10 ${className}`}
     >
-      <div className="max-w-xl">
-        <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 ring-1 ring-blue-200">
+      <div className="max-w-2xl">
+        <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 ring-1 ring-blue-200">
           <Users className="h-3.5 w-3.5" aria-hidden="true" />
-          How subscription works
+          Subscription Onboarding
         </span>
-        <h3 className="mt-4 font-heading text-2xl font-bold tracking-tight text-slate-900">
-          Three steps. No card details on this site.
+        <h3 className="mt-4 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+          Three Simple Steps. No Automated Card Charges.
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-slate-600">
-          Every plan is activated by our team after we confirm your payment.
-          Nothing is charged automatically, and nothing is stored.
+          Every organization account is verified and activated by our team after confirming your payment. Zero automatic rebilling, zero stored credit card data.
         </p>
       </div>
 
       <MotionSection
         motion={motion}
-        stagger={0.14}
+        stagger={0.1}
         className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
       >
         {SUBSCRIPTION_STEPS.map((step, index) => (
           <MotionItem key={step.title} motion={motion} className="h-full">
-            <div className="flex h-full flex-col rounded-2xl border border-slate-200 bg-slate-50/70 p-6 transition-colors hover:border-slate-300 hover:bg-white">
-              <div className="flex items-center gap-3">
+            <div className="flex h-full flex-col rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50/90 to-white p-6 transition-all duration-200 hover:border-blue-300 hover:shadow-md">
+              <div className="flex items-center justify-between mb-4">
                 <span
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold shadow-sm ${
                     step.tone === "blue"
-                      ? "bg-blue-100 text-blue-700"
+                      ? "bg-blue-600 text-white shadow-blue-600/20"
                       : step.tone === "amber"
-                        ? "bg-amber-100 text-amber-700"
-                        : "bg-emerald-100 text-emerald-700"
+                        ? "bg-amber-500 text-white shadow-amber-500/20"
+                        : "bg-emerald-600 text-white shadow-emerald-600/20"
                   }`}
                 >
-                  {index + 1}
+                  0{index + 1}
                 </span>
-                {/* A rule that fades out to the right, so the steps read as a
-                    left-to-right sequence without a literal arrow. Decorative. */}
-                <span
-                  aria-hidden="true"
-                  className="h-px flex-1 bg-gradient-to-r from-slate-300 to-transparent"
-                />
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                  Stage 0{index + 1}
+                </span>
               </div>
 
-              <h4 className="mt-4 font-heading text-base font-bold text-slate-900">
+              <h4 className="font-heading text-base font-bold text-slate-900">
                 {step.title}
               </h4>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">{step.text}</p>
+              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600 flex-1">
+                {step.text}
+              </p>
             </div>
           </MotionItem>
         ))}
       </MotionSection>
 
-      {/* Email and WhatsApp with equal weight. Email is the written record we
-          can confirm a subscription against; WhatsApp is faster for a live
-          question. The contact form stays as a third option for anyone who
-          prefers not to open another app. */}
-      <div className="mt-7 flex flex-col gap-5 rounded-2xl border border-slate-200 bg-slate-50 p-5 lg:flex-row lg:items-center lg:justify-between">
-        <p className="text-sm text-slate-600">
-          <span className="font-semibold text-slate-900">Not sure which plan fits?</span>{" "}
-          Tell us what you are hiring for and we will recommend one.
-        </p>
-        <div className="flex flex-col gap-2.5 sm:flex-row lg:shrink-0">
+      <div className="mt-8 flex flex-col gap-5 rounded-2xl border border-slate-200 bg-slate-50/80 p-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="space-y-0.5">
+          <p className="text-sm font-bold text-slate-900">
+            Need a tailored enterprise or institutional convention?
+          </p>
+          <p className="text-xs text-slate-600">
+            Tell us your recruitment volume or university scope, and our team will prepare a direct quote in XAF.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2.5 sm:flex-nowrap lg:shrink-0">
           <a
             href={`mailto:${APP_CONFIG.support.email}?subject=${encodeURIComponent(
               "MANTECH Nexus subscription enquiry"
             )}&body=${encodeURIComponent(
               "Hello MANTECH Nexus,\n\nI would like to subscribe to a plan. Here is what I need:\n\nOrganization:\nRole(s) to fill:\nNumber of interns:\n\nThank you."
             )}`}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
           >
-            <Mail className="h-4 w-4" aria-hidden="true" />
-            Email us
+            <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+            Email Concierge
           </a>
           <a
             href={APP_CONFIG.support.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#128C7E]"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-[#128C7E]"
           >
-            <WhatsAppIcon className="h-4 w-4" title="WhatsApp" />
+            <WhatsAppIcon className="h-3.5 w-3.5" title="WhatsApp" />
             WhatsApp
           </a>
           <Link
             href="/contact"
-            className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100"
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-300 bg-white px-4 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-100"
           >
-            Contact form
+            Contact Form
           </Link>
         </div>
       </div>

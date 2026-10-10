@@ -136,12 +136,12 @@ export default function AboutPage() {
           />
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {/* Mission: Slide in from Left */}
+            {/* Mission */}
             <motion.div
-              initial={{ opacity: 0, x: -60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
               <AnimatedCard className="h-full rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 p-8 sm:p-10 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-colors" />
@@ -171,12 +171,12 @@ export default function AboutPage() {
               </AnimatedCard>
             </motion.div>
 
-            {/* Vision: Slide in from Right */}
+            {/* Vision */}
             <motion.div
-              initial={{ opacity: 0, x: 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
             >
               <AnimatedCard className="h-full rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-cyan-50/30 p-8 sm:p-10 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-colors" />

@@ -45,6 +45,12 @@ import {
 import {
   MotionSection,
   MotionItem,
+  FadeIn,
+  RevealOnScroll,
+  StaggerContainer,
+  StaggerItem,
+  AnimatedCard,
+  StatReveal,
 } from "@/components/shared/section-animations";
 import type { InternshipOpportunity } from "@/lib/types";
 import { fieldNameOf, regionNameOf } from "@/lib/catalog-shape";
@@ -95,26 +101,78 @@ interface TestimonialItem {
   rating: number;
 }
 
-const TOP_FAQS = [
+export interface FaqItem {
+  id: string;
+  category: "all" | "interns" | "recruiters" | "universities" | "trust";
+  categoryName: string;
+  badge: string;
+  q: string;
+  a: string;
+  takeaway: string;
+}
+
+const FAQ_CATEGORIES = [
+  { id: "all", label: "All Questions", count: 6 },
+  { id: "interns", label: "Students & Interns", count: 3 },
+  { id: "recruiters", label: "Companies & Hosts", count: 1 },
+  { id: "universities", label: "Universities & Conventions", count: 1 },
+  { id: "trust", label: "Security & Invoicing", count: 1 },
+] as const;
+
+const EXPANDED_FAQS: FaqItem[] = [
   {
+    id: "faq-free",
+    category: "interns",
+    categoryName: "Candidate Access",
+    badge: "100% Free Forever",
     q: "Is MANTECH Nexus free for internship seekers?",
-    a: "Yes! Intern registration, profile creation, Intern Passport generation, opportunity search, and applications are 100% free for all students and internship seekers across Cameroon.",
+    a: "Yes, absolutely! Intern registration, profile creation, Intern Passport generation, opportunity search, and applications are 100% free for all students and internship seekers across Cameroon. No subscription fees, listing fees, or application charges are ever billed to students.",
+    takeaway: "Students never pay a single Franc CFA — all costs are sponsored by accredited hiring hosts.",
   },
   {
+    id: "faq-passport",
+    category: "interns",
+    categoryName: "Credential Verification",
+    badge: "Verifiable Credential",
     q: "What is the Intern Passport and how is it verified?",
-    a: "The Intern Passport is your professional discovery credential on MANTECH Nexus. Each passport receives a unique verification number (e.g. MN-LT-2026-XXXX). Verified host enterprises and universities can view your validated competencies, achievements, and authorized credentials with zero-trust privacy controls.",
+    a: "The Intern Passport is your cryptographically identifiable professional discovery credential on MANTECH Nexus. Each passport receives a unique verification identifier (e.g. MN-LT-2026-XXXX). Verified host enterprises and universities can inspect validated competencies, academic achievements, and authorized credentials with strict zero-trust privacy controls.",
+    takeaway: "Your phone number and private contact details remain protected until you authorize disclosure.",
   },
   {
-    q: "How do verified companies and universities recruit interns?",
-    a: "Organizations submit their credentials for platform accreditation. Once verified by MANTECH administrators, they gain access to post opportunities, discover candidates by field and skill, review authorized CVs, schedule interviews, and manage placements.",
+    id: "faq-methods",
+    category: "interns",
+    categoryName: "Application Pathways",
+    badge: "3 Pathways",
+    q: "What are the 3 application methods supported on the platform?",
+    a: "Opportunities support three structured pathways: (1) Direct Application on MANTECH Nexus with your Intern Passport, (2) Direct redirection to official company career portals with tracked analytics, and (3) Accredited external portals (such as corporate recruitment portals or university partner hubs).",
+    takeaway: "Every application status is tracked in real time from submission to interview decision.",
   },
   {
-    q: "What are the 3 application methods supported?",
-    a: "Opportunities support three pathways: (1) Direct application on MANTECH with your Intern Passport, (2) Direct redirection to official company career portals with tracked analytics, and (3) Application via external accredited portals (such as corporate recruitment platforms or university partners).",
+    id: "faq-recruiters",
+    category: "recruiters",
+    categoryName: "Recruitment Workflow",
+    badge: "Vetted Host Hub",
+    q: "How do verified companies and host enterprises recruit interns?",
+    a: "Organizations submit legal credentials for platform accreditation. Once verified by MANTECH administrators, they gain immediate access to post openings, search candidates by specialized field and regional location, review authorized CVs with audit trails, coordinate structured interview panels, and issue digital offers.",
+    takeaway: "Eliminates random inbox CVs and gives companies pre-screened talent across all 10 regions.",
   },
   {
+    id: "faq-billing",
+    category: "trust",
+    categoryName: "Billing & Invoicing",
+    badge: "Manual Invoicing",
     q: "How does payment and billing work for organizations?",
-    a: "MANTECH does not use automated online payment gateways. Package subscriptions, upgrades, and institutional contracts are handled transparently with human support directly on WhatsApp or Email, with invoices in XAF (FCFA).",
+    a: "MANTECH Nexus does not charge payment cards online. Package subscriptions, enterprise upgrades, and institutional contracts are handled transparently with human support directly on WhatsApp or Email, with official invoices in XAF (FCFA) via Cameroon bank transfers or commercial mobile money receipts.",
+    takeaway: "Zero recurring card charges. Transparent invoicing in XAF with dedicated human account managers.",
+  },
+  {
+    id: "faq-universities",
+    category: "universities",
+    categoryName: "Academic Partnerships",
+    badge: "Tripartite Oversight",
+    q: "Can universities supervise and track student internships?",
+    a: "Yes! Academic departments and university placement coordinators have a dedicated portal to supervise tripartite internship conventions, review assigned faculty supervisors, track student attendance logbooks, and authenticate institutional completion certificates.",
+    takeaway: "Seamless institutional oversight without mountains of paper letters or untracked spreadsheets.",
   },
 ];
 
@@ -150,6 +208,10 @@ export default function HomePage() {
   const [heroSearchQuery, setHeroSearchQuery] = useState("");
   const [heroSelectedField, setHeroSelectedField] = useState("all");
   const [heroSelectedRegion, setHeroSelectedRegion] = useState("all");
+
+  // FAQ section interactive state
+  const [faqCategory, setFaqCategory] = useState<string>("all");
+  const [faqSearch, setFaqSearch] = useState<string>("");
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -714,7 +776,7 @@ export default function HomePage() {
       {/* --- SRS §20: FEATURED VERIFIED ORGANIZATIONS FROM DATABASE --- */}
       <section className="py-16 bg-white border-b border-slate-200">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+          <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
             <div>
               <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
                 Trusted Partners
@@ -736,32 +798,33 @@ export default function HomePage() {
                 <ChevronRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </Link>
-          </div>
+          </FadeIn>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {companies.length > 0
               ? companies.map((org) => (
-                  <Link
-                    key={org.id}
-                    href={`/companies/${org.slug || org.id}`}
-                    className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:shadow-md hover:border-blue-300 transition-all text-center group flex flex-col justify-between"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-700 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3 shadow-sm group-hover:scale-105 transition-transform">
-                      {org.name.charAt(0)}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-xs text-slate-900 group-hover:text-blue-600 transition-colors truncate">
-                        {org.name}
-                      </h3>
-                      <div className="flex items-center justify-center gap-1 text-[10px] text-emerald-600 mt-1">
-                        <ShieldCheck className="w-3 h-3" />
-                        <span>Verified</span>
+                  <StaggerItem key={org.id}>
+                    <Link
+                      href={`/companies/${org.slug || org.id}`}
+                      className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:shadow-md hover:border-blue-300 transition-all text-center group flex flex-col justify-between h-full"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-700 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3 shadow-sm group-hover:scale-105 transition-transform">
+                        {org.name.charAt(0)}
                       </div>
-                    </div>
-                    <span className="text-[10px] text-slate-500 mt-2 block font-mono">
-                      {org.city || org.region?.name || "Cameroon"}
-                    </span>
-                  </Link>
+                      <div>
+                        <h3 className="font-bold text-xs text-slate-900 group-hover:text-blue-600 transition-colors truncate">
+                          {org.name}
+                        </h3>
+                        <div className="flex items-center justify-center gap-1 text-[10px] text-emerald-600 mt-1">
+                          <ShieldCheck className="w-3 h-3" />
+                          <span>Verified</span>
+                        </div>
+                      </div>
+                      <span className="text-[10px] text-slate-500 mt-2 block font-mono">
+                        {org.city || org.region?.name || "Cameroon"}
+                      </span>
+                    </Link>
+                  </StaggerItem>
                 ))
               : [
                   "Orange Cameroun",
@@ -771,25 +834,25 @@ export default function HomePage() {
                   "Afriland First Bank",
                   "Université de Yaoundé I",
                 ].map((name, i) => (
-                  <div
-                    key={i}
-                    className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 text-center"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-slate-800 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3">
-                      {name.charAt(0)}
+                  <StaggerItem key={i}>
+                    <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 text-center">
+                      <div className="w-12 h-12 rounded-xl bg-slate-800 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3">
+                        {name.charAt(0)}
+                      </div>
+                      <div className="font-bold text-xs text-slate-900 truncate">
+                        {name}
+                      </div>
+                      <div className="flex items-center justify-center gap-1 text-[10px] text-emerald-600 mt-1">
+                        <ShieldCheck className="w-3 h-3" />
+                        <span>Accredited</span>
+                      </div>
                     </div>
-                    <div className="font-bold text-xs text-slate-900 truncate">
-                      {name}
-                    </div>
-                    <div className="flex items-center justify-center gap-1 text-[10px] text-emerald-600 mt-1">
-                      <ShieldCheck className="w-3 h-3" />
-                      <span>Accredited</span>
-                    </div>
-                  </div>
+                  </StaggerItem>
                 ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
+
 
       {/* --- THE COMPLETE INTERNSHIP LIFECYCLE (SRS Section 1, 2, 3) --- */}
       <section className="py-24 bg-slate-900 text-white relative">
@@ -945,7 +1008,7 @@ export default function HomePage() {
       <section className="py-24 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white relative overflow-hidden">
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 space-y-6">
+            <FadeIn direction="left" className="lg:col-span-7 space-y-6">
               <Badge className="bg-amber-400/20 text-amber-300 border-amber-400/30 uppercase tracking-widest text-[10px]">
                 SRS Core Feature
               </Badge>
@@ -996,10 +1059,10 @@ export default function HomePage() {
                   </Button>
                 </Link>
               </div>
-            </div>
+            </FadeIn>
 
             {/* Passport Credential Mockup */}
-            <div className="lg:col-span-5">
+            <FadeIn direction="right" className="lg:col-span-5">
               <div className="rounded-3xl border-2 border-amber-400/40 bg-slate-900/90 p-6 sm:p-8 backdrop-blur-xl shadow-2xl relative space-y-6">
                 <div className="flex items-start justify-between border-b border-white/10 pb-4">
                   <div>
@@ -1059,7 +1122,7 @@ export default function HomePage() {
                   <span className="text-emerald-400 font-mono font-bold">Active</span>
                 </div>
               </div>
-            </div>
+            </FadeIn>
           </div>
         </div>
       </section>
@@ -1067,7 +1130,7 @@ export default function HomePage() {
       {/* --- SRS §20: PROFESSIONAL FIELDS EXPLORER --- */}
       <section className="py-24 bg-white border-b border-slate-200">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+          <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
               <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
                 Specializations
@@ -1085,14 +1148,14 @@ export default function HomePage() {
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
-          </div>
+          </FadeIn>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {displayFields.map((field) => (
+              <StaggerItem key={field.id}>
               <Link
-                key={field.id}
                 href={`/fields/${field.slug}`}
-                className="p-6 rounded-2xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-lg transition-all group flex flex-col justify-between"
+                className="p-6 rounded-2xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-lg transition-all group flex flex-col justify-between h-full"
               >
                 <div>
                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -1114,15 +1177,16 @@ export default function HomePage() {
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </Link>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* --- SRS §20: CAMEROON REGIONAL HUBS EXPLORER --- */}
       <section className="py-24 bg-slate-50 border-b border-slate-200">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+          <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
               <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
                 Territory Coverage
@@ -1140,14 +1204,14 @@ export default function HomePage() {
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
-          </div>
+          </FadeIn>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {displayRegions.map((region) => (
+              <StaggerItem key={region.id}>
               <Link
-                key={region.id}
                 href={`/locations/${region.code.toLowerCase()}`}
-                className="p-5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all group text-center"
+                className="p-5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all group text-center block"
               >
                 <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mx-auto mb-3 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                   <MapPin className="w-5 h-5" />
@@ -1162,8 +1226,9 @@ export default function HomePage() {
                   {region.code}
                 </span>
               </Link>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -1174,7 +1239,7 @@ export default function HomePage() {
       >
         <div className="absolute inset-0 bg-slate-950/92 backdrop-blur-[2px]" />
         <div className="container-mantech relative z-10 px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <RevealOnScroll className="text-center max-w-3xl mx-auto mb-16">
             <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 uppercase tracking-widest text-[10px] mb-3">
               Multi-Tenant Architecture
             </Badge>
@@ -1185,7 +1250,7 @@ export default function HomePage() {
               Dedicated interfaces tailored to the distinct workflows of every
               stakeholder in the national internship pipeline.
             </p>
-          </div>
+          </RevealOnScroll>
 
           <MotionSection motion="scaleIn" stagger={0.09}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -1352,7 +1417,7 @@ export default function HomePage() {
       {/* --- PLANS FOR COMPANIES AND UNIVERSITIES --- */}
       <section id="plans" className="py-20 bg-slate-50 relative overflow-hidden">
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto">
+          <RevealOnScroll className="text-center max-w-3xl mx-auto">
             <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
               <Zap className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
               Plans
@@ -1365,7 +1430,7 @@ export default function HomePage() {
               costs anything. If you run a company or a university and want to post
               internships and reach candidates, pick a plan below.
             </p>
-          </div>
+          </RevealOnScroll>
 
           {packages.length > 0 ? (
             <MotionSection motion="scaleIn" stagger={0.1}>
@@ -1474,7 +1539,7 @@ export default function HomePage() {
       {/* --- SRS §20: EDITORIAL TESTIMONIALS SPOTLIGHT --- */}
       <section className="py-24 bg-white border-b border-slate-200">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+          <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
               <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
                 Community Voices
@@ -1492,181 +1557,479 @@ export default function HomePage() {
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
-          </div>
+          </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.length > 0 ? (
               testimonials.map((t) => (
-                <div
-                  key={t.id}
-                  className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center gap-1 text-amber-400 mb-3">
-                      {[...Array(t.rating || 5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400" />
-                      ))}
+                <StaggerItem key={t.id}>
+                  <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between h-full hover:shadow-md hover:border-slate-300 transition-all">
+                    <div>
+                      <div className="flex items-center gap-1 text-amber-400 mb-3">
+                        {[...Array(t.rating || 5)].map((_, i) => (
+                          <Star key={i} className="w-4 h-4 fill-amber-400" />
+                        ))}
+                      </div>
+                      <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
+                        &ldquo;{t.message}&rdquo;
+                      </p>
                     </div>
-                    <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
-                      &ldquo;{t.message}&rdquo;
-                    </p>
+                    <div className="mt-6 pt-4 border-t border-slate-200/80">
+                      <h4 className="font-bold text-xs text-slate-900">{t.name}</h4>
+                      <p className="text-[11px] text-slate-500">
+                        {t.role} • {t.company || t.region}
+                      </p>
+                    </div>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-slate-200/80">
-                    <h4 className="font-bold text-xs text-slate-900">{t.name}</h4>
-                    <p className="text-[11px] text-slate-500">
-                      {t.role} • {t.company || t.region}
-                    </p>
-                  </div>
-                </div>
+                </StaggerItem>
               ))
             ) : (
               <>
-                <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-1 text-amber-400 mb-3">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400" />
-                      ))}
+                {[
+                  {
+                    name: "Arlette M.",
+                    role: "Software Intern • Douala, Littoral",
+                    msg: "With my Intern Passport, an engineering enterprise in Douala shortlisted me within 4 days. The process was direct and transparent."
+                  },
+                  {
+                    name: "Patrick E.",
+                    role: "Talent Lead • Enterprise Partner, Yaoundé",
+                    msg: "Filtering candidates by specific competencies and viewing authorized Intern Passports saved our recruitment team weeks of manual screening."
+                  },
+                  {
+                    name: "Dr. Samuel B.",
+                    role: "Placement Coordinator • Higher Institute, Buea",
+                    msg: "Our university faculty now has live visibility over student placements across host companies without administrative paperwork."
+                  }
+                ].map((t, i) => (
+                  <StaggerItem key={i}>
+                    <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between h-full hover:shadow-md hover:border-slate-300 transition-all">
+                      <div>
+                        <div className="flex items-center gap-1 text-amber-400 mb-3">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-4 h-4 fill-amber-400" />
+                          ))}
+                        </div>
+                        <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
+                          &ldquo;{t.msg}&rdquo;
+                        </p>
+                      </div>
+                      <div className="mt-6 pt-4 border-t border-slate-200/80">
+                        <h4 className="font-bold text-xs text-slate-900">{t.name}</h4>
+                        <p className="text-[11px] text-slate-500">{t.role}</p>
+                      </div>
                     </div>
-                    <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
-                      &ldquo;With my Intern Passport, an engineering enterprise in Douala shortlisted me within 4 days. The process was direct and transparent.&rdquo;
-                    </p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-slate-200/80">
-                    <h4 className="font-bold text-xs text-slate-900">Arlette M.</h4>
-                    <p className="text-[11px] text-slate-500">
-                      Software Intern • Douala, Littoral
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-1 text-amber-400 mb-3">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400" />
-                      ))}
-                    </div>
-                    <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
-                      &ldquo;Filtering candidates by specific competencies and viewing authorized Intern Passports saved our recruitment team weeks of manual screening.&rdquo;
-                    </p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-slate-200/80">
-                    <h4 className="font-bold text-xs text-slate-900">Patrick E.</h4>
-                    <p className="text-[11px] text-slate-500">
-                      Talent Lead • Enterprise Partner, Yaoundé
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-1 text-amber-400 mb-3">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400" />
-                      ))}
-                    </div>
-                    <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
-                      &ldquo;Our university faculty now has live visibility over student placements across host companies without administrative paperwork.&rdquo;
-                    </p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-slate-200/80">
-                    <h4 className="font-bold text-xs text-slate-900">Dr. Samuel B.</h4>
-                    <p className="text-[11px] text-slate-500">
-                      Placement Coordinator • Higher Institute, Buea
-                    </p>
-                  </div>
-                </div>
+                  </StaggerItem>
+                ))}
               </>
             )}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
-      {/* --- SRS §20: FREQUENTLY ASKED QUESTIONS ACCORDION --- */}
-      <section className="py-24 bg-slate-50 border-b border-slate-200">
-        <div className="container-mantech max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
-              Common Questions
-            </span>
-            <h2 className="text-3xl font-extrabold text-slate-900 font-heading mt-1">
+      {/* --- SRS §20: FREQUENTLY ASKED QUESTIONS — REDESIGNED & IMAGINATIVE UI --- */}
+      <section className="py-24 bg-slate-950 relative overflow-hidden border-t border-slate-900">
+        {/* Ambient atmospheric backdrop */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none" />
+        <div className="absolute -bottom-24 right-10 w-96 h-96 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none" />
+        
+        {/* Subtle grid pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.025] pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, #60a5fa 1px, transparent 1px), linear-gradient(to bottom, #60a5fa 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Section header */}
+          <RevealOnScroll className="text-center max-w-3xl mx-auto mb-14">
+            <span className="inline-flex items-center gap-2 rounded-full bg-blue-500/15 border border-blue-500/30 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-cyan-300 mb-4 backdrop-blur-sm">
+              <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
               Frequently Asked Questions
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-heading tracking-tight">
+              Got Questions? We Have Answers.
             </h2>
-            <p className="text-slate-600 text-sm mt-1 max-w-xl mx-auto">
-              Clear answers on how MANTECH Nexus operates for candidates, companies, and universities.
+            <p className="text-slate-400 text-sm sm:text-base mt-4 max-w-2xl mx-auto leading-relaxed">
+              Transparent, verified insights on how students get discovered, host enterprises recruit, and universities supervise accredited internships across Cameroon.
             </p>
+          </RevealOnScroll>
+
+          {/* Interactive Category Tabs & Search Bar */}
+          <div className="max-w-5xl mx-auto mb-10 space-y-4">
+            {/* Category Selector Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {FAQ_CATEGORIES.map((cat) => {
+                const isActive = faqCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setFaqCategory(cat.id)}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 ring-1 ring-blue-400 scale-[1.02]"
+                        : "bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10"
+                    }`}
+                  >
+                    <span>{cat.label}</span>
+                    <span
+                      className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                        isActive
+                          ? "bg-white/20 text-white"
+                          : "bg-slate-800 text-slate-400"
+                      }`}
+                    >
+                      {cat.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Quick Keyword Search Filter */}
+            <div className="relative max-w-xl mx-auto">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input
+                type="text"
+                placeholder="Search questions (e.g. passport, free, billing, universities)..."
+                value={faqSearch}
+                onChange={(e) => setFaqSearch(e.target.value)}
+                className="pl-11 pr-4 h-11 bg-slate-900/90 border-white/10 text-slate-200 placeholder:text-slate-500 rounded-xl focus:border-blue-500 focus:ring-blue-500 text-xs sm:text-sm"
+              />
+              {faqSearch && (
+                <button
+                  type="button"
+                  onClick={() => setFaqSearch("")}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
           </div>
 
-          <Accordion type="single" collapsible className="space-y-3">
-            {TOP_FAQS.map((faq, idx) => (
-              <AccordionItem
-                key={idx}
-                value={`faq-${idx}`}
-                className="rounded-2xl border border-slate-200 bg-white px-6 shadow-sm data-[state=open]:border-blue-400"
-              >
-                <AccordionTrigger className="text-left font-heading text-sm sm:text-base font-bold text-slate-900 hover:no-underline">
-                  {faq.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          {/* Main FAQ Content Architecture: Question Explorer + Knowledge Concierge */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto items-start">
+            {/* Left Column: Filtered Questions List (7 cols) */}
+            <div className="lg:col-span-7 space-y-4">
+              {(() => {
+                const filtered = EXPANDED_FAQS.filter((faq) => {
+                  const matchesCategory =
+                    faqCategory === "all" || faq.category === faqCategory;
+                  const matchesSearch =
+                    !faqSearch.trim() ||
+                    faq.q.toLowerCase().includes(faqSearch.toLowerCase()) ||
+                    faq.a.toLowerCase().includes(faqSearch.toLowerCase()) ||
+                    faq.categoryName.toLowerCase().includes(faqSearch.toLowerCase());
+                  return matchesCategory && matchesSearch;
+                });
 
-          <div className="mt-8 text-center text-xs text-slate-500">
-            Have more questions? Visit our full{" "}
-            <Link href="/faq" className="text-blue-600 font-semibold underline">
-              FAQ Knowledge Base
-            </Link>{" "}
-            or{" "}
-            <a
-              href={waSupportLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-emerald-700 font-semibold underline"
-            >
-              ask our team on WhatsApp
-            </a>
-            .
+                if (filtered.length === 0) {
+                  return (
+                    <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-8 text-center space-y-3">
+                      <HelpCircle className="w-8 h-8 text-slate-500 mx-auto" />
+                      <p className="text-sm font-semibold text-slate-300">
+                        No questions matched your search.
+                      </p>
+                      <p className="text-xs text-slate-400">
+                        Try a different keyword or reset the category filter.
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setFaqCategory("all");
+                          setFaqSearch("");
+                        }}
+                        className="text-xs border-white/20 text-slate-300 hover:text-white mt-2"
+                      >
+                        Reset filters
+                      </Button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Accordion type="single" collapsible className="space-y-3.5">
+                    {filtered.map((faq, idx) => (
+                      <AccordionItem
+                        key={faq.id}
+                        value={faq.id}
+                        className="rounded-2xl border border-white/10 bg-slate-900/70 backdrop-blur-md overflow-hidden transition-all duration-200 hover:border-blue-500/30 hover:bg-slate-900/90 shadow-sm"
+                      >
+                        <AccordionTrigger className="px-5 py-4 sm:px-6 sm:py-5 text-left font-semibold text-sm sm:text-base text-white hover:no-underline hover:text-cyan-300 transition-colors [&>svg]:text-cyan-400 [&>svg]:shrink-0">
+                          <div className="flex items-start gap-3.5 pr-2">
+                            <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-500/20 text-cyan-400 text-xs font-bold mt-0.5 border border-blue-500/30">
+                              0{idx + 1}
+                            </span>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white/5 text-blue-300 border border-white/10">
+                                  {faq.categoryName}
+                                </span>
+                                <span className="text-[10px] font-medium text-emerald-400">
+                                  {faq.badge}
+                                </span>
+                              </div>
+                              <span className="block leading-snug">{faq.q}</span>
+                            </div>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-5 pb-5 sm:px-6 sm:pb-6 pl-[3.75rem] space-y-4">
+                          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            {faq.a}
+                          </p>
+                          {/* Imaginative Key Takeaway Card */}
+                          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 flex items-start gap-2.5">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                            <div className="text-xs text-emerald-200 leading-relaxed font-medium">
+                              <span className="font-bold text-emerald-300">Key Takeaway: </span>
+                              {faq.takeaway}
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                );
+              })()}
+            </div>
+
+            {/* Right Column: Knowledge Concierge & Quick Assistance (5 cols) */}
+            <div className="lg:col-span-5 space-y-4">
+              {/* WhatsApp Live Desk Card */}
+              <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900/80 to-slate-900/90 p-6 space-y-4 backdrop-blur-md shadow-xl">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
+                    </span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                      Live Support Desk
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-medium text-slate-400">Avg. reply &lt; 15 mins</span>
+                </div>
+
+                <div>
+                  <h3 className="text-base font-bold text-white font-heading">
+                    Still have questions or specific needs?
+                  </h3>
+                  <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                    Our student admissions and corporate partnerships desk is available directly on WhatsApp to guide you through registration, passport validation, or employer subscriptions.
+                  </p>
+                </div>
+
+                <div className="pt-1 flex flex-col sm:flex-row gap-2.5">
+                  <a
+                    href={waSupportLink()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-4 shadow-lg shadow-emerald-900/40 transition-colors"
+                  >
+                    <WhatsAppIcon className="w-4 h-4" />
+                    Chat on WhatsApp
+                  </a>
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-semibold py-3 px-4 transition-colors border border-white/10"
+                  >
+                    Contact Form
+                  </Link>
+                </div>
+              </div>
+
+              {/* Zero-Fee Candidate Guarantee Card */}
+              <div className="rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-950/40 via-slate-900/80 to-slate-900/90 p-6 space-y-3 backdrop-blur-md">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-cyan-300">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-white">The Candidate Guarantee</h4>
+                    <p className="text-[11px] text-cyan-300 font-medium">100% Free for Students Across Cameroon</p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Students and internship seekers will never be charged fees to browse, apply, or build verified Intern Passports. We charge host enterprises and institutional partners, never talent.
+                </p>
+              </div>
+
+              {/* Full FAQ Directory Link Card */}
+              <div className="rounded-2xl border border-white/10 bg-slate-900/50 p-5 flex items-center justify-between gap-4">
+                <div>
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">Comprehensive Knowledge Base</h4>
+                  <p className="text-xs text-slate-400 mt-0.5">Explore 25+ detailed policy & workflow answers</p>
+                </div>
+                <Link
+                  href="/faq"
+                  className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  View All
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* --- HIGH IMPACT FINAL CTA BANNER --- */}
-      <section className="py-20 bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-white relative">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-3xl mx-auto space-y-6">
-          <Badge className="bg-white/20 text-white border-white/30 uppercase tracking-widest text-[10px]">
-            National Cameroon Network
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-heading">
-            Ready to Take Your Next Professional Step?
-          </h2>
-          <p className="text-sm sm:text-base text-blue-100 leading-relaxed">
-            Whether you are looking for your first verified internship or recruiting the next generation of Cameroon talent, MANTECH Nexus is ready.
-          </p>
+      {/* --- PRE-FOOTER SECTION: DUAL-PATHWAY HIGH-IMPACT CTA BANNER --- */}
+      <section className="py-24 bg-gradient-to-b from-slate-950 via-blue-950 to-slate-950 text-white relative overflow-hidden border-t border-blue-900/30">
+        {/* Ambient atmospheric glows */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[140px] pointer-events-none" />
 
-          <div className="pt-4 flex flex-wrap justify-center gap-4">
-            <Link href="/register/intern">
-              <Button className="h-12 px-7 bg-white text-blue-900 hover:bg-slate-100 font-bold text-sm shadow-xl">
-                Get Your Intern Passport Free
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-            <a
-              href={waCompanySalesLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                variant="outline"
-                className="h-12 px-7 border-white/40 text-black hover:bg-white/10 font-bold text-sm gap-2"
-              >
-                <WhatsAppIcon className="w-4 h-4 text-emerald-400" />
-                <span>Talk with Recruitment Team</span>
-              </Button>
-            </a>
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
+          <RevealOnScroll className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-300 backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              National Cameroon Internship Infrastructure
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-extrabold font-heading leading-tight tracking-tight">
+              Ready to Take Your Next
+              <span className="block bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 bg-clip-text text-transparent">
+                Professional Step?
+              </span>
+            </h2>
+            <p className="text-sm sm:text-base text-blue-100/80 leading-relaxed max-w-2xl mx-auto">
+              Join thousands of aspiring professionals, accredited enterprises, and higher education faculties collaborating across Cameroon&apos;s verified internship highway.
+            </p>
+          </RevealOnScroll>
+
+          {/* Dual Pathway Interactive Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Pathway 1: For Interns & Students */}
+            <div className="group relative rounded-3xl border border-cyan-500/30 bg-gradient-to-b from-slate-900/90 via-slate-900/80 to-blue-950/60 p-8 sm:p-10 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-cyan-400/60 hover:shadow-cyan-900/20 flex flex-col justify-between">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="w-14 h-14 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+                    <GraduationCap className="w-7 h-7" />
+                  </div>
+                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                    For Students & Seekers
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-bold font-heading text-white">
+                    Get Your Free Intern Passport
+                  </h3>
+                  <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+                    Build your verifiable digital credential, showcase validated technical skills, and apply directly to vetted host enterprises across Cameroon.
+                  </p>
+                </div>
+
+                <ul className="space-y-2.5 text-xs text-slate-300">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>100% Free forever — zero application or listing fees</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Zero-trust privacy protects your phone number & CV</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Live status tracking on all active applications</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-white/10">
+                <Link href="/register/intern" className="block">
+                  <Button className="w-full h-12 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm shadow-xl shadow-cyan-500/25 transition-all">
+                    Register as Intern Free
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Pathway 2: For Host Companies & Universities */}
+            <div className="group relative rounded-3xl border border-blue-500/30 bg-gradient-to-b from-slate-900/90 via-slate-900/80 to-indigo-950/60 p-8 sm:p-10 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-blue-400/60 hover:shadow-blue-900/20 flex flex-col justify-between">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="w-14 h-14 rounded-2xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                    <Building2 className="w-7 h-7" />
+                  </div>
+                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                    For Hosts & Faculties
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-bold font-heading text-white">
+                    Recruit & Supervise Talent
+                  </h3>
+                  <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+                    Post vetted opportunities, access pre-screened candidate pipelines, schedule structured interviews, and coordinate tripartite conventions.
+                  </p>
+                </div>
+
+                <ul className="space-y-2.5 text-xs text-slate-300">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>Pre-screened candidates sorted by skill & region</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>Transparent pricing with human-assisted invoicing in XAF</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>Dedicated WhatsApp support & tripartite convention oversight</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-3">
+                <a
+                  href={waCompanySalesLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1"
+                >
+                  <Button className="w-full h-12 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-xl shadow-blue-600/30 gap-2 transition-all">
+                    <WhatsAppIcon className="w-4 h-4 text-emerald-400" />
+                    <span>Recruiter Concierge</span>
+                  </Button>
+                </a>
+                <Link href="/pricing" className="shrink-0">
+                  <Button
+                    variant="outline"
+                    className="h-12 border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm px-5"
+                  >
+                    View Plans
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* National Trust & Telemetry Strip */}
+          <div className="mt-16 pt-8 border-t border-white/10 max-w-4xl mx-auto flex flex-wrap justify-center items-center gap-6 sm:gap-10 text-xs text-slate-400">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>100% Free For All Candidates</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-cyan-400" />
+              <span>Zero-Trust Privacy Standard</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Globe className="w-4 h-4 text-blue-400" />
+              <span>10 Regions Across Cameroon</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Lock className="w-4 h-4 text-amber-400" />
+              <span>Audited PII & ACID Security</span>
+            </div>
           </div>
         </div>
       </section>

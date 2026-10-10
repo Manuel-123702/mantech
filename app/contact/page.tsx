@@ -96,12 +96,12 @@ export default function ContactPage() {
       <section className="py-20 sm:py-24 bg-white">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-start">
-            {/* Left Column: Direct channels (Slide Left) */}
+            {/* Left Column: Direct channels */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
               <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
                 Get in touch with our team
@@ -170,12 +170,12 @@ export default function ContactPage() {
               </div>
             </motion.div>
 
-            {/* Right Column: Contact Form (Slide Right) */}
+            {/* Right Column: Contact Form */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
             >
               {submitted ? (
                 <div className="flex h-full min-h-[460px] flex-col items-center justify-center rounded-3xl border border-emerald-200 bg-emerald-50/40 p-12 text-center shadow-md">
