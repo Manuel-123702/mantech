@@ -1,90 +1,303 @@
-'use client';
+﻿"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { Check, MessageCircle, ArrowRight, Star } from 'lucide-react';
-import { SectionHeader, FadeIn, StaggerContainer, StaggerItem } from '@/components/shared/section-animations';
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Check, ArrowRight, Mail } from "lucide-react";
+import { MemberPlanSection, SubscriptionProcess } from "@/components/pricing/member-plan-section";
+import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
+import {
+  SectionHeader,
+  FadeIn,
+  MotionSection,
+  MotionItem,
+} from "@/components/shared/section-animations";
+import { APP_CONFIG } from "@/lib/config";
+import { z } from "zod";
 
-const plans = [
-  { name: 'Basic', price: 'Free', period: 'for students', features: ['Search & apply to internships', 'Application tracking', 'Saved internships', 'Basic profile', 'Notifications'], cta: 'Sign up as student', highlight: false },
-  { name: 'Professional', price: 'XAF 50,000', period: 'per month', features: ['Everything in Basic', 'Up to 5 active internships', 'Candidate pipeline', 'Interview scheduling', 'Basic analytics', 'Email support'], cta: 'Contact MANTECH', highlight: false },
-  { name: 'Business', price: 'XAF 150,000', period: 'per month', features: ['Everything in Professional', 'Unlimited internships', 'Multiple recruiters', 'Supervisor management', 'Advanced analytics', 'Priority support'], cta: 'Contact MANTECH', highlight: true },
-  { name: 'Enterprise', price: 'Custom', period: 'tailored', features: ['Everything in Business', 'Custom workflows', 'Enterprise support', 'Integrations', 'Dedicated manager', 'SLA & reporting'], cta: 'Contact MANTECH', highlight: false },
-];
+const WHATSAPP_CTA = APP_CONFIG.support.whatsapp;
+const publicPackageSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  code: z.enum(["FREE", "PROFESSIONAL", "BUSINESS", "ENTERPRISE"]),
+  priceXAF: z.number(),
+  opportunityLimit: z.number(),
+  candidateSearchLimit: z.number(),
+  maxRecruiterAccounts: z.number(),
+  featuredOpportunitiesLimit: z.number(),
+  isFeaturedBadge: z.boolean(),
+  prioritySupport: z.boolean(),
+  description: z.string(),
+  features: z.array(z.string()),
+});
+const publicPackagesResponseSchema = z.object({
+  packages: z.array(publicPackageSchema),
+});
+type PublicPackage = z.infer<typeof publicPackageSchema>;
 
-const universityPlans = [
-  { name: 'University Package', price: 'XAF 200,000', period: 'per semester', features: ['University dashboard', 'Student monitoring', 'Placement management', 'Supervisor coordination', 'Reports & analytics', 'Exports'], cta: 'Contact MANTECH' },
-];
+const PACKAGE_ORDER: PublicPackage["code"][] = ["FREE", "PROFESSIONAL", "BUSINESS", "ENTERPRISE"];
+
+function packageWhatsAppLink(pkg: PublicPackage) {
+  return `${WHATSAPP_CTA}?text=${encodeURIComponent(
+    `Hello MANTECH Nexus, I would like information about the ${pkg.name} package (${pkg.code}).`
+  )}`;
+}
+
+/**
+ * One paid plan, rendered as a card.
+ *
+ * `isFeaturedBadge` drives the emphasis rather than a hardcoded plan name, so
+ * changing the recommended plan in configuration moves the highlight with it.
+ * `wide` switches the Institutional Partner card to a two-column layout, since
+ * its feature list is longer and the comparison row above it is a 3-up grid.
+ */
+function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean }) {
+  const recommended = plan.isFeaturedBadge;
+
+  return (
+    <article
+      className={`flex h-full flex-col rounded-2xl border p-7 transition-shadow duration-200 hover:shadow-card-hover ${
+        recommended
+          ? "border-primary/40 bg-gradient-mantech-light shadow-card ring-1 ring-primary/15"
+          : "border-border/80 bg-white shadow-card"
+      }`}
+    >
+      {recommended && (
+        <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
+          Most popular
+        </span>
+      )}
+
+      <h3 className="font-heading text-lg font-bold text-foreground">{plan.name}</h3>
+      {/* Fixed height so prices align across the row even when descriptions
+          differ in length. */}
+      <p className="mt-2 min-h-10 text-sm text-muted-foreground">{plan.description}</p>
+
+      <p className="mt-5 font-heading text-3xl font-extrabold text-foreground">
+        {plan.priceXAF === 0 ? "Free" : plan.priceXAF.toLocaleString("en-US")}
+        {plan.priceXAF > 0 && (
+          <span className="ml-1.5 text-sm font-medium text-muted-foreground">XAF</span>
+        )}
+      </p>
+      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        {plan.code === "ENTERPRISE" ? "per semester / annual" : "per month"}
+      </p>
+
+      {wide && (
+        <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-white/70 p-4 text-xs sm:grid-cols-4">
+          {[
+            { label: "Active roles", value: plan.opportunityLimit },
+            { label: "Candidate views", value: plan.candidateSearchLimit },
+            { label: "Recruiter seats", value: plan.maxRecruiterAccounts },
+            { label: "Featured slots", value: plan.featuredOpportunitiesLimit },
+          ].map((stat) => (
+            <div key={stat.label}>
+              <dt className="text-muted-foreground">{stat.label}</dt>
+              <dd className="mt-0.5 font-semibold text-foreground">
+                {stat.value >= 999 ? "Unlimited" : stat.value}
+              </dd>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <ul className={`${wide ? "sm:grid sm:grid-cols-2 sm:gap-x-8" : ""} mt-6 flex-1 space-y-3`}>
+        {plan.features.map((feature) => (
+          <li key={feature} className="flex items-start gap-2">
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
+            <span className="text-sm text-foreground/80">{feature}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Email is the primary route for a written record of the commitment,
+          WhatsApp the equal, faster alternative. Both appear on every card so
+          a visitor never has to hunt for a contact method. */}
+      <div className="mt-8 space-y-2.5">
+        <a
+          href={`mailto:${APP_CONFIG.support.email}?subject=${encodeURIComponent(
+            `Subscription enquiry: ${plan.name}`
+          )}&body=${encodeURIComponent(
+            `Hello MANTECH Nexus,\n\nI would like to subscribe to the ${plan.name} package (${plan.code}).\n\nMy organization:\nNumber of interns to hire:\n\nThank you.`
+          )}`}
+          className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
+            recommended
+              ? "bg-primary text-white hover:bg-primary/90"
+              : "border border-border bg-white text-foreground hover:bg-secondary"
+          }`}
+        >
+          <Mail className="h-4 w-4" aria-hidden="true" />
+          Subscribe by email
+        </a>
+        <a
+          href={packageWhatsAppLink(plan)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#128C7E]"
+        >
+          <WhatsAppIcon className="h-4 w-4" title="WhatsApp" />
+          Subscribe on WhatsApp
+        </a>
+      </div>
+    </article>
+  );
+}
 
 export default function PricingPage() {
+  const [packages, setPackages] = useState<PublicPackage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadPackages() {
+      try {
+        const response = await fetch("/api/packages");
+        const body: unknown = await response.json();
+        if (!response.ok) {
+          const message = z.object({ error: z.string() }).safeParse(body);
+          throw new Error(message.success ? message.data.error : "Could not load current packages.");
+        }
+        const parsed = publicPackagesResponseSchema.safeParse(body);
+        if (!parsed.success) throw new Error("The package response was invalid.");
+        if (!cancelled) {
+          setPackages(parsed.data.packages);
+          setError(null);
+        }
+      } catch (loadError) {
+        if (!cancelled) {
+          setError(loadError instanceof Error ? loadError.message : "Could not load current packages.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    void loadPackages();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Preserve the configured order so the ladder always reads cheapest first,
+  // regardless of what order the API happens to return.
+  const orderedPackages = PACKAGE_ORDER
+    .map((code) => packages.find((pkg) => pkg.code === code))
+    .filter((pkg): pkg is PublicPackage => Boolean(pkg));
+
+  // The three commercial plans sit in the comparison grid. Institutional
+  // Partner is separated out because universities buy a semester agreement with
+  // a different buyer, not a monthly seat.
+  const commercialPackages = orderedPackages.filter((pkg) => pkg.code !== "ENTERPRISE");
+  const universityPlan = orderedPackages.find((pkg) => pkg.code === "ENTERPRISE");
+
   return (
     <div className="overflow-hidden">
-      <section className="pt-8 pb-20 bg-gradient-mantech-light">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mx-auto max-w-3xl text-center">
-            <span className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">Pricing</span>
-            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Simple, transparent pricing</h1>
-            <p className="mt-4 text-lg text-muted-foreground">MANTECH primarily monetizes organizations. Students always have free access. All prices in XAF/FCFA.</p>
+      <section className="surface-page relative overflow-hidden border-b border-border/70">
+        <div className="pointer-events-none absolute inset-0 bg-grid opacity-35" />
+        <div className="container-mantech relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mx-auto max-w-3xl text-center"
+          >
+            <span className="mb-5 inline-flex rounded-full border border-primary/15 bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary shadow-sm">
+              Pricing
+            </span>
+            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Simple, transparent pricing
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+              MANTECH primarily monetizes organizations. Interns always have
+              free access. All prices in XAF/FCFA.
+            </p>
           </motion.div>
         </div>
       </section>
+{/* Member plan first: an intern should learn the price is zero before
+          they ever see an organization's prices. */}
+      <MemberPlanSection />
 
       <section className="section-padding bg-white">
         <div className="container-mantech">
-          <SectionHeader eyebrow="Company Plans" title="Choose your plan" description="No online payment processing. Contact MANTECH on WhatsApp to discuss your plan." />
-          <StaggerContainer className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {plans.map((plan) => (
-              <StaggerItem key={plan.name}>
-                <div className={`relative h-full rounded-2xl border p-8 shadow-card transition-all hover:shadow-card-hover ${plan.highlight ? 'border-primary bg-gradient-mantech text-white' : 'border-border bg-card'}`}>
-                  {plan.highlight && <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-4 py-1 text-xs font-semibold text-white">Most Popular</div>}
-                  <h3 className={`font-heading text-lg font-bold ${plan.highlight ? 'text-white' : 'text-foreground'}`}>{plan.name}</h3>
-                  <div className="mt-4"><span className={`font-heading text-3xl font-bold ${plan.highlight ? 'text-white' : 'text-foreground'}`}>{plan.price}</span><span className={`ml-1 text-sm ${plan.highlight ? 'text-white/70' : 'text-muted-foreground'}`}>{plan.period}</span></div>
-                  <ul className="mt-6 space-y-3">
-                    {plan.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2"><Check className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlight ? 'text-white' : 'text-green-600'}`} /><span className={`text-sm ${plan.highlight ? 'text-white/90' : 'text-foreground/80'}`}>{f}</span></li>
-                    ))}
-                  </ul>
-                  <div className="mt-8">
-                    {plan.cta === 'Sign up as student' ? (
-                      <Link href="/sign-up"><button className={`w-full rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${plan.highlight ? 'bg-white text-primary hover:bg-white/90' : 'border border-border text-foreground hover:bg-secondary'}`}>{plan.cta}</button></Link>
-                    ) : (
-                      <a href="https://wa.me/237650921917" target="_blank" rel="noopener noreferrer"><button className={`w-full rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${plan.highlight ? 'bg-white text-primary hover:bg-white/90' : 'border border-border text-foreground hover:bg-secondary'}`}>{plan.cta}</button></a>
-                    )}
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          <SectionHeader
+            eyebrow="For organizations"
+            title="Plans for companies and universities"
+            description="Internships are free for everyone looking for one. These plans are for the organizations that post them and reach candidates."
+          />
+          {error && (
+            <p role="alert" className="mt-8 text-center text-sm text-destructive">{error}</p>
+          )}
+          {loading ? (
+            <p className="mt-12 text-center text-muted-foreground" role="status">Loading current packagesâ€¦</p>
+          ) : (
+          <>
+          {/* The three commercial plans, side by side. */}
+          <MotionSection motion="rise" stagger={0.12}>
+            <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {commercialPackages.map((plan) => (
+                <MotionItem key={plan.code} motion="spread" className="h-full">
+                  <PlanCard plan={plan} />
+                </MotionItem>
+              ))}
+            </div>
+          </MotionSection>
+
+          {/* Universities get a full-width panel below, because a semester
+              contract and a dual-mode dashboard do not belong in the same
+              three-way comparison. */}
+          {universityPlan && (
+            <MotionSection motion="spread" stagger={0.1}>
+              <MotionItem motion="spread" className="mt-6">
+                <PlanCard plan={universityPlan} wide />
+              </MotionItem>
+            </MotionSection>
+          )}
+
+          </>
+          )}
         </div>
       </section>
 
-      <section className="section-padding bg-secondary/30">
-        <div className="container-mantech">
-          <SectionHeader eyebrow="University Plans" title="Institutional packages" description="Designed for universities and higher education institutions in Cameroon." />
-          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
-            {universityPlans.map((plan) => (
-              <FadeIn key={plan.name}>
-                <div className="h-full rounded-2xl border border-border bg-white p-8 shadow-card">
-                  <h3 className="font-heading text-lg font-bold text-foreground">{plan.name}</h3>
-                  <div className="mt-4"><span className="font-heading text-3xl font-bold text-foreground">{plan.price}</span><span className="ml-1 text-sm text-muted-foreground">{plan.period}</span></div>
-                  <ul className="mt-6 space-y-3">{plan.features.map((f) => (<li key={f} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-green-600" /><span className="text-sm text-foreground/80">{f}</span></li>))}</ul>
-                  <a href="https://wa.me/237650921917" target="_blank" rel="noopener noreferrer" className="mt-8 block"><button className="w-full rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-foreground hover:bg-secondary transition-all">Contact MANTECH</button></a>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section-padding bg-white">
+      {/* Questions block. The email button is visually primary because a
+          subscription is a written commitment we need a record of; WhatsApp
+          sits beside it at equal size for a faster conversation. */}
+      <section className="section-padding bg-slate-50">
         <div className="container-mantech">
           <FadeIn>
-            <div className="rounded-3xl bg-gradient-mantech p-12 text-center text-white">
-              <h2 className="font-heading text-3xl font-bold">Have questions about pricing?</h2>
-              <p className="mt-4 text-white/80">We discuss commercial details directly. No online payment processing — just a conversation.</p>
+            <div className="rounded-3xl border border-primary/15 bg-gradient-mantech-light p-8 text-center sm:p-12">
+              <h2 className="font-heading text-3xl font-bold text-foreground">
+                Have questions about pricing?
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                We discuss commercial details directly. No online payment
+                processing â€” just a conversation.
+              </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <a href="https://wa.me/237650921917" target="_blank" rel="noopener noreferrer"><button className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-medium text-primary hover:bg-white/90 transition-all"><MessageCircle className="h-4 w-4" /> WhatsApp: +237 650 921 917</button></a>
-                <Link href="/contact"><button className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm hover:bg-white/20 transition-all">Contact form <ArrowRight className="h-4 w-4" /></button></Link>
+                {/* Email and WhatsApp sit side by side with equal weight: email
+                    is the written record we can actually quote back, WhatsApp
+                    is faster for a live question. */}
+                <a href={`mailto:${APP_CONFIG.support.email}`}>
+                  <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-primary/90">
+                    <Mail className="h-4 w-4" aria-hidden="true" />
+                    Email us
+                  </button>
+                </a>
+                <a
+                  href={WHATSAPP_CTA}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-primary/90">
+                    <WhatsAppIcon className="h-4 w-4" title="WhatsApp" />
+                    Chat on WhatsApp
+                  </button>
+                </a>
+                <Link href="/contact">
+                  <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-6 py-3 text-sm font-semibold text-foreground transition-all hover:border-primary/30 hover:text-primary">
+                    Contact form <ArrowRight className="h-4 w-4" />
+                  </button>
+                </Link>
               </div>
             </div>
           </FadeIn>

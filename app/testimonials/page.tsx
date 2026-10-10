@@ -1,49 +1,77 @@
-'use client';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ShieldCheck, MessageSquareQuote, Sparkles } from 'lucide-react';
+import { TestimonialsClient } from './testimonials-client';
+import { Button } from '@/components/ui/button';
 
-import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
-import { SectionHeader, StaggerContainer, StaggerItem } from '@/components/shared/section-animations';
-
-const testimonials = [
-  { name: 'Student', role: 'Software Engineering Intern', organization: 'University of Buea', quote: 'MANTECH helped me find a legitimate software engineering internship in Douala. The application tracking and report system kept me organized throughout.' },
-  { name: 'Recruiter', role: 'HR Manager', organization: 'Tech Company, Yaoundé', quote: 'We replaced our spreadsheet-based applicant tracking with MANTECH. The candidate pipeline and interview scheduling saved us hours every week.' },
-  { name: 'Coordinator', role: 'Internship Coordinator', organization: 'University of Douala', quote: 'For the first time, we can see all our students\' placements in real time. The analytics dashboard gives us insights we never had before.' },
-  { name: 'Supervisor', role: 'Technical Supervisor', organization: 'IT Firm, Bafoussam', quote: 'The structured evaluation system and progress tracking make supervision much more systematic. Reports and feedback are all in one place.' },
-];
+export const metadata: Metadata = {
+  title: 'Testimonials — Share your experience | MANTECH Nexus',
+  description:
+    'Tell the world what you think of MANTECH. Share your experience as an intern, university or organization — no account needed.',
+};
 
 export default function TestimonialsPage() {
   return (
-    <div className="overflow-hidden">
-      <section className="pt-8 pb-12 bg-gradient-mantech-light">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
-            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Testimonials</h1>
-            <p className="mt-4 text-lg text-muted-foreground">Real experiences from the MANTECH community.</p>
-          </motion.div>
+    <>
+      {/* ── Hero ────────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-br from-blue-700 via-blue-600 to-slate-900 py-16 text-white sm:py-24">
+        {/* Soft background shapes, purely decorative. */}
+        <div
+          aria-hidden="true"
+          className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-white/10 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -bottom-32 right-0 h-96 w-96 rounded-full bg-emerald-400/10 blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-3xl px-6 text-center">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-semibold backdrop-blur">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+            Stories from our community
+          </span>
+
+          <h1 className="mt-6 text-3xl font-extrabold tracking-tight sm:text-5xl">
+            Every word here was sent by a real person
+          </h1>
+
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-blue-50/90 sm:text-lg">
+            No sample quotes, no invented names. If an experience appears on this page, a
+            visitor wrote it and our team read it first.
+          </p>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button
+              asChild
+              size="lg"
+              className="h-12 bg-white px-6 font-semibold text-blue-700 hover:bg-blue-50"
+            >
+              <Link href="#share">
+                <MessageSquareQuote className="mr-2 h-4 w-4" aria-hidden="true" />
+                Share your experience
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 border-white/30 bg-transparent px-6 font-semibold text-white hover:bg-white/10 hover:text-white"
+            >
+              <Link href="/internships">Browse internships</Link>
+            </Button>
+          </div>
+
+          <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-blue-100/80">
+            <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+            We never publish your email address.
+          </p>
         </div>
       </section>
-      <section className="pb-20 bg-white">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {testimonials.map((t, idx) => (
-              <StaggerItem key={idx}>
-                <div className="h-full rounded-2xl border border-border bg-card p-8 shadow-card">
-                  <Quote className="h-8 w-8 text-primary/20" />
-                  <p className="mt-4 text-foreground/80">&ldquo;{t.quote}&rdquo;</p>
-                  <div className="mt-6 flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-mantech text-sm font-semibold text-white">{t.name.charAt(0)}</div>
-                    <div>
-                      <div className="font-semibold text-foreground">{t.name}</div>
-                      <div className="text-sm text-muted-foreground">{t.role} · {t.organization}</div>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex gap-1">{[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-accent text-accent" />)}</div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-    </div>
+
+      <div className="mx-auto max-w-6xl px-6 py-16">
+        {/* Form first, so the page opens with a way to contribute. */}
+        <TestimonialsClient />
+      </div>
+    </>
   );
 }

@@ -1,26 +1,30 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Sora } from 'next/font/google';
-import { AuthProvider } from '@/lib/auth-context';
+import { AuthProvider } from '@/lib/clerk';
 import { Navbar } from '@/components/shared/navbar';
 import { Footer } from '@/components/shared/footer';
 import { LoadingScreen } from '@/components/shared/loading-screen';
 import { WhatsAppFloat } from '@/components/shared/whatsapp-float';
+import { Toaster } from '@/components/ui/sonner';
+import { SITE_URL, organizationJsonLd } from '@/lib/seo';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const sora = Sora({ subsets: ['latin'], variable: '--font-sora' });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'MANTECH Nexus — Enterprise Internship Management System',
+    default: 'MANTECH Nexus — Internships in Cameroon',
     template: '%s | MANTECH Nexus',
   },
   description:
-    'MANTECH Nexus is a secure, enterprise-grade internship management platform connecting students, companies, and universities across Cameroon. Manage the complete internship lifecycle from discovery to verified completion.',
+    'Find verified internships in Cameroon — Douala, Yaoundé, Buea. Verified companies, universities, real placements, Intern Passport.',
   keywords: [
     'MANTECH',
-    'internship management',
-    'Cameroon internships',
+    'internship Cameroon',
+    'internship Douala',
+    'internship Yaoundé',
     'IT internships',
     'student internships',
     'enterprise internship platform',
@@ -28,18 +32,22 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  alternates: { canonical: SITE_URL },
   openGraph: {
-    title: 'MANTECH Nexus — Enterprise Internship Management System',
+    title: 'MANTECH Nexus — Internships in Cameroon',
     description:
-      'Secure, enterprise-grade internship management connecting students, companies, and universities across Cameroon.',
+      'Verified internships, companies and universities across Cameroon — Douala, Yaoundé, Buea.',
     type: 'website',
     locale: 'en_US',
+    url: SITE_URL,
+    siteName: 'MANTECH Nexus',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MANTECH Nexus',
-    description: 'Enterprise Internship Management System for Cameroon and beyond.',
+    title: 'MANTECH Nexus — Internships in Cameroon',
+    description: 'Verified internships & placements across Cameroon.',
   },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -49,6 +57,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${sora.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
+      </head>
       <body className="font-sans antialiased">
         <AuthProvider>
           <LoadingScreen />
@@ -56,6 +70,7 @@ export default function RootLayout({
           <main className="min-h-screen pt-24">{children}</main>
           <Footer />
           <WhatsAppFloat />
+          <Toaster position="top-center" richColors closeButton />
         </AuthProvider>
       </body>
     </html>

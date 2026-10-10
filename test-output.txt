@@ -1,0 +1,11 @@
+﻿node.exe : Invalid project directory provided, no such 
+directory: C:\mantech_nexus\test
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~
+    + CategoryInfo          : NotSpecified: (Invalid project...t 
+   ech_nexus\test:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

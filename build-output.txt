@@ -1,0 +1,177 @@
+﻿   Γû▓ Next.js 15.5.27
+   - Environments: .env
+   - Experiments (use with caution):
+     ┬╖ cpus: 1
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully in 58s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/118) ...
+   Generating static pages (29/118) 
+   Generating static pages (58/118) 
+   Generating static pages (88/118) 
+ Γ£ô Generating static pages (118/118)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                     Size  First Load JS
+Γöî Γùï /                                                          11 kB         170 kB
+Γö£ Γùï /_not-found                                                273 B         103 kB
+Γö£ Γùï /about                                                   4.87 kB         158 kB
+Γö£ Γùï /accessibility                                            3.1 kB         153 kB
+Γö£ ╞Æ /api/admin/opportunities/[id]/feature                      273 B         103 kB
+Γö£ ╞Æ /api/admin/opportunities/[id]/moderate                     273 B         103 kB
+Γö£ ╞Æ /api/admin/packages                                        273 B         103 kB
+Γö£ ╞Æ /api/admin/passports/[id]                                  273 B         103 kB
+Γö£ ╞Æ /api/admin/subscriptions/[id]                              273 B         103 kB
+Γö£ ╞Æ /api/admin/taxonomy                                        273 B         103 kB
+Γö£ ╞Æ /api/admin/testimonials/[id]                               273 B         103 kB
+Γö£ ╞Æ /api/admin/users/[id]                                      273 B         103 kB
+Γö£ ╞Æ /api/admin/verifications/[organizationId]                  273 B         103 kB
+Γö£ ╞Æ /api/applications                                          273 B         103 kB
+Γö£ ╞Æ /api/applications/[id]                                     273 B         103 kB
+Γö£ ╞Æ /api/audit-logs                                            273 B         103 kB
+Γö£ ╞Æ /api/billing/upgrade                                       273 B         103 kB
+Γö£ ╞Æ /api/candidate-contacts                                    273 B         103 kB
+Γö£ ╞Æ /api/candidates                                            273 B         103 kB
+Γö£ ╞Æ /api/candidates/alerts                                     273 B         103 kB
+Γö£ ╞Æ /api/candidates/application                                273 B         103 kB
+Γö£ ╞Æ /api/candidates/check                                      273 B         103 kB
+Γö£ ╞Æ /api/candidates/saved                                      273 B         103 kB
+Γö£ ╞Æ /api/companies                                             273 B         103 kB
+Γö£ ╞Æ /api/companies/[slug]                                      273 B         103 kB
+Γö£ ╞Æ /api/contact                                               273 B         103 kB
+Γö£ ╞Æ /api/cv/[id]/access                                        273 B         103 kB
+Γö£ ╞Æ /api/interns/register                                      273 B         103 kB
+Γö£ ╞Æ /api/internships                                           273 B         103 kB
+Γö£ ╞Æ /api/internships/[id]                                      273 B         103 kB
+Γö£ ╞Æ /api/interviews                                            273 B         103 kB
+Γö£ ╞Æ /api/interviews/[id]                                       273 B         103 kB
+Γö£ ╞Æ /api/me                                                    273 B         103 kB
+Γö£ ╞Æ /api/me/match-profile                                      273 B         103 kB
+Γö£ ╞Æ /api/notifications                                         273 B         103 kB
+Γö£ ╞Æ /api/onboarding/[id]                                       273 B         103 kB
+Γö£ ╞Æ /api/opportunities                                         273 B         103 kB
+Γö£ ╞Æ /api/opportunities/[id]                                    273 B         103 kB
+Γö£ ╞Æ /api/organization                                          273 B         103 kB
+Γö£ ╞Æ /api/organization/members                                  273 B         103 kB
+Γö£ ╞Æ /api/packages                                              273 B         103 kB
+Γö£ ╞Æ /api/placements                                            273 B         103 kB
+Γö£ ╞Æ /api/placements/[id]                                       273 B         103 kB
+Γö£ ╞Æ /api/reports                                               273 B         103 kB
+Γö£ ╞Æ /api/stats                                                 273 B         103 kB
+Γö£ ╞Æ /api/taxonomy                                              273 B         103 kB
+Γö£ ╞Æ /api/testimonials                                          273 B         103 kB
+Γö£ ╞Æ /api/testimonials/photo                                    273 B         103 kB
+Γö£ ╞Æ /api/universities                                          273 B         103 kB
+Γö£ ╞Æ /api/universities/[slug]                                   273 B         103 kB
+Γö£ ╞Æ /api/upload                                                273 B         103 kB
+Γö£ ╞Æ /applications                                              218 B         106 kB
+Γö£ Γùï /auth                                                      182 B         111 kB
+Γö£ Γùï /companies                                               5.57 kB         159 kB
+Γö£ ╞Æ /companies/[slug]                                        6.48 kB         160 kB
+Γö£ Γùï /contact                                                 6.53 kB         162 kB
+Γö£ Γùï /dashboard                                               4.61 kB         159 kB
+Γö£ ╞Æ /dashboard/admin                                           218 B         106 kB
+Γö£ ╞Æ /dashboard/admin/analytics                                 218 B         106 kB
+Γö£ ╞Æ /dashboard/admin/applications                              218 B         106 kB
+Γö£ ╞Æ /dashboard/admin/audit                                     218 B         106 kB
+Γö£ ╞Æ /dashboard/admin/configuration                           3.41 kB         116 kB
+Γö£ ╞Æ /dashboard/admin/featured                                3.41 kB         116 kB
+Γö£ ╞Æ /dashboard/admin/interns                                 3.41 kB         116 kB
+Γö£ ╞Æ /dashboard/admin/moderation                              3.41 kB         116 kB
+Γö£ ╞Æ /dashboard/admin/organizations                           3.41 kB         116 kB
+Γö£ ╞Æ /dashboard/admin/packages                                3.83 kB         133 kB
+Γö£ ╞Æ /dashboard/admin/support                                   218 B         106 kB
+Γö£ ╞Æ /dashboard/admin/testimonials                            3.41 kB         116 kB
+Γö£ ╞Æ /dashboard/admin/users                                   3.38 kB         116 kB
+Γö£ ╞Æ /dashboard/admin/verification                            3.41 kB         116 kB
+Γö£ ╞Æ /dashboard/company                                         218 B         106 kB
+Γö£ ╞Æ /dashboard/company/analytics                               273 B         103 kB
+Γö£ ╞Æ /dashboard/company/applications                          5.09 kB         121 kB
+Γö£ ╞Æ /dashboard/company/applications/[id]                       149 B         165 kB
+Γö£ ╞Æ /dashboard/company/billing                                 135 B         129 kB
+Γö£ ╞Æ /dashboard/company/candidates                            2.83 kB         115 kB
+Γö£ ╞Æ /dashboard/company/interviews                            3.41 kB         116 kB
+Γö£ ╞Æ /dashboard/company/opportunities                         2.36 kB         115 kB
+Γö£ ╞Æ /dashboard/company/opportunities/[id]/edit                 142 B         147 kB
+Γö£ ╞Æ /dashboard/company/opportunities/create                    142 B         147 kB
+Γö£ ╞Æ /dashboard/company/organization                            141 B         156 kB
+Γö£ ╞Æ /dashboard/company/recruitment                           2.82 kB         116 kB
+Γö£ ╞Æ /dashboard/company/settings                                141 B         156 kB
+Γö£ ╞Æ /dashboard/company/setup                                  3.7 kB         140 kB
+Γö£ ╞Æ /dashboard/intern                                          218 B         106 kB
+Γö£ ╞Æ /dashboard/intern/applications                           2.83 kB         119 kB
+Γö£ ╞Æ /dashboard/intern/history                                  273 B         103 kB
+Γö£ ╞Æ /dashboard/intern/notifications                            133 B         117 kB
+Γö£ ╞Æ /dashboard/intern/passport                                 182 B         111 kB
+Γö£ ╞Æ /dashboard/intern/saved                                    218 B         106 kB
+Γö£ ╞Æ /dashboard/intern/settings                                 133 B         117 kB
+Γö£ ╞Æ /dashboard/university                                      218 B         106 kB
+Γö£ ╞Æ /dashboard/university/analytics                            273 B         103 kB
+Γö£ ╞Æ /dashboard/university/analytics-recruiter                  273 B         103 kB
+Γö£ ╞Æ /dashboard/university/applications                       5.56 kB         148 kB
+Γö£ ╞Æ /dashboard/university/applications/[id]                    150 B         165 kB
+Γö£ ╞Æ /dashboard/university/billing                              136 B         129 kB
+Γö£ ╞Æ /dashboard/university/candidates                         7.08 kB         159 kB
+Γö£ ╞Æ /dashboard/university/interviews                         4.21 kB         163 kB
+Γö£ ╞Æ /dashboard/university/opportunities                        218 B         106 kB
+Γö£ ╞Æ /dashboard/university/opportunities-recruiter            2.36 kB         115 kB
+Γö£ ╞Æ /dashboard/university/opportunities-recruiter/[id]/edit    142 B         147 kB
+Γö£ ╞Æ /dashboard/university/opportunities-recruiter/create       142 B         147 kB
+Γö£ ╞Æ /dashboard/university/partners                             218 B         106 kB
+Γö£ ╞Æ /dashboard/university/placements                           218 B         106 kB
+Γö£ ╞Æ /dashboard/university/recruitment                        8.16 kB         140 kB
+Γö£ ╞Æ /dashboard/university/settings                             142 B         156 kB
+Γö£ ╞Æ /dashboard/university/settings-recruiter                   142 B         156 kB
+Γö£ ╞Æ /dashboard/university/setup                              4.21 kB         140 kB
+Γö£ ╞Æ /dashboard/university/students                             218 B         106 kB
+Γö£ Γùï /faq                                                     7.35 kB         157 kB
+Γö£ Γùï /fields                                                  8.09 kB         154 kB
+Γö£ ╞Æ /fields/[slug]                                           7.15 kB         160 kB
+Γö£ Γùï /how-it-works                                            4.46 kB         158 kB
+Γö£ Γùï /how-it-works/companies                                  2.56 kB         152 kB
+Γö£ Γùï /how-it-works/students                                   2.61 kB         152 kB
+Γö£ Γùï /how-it-works/universities                               2.53 kB         152 kB
+Γö£ ╞Æ /intern-passports                                        1.34 kB         146 kB
+Γö£ ╞Æ /intern-passports/[id]                                   2.84 kB         121 kB
+Γö£ ╞Æ /intern-passports/me                                       273 B         103 kB
+Γö£ Γùï /internships                                             9.46 kB         204 kB
+Γö£ ╞Æ /internships/[slug]                                      10.4 kB         170 kB
+Γö£ Γùï /locations                                               3.67 kB         157 kB
+Γö£ ╞Æ /locations/[slug]                                          218 B         106 kB
+Γö£ Γùï /mantech-internship                                        273 B         103 kB
+Γö£ ╞Æ /mantech-internship/opportunities/[slug]                   273 B         103 kB
+Γö£ ╞Æ /notifications                                             133 B         117 kB
+Γö£ Γùï /pricing                                                 21.9 kB         178 kB
+Γö£ Γùï /privacy                                                 4.31 kB         147 kB
+Γö£ Γùï /register/intern                                         10.3 kB         196 kB
+Γö£ Γùï /resources                                               1.07 kB         154 kB
+Γö£ ╞Æ /resources/[slug]                                          218 B         106 kB
+Γö£ Γùï /robots.txt                                                273 B         103 kB
+Γö£ ╞Æ /saved                                                     218 B         106 kB
+Γö£ Γùï /security                                                4.15 kB         154 kB
+Γö£ Γùï /services                                                3.52 kB         157 kB
+Γö£ Γùï /services/companies                                      2.86 kB         156 kB
+Γö£ Γùï /services/universities                                   2.77 kB         156 kB
+Γö£ ╞Æ /settings                                                  133 B         117 kB
+Γö£ ╞Æ /sign-in/[[...sign-in]]                                  1.99 kB         158 kB
+Γö£ ╞Æ /sign-up/[[...sign-up]]                                  1.99 kB         158 kB
+Γö£ Γùï /sitemap.xml                                               273 B         103 kB
+Γö£ Γùï /success-stories                                           15 kB         168 kB
+Γö£ Γùï /terms                                                   4.29 kB         147 kB
+Γö£ Γùï /testimonials                                            8.16 kB         147 kB
+Γö£ Γùï /universities                                            5.07 kB         158 kB
+Γöö ╞Æ /universities/[slug]                                     6.28 kB         159 kB
++ First Load JS shared by all                                 102 kB
+  Γö£ chunks/1255-8dc91b756d944555.js                          46.2 kB
+  Γö£ chunks/4bd1b696-100b9d70ed4e49c1.js                      54.2 kB
+  Γöö other shared chunks (total)                              2.02 kB
+
+
+╞Æ Middleware                                                 93.3 kB
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+

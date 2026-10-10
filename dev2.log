@@ -1,0 +1,29 @@
+
+> nextjs@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.27
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.81:3000
+   - Environments: .env
+   - Experiments (use with caution):
+     · cpus: 1
+
+ ✓ Starting...
+ ✓ Ready in 5s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 1126ms (213 modules)
+ ○ Compiling /internships ...
+ ✓ Compiled /internships in 14s (2145 modules)
+ GET /internships 200 in 16363ms
+ ○ Compiling /api/taxonomy ...
+ ✓ Compiled /api/taxonomy in 6.7s (2155 modules)
+ GET /api/taxonomy 200 in 10026ms
+ ✓ Compiled in 553ms (952 modules)
+ ✓ Compiled in 2.1s (952 modules)
+ ✓ Compiled in 655ms (952 modules)
+ ✓ Compiled in 928ms (952 modules)
+ ✓ Compiled in 1590ms (952 modules)
+ ✓ Compiled in 681ms (952 modules)
+ ✓ Compiled in 1148ms (952 modules)
+[?25h

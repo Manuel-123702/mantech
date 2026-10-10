@@ -1,0 +1,138 @@
+﻿(node:18016) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/mantech_nexus/tests/authorization.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\mantech_nexus\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[authz] unhandled error: postgresql://user:hunter2@host/db failed
+Γ£ö a university without canRecruitInterns is denied recruiter access (59.0252ms)
+Γ£ö a university without a profile is denied recruiter access (0.7489ms)
+Γ£ö a university with canRecruitInterns is allowed (1.4373ms)
+Γ£ö company and intern roles are not gated by the university recruiter rule (0.6889ms)
+Γ£ö AuthError preserves its intended status (3.4473ms)
+Γ£ö unexpected errors are masked as a generic 500 (1.307ms)
+Γ£ö non-Error throws still produce a safe response (0.5669ms)
+Γ£ö isUniqueConstraintViolation recognises the Prisma code (0.6162ms)
+Γ£ö isUniqueConstraintViolation recognises a message-only error (0.6458ms)
+Γ£ö isUniqueConstraintViolation ignores unrelated failures (0.9386ms)
+Γ£ö a duplicate-email conflict surfaces a safe 409, not a driver error (1.2126ms)
+Γ£ö nested Prisma relations resolve to names, not objects (1.2379ms)
+Γ£ö legacy flat-string records keep working (0.4429ms)
+Γ£ö missing relations resolve to null instead of throwing (0.4699ms)
+Γ£ö nameOf falls back to id and handles non-objects (0.5228ms)
+Γ£ö company region relation resolves to a renderable name (1.1797ms)
+Γ£ö company search tolerates a non-matching term without throwing (0.8562ms)
+Γ£ö company card degrades gracefully when region and city are absent (0.7004ms)
+(node:8508) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/mantech_nexus/tests/intern-history.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\mantech_nexus\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Γ£ö a brand new intern still has a non-empty journey (42.8088ms)
+Γ£ö passport and CV milestones only appear when they actually exist (89.4945ms)
+Γ£ö an application produces an entry carrying its real organization (1.1455ms)
+Γ£ö status transitions are projected and the initial submit is not duplicated (4.0219ms)
+Γ£ö shortlisting reads as progress while selection reads as a milestone (1.4701ms)
+Γ£ö a rejection is shown as closed, never as progress (0.9021ms)
+Γ£ö interviews are projected and a cancelled one is not counted as progress (1.4082ms)
+Γ£ö a placement becomes a milestone with a readable duration (1.2863ms)
+Γ£ö achievements from the passport appear as milestones (1.651ms)
+Γ£ö history is ordered newest first (2.6009ms)
+Γ£ö entry ids are unique so React keys are stable (1.0018ms)
+Γ£ö ordering is deterministic for entries sharing a timestamp (0.9024ms)
+Γ£ö every entry carries a title, a valid date and an internal deep link (0.791ms)
+Γ£ö summary totals match the rendered entries (0.8228ms)
+Γ£ö statusLabel humanises known and unknown statuses (0.518ms)
+Γ£ö the timeline builder returns only what it was given (0.8579ms)
+(node:15432) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/mantech_nexus/tests/readiness.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\mantech_nexus\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Γ£ö an empty profile is 0% ready and every item is outstanding (4.5469ms)
+Γ£ö a fully complete profile is 100% ready (0.7157ms)
+Γ£ö the CV, phone and qualification are tracked as mandatory items (1.057ms)
+Γ£ö every checklist item links somewhere the intern can act (0.8112ms)
+Γ£ö readiness scales with completed items (33.5568ms)
+Γ£ö next actions only lists outstanding items and respects the limit (1.1092ms)
+Γ£ö a complete profile has no next actions (96.5387ms)
+Γ£ö readinessPercent never divides by zero (0.5925ms)
+(node:18340) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/mantech_nexus/tests/roles.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\mantech_nexus\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Γ£ö an email list separated by commas, spaces or semicolons is read cleanly (7.5491ms)
+Γ£ö an empty email list is handled without breaking (0.6667ms)
+Γ£ö small spelling differences in an email do not matter (0.9328ms)
+Γ£ö a listed owner becomes an admin (0.9524ms)
+Γ£ö a listed company person becomes a company user (0.9085ms)
+Γ£ö a listed university person becomes a university user (0.6899ms)
+Γ£ö anyone else is treated as an intern (0.8046ms)
+Γû╢ a lookalike email is not accepted as an owner
+  Γ£ö a listed email wins over a smaller role already saved (2.5458ms)
+  Γ£ö a role already saved is kept when the email is on no list (0.9323ms)
+  Γ£ö an unrecognised saved role falls back to an intern (31.9466ms)
+  Γ£ö only the four known roles are accepted as a saved role (1.4827ms)
+  Γ£ö every signed-in member can open the intern dashboard and the passport (1.3885ms)
+  Γ£ö an admin can open all five dashboards (0.7022ms)
+  Γ£ö an intern is refused the company, university and admin dashboards (0.5767ms)
+  Γ£ö typing an inner company page address does not open it for an intern (0.3655ms)
+  Γ£ö a company user can open only the company dashboard (0.5228ms)
+  Γ£ö a university user can open only the university dashboard (0.6415ms)
+  Γ£ö a member can open their own inner pages (0.4062ms)
+Γ£ö a lookalike email is not accepted as an owner (44.8289ms)
+Γ£ö someone on both the company and university lists holds both roles (0.4483ms)
+Γ£ö a two-role person opens four dashboards, not three (0.4774ms)
+Γ£ö a two-role person can reach both dashboards, but not the admin one (0.4374ms)
+Γ£ö a two-role person still reaches the intern dashboard and passport (0.4107ms)
+Γ£ö an admin can open all five dashboards (0.5897ms)
+Γ£ö a two-role list never grants admin by accident (0.4242ms)
+Γ£ö the strongest role is always first, so the account stores admin (0.4202ms)
+Γ£ö combining roles never repeats a dashboard (0.4514ms)
+(node:13396) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/mantech_nexus/tests/security.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\mantech_nexus\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Γ£ö rateLimit allows requests up to the configured limit (46.5136ms)
+Γ£ö rateLimit blocks once the limit is exceeded (4.0229ms)
+Γ£ö rateLimit isolates keys from each other (1.1163ms)
+Γ£ö rateLimit reports remaining budget and resets after the window (86.8099ms)
+Γ£ö rateLimitHeaders exposes standard budget headers (5.6693ms)
+Γ£ö clientKey falls back to "unknown" rather than throwing (157.1817ms)
+Γ£ö clientKey prefers the forwarded client IP (2.4986ms)
+Γ£ö shipped write budget is stricter than the read budget (0.7231ms)
+Γ£ö redactPrivateInternData strips CV and file fields (1.3679ms)
+Γ£ö redactPrivateInternData removes phone when the intern hid it (1.345ms)
+Γ£ö redactPrivateInternData walks nested structures and arrays (0.8794ms)
+(node:12424) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/mantech_nexus/tests/testimonial-fields.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\mantech_nexus\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Γ£ö only the photo may be left blank (6.0021ms)
+Γ£ö whitespace never counts as an answer (0.9983ms)
+Γ£ö an answer that is too short is rejected with a helpful message (0.7873ms)
+Γ£ö an over-long answer is rejected (0.7317ms)
+Γ£ö region must be one of the ten Cameroon regions (3.8231ms)
+Γ£ö role accepts a listed option or the visitor's own words (0.7921ms)
+Γ£ö focus accepts a listed option or the visitor's own words (0.7849ms)
+Γ£ö the "Something else" placeholder is never stored as a real answer (0.7555ms)
+Γ£ö surrounding spaces are trimmed away (0.6954ms)
+Γ£ö a listed option still matches once it is trimmed (28.2829ms)
+Γ£ö the short quote and the full story both need real content (0.7548ms)
+Γ£ö ratings stay whole numbers between one and five (0.84ms)
+(node:5936) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/mantech_nexus/tests/upload-acl.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\mantech_nexus\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Γ£ö detects the free-tier private ACL refusal in a plain string (4.9353ms)
+Γ£ö detects the refusal nested in the SDK error object (0.8881ms)
+Γ£ö detects the refusal inside an Error instance (0.6766ms)
+Γ£ö recognises the insufficient-permissions code variant (0.6074ms)
+Γ£ö does not retry the upload for unrelated failures (0.953ms)
+Γ£ö handles empty and nullish errors safely (0.74ms)
+Γ£ö a circular error object does not throw (19.9089ms)
+Γ£ö privacy guarantee: a successful upload response never exposes the raw key as public (1.0389ms)
+Γä╣ tests 100
+Γä╣ suites 0
+Γä╣ pass 100
+Γä╣ fail 0
+Γä╣ cancelled 0
+Γä╣ skipped 0
+Γä╣ todo 0
+Γä╣ duration_ms 1935.6698

@@ -1,44 +1,78 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Shield, Lock, Server, Eye, FileCheck, AlertTriangle, KeyRound, Database } from 'lucide-react';
-import { FadeIn } from '@/components/shared/section-animations';
+import { ShieldCheck, Lock, Server, Eye, FileCheck, AlertTriangle, KeyRound, Database, ShieldAlert, Cpu } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const securityFeatures = [
-  { icon: KeyRound, title: 'Authentication', description: 'Secure email/password authentication with session management. MFA for sensitive roles. Session validation on every request.' },
-  { icon: Server, title: 'Server-Side Authorization', description: 'Role-based access control enforced on the server. If a student enters /dashboard/admin, the server denies access — not just the UI.' },
-  { icon: Lock, title: 'Organization Isolation', description: 'Company A can never access Company B\'s data. Isolation is enforced at the database query, API, server action, and dashboard level.' },
-  { icon: Database, title: 'Row-Level Security', description: 'Database-level RLS policies ensure users can only access rows they own or are authorized to see, even if API checks are bypassed.' },
-  { icon: FileCheck, title: 'Audit Logging', description: 'Sensitive actions are logged: role changes, member additions, internship publications, application status changes, and more.' },
-  { icon: AlertTriangle, title: 'Anti-Enumeration', description: 'High-entropy IDs prevent guessing. The system never reveals whether arbitrary private IDs are valid.' },
-  { icon: Eye, title: 'Input Validation', description: 'All user input is validated with Zod schemas on both client and server. URLs are validated to prevent JavaScript injection or unsafe redirects.' },
-  { icon: Shield, title: 'Secure Error Handling', description: 'Internal stack traces and secrets are never exposed. Error messages are professional and do not leak implementation details.' },
+  { icon: KeyRound, title: 'Zero-Trust Authentication', description: 'Cryptographic session tokens with server-side validation on every single request. Never relying on client-side state or hidden UI buttons.' },
+  { icon: Server, title: 'Server-Enforced RBAC', description: 'Role-based access control strictly validated at middleware and database levels. If an unauthorized role attempts access to /dashboard/admin, the server denies access immediately.' },
+  { icon: Lock, title: 'Multi-Tenant Organization Isolation', description: 'Company A can never query or inspect Company B\'s talent pool. Isolation is enforced at the database query, API, and dashboard layer.' },
+  { icon: Database, title: 'ACID Relational Core', description: 'Strict relational data integrity prevents orphaned records or tampering during concurrent status transitions and report approvals.' },
+  { icon: FileCheck, title: 'Tamper-Evident Audit Trails', description: 'Every authentication event, report signature, application status mutation, and admin moderation decision is timestamped and logged with IP telemetry.' },
+  { icon: AlertTriangle, title: 'Anti-Enumeration Shield', description: 'High-entropy opaque UUIDs prevent enumeration attacks. The system never reveals whether an arbitrary ID or user email exists to unauthorized callers.' },
+  { icon: Eye, title: 'Injection & Traversal Armor', description: 'Query strings and payloads undergo pattern inspection to neutralize SQL injection signatures, cross-site scripting (XSS), and path traversal attempts.' },
+  { icon: ShieldAlert, title: 'Security Headers & CSP', description: 'Strict-Transport-Security, X-Frame-Options: DENY (anti-clickjacking), X-Content-Type-Options: nosniff, and granular permissions policies active across all routes.' },
 ];
 
 export default function SecurityPage() {
   return (
     <div className="overflow-hidden">
-      <section className="pt-8 pb-12 bg-gradient-mantech-light">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-mantech text-white"><Shield className="h-8 w-8" /></div>
-            <h1 className="mt-6 font-heading text-4xl font-bold tracking-tight text-foreground">Security at MANTECH</h1>
-            <p className="mt-4 text-lg text-muted-foreground">Security is enforced on the server, not just in the UI. We never rely on hiding buttons.</p>
+      {/* ───── HERO SECTION WITH BACKGROUND IMAGE ───── */}
+      <section
+        className="relative py-24 lg:py-32 bg-cover bg-center text-white"
+        style={{ backgroundImage: "url('/images/security_tech_bg.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/85 to-slate-900/80 backdrop-blur-[1px]" />
+
+        <div className="container-mantech relative z-10 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <span className="mb-4 inline-flex rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-300 backdrop-blur-md">
+              Enterprise Defense Architecture
+            </span>
+            <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
+              Security & Hacker Prevention Architecture
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
+              MANTECH Nexus enforces security on the server, not just in the UI. Built with zero-trust authorization, strict tenant boundaries, and real-time audit protection.
+            </p>
           </motion.div>
         </div>
       </section>
-      <section className="pb-20 bg-white">
+
+      {/* ───── SECURITY SPECIFICATIONS ───── */}
+      <section className="py-20 bg-slate-50">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {securityFeatures.map((f, idx) => (
-              <FadeIn key={f.title} delay={idx * 0.05}>
-                <div className="h-full rounded-2xl border border-border bg-card p-6 shadow-card">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary"><f.icon className="h-6 w-6" /></div>
-                  <h3 className="mt-4 font-heading text-base font-semibold text-foreground">{f.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{f.description}</p>
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <Badge className="bg-blue-100 text-blue-800 uppercase tracking-widest text-[10px] mb-3">
+              SRS Sections 7 & 47-50 Compliant
+            </Badge>
+            <h2 className="text-3xl font-extrabold text-slate-900 font-heading">
+              Enterprise Safeguards in Depth
+            </h2>
+            <p className="mt-3 text-slate-600 text-sm">
+              Comprehensive defense mechanisms preventing unauthorized access, data leakage, and system tampering.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {securityFeatures.map((f, idx) => {
+              const Icon = f.icon;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 mb-4 border border-blue-100">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-heading text-base font-bold text-slate-900">{f.title}</h3>
+                    <p className="mt-2 text-xs text-slate-600 leading-relaxed">{f.description}</p>
+                  </div>
                 </div>
-              </FadeIn>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

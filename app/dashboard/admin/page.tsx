@@ -1,309 +1,266 @@
-'use client';
-
-import React, { useState } from 'react';
-import { initialData } from '@/lib/data-store';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
+import { requireAdminDashboard } from '@/lib/admin-dashboard';
 import {
-  ShieldAlert,
-  ShieldCheck,
-  CheckCircle2,
-  XCircle,
-  Building2,
-  GraduationCap,
-  Briefcase,
   Users,
-  Settings,
-  Plus,
-  Search,
-  Lock,
-  Activity,
-  Layers,
+  GraduationCap,
+  Building2,
+  Landmark,
+  Briefcase,
+  FileText,
+  ShieldCheck,
+  ClipboardList,
+  BadgeCheck,
+  CreditCard,
+  ArrowRight,
 } from 'lucide-react';
 
-export default function AdminControlCenterPage() {
-  const [activeTab, setActiveTab] = useState<'moderation' | 'taxonomy' | 'organizations' | 'audit'>('moderation');
-  const [opportunities, setOpportunities] = useState(initialData.internships);
-  const [companies, setCompanies] = useState(initialData.companies);
-  const [itFields, setItFields] = useState([
-    { id: 'fld_se', name: 'Software Engineering', category: 'Software Development', isHND: true, active: true },
-    { id: 'fld_cyber', name: 'Cybersecurity & CyberDefence', category: 'Information Security', isHND: true, active: true },
-    { id: 'fld_cloud', name: 'Cloud Computing & DevOps', category: 'Platform Engineering', isHND: false, active: true },
-    { id: 'fld_net', name: 'Networks and Telecommunications', category: 'Telecom Infrastructure', isHND: true, active: true },
-    { id: 'fld_ai', name: 'Artificial Intelligence & Machine Learning', category: 'Intelligent Systems', isHND: false, active: true },
-    { id: 'fld_mobile', name: 'Mobile Application Development', category: 'Software Development', isHND: true, active: true },
-    { id: 'fld_db', name: 'Database Management', category: 'Databases & Data Engineering', isHND: true, active: true },
-    { id: 'fld_maint', name: 'Computer Maintenance & Hardware', category: 'Hardware Support', isHND: true, active: true },
+function formatDateTime(date: Date) {
+  return date.toISOString().replace('T', ' ').slice(0, 16);
+}
+
+function DistributionList({ title, groups }: { title: string; groups: { label: string; count: number }[] }) {
+  const total = groups.reduce((sum, group) => sum + group.count, 0);
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h3 className="text-sm font-bold text-slate-900">{title}</h3>
+      <div className="mt-3 space-y-2.5">
+        {total === 0 ? (
+          <p className="text-xs text-slate-500">No records yet.</p>
+        ) : (
+          groups.map((group) => (
+            <div key={group.label}>
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-medium text-slate-600">{group.label.replace(/_/g, ' ').toLowerCase()}</span>
+                <span className="font-mono font-semibold text-slate-800">{group.count}</span>
+              </div>
+              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-slate-800"
+                  style={{ width: `${total ? Math.max((group.count / total) * 100, 3) : 0}%` }}
+                />
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default async function AdminOverviewPage() {
+  await requireAdminDashboard();
+
+  const [
+    usersByRole,
+    suspendedUsers,
+    totalInterns,
+    companyCount,
+    universityCount,
+    pendingVerification,
+    opportunitiesByStatus,
+    applicationsTotal,
+    applicationsByStatus,
+    placementsByStatus,
+    passportsTotal,
+    unverifiedPassports,
+    pendingSubscriptions,
+    pendingSubscriptionsCount,
+    activeFeatured,
+    recentAudit,
+  ] = await Promise.all([
+    prisma.user.groupBy({ by: ['role'], _count: { _all: true } }),
+    prisma.user.count({ where: { status: 'suspended' } }),
+    prisma.internProfile.count(),
+    prisma.organization.count({ where: { type: 'COMPANY' } }),
+    prisma.organization.count({ where: { type: 'UNIVERSITY' } }),
+    prisma.organization.count({ where: { verificationStatus: 'PENDING' } }),
+    prisma.internshipOpportunity.groupBy({ by: ['moderationStatus'], _count: { _all: true } }),
+    prisma.application.count(),
+    prisma.application.groupBy({ by: ['status'], _count: { _all: true } }),
+    prisma.placement.groupBy({ by: ['status'], _count: { _all: true } }),
+    prisma.internPassport.count(),
+    prisma.internPassport.count({ where: { isVerified: false } }),
+    prisma.organizationSubscription.findMany({
+      where: { status: 'PENDING_PAYMENT' },
+      include: { package: { select: { name: true } }, organization: { select: { name: true } } },
+      orderBy: { requestedAt: 'asc' },
+      take: 5,
+    }),
+    prisma.organizationSubscription.count({ where: { status: 'PENDING_PAYMENT' } }),
+    prisma.featuredOpportunity.count({ where: { isActive: true, endsAt: { gte: new Date() } } }),
+    prisma.auditLog.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 8,
+      include: { actor: { select: { fullName: true, email: true } } },
+    }),
   ]);
-  const [newFieldName, setNewFieldName] = useState('');
-  const [newFieldCategory, setNewFieldCategory] = useState('');
 
-  const handleModerate = (id: string, status: 'published' | 'rejected') => {
-    setOpportunities((prev) =>
-      prev.map((opp) => (opp.id === id ? { ...opp, moderation_status: status } : opp))
-    );
-  };
+  const roleCounts = new Map(usersByRole.map((entry) => [entry.role, entry._count._all]));
+  const totalUsers = usersByRole.reduce((sum, entry) => sum + entry._count._all, 0);
+  const publishedCount = opportunitiesByStatus.find((entry) => entry.moderationStatus === 'PUBLISHED')?._count._all ?? 0;
+  const pendingReviewCount = opportunitiesByStatus.find((entry) => entry.moderationStatus === 'PENDING_REVIEW')?._count._all ?? 0;
+  const placedCount = placementsByStatus
+    .filter((entry) => ['CONFIRMED', 'ACTIVE', 'COMPLETED'].includes(entry.status))
+    .reduce((sum, entry) => sum + entry._count._all, 0);
 
-  const handleVerifyCompany = (id: string) => {
-    setCompanies((prev) =>
-      prev.map((comp) => (comp.id === id ? { ...comp, verification_status: 'verified' } : comp))
-    );
-  };
+  const kpis = [
+    { label: 'Registered users', value: totalUsers, icon: Users, detail: `${suspendedUsers} suspended` },
+    { label: 'Intern profiles', value: totalInterns, icon: GraduationCap, detail: `${roleCounts.get('INTERN') ?? 0} intern accounts` },
+    { label: 'Companies', value: companyCount, icon: Building2, detail: 'enterprise hosts' },
+    { label: 'Universities', value: universityCount, icon: Landmark, detail: 'institutions' },
+    { label: 'Published openings', value: publishedCount, icon: Briefcase, detail: `${pendingReviewCount} awaiting review` },
+    { label: 'Applications', value: applicationsTotal, icon: FileText, detail: `${placedCount} placements confirmed+` },
+  ];
 
-  const handleAddField = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newFieldName || !newFieldCategory) return;
-    setItFields([
-      ...itFields,
-      {
-        id: `fld_${Date.now()}`,
-        name: newFieldName,
-        category: newFieldCategory,
-        isHND: false,
-        active: true,
-      },
-    ]);
-    setNewFieldName('');
-    setNewFieldCategory('');
-  };
+  const queues = [
+    {
+      href: '/dashboard/admin/verification',
+      label: 'Verifications pending',
+      count: pendingVerification,
+      icon: ShieldCheck,
+      hint: 'Organizations awaiting §15 verification review',
+    },
+    {
+      href: '/dashboard/admin/moderation',
+      label: 'Opportunities awaiting review',
+      count: pendingReviewCount,
+      icon: ClipboardList,
+      hint: 'Moderation queue before public listing',
+    },
+    {
+      href: '/dashboard/admin/interns',
+      label: 'Unverified passports',
+      count: unverifiedPassports,
+      icon: BadgeCheck,
+      hint: `${passportsTotal} passports issued in total`,
+    },
+    {
+      href: '/dashboard/admin/packages',
+      label: 'Package payments pending',
+      count: pendingSubscriptionsCount,
+      icon: CreditCard,
+      hint: 'WhatsApp concierge activations awaiting confirmation',
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Admin Header */}
-        <div className="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-xl">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-extrabold text-2xl font-heading">
-              <ShieldCheck className="w-8 h-8" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold text-white font-heading">
-                  MANTECH Admin Control Center
-                </h1>
-                <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-[10px]">
-                  SUPER_ADMIN
-                </Badge>
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
+        {kpis.map((kpi) => {
+          const Icon = kpi.icon;
+          return (
+            <div key={kpi.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{kpi.label}</span>
+                <Icon className="h-4 w-4 text-slate-400" />
               </div>
-              <p className="text-xs text-slate-400 mt-1">
-                Centralized Governance, Moderation, Dynamic Taxonomy, and Organization Verifications
-              </p>
+              <div className="mt-2 font-mono text-2xl font-bold text-slate-900">{kpi.value.toLocaleString()}</div>
+              <div className="mt-0.5 text-[11px] text-slate-500">{kpi.detail}</div>
             </div>
-          </div>
+          );
+        })}
+      </div>
 
-          <div className="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-xl font-mono">
-            <Activity className="w-3.5 h-3.5" />
-            <span>Neon DB & Clerk Security: HEALTHY</span>
+      <div>
+        <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">Requires attention</h2>
+        <div className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {queues.map((queue) => {
+            const Icon = queue.icon;
+            return (
+              <Link
+                key={queue.href}
+                href={queue.href}
+                className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-slate-300"
+              >
+                <div className="flex items-center justify-between">
+                  <Icon className="h-5 w-5 text-slate-500" />
+                  <span className={`font-mono text-2xl font-bold ${queue.count > 0 ? 'text-amber-600' : 'text-slate-300'}`}>
+                    {queue.count}
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-sm font-semibold text-slate-800">{queue.label}</span>
+                  <ArrowRight className="h-4 w-4 text-slate-300 transition-transform group-hover:translate-x-0.5" />
+                </div>
+                <p className="mt-1 text-[11px] text-slate-500">{queue.hint}</p>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <DistributionList
+          title="Applications by status"
+          groups={applicationsByStatus.map((entry) => ({ label: entry.status, count: entry._count._all }))}
+        />
+        <DistributionList
+          title="Placements by status"
+          groups={placementsByStatus.map((entry) => ({ label: entry.status, count: entry._count._all }))}
+        />
+        <DistributionList
+          title="Opportunities by moderation state"
+          groups={opportunitiesByStatus.map((entry) => ({ label: entry.moderationStatus, count: entry._count._all }))}
+        />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900">Latest package requests</h3>
+            <Link href="/dashboard/admin/packages" className="text-xs font-semibold text-blue-600 hover:underline">
+              Manage
+            </Link>
           </div>
+          <div className="mt-3 space-y-2">
+            {pendingSubscriptions.length === 0 ? (
+              <p className="text-xs text-slate-500">No pending payment requests.</p>
+            ) : (
+              pendingSubscriptions.map((subscription) => (
+                <div
+                  key={subscription.id}
+                  className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-3 py-2"
+                >
+                  <div>
+                    <p className="text-xs font-semibold text-slate-800">{subscription.organization.name}</p>
+                    <p className="text-[11px] text-slate-500">{subscription.package.name}</p>
+                  </div>
+                  <span className="font-mono text-[10px] uppercase text-amber-700">{subscription.status.replace('_', ' ')}</span>
+                </div>
+              ))
+            )}
+          </div>
+          <p className="mt-3 text-[11px] text-slate-500">
+            {activeFeatured} featured {activeFeatured === 1 ? 'opportunity' : 'opportunities'} currently active.
+          </p>
         </div>
 
-        {/* Global Platform KPIs (SRS Section 119 - Real Derived Metrics) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5">
-            <div className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Opportunities</div>
-            <div className="text-2xl font-bold text-white mt-1">{opportunities.length}</div>
-            <div className="text-[11px] text-blue-400 mt-1">3 Application Methods</div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900">Recent audit activity</h3>
+            <Link href="/dashboard/admin/audit" className="text-xs font-semibold text-blue-600 hover:underline">
+              Full trail
+            </Link>
           </div>
-          <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5">
-            <div className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Verified Organizations</div>
-            <div className="text-2xl font-bold text-amber-400 mt-1">{companies.length}</div>
-            <div className="text-[11px] text-slate-400 mt-1">Host Companies & Hubs</div>
-          </div>
-          <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5">
-            <div className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Active IT Fields</div>
-            <div className="text-2xl font-bold text-emerald-400 mt-1">{itFields.length}</div>
-            <div className="text-[11px] text-emerald-400 mt-1">Dynamic Taxonomy</div>
-          </div>
-          <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5">
-            <div className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Security Audit Events</div>
-            <div className="text-2xl font-bold text-purple-400 mt-1">{initialData.auditLogs.length}</div>
-            <div className="text-[11px] text-slate-400 mt-1">Zero vulnerabilities logged</div>
+          <div className="mt-3 space-y-2">
+            {recentAudit.length === 0 ? (
+              <p className="text-xs text-slate-500">No audit events recorded yet.</p>
+            ) : (
+              recentAudit.map((log) => (
+                <div key={log.id} className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 px-3 py-2">
+                  <div className="min-w-0">
+                    <p className="truncate font-mono text-[11px] font-semibold text-blue-700">{log.action}</p>
+                    <p className="truncate text-[11px] text-slate-500">
+                      {log.actor?.fullName || log.actorRole || 'system'} · {log.entityType}
+                    </p>
+                  </div>
+                  <span className="shrink-0 font-mono text-[10px] text-slate-400">{formatDateTime(log.createdAt)}</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
-
-        {/* Tab Switcher */}
-        <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
-          <button
-            onClick={() => setActiveTab('moderation')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'moderation' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800'
-            }`}
-          >
-            Opportunity Moderation ({opportunities.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('taxonomy')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'taxonomy' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800'
-            }`}
-          >
-            IT Taxonomy Management ({itFields.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('organizations')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'organizations' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800'
-            }`}
-          >
-            Organization Verifications
-          </button>
-          <button
-            onClick={() => setActiveTab('audit')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'audit' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800'
-            }`}
-          >
-            Security Audit Logs
-          </button>
-        </div>
-
-        {/* TAB 1: MODERATION (SRS Section 13) */}
-        {activeTab === 'moderation' && (
-          <div className="space-y-4">
-            {opportunities.map((opp) => (
-              <div key={opp.id} className="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-base font-bold text-white font-heading">{opp.title}</h3>
-                    <Badge className="bg-blue-500/20 text-blue-300 capitalize text-[10px]">
-                      {opp.moderation_status}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Host: {opp.company?.name} • Region: {opp.city}, {opp.region} • Method: {opp.application_method}
-                  </p>
-                  <p className="text-xs text-slate-300 mt-2 max-w-2xl line-clamp-2">
-                    {opp.description}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  <Button
-                    size="sm"
-                    onClick={() => handleModerate(opp.id, 'published')}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                    Approve & Publish
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleModerate(opp.id, 'rejected')}
-                    className="border-red-500/50 text-red-400 hover:bg-red-500/10 text-xs"
-                  >
-                    <XCircle className="w-3.5 h-3.5 mr-1" />
-                    Reject
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* TAB 2: DYNAMIC IT TAXONOMY (SRS Section 109 & Critical Update) */}
-        {activeTab === 'taxonomy' && (
-          <div className="space-y-6">
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
-              <h3 className="text-base font-bold text-white font-heading mb-1">
-                Add New Dynamic IT / ICT Field of Study
-              </h3>
-              <p className="text-xs text-slate-400 mb-4">
-                Administrators can dynamically register new technology disciplines into Neon PostgreSQL without source-code edits.
-              </p>
-
-              <form onSubmit={handleAddField} className="flex flex-col sm:flex-row gap-3">
-                <Input
-                  placeholder="Field Name (e.g. Distributed Ledger & FinTech)"
-                  value={newFieldName}
-                  onChange={(e) => setNewFieldName(e.target.value)}
-                  className="bg-slate-900 border-slate-700 text-white text-xs h-10"
-                />
-                <Input
-                  placeholder="Category (e.g. Emerging Technologies)"
-                  value={newFieldCategory}
-                  onChange={(e) => setNewFieldCategory(e.target.value)}
-                  className="bg-slate-900 border-slate-700 text-white text-xs h-10"
-                />
-                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white text-xs shrink-0 h-10">
-                  <Plus className="w-4 h-4 mr-1" />
-                  Register IT Field
-                </Button>
-              </form>
-            </div>
-
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
-                Managed IT / ICT Field Taxonomy ({itFields.length})
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {itFields.map((field) => (
-                  <div key={field.id} className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-700/80 flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-bold text-white">{field.name}</div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">{field.category}</div>
-                    </div>
-                    {field.isHND && (
-                      <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-[10px]">
-                        Cameroon HND
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: ORGANIZATIONS */}
-        {activeTab === 'organizations' && (
-          <div className="space-y-4">
-            {companies.map((comp) => (
-              <div key={comp.id} className="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-base font-bold text-white font-heading">{comp.name}</h3>
-                    <Badge className="bg-emerald-500/20 text-emerald-300 text-[10px]">
-                      {comp.verification_status}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    {comp.industry} • Headquarters: {comp.city}, {comp.region}
-                  </p>
-                </div>
-                {comp.verification_status !== 'verified' && (
-                  <Button
-                    size="sm"
-                    onClick={() => handleVerifyCompany(comp.id)}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
-                  >
-                    Issue Verification Badge
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* TAB 4: AUDIT LOGS */}
-        {activeTab === 'audit' && (
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-3">
-            <h3 className="text-base font-bold text-white font-heading mb-4">
-              Cryptographic Security Audit Telemetry
-            </h3>
-            {initialData.auditLogs.map((log) => (
-              <div key={log.id} className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 text-xs flex justify-between">
-                <div>
-                  <span className="font-bold text-blue-400 font-mono">{log.action}</span>
-                  <p className="text-slate-300 mt-0.5">{log.details}</p>
-                  <span className="text-[10px] text-slate-500">Actor: {log.actor_name} ({log.actor_role})</span>
-                </div>
-                <span className="text-[10px] text-slate-400 font-mono">{new Date(log.created_at).toLocaleString()}</span>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

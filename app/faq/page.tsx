@@ -1,42 +1,43 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { SectionHeader } from '@/components/shared/section-animations';
 
 const faqs = [
-  { q: 'What is MANTECH Nexus?', a: 'MANTECH Nexus is a secure, enterprise-grade internship management platform connecting students, companies, and universities across Cameroon. It manages the complete internship lifecycle from discovery to verified completion.' },
-  { q: 'Is MANTECH free for students?', a: 'Yes, students always have free access to search and apply for internships, track applications, submit reports, and access their Career Passport.' },
+  { q: 'What is MANTECH Nexus?', a: 'MANTECH Nexus connects internship seekers, companies, and universities across Cameroon for opportunity discovery, applications, recruitment, and placement coordination.' },
+  { q: 'Is MANTECH free for interns?', a: 'Intern access is free at launch. Interns can create a profile, discover opportunities, and manage applications.' },
   { q: 'How do companies get verified?', a: 'Companies register on MANTECH and submit their profile. MANTECH administrators review and verify companies before they can publish internships. Verification includes checking company identity, description, and contact information.' },
-  { q: 'What IT fields does MANTECH support?', a: 'MANTECH supports 80+ IT/ICT fields including Computer Science, Software Engineering, Cybersecurity, Networks, Data Science, AI/ML, Cloud Computing, DevOps, and more. The taxonomy is admin-managed and extensible.' },
-  { q: 'How does the application process work?', a: 'Students can apply through three methods: directly on MANTECH, through the company website, or via external platforms like LinkedIn. All applications are tracked with a timeline from submission to completion.' },
-  { q: 'What is the Career Passport?', a: 'Career Passport is a separate companion application that presents your verified internship journey — education, experience, skills, achievements, and career development. It is available only to authenticated students, companies, and universities.' },
+  { q: 'What professional fields does MANTECH support?', a: 'MANTECH supports professional fields managed through the platform taxonomy, including technology, engineering, business, and other disciplines.' },
+  { q: 'How does the application process work?', a: 'Organizations choose applications through MANTECH, a company website, or an official external application URL. Each opportunity displays its application method.' },
+  { q: 'What is the Intern Passport?', a: 'The Intern Passport is a professional discovery profile for authenticated users. Verified organizations can access permitted profile details; CV access is separately authorized and audited.' },
   { q: 'How does MANTECH ensure security?', a: 'MANTECH uses server-side role-based access control, organization isolation, row-level security at the database level, audit logging, and anti-enumeration measures. We never rely on hiding buttons — the server is the final authority.' },
   { q: 'Does MANTECH process payments online?', a: 'No. MANTECH does not implement online payment processing. All commercial discussions happen through WhatsApp, phone, or email. We display pricing in XAF/FCFA for reference.' },
-  { q: 'Can universities track their students?', a: 'Yes. Universities get a dashboard to monitor student placements, track active internships, coordinate supervisors, collect reports, and access institutional analytics. Universities only see their own students — never other institutions\' records.' },
+  { q: 'What can universities do on MANTECH?', a: 'Universities can coordinate permitted placement activity and, when recruiter mode is enabled, manage opportunities and recruit interns. Organization data is isolated.' },
   { q: 'What regions of Cameroon does MANTECH cover?', a: 'MANTECH supports all 10 regions of Cameroon: Littoral, Centre, Southwest, Northwest, West, South, East, Far North, North, and Adamawa. Location data is admin-managed and extensible.' },
 ];
 
 export default function FAQPage() {
   return (
     <div className="overflow-hidden">
-      <section className="pt-8 pb-12 bg-gradient-mantech-light">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="surface-page relative overflow-hidden border-b border-border/70">
+        <div className="pointer-events-none absolute inset-0 bg-grid opacity-35" />
+        <div className="container-mantech relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
+            <span className="mb-5 inline-flex rounded-full border border-primary/15 bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary shadow-sm">Support</span>
             <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Frequently Asked Questions</h1>
-            <p className="mt-4 text-lg text-muted-foreground">Everything you need to know about MANTECH Nexus.</p>
+            <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">Everything you need to know about MANTECH Nexus.</p>
           </motion.div>
         </div>
       </section>
       <section className="pb-20 bg-white">
-        <div className="container-mantech max-w-3xl px-4 sm:px-6 lg:px-8">
-          <Accordion type="single" collapsible className="space-y-4">
+        <div className="container-mantech max-w-4xl px-4 sm:px-6 lg:px-8">
+          <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((faq, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: idx * 0.05 }}>
-                <AccordionItem key={idx} value={`item-${idx}`} className="rounded-2xl border border-border bg-card px-6 shadow-card">
-                  <AccordionTrigger className="text-left font-heading text-base font-semibold hover:no-underline">{faq.q}</AccordionTrigger>
-                  <AccordionContent className="text-sm text-muted-foreground">{faq.a}</AccordionContent>
+                <AccordionItem key={idx} value={`item-${idx}`} className="rounded-2xl border border-border/80 bg-white px-6 shadow-card data-[state=open]:border-primary/25">
+                  <AccordionTrigger className="text-left font-heading text-base font-semibold text-foreground hover:no-underline">{faq.q}</AccordionTrigger>
+                  <AccordionContent className="max-w-3xl text-sm leading-relaxed text-muted-foreground">{faq.a}</AccordionContent>
                 </AccordionItem>
               </motion.div>
             ))}

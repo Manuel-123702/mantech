@@ -1,0 +1,27 @@
+{
+  "//": "Config used only by `npm run db:seed`. The root tsconfig targets ESM",
+  "//2": "(`module: esnext`) for Next.js, which ts-node cannot execute directly.",
+  "//3": "Forcing CommonJS here lets ts-node run prisma/seed.ts, and `require`",
+  "//4": "registers tsconfig-paths so the `@/lib/config` alias resolves at runtime.",
+  "//5": "Putting these in a file (instead of --compiler-options on the CLI) also",
+  "//6": "avoids the brace/quote mangling that broke `npm run db:seed` on Windows.",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2020",
+    "lib": ["es2020"],
+    "noEmit": false,
+    "incremental": false,
+    "allowImportingTsExtensions": false,
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "require": ["tsconfig-paths/register"]
+  },
+  "include": ["seed.ts", "../lib/**/*.ts"]
+}

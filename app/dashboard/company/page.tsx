@@ -1,254 +1,186 @@
-'use client';
-
-import React, { useState } from 'react';
 import Link from 'next/link';
-import { initialData } from '@/lib/data-store';
+import { prisma } from '@/lib/prisma';
+import { requireCompanyDashboard } from '@/lib/company-dashboard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import {
-  Building2,
-  Users,
-  Briefcase,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Plus,
-  Search,
-  ExternalLink,
-  ChevronRight,
-  ShieldCheck,
-  TrendingUp,
-} from 'lucide-react';
+import { StatusBadge } from '@/components/company/status-badge';
+import { Briefcase, Users, Star, Calendar, UserCheck, Clock, Bell, AlertTriangle } from 'lucide-react';
 
-export default function CompanyDashboardPage() {
-  const company = initialData.companies[0]; // MTN Cameroon
-  const opportunities = initialData.internships.filter((item) => item.company_id === company.id);
-  const applications = initialData.applications;
+export default async function CompanyOverviewPage() {
+  const { organization } = await requireCompanyDashboard();
+  if (!organization) return null;
 
-  const [activeTab, setActiveTab] = useState<'pipeline' | 'postings' | 'interns' | 'history'>('pipeline');
-  const [pipelineState, setPipelineState] = useState(applications);
+  const now = new Date();
+  const soon = new Date();
+  soon.setDate(soon.getDate() + 14);
 
-  const handleStatusUpdate = (appId: string, newStatus: any) => {
-    setPipelineState((prev) =>
-      prev.map((app) => (app.id === appId ? { ...app, status: newStatus } : app))
-    );
-  };
+  const [
+    opportunities,
+    applications,
+    interviews,
+    placements,
+    savedCount,
+    notifications,
+  ] = await Promise.all([
+    prisma.internshipOpportunity.findMany({
+      where: { organizationId: organization.id },
+      include: { applications: true, region: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.application.findMany({
+      where: { opportunity: { organizationId: organization.id } },
+      include: {
+        internProfile: { include: { user: { select: { fullName: true } } } },
+        opportunity: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 8,
+    }),
+    prisma.interview.count({
+      where: {
+        application: { opportunity: { organizationId: organization.id } },
+        status: 'scheduled',
+        scheduledAt: { gte: now },
+      },
+    }),
+    prisma.placement.findMany({
+      where: { organizationId: organization.id },
+    }),
+    prisma.savedCandidate.count({ where: { organizationId: organization.id } }),
+    prisma.notification.findMany({
+      where: { userId: { in: organization.members.map((m) => m.userId) } },
+      orderBy: { createdAt: 'desc' },
+      take: 6,
+    }),
+  ]);
+
+  const activeOpportunities = opportunities.filter((o) => o.moderationStatus === 'PUBLISHED');
+  const expiring = activeOpportunities.filter((o) => o.deadline <= soon && o.deadline >= now);
+  const selected = applications.filter((a) => a.status === 'SELECTED').length;
+  const shortlisted = await prisma.application.count({
+    where: { opportunity: { organizationId: organization.id }, status: 'SHORTLISTED' },
+  });
+
+  const stats = [
+    { label: 'Active opportunities', value: activeOpportunities.length, icon: Briefcase },
+    { label: 'Applications', value: opportunities.reduce((sum, o) => sum + o.applications.length, 0), icon: Users },
+    { label: 'Shortlisted', value: shortlisted, icon: Star },
+    { label: 'Upcoming interviews', value: interviews, icon: Calendar },
+    { label: 'Selected interns', value: selected, icon: UserCheck },
+    { label: 'Active placements', value: placements.filter((p) => p.status === 'ACTIVE').length, icon: Clock },
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Company Header */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-700 font-extrabold text-2xl font-heading">
-              {company.name.charAt(0)}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold text-slate-900 font-heading">
-                  {company.name}
-                </h1>
-                <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">
-                  Verified Enterprise Host
-                </Badge>
-              </div>
-              <p className="text-xs text-slate-500 mt-1">
-                {company.industry} • Headquarters: {company.city}, {company.region} • Recruiter: Brenda Ngu
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link href="/career-passport" target="_blank">
-              <Button variant="outline" className="text-xs font-semibold border-amber-600 text-amber-800 hover:bg-amber-50">
-                Company Passport
-                <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
-              </Button>
-            </Link>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold">
-              <Plus className="w-4 h-4 mr-1.5" />
-              Create IT Internship
-            </Button>
-          </div>
+    <div className="space-y-6">
+      {organization.verificationStatus !== 'VERIFIED' && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          Your organization is {organization.verificationStatus.toLowerCase()}. You can create opportunities now;
+          Intern Passport discovery and CV access unlock after MANTECH verification.
         </div>
+      )}
 
-        {/* High-Level Enterprise KPI Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Published Roles</div>
-            <div className="text-2xl font-bold text-slate-900 mt-1">{opportunities.length}</div>
-            <div className="text-[11px] text-emerald-600 mt-1">All verified & active</div>
-          </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Applicants</div>
-            <div className="text-2xl font-bold text-slate-900 mt-1">{pipelineState.length}</div>
-            <div className="text-[11px] text-blue-600 mt-1">Average readiness 92%</div>
-          </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Active Interns</div>
-            <div className="text-2xl font-bold text-amber-600 mt-1">1</div>
-            <div className="text-[11px] text-slate-500 mt-1">Supervised by Eng. Fon</div>
-          </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Health Index</div>
-            <div className="text-2xl font-bold text-emerald-600 mt-1">100%</div>
-            <div className="text-[11px] text-slate-500 mt-1">No overdue reports</div>
-          </div>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-          <button
-            onClick={() => setActiveTab('pipeline')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'pipeline' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            Candidate Pipeline ({pipelineState.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('postings')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'postings' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            Internship Postings ({opportunities.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('interns')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'interns' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            Active Interns (1)
-          </button>
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'history' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            Company History
-          </button>
-        </div>
-
-        {/* TAB 1: CANDIDATE PIPELINE */}
-        {activeTab === 'pipeline' && (
-          <div className="space-y-4">
-            {pipelineState.map((app) => (
-              <div key={app.id} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-base font-bold text-slate-900 font-heading">
-                      David Kamga
-                    </h3>
-                    <Badge className="bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      Readiness: {app.readiness_score}%
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-slate-500 mb-2">
-                    University of Yaoundé I • BSc Software Engineering • Applied: 05 Aug 2026
-                  </p>
-                  <p className="text-xs text-slate-700 max-w-xl line-clamp-2">
-                    {app.cover_letter}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleStatusUpdate(app.id, 'shortlisted')}
-                    className="text-xs"
-                  >
-                    Shortlist
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleStatusUpdate(app.id, 'interview')}
-                    className="text-xs"
-                  >
-                    Schedule Interview
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={() => handleStatusUpdate(app.id, 'internship_active')}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
-                  >
-                    Confirm Placement
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* TAB 2: POSTINGS */}
-        {activeTab === 'postings' && (
-          <div className="space-y-4">
-            {opportunities.map((opp) => (
-              <div key={opp.id} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-base font-bold text-slate-900 font-heading">{opp.title}</h3>
-                    <Badge className="bg-emerald-100 text-emerald-800 text-[10px]">Published</Badge>
-                  </div>
-                  <div className="text-xs text-slate-500">
-                    {opp.city}, {opp.region} • {opp.duration_months} Months • Allowance: {opp.allowance_xaf?.toLocaleString()} XAF
-                  </div>
-                </div>
-                <Link href={`/mantech-internship/opportunities/${opp.slug}`}>
-                  <Button variant="outline" size="sm" className="text-xs">
-                    View Live Portal Page
-                  </Button>
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* TAB 3: ACTIVE INTERNS */}
-        {activeTab === 'interns' && (
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-slate-900 font-heading">
-                Active Supervised Interns
-              </h3>
-              <Badge className="bg-emerald-100 text-emerald-800 text-xs">All Healthy</Badge>
-            </div>
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {stats.map((stat) => (
+          <Card key={stat.label}>
+            <CardContent className="flex items-center justify-between pt-6">
               <div>
-                <div className="font-bold text-slate-900 text-sm">David Kamga</div>
-                <div className="text-slate-500">Role: Full-Stack Software Engineering Intern</div>
-                <div className="text-blue-700 font-semibold mt-1">Supervisor: Eng. Martin Fon</div>
+                <p className="text-sm text-slate-500">{stat.label}</p>
+                <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
               </div>
-              <div className="text-right">
-                <div className="font-bold text-emerald-600">3 Logbooks Approved</div>
-                <div className="text-slate-400 text-[11px]">Period: Sep 2026 — Feb 2027</div>
-              </div>
-            </div>
-          </div>
-        )}
+              <stat.icon className="h-8 w-8 text-blue-600" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-        {/* TAB 4: HISTORY */}
-        {activeTab === 'history' && (
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-3">
-            <h3 className="text-base font-bold text-slate-900 font-heading mb-4">
-              Company Operational History
-            </h3>
-            {initialData.auditLogs.map((log) => (
-              <div key={log.id} className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs flex justify-between">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader className="flex-row items-center justify-between">
+            <CardTitle>Opportunities</CardTitle>
+            <Link href="/dashboard/company/opportunities/create">
+              <Button size="sm">New opportunity</Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {opportunities.slice(0, 5).map((opp) => (
+              <div key={opp.id} className="flex items-center justify-between rounded-xl bg-slate-50 p-3">
                 <div>
-                  <span className="font-bold text-amber-800">{log.action}</span>
-                  <p className="text-slate-600 mt-0.5">{log.details}</p>
+                  <p className="font-medium text-slate-900">{opp.title}</p>
+                  <p className="text-xs text-slate-500">
+                    {opp.applications.length} applications · {opp.city}
+                  </p>
                 </div>
-                <span className="text-[10px] text-slate-400">{new Date(log.created_at).toLocaleDateString()}</span>
+                <StatusBadge status={opp.moderationStatus} />
               </div>
             ))}
-          </div>
-        )}
+            {opportunities.length === 0 && <p className="py-8 text-center text-slate-500">No opportunities yet.</p>}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent applications</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {applications.map((app) => (
+              <Link
+                key={app.id}
+                href={`/dashboard/company/applications/${app.id}`}
+                className="flex items-center justify-between rounded-xl bg-slate-50 p-3 hover:bg-slate-100"
+              >
+                <div>
+                  <p className="font-medium text-slate-900">{app.internProfile.user.fullName}</p>
+                  <p className="text-xs text-slate-500">{app.opportunity.title}</p>
+                </div>
+                <StatusBadge status={app.status} />
+              </Link>
+            ))}
+            {applications.length === 0 && <p className="py-8 text-center text-slate-500">No applications yet.</p>}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-amber-600" />
+              Expiring opportunities
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {expiring.length === 0 ? (
+              <p className="text-sm text-slate-500">No deadlines in the next 14 days.</p>
+            ) : (
+              <div className="space-y-2">
+                {expiring.map((opp) => (
+                  <p key={opp.id} className="text-sm">
+                    {opp.title} · {opp.deadline.toLocaleDateString()}
+                  </p>
+                ))}
+              </div>
+            )}
+            <p className="mt-4 text-sm text-slate-500">Saved Intern Passports: {savedCount}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="h-4 w-4" />
+              Recent activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {notifications.map((item) => (
+              <div key={item.id}>
+                <p className="text-sm font-medium text-slate-900">{item.title}</p>
+                <p className="text-xs text-slate-500">{item.message}</p>
+              </div>
+            ))}
+            {notifications.length === 0 && <p className="text-sm text-slate-500">No notifications yet.</p>}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ const features = [
 export default function AccessibilityPage() {
   return (
     <div className="overflow-hidden">
-      <section className="pt-8 pb-12 bg-gradient-mantech-light">
+      <section className="pt-8 pb-12 bg-gradient-to-br from-blue-50 via-white to-slate-50">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="font-heading text-4xl font-bold tracking-tight text-foreground">Accessibility</motion.h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">MANTECH Nexus is committed to making internship management accessible to all users across Cameroon.</p>
@@ -27,7 +27,7 @@ export default function AccessibilityPage() {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f, idx) => (
               <FadeIn key={f.title} delay={idx * 0.05}>
-                <div className="h-full rounded-2xl border border-border bg-card p-6 shadow-card">
+                <div className="h-full rounded-2xl border border-border bg-card p-6 shadow-sm">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary"><f.icon className="h-6 w-6" /></div>
                   <h3 className="mt-4 font-heading text-base font-semibold text-foreground">{f.title}</h3>
                   <p className="mt-2 text-sm text-muted-foreground">{f.description}</p>

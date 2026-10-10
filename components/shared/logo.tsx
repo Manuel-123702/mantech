@@ -18,7 +18,7 @@ export function Logo({ className, size = 44 }: LogoProps) {
       alt="MANTECH Nexus"
       width={size}
       height={size}
-      className={cn('shrink-0 select-none transition-transform duration-300 hover:scale-105', className)}
+      className={cn('block h-auto max-w-full shrink-0 select-none object-contain transition-transform duration-300 hover:scale-105', className)}
       priority
     />
   );
@@ -27,6 +27,6 @@ export function Logo({ className, size = 44 }: LogoProps) {
 /**
  * Image-only full logo component (per requirement: no text logo near it).
  */
-export function LogoFull({ className, size = 44 }: LogoProps) {
+export function LogoFull({ className, size = 144 }: LogoProps) {
   return <Logo className={className} size={size} />;
 }

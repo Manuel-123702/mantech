@@ -1,10 +1,3 @@
-import emailjs from '@emailjs/browser';
-
-// EmailJS configuration
-const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
-const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
-const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
-
 export interface EmailParams {
   to_email: string;
   to_name: string;
@@ -13,62 +6,52 @@ export interface EmailParams {
   [key: string]: string | number;
 }
 
-export async function sendEmail(params: EmailParams): Promise<boolean> {
-  try {
-    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
-      console.error('EmailJS configuration missing');
-      return false;
+const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
+const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
+const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
+
+// EmailJS permits one send request per second per account. Serialize sends in
+// this process and leave the database notification as the reliable fallback.
+let emailQueue: Promise<void> = Promise.resolve();
+let nextSendAt = 0;
+
+export function sendEmail(params: EmailParams): Promise<boolean> {
+  if (!serviceId || !templateId || !publicKey) return Promise.resolve(false);
+  let resolveResult: (result: boolean) => void;
+  const result = new Promise<boolean>(resolve => { resolveResult = resolve; });
+  emailQueue = emailQueue.then(async () => {
+    const delay = Math.max(0, nextSendAt - Date.now());
+    if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+    nextSendAt = Date.now() + 1100;
+    try {
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: serviceId,
+          template_id: templateId,
+          user_id: publicKey,
+          template_params: params,
+        }),
+      });
+      resolveResult(response.ok);
+      if (!response.ok) console.error('EmailJS rejected a notification email.', response.status);
+    } catch (error) {
+      resolveResult(false);
+      console.error('EmailJS notification delivery failed.', error);
     }
-
-    const response = await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      params,
-      EMAILJS_PUBLIC_KEY
-    );
-
-    console.log('Email sent successfully:', response);
-    return true;
-  } catch (error) {
-    console.error('Failed to send email:', error);
-    return false;
-  }
+  }).catch(error => {
+    resolveResult(false);
+    console.error('EmailJS queue failed.', error);
+  });
+  return result;
 }
 
-// Email templates for different scenarios
 export const emailTemplates = {
-  welcome: (name: string, email: string) => ({
+  notification: (name: string, email: string, subject: string, message: string) => ({
     to_email: email,
     to_name: name,
-    subject: 'Welcome to MANTECH Nexus',
-    message: `Dear ${name},\n\nWelcome to MANTECH Nexus! Your account has been successfully created.\n\nYou can now access our enterprise internship management platform.\n\nBest regards,\nMANTECH Nexus Team`,
-  }),
-
-  applicationReceived: (name: string, email: string, companyName: string) => ({
-    to_email: email,
-    to_name: name,
-    subject: 'Application Received',
-    message: `Dear ${name},\n\nYour application to ${companyName} has been received successfully.\n\nYou can track your application status in your dashboard.\n\nBest regards,\nMANTECH Nexus Team`,
-  }),
-
-  interviewScheduled: (name: string, email: string, companyName: string, date: string) => ({
-    to_email: email,
-    to_name: name,
-    subject: 'Interview Scheduled',
-    message: `Dear ${name},\n\nYou have been selected for an interview with ${companyName}.\n\nDate: ${date}\n\nPlease check your dashboard for more details.\n\nBest regards,\nMANTECH Nexus Team`,
-  }),
-
-  placementConfirmed: (name: string, email: string, companyName: string) => ({
-    to_email: email,
-    to_name: name,
-    subject: 'Internship Placement Confirmed',
-    message: `Dear ${name},\n\nCongratulations! Your internship placement with ${companyName} has been confirmed.\n\nPlease complete the onboarding process in your dashboard.\n\nBest regards,\nMANTECH Nexus Team`,
-  }),
-
-  reportReminder: (name: string, email: string, weekNumber: number) => ({
-    to_email: email,
-    to_name: name,
-    subject: 'Weekly Report Reminder',
-    message: `Dear ${name},\n\nThis is a reminder to submit your weekly report for Week ${weekNumber}.\n\nPlease log in to your dashboard to submit your report.\n\nBest regards,\nMANTECH Nexus Team`,
+    subject,
+    message,
   }),
 };
