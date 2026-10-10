@@ -198,8 +198,8 @@ export const APP_CONFIG = {
       period: 'per month',
       description: 'Full-featured recruitment platform with priority visibility, unlimited talent search, and multi-recruiter team support.',
       features: [
-        'Unlimited active internship opportunities',
-        'Unlimited Intern Passport discovery & CV downloads',
+        'Post up to 15 active internship opportunities',
+        'Generous Intern Passport discovery & CV downloads',
         'Multiple recruiter seats (up to 10 team members)',
         'Featured opportunities with priority marketplace ranking',
         'Direct phone candidate reachout permissions',
@@ -207,7 +207,7 @@ export const APP_CONFIG = {
         'Dedicated talent sourcing assistant on WhatsApp',
       ],
       limits: {
-        activeOpportunities: 999,
+        activeOpportunities: 15,
         monthlyCandidateViews: 9999,
         recruiterAccounts: 10,
         featuredBadges: 5,
@@ -234,7 +234,7 @@ export const APP_CONFIG = {
         'Dedicated institutional account manager',
       ],
       limits: {
-        activeOpportunities: 999,
+        activeOpportunities: 15,
         monthlyCandidateViews: 9999,
         recruiterAccounts: 50,
         featuredBadges: 10,

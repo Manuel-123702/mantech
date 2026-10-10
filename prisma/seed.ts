@@ -7,11 +7,33 @@ import { APP_CONFIG } from "@/lib/config";
 // Seeding is a short-lived maintenance job, so prefer the direct endpoint when
 // DIRECT_URL is configured and fall back to DATABASE_URL otherwise.
 const prisma = new PrismaClient(
-  process.env.DIRECT_URL ? { datasourceUrl: process.env.DIRECT_URL } : undefined
+  process.env.DIRECT_URL
+    ? {
+        datasourceUrl: process.env.DIRECT_URL.includes("connection_limit=")
+          ? process.env.DIRECT_URL.replace(/connection_limit=\d+/, "connection_limit=2")
+          : `${process.env.DIRECT_URL}${process.env.DIRECT_URL.includes("?") ? "&" : "?"}connection_limit=2`,
+      }
+    : undefined
 );
 
-async function main() {
-  console.log("🌱 Starting database seed...");
+// Neon free-tier compute sleeps after inactivity, so the first handshake can
+// outlast the driver's connect timeout and surface as P1001 ("Can't reach
+// database server"). Retry the first ping so one cold start never kills the run.
+async function waitForDatabase(attempts = 6, delayMs = 5000) {
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      if (attempt > 1) console.log(`Database reachable (attempt ${attempt}).`);
+      return;
+    } catch (error) {
+      if (attempt === attempts) throw error;
+      console.log(`Database waking up (attempt ${attempt}/${attempts}) — retrying in ${delayMs / 1000}s...`);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+}
+
+async function seedAll() {
 
   // Create Regions
   for (const region of APP_CONFIG.cameroonRegions) {
@@ -310,7 +332,18 @@ async function main() {
       where: {
         code: pkg.code as "FREE" | "PROFESSIONAL" | "BUSINESS" | "ENTERPRISE",
       },
-      update: {},
+      // Sync limits/pricing on re-seed so config changes (e.g. BUSINESS/ENTERPRISE
+      // opportunity caps) actually reach rows created by an earlier seed run.
+      update: {
+        name: pkg.name,
+        priceXAF: pkg.priceXAF,
+        opportunityLimit: pkg.limits.activeOpportunities,
+        candidateSearchLimit: pkg.limits.monthlyCandidateViews,
+        maxRecruiterAccounts: pkg.limits.recruiterAccounts,
+        featuredOpportunitiesLimit: pkg.limits.featuredBadges,
+        description: pkg.description,
+        features: pkg.features,
+      },
       create: {
         name: pkg.name,
         code: pkg.code as "FREE" | "PROFESSIONAL" | "BUSINESS" | "ENTERPRISE",
@@ -328,8 +361,27 @@ async function main() {
   console.log("✅ Database seed completed successfully!");
 }
 
+// Every write in seedAll is an idempotent upsert, so re-running the whole pass
+// after a transient Neon hiccup (P1001 cold start, P2024 pool timeout while the
+// compute is still warming) is safe and simply resumes where it left off.
+async function main() {
+  console.log("🌱 Starting database seed...");
+  await waitForDatabase();
+  const maxPasses = 3;
+  for (let pass = 1; pass <= maxPasses; pass += 1) {
+    try {
+      await seedAll();
+      return;
+    } catch (error) {
+      if (pass === maxPasses) throw error;
+      console.log(`Seed pass ${pass} hit a transient error — retrying the whole pass in 10s...`);
+      await new Promise((resolve) => setTimeout(resolve, 10000));
+    }
+  }
+}
+
 main()
-  .catch((e) => {
+  .catch(async (e) => {
     console.error("❌ Seed failed:", e);
     process.exit(1);
   })

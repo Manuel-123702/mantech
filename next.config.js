@@ -9,7 +9,6 @@
 const isProductionBuild = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
-  distDir: isProductionBuild ? '.next-build' : '.next',
   experimental: {
     cpus: 1,
   },
