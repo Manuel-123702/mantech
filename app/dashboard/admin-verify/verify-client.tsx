@@ -8,7 +8,7 @@ import { OTPInput } from 'input-otp';
 import {
   ArrowLeft,
   Loader2,
-  MessageCircle,
+  Mail,
   RefreshCw,
   ShieldAlert,
   ShieldCheck,
@@ -271,7 +271,7 @@ export function VerifyAdminOtpClient({ next }: { next: string }) {
 
               <div className="mt-4 flex items-center justify-between text-xs">
                 <span className="inline-flex items-center gap-1.5 text-slate-400">
-                  <MessageCircle className="h-3.5 w-3.5" aria-hidden /> WhatsApp delivery
+                  <Mail className="h-3.5 w-3.5" aria-hidden /> Email delivery
                 </span>
                 <button
                   type="button"
@@ -313,7 +313,7 @@ export function VerifyAdminOtpClient({ next }: { next: string }) {
               </p>
               <p className="mt-1 text-xs text-slate-500">{hint}</p>
               <pre className="mt-2 overflow-x-auto rounded-lg bg-slate-900 p-3 text-[11px] leading-relaxed text-emerald-300">
-{`# Options - add ADMIN_WHATSAPP=<number> to .env too\n  1. Free, instant, no Meta approval:\n     WHATSAPP_API_URL=https://api.callmebot.com/whatsapp.php?apikey=YOUR_KEY\n  2. Official Meta Cloud API:\n     WHATSAPP_API_URL=https://graph.facebook.com/v21.0/<PHONE_ID>/messages\n     WHATSAPP_API_TOKEN=your_meta_token`}
+{`Codes are emailed to your sign-in inbox (the Clerk account email in ADMIN_EMAILS).\n  Check inbox + spam within 60 seconds.\n  If sending fails, add EmailJS to .env:\n     NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxx\n     NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxx\n     NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxx`}
               </pre>
             </div>
           ) : null}

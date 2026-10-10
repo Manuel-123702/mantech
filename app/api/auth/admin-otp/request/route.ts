@@ -7,14 +7,15 @@ import {
   OTP_SEND_LIMIT,
   OTP_SEND_WINDOW_MS,
   OTP_TTL_SECONDS,
-  formatAdminOtpWhatsAppMessage,
+  formatAdminOtpEmailMessage,
+  formatAdminOtpEmailSubject,
   generateOtpCode,
   getOtpPepper,
   hashOtpCode,
-  maskWhatsAppDestination,
+  maskEmailDestination,
   normalizeOtpEmail,
 } from '@/lib/admin-otp';
-import { sendWhatsAppDirect } from '@/lib/whatsapp-notifications';
+import { emailTemplates, sendEmail } from '@/lib/emailjs';
 
 /**
  * POST /api/auth/admin-otp/request
@@ -22,10 +23,13 @@ import { sendWhatsAppDirect } from '@/lib/whatsapp-notifications';
  * Step 1 of the admin two-factor gate. The caller must already be signed in
  * through Clerk AND resolve to the ADMIN role. Generates a fresh 6-digit code
  * (60s TTL), stores only its SHA-256 hash, burns any previous outstanding
- * code, and delivers the code to ADMIN_WHATSAPP through the WhatsApp gateway.
+ * code, and delivers the code to the admin's sign-in email inbox via EmailJS.
  *
- * In development, when no gateway is configured, the code is echoed back in
- * `devCode` so the flow can be exercised locally. Never in production.
+ * Email-only delivery: the former WhatsApp/CallMeBot gateway was removed
+ * because no production API key was ever issued.
+ *
+ * In development, when no email service is configured, the code is echoed
+ * back in `devCode` so the flow can be exercised locally. Never in production.
  */
 export async function POST(request: Request) {
   try {
@@ -46,13 +50,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const destination = process.env.ADMIN_WHATSAPP || '';
-    if (!destination) {
+    // Email-only delivery: the code goes to the admin's own sign-in inbox
+    // (tied to the Clerk account email, e.g. tessohmanuel@gmail.com).
+    const destination = email;
+    if (!destination || !destination.includes('@')) {
       return NextResponse.json(
         {
-          error: 'WhatsApp delivery is not configured.',
+          error: 'Email delivery is not configured.',
           setupHint:
-            'Add ADMIN_WHATSAPP=<your number, e.g. 237650921917> plus a free gateway to .env:\n  CallMeBot: WHATSAPP_API_URL=https://api.callmebot.com/whatsapp.php?apikey=YOUR_KEY\n  Meta:      WHATSAPP_API_URL=https://graph.facebook.com/v21.0/<PHONE_ID>/messages\n  WHATSAPP_API_TOKEN=<YOUR_TOKEN>',
+            'Sign in with an admin email address listed in ADMIN_EMAILS, and add EmailJS to .env:\n  NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxx\n  NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxx\n  NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxx',
           code: 'gateway_unconfigured',
         },
         { status: 503 },
@@ -71,7 +77,15 @@ export async function POST(request: Request) {
     });
     await prisma.adminOtp.create({ data: { email, codeHash, expiresAt } });
 
-    const delivery = await sendWhatsAppDirect(destination, formatAdminOtpWhatsAppMessage(code));
+    const sent = await sendEmail(
+      emailTemplates.notification(
+        user.fullName || 'MANTECH Admin',
+        destination,
+        formatAdminOtpEmailSubject(),
+        formatAdminOtpEmailMessage(code),
+      ),
+    );
+    const delivery = { sent, provider: sent ? 'emailjs' : 'unconfigured' as const };
 
     if (!delivery.sent && !isDev) {
       // Production has no silent fallback: burn the undeliverable code and
@@ -81,7 +95,7 @@ export async function POST(request: Request) {
         data: { consumedAt: new Date() },
       });
       return NextResponse.json(
-        { error: 'WhatsApp delivery failed.', detail: delivery.error, code: 'delivery_failed' },
+        { error: 'Email delivery failed. Check your EmailJS service, template and public key, then resend.', code: 'delivery_failed' },
         { status: delivery.provider === 'unconfigured' ? 503 : 502 },
       );
     }
@@ -92,13 +106,13 @@ export async function POST(request: Request) {
       action: 'ADMIN_OTP_REQUESTED',
       entityType: 'AdminOtp',
       entityId: email,
-      details: { channel: 'whatsapp', provider: delivery.provider, sent: delivery.sent },
+      details: { channel: 'email', provider: delivery.provider, sent: delivery.sent },
       request,
     }).catch(() => undefined); // never fail the flow on an audit hiccup
 
     return NextResponse.json({
       ok: true,
-      maskedDestination: maskWhatsAppDestination(destination),
+      maskedDestination: maskEmailDestination(destination),
       expiresInSeconds: OTP_TTL_SECONDS,
       resendAfterSeconds: OTP_TTL_SECONDS,
       gateway: delivery.provider,

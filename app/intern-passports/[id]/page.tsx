@@ -29,6 +29,7 @@ import type {
 import { APP_CONFIG } from "@/lib/config";
 import { getPackageLimits } from "@/lib/package-limits";
 import { reserveCandidateViews } from "@/lib/candidate-usage";
+import { notifyUser } from "@/lib/audit";
 
 type SkillRel = InternProfileSkill & { skill: Skill };
 
@@ -41,7 +42,7 @@ export default async function InternPassportDetailPage({
   const session = await auth();
   const userId = session.userId;
   if (!userId) {
-    redirect("/sign-in");
+    redirect(`/sign-in?redirect_url=/intern-passports/${id}`);
   }
 
   const user = await prisma.user.findUnique({
@@ -51,15 +52,13 @@ export default async function InternPassportDetailPage({
     },
   });
 
-  if (
-    !user ||
-    (user.role !== "COMPANY" &&
-      user.role !== "UNIVERSITY" &&
-      user.role !== "ADMIN")
-  ) {
-    redirect("/dashboard");
-  }
+  if (!user) redirect("/dashboard");
 
+  // Any signed-in member may open a passport — the sign-in gate above
+  // (mirrored by the middleware) is the only access requirement.
+  // `organization`, `canRecruit` and `isVerified` no longer block the
+  // page; they decide which recruiter-only extras this viewer unlocks:
+  // CV files, the public phone number, and candidate-view quota accounting.
   const organization = user.role === "ADMIN"
     ? null
     : user.organizationMembers[0]?.organizationId
@@ -68,14 +67,12 @@ export default async function InternPassportDetailPage({
           include: { universityProfile: true },
         })
       : null;
-  const isVerified =
-    user.role === "ADMIN" || organization?.verificationStatus === "VERIFIED";
-  if (
-    !isVerified ||
-    (user.role === "UNIVERSITY" && !organization?.universityProfile?.canRecruitInterns)
-  ) {
-    redirect("/dashboard");
-  }
+  const canRecruit =
+    (user.role === "COMPANY" || user.role === "UNIVERSITY") &&
+    organization?.verificationStatus === "VERIFIED" &&
+    (user.role !== "UNIVERSITY" ||
+      Boolean(organization?.universityProfile?.canRecruitInterns));
+  const isVerified = user.role === "ADMIN" || canRecruit;
 
   const internProfile = await prisma.internProfile.findUnique({
     where: { id, isCvSearchable: true, profileCompleted: true },
@@ -112,7 +109,10 @@ export default async function InternPassportDetailPage({
     notFound();
   }
 
-  if (user.role !== "ADMIN" && organization) {
+  // Monthly candidate-view quota is a recruiter billing feature — it only
+  // applies to verified recruiters' organizations, never to interns,
+  // admins or unverified accounts just browsing a passport.
+  if (canRecruit && organization) {
     const packageLimits = await getPackageLimits(organization.packageCode);
     const usage = await reserveCandidateViews({
       organizationId: organization.id,
@@ -154,6 +154,58 @@ export default async function InternPassportDetailPage({
         }),
       },
     });
+  }
+
+  // ── View alert: in-app + email to the passport owner whenever somebody
+  // else inspects their public passport. Self-views are excluded so an intern
+  // previewing their own passport never notifies themselves, and repeat views
+  // by the same viewer are throttled to one alert per 24 hours. Failures are
+  // swallowed so notification trouble can never break this page.
+  if (user.id !== internProfile.userId) {
+    try {
+      const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const recentView = await prisma.auditLog.findFirst({
+        where: {
+          action: "PASSPORT_VIEW",
+          entityType: "InternProfile",
+          entityId: internProfile.id,
+          actorId: user.id,
+          createdAt: { gte: dayAgo },
+        },
+        select: { id: true },
+      });
+
+      if (!recentView) {
+        const viewerLabel =
+          user.role === "ADMIN"
+            ? "A MANTECH administrator"
+            : canRecruit
+              ? organization?.name || "A verified recruiter"
+              : user.fullName || "A MANTECH member";
+        await notifyUser({
+          userId: internProfile.userId,
+          title: "Your Intern Passport was viewed",
+          message: `${viewerLabel} viewed your public Intern Passport. Keep your profile and CV up to date to stay visible to verified recruiters.`,
+          category: "system",
+          link: "/dashboard/intern/passport",
+        });
+        await prisma.auditLog.create({
+          data: {
+            actorId: user.id,
+            actorRole: user.role,
+            action: "PASSPORT_VIEW",
+            entityType: "InternProfile",
+            entityId: internProfile.id,
+            details: JSON.stringify({ organizationId: organization?.id ?? null }),
+          },
+        });
+      }
+    } catch (reason) {
+      console.warn(
+        "[intern-passports] view alert failed (non-fatal):",
+        reason instanceof Error ? reason.message : reason,
+      );
+    }
   }
 
   const passport = internProfile.passport as
@@ -350,9 +402,10 @@ export default async function InternPassportDetailPage({
             {!isVerified ? (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-sm text-yellow-800">
-                  <strong>Verification Required:</strong> Your organization must
-                  be verified to access CVs. Contact MANTECH on WhatsApp for
-                  verification.
+                  <strong>Recruiters only:</strong> this passport is open to
+                  all signed-in members, but CV downloads are limited to
+                  verified recruiters. Recruiters: contact MANTECH on WhatsApp
+                  to complete your organization verification.
                 </p>
               </div>
             ) : cvFiles.length === 0 ? (

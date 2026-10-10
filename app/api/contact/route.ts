@@ -12,7 +12,8 @@ const contactSchema = z.object({
   subject: z.string().min(2, 'Please provide a subject.').max(200),
   message: z.string().min(10, 'Please write a longer message.').max(5000),
   // Honeypot: real users never fill a hidden field. Bots do.
-  website: z.string().max(0).optional(),
+  // Empty/absent/unset is normal; any truthy content (after trimming) is spam.
+  website: z.string().max(0).optional().or(z.literal('')),
 });
 
 export async function POST(request: Request) {

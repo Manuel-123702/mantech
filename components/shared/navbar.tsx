@@ -172,6 +172,10 @@ export function Navbar() {
 
   const roleLabel = userRole ? (ROLE_LABEL[userRole] ?? userRole) : 'Member';
 
+  // The Intern Passport directory is open to every signed-in member;
+  // signed-out visitors never see its entry points.
+  const canBrowsePassports = !!user;
+
   const displayName =
     user?.fullName ||
     [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
@@ -421,6 +425,18 @@ export function Navbar() {
 
           {/* Right-Side Actions: WhatsApp Concierge + User Auth Area */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Intern Passports directory — signed-in recruiters only */}
+            {canBrowsePassports && (
+              <Link
+                href="/intern-passports"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-blue-300/70 bg-blue-50/80 px-3 py-1.5 text-xs font-bold text-blue-800 shadow-sm transition-all hover:border-blue-400 hover:bg-blue-100"
+                title="Browse verified Intern Passports"
+              >
+                <Award className="h-3.5 w-3.5" />
+                <span>Passports</span>
+              </Link>
+            )}
+
             {/* Quick WhatsApp Support Pill */}
             <a
               href={waSupportLink()}
@@ -472,6 +488,15 @@ export function Navbar() {
                       <span>{roleLabel} Dashboard</span>
                     </Link>
                   </DropdownMenuItem>
+
+                  {canBrowsePassports && (
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50">
+                      <Link href="/intern-passports" className="flex items-center gap-2.5 text-xs font-semibold text-slate-900">
+                        <Award className="h-4 w-4 text-blue-600" />
+                        <span>Intern Passports</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
 
                   {userRole === 'INTERN' && (
                     <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-amber-50">
@@ -703,6 +728,22 @@ export function Navbar() {
                     </Link>
                   </div>
                 </div>
+
+                {canBrowsePassports && (
+                  <div className="pt-2 border-t border-slate-100">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 mb-1.5">
+                      Talent Discovery
+                    </p>
+                    <Link
+                      href="/intern-passports"
+                      onClick={closeMobile}
+                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-xs font-semibold text-slate-800"
+                    >
+                      <Award className="h-4 w-4 text-blue-600" />
+                      <span>Intern Passports</span>
+                    </Link>
+                  </div>
+                )}
 
                 {/* Mobile Auth Actions */}
                 <div className="pt-3 border-t border-slate-200 space-y-2">

@@ -92,37 +92,10 @@ export default async function InternPassportsPage(props: PageProps) {
     );
   }
 
-  if (
-    !user ||
-    (user.role !== "COMPANY" &&
-      user.role !== "UNIVERSITY" &&
-      user.role !== "ADMIN")
-  ) {
-    redirect("/dashboard");
-  }
-
-  const userAny = user as any;
-  const orgId =
-    user.role === "ADMIN"
-      ? null
-      : (userAny.organizationMembers[0]?.organizationId ?? null);
-  let verified = user.role === "ADMIN";
-  if (!verified && orgId) {
-    const org = await prisma.organization.findUnique({
-      where: { id: orgId },
-      include: { universityProfile: true },
-    });
-    if (org) {
-      if (org.verificationStatus !== "VERIFIED") redirect("/dashboard");
-      if (
-        user.role === "UNIVERSITY" &&
-        !org.universityProfile?.canRecruitInterns
-      )
-        redirect("/dashboard");
-      verified = true;
-    }
-  }
-  if (!verified) redirect("/dashboard");
+  // Any signed-in member may browse the directory — the sign-in gate above
+  // is the only access requirement. Recruiter-only extras (CV downloads,
+  // phone numbers) enforce their own verification checks downstream.
+  if (!user) redirect("/dashboard");
 
   // Build filters
   const keyword = (sp.q || "").trim();
@@ -269,7 +242,7 @@ export default async function InternPassportsPage(props: PageProps) {
         <div className="container-mantech relative px-4 sm:px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-100">
             <UserCheck className="h-3.5 w-3.5" />
-            Verified recruiter access
+            Open to all signed-in members
           </div>
           <h1 className="mt-4 font-heading text-4xl font-extrabold sm:text-5xl">
             Intern Passports
@@ -277,7 +250,8 @@ export default async function InternPassportsPage(props: PageProps) {
           <p className="mt-4 max-w-3xl text-slate-200">
             Discover qualified Cameroonian internship seekers with verified
             professional profiles — readiness scored, skill-tagged, and
-            CV-accessible. All candidates have consented to recruiter search.
+            consented to recruiter search. CV downloads remain limited to
+            verified recruiters.
           </p>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">

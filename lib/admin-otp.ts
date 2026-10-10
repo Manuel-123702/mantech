@@ -181,7 +181,37 @@ export async function verifyAdminOtpSession(
   return { email: payload.email };
 }
 
-// ── WhatsApp presentation helpers ──────────────────────────────────────────
+// ── Email presentation helpers ─────────────────────────────────────────────
+/** "tessohmanuel@gmail.com" -> "t•••@gmail.com" */
+export function maskEmailDestination(email: string): string {
+  const normalized = normalizeOtpEmail(email);
+  const [local, domain] = normalized.split('@');
+  if (!local || !domain) return '•••';
+  const head = local.slice(0, 1);
+  return `${head}•••@${domain}`;
+}
+
+/** Subject line for the admin verification email. */
+export function formatAdminOtpEmailSubject(): string {
+  return 'MANTECH Nexus — Admin Verification Code';
+}
+
+/** Message body sent to the admin's email inbox. */
+export function formatAdminOtpEmailMessage(code: string): string {
+  return [
+    'MANTECH Nexus — Admin Verification',
+    '',
+    `Your one-time code is: ${code}`,
+    '',
+    `Valid for ${OTP_TTL_SECONDS} seconds. Never share it with anyone.`,
+    'If you did not request this, ignore this message.',
+  ].join('\n');
+}
+
+// ── WhatsApp presentation helpers (legacy) ─────────────────────────────────
+// WhatsApp delivery was removed: CallMeBot never issued a production API key,
+// so the admin gate is email-only. These helpers stay exported so older
+// build artefacts and comments keep compiling, but no route calls them.
 /** "+237650921917" -> "+237 ••• •• •• 17" */
 export function maskWhatsAppDestination(phone: string): string {
   const digits = phone.replace(/\D/g, '');
