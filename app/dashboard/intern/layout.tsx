@@ -62,6 +62,9 @@ export default async function InternDashboardLayout({
   }
 
   const userAny = user as any;
+  if (userAny.status === "suspended") {
+    redirect("/suspended");
+  }
   const needsRegistration =
     !userAny.internProfile || !userAny.internProfile.profileCompleted;
 

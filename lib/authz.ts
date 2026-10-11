@@ -108,6 +108,14 @@ export async function syncDbUser(): Promise<SyncedUser | null> {
 export async function requireUser() {
   const user = await syncDbUser();
   if (!user) throw new AuthError(401, 'Authentication required');
+  // Enforce admin moderation: a suspended account keeps its Clerk sign-in but
+  // is locked out of every member feature (dashboards, applications, posting).
+  if (user.status === 'suspended') {
+    throw new AuthError(
+      403,
+      'Your MANTECH Nexus account has been suspended. Contact MANTECH support if you believe this is a mistake.',
+    );
+  }
   return user;
 }
 
