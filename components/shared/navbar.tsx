@@ -556,7 +556,7 @@ export function Navbar() {
 
                   <DropdownMenuItem
                     onSelect={() => void signOut()}
-                    className="cursor-pointer rounded-xl p-2.5 text-xs font-semibold text-red-600 focus:bg-red-50 flex items-center gap-2.5"
+                    className="cursor-pointer rounded-xl p-2.5 text-xs font-semibold text-red-600 focus:bg-red-50 focus:text-red-600 data-[highlighted]:text-red-600 flex items-center gap-2.5"
                   >
                     <LogOut className="h-4 w-4 text-red-500" />
                     <span>Sign Out</span>
@@ -572,11 +572,11 @@ export function Navbar() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-10 px-3 text-xs font-bold text-blue-950/85 hover:text-blue-700 hover:bg-blue-50/70 rounded-xl"
+                      className="h-10 px-3 text-xs font-bold text-blue-800 hover:text-blue-90 hover:bg-blue-50/70 rounded-xl"
                     >
-                      <LayoutDashboard className="w-3.5 h-3.5 mr-1.5 text-blue-950/50" />
+                      <LayoutDashboard className="w-3.5 h-3.5 mr-1.5 text-blue-800" />
                       <span>Dashboards</span>
-                      <ChevronDown className="w-3.5 h-3.5 ml-1 text-blue-950/40" />
+                      <ChevronDown className="w-3.5 h-3.5 ml-1 text-blue-800" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -629,9 +629,9 @@ export function Navbar() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-10 px-4 text-xs font-bold text-blue-950/85 hover:text-blue-700 hover:bg-blue-50/70 rounded-xl"
+                    className="h-10 px-4 text-xs font-bold text-blue-800 hover:text-blue-950 hover:bg-blue-400 rounded-xl"
                   >
-                    <LogIn className="w-3.5 h-3.5 mr-1.5 text-blue-950/50" />
+                    <LogIn className="w-3.5 h-3.5 mr-1.5 text-blue-800" />
                     <span>Sign In</span>
                   </Button>
                 </Link>
@@ -802,7 +802,7 @@ export function Navbar() {
                           closeMobile();
                           void signOut();
                         }}
-                        className="w-full text-xs text-red-600 hover:bg-red-50 border-red-200"
+                        className="w-full text-xs text-red-600 hover:bg-orange-50 hover:text-red-600 border-red-200"
                       >
                         <LogOut className="h-4 w-4 mr-2" />
                         <span>Sign Out</span>

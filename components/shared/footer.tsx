@@ -103,7 +103,7 @@ export function Footer() {
               >
                 <Logo size={210} />
               </Link>
-              
+
               <p className="max-w-xs text-xs sm:text-sm leading-relaxed text-slate-400">
                 The national professional internship marketplace connecting interns, accredited companies, and higher education across all 10 regions of Cameroon.
               </p>
@@ -208,7 +208,7 @@ export function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className={`group inline-flex items-center text-xs sm:text-sm text-slate-300 transition-colors ${group.accent}`}
+                        className={`group inline-flex items-center text-xs sm:text-sm text-orange-200 transition-colors ${group.accent}`}
                       >
                         <span
                           aria-hidden="true"
@@ -241,7 +241,7 @@ export function Footer() {
           </div>
 
           {/* Bottom Copyright & Legal Strip */}
-          <div className="mt-6 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="mt-6 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-orange-300">
             <p>
               &copy; {new Date().getFullYear()} MANTECH Nexus Cameroon. All rights reserved.
             </p>

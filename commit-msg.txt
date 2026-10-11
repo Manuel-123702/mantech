@@ -1,0 +1,1 @@
+Fix Sign Out button hover text turning white in navbar dropdown and mobile menu
