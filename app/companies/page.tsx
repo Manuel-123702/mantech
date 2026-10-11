@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import {
   Building2,
   MapPin,
@@ -132,20 +133,28 @@ export default function CompaniesPage() {
       </section>
 
       {/* ───── COMPANIES GRID WITH SPRING POP ANIMATION ───── */}
-      <section className="py-20 bg-slate-50 min-h-[500px]">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-200">
+      <section className="py-24 bg-[#080d19] border-b border-slate-800/80 relative overflow-hidden min-h-[500px] text-white">
+        {/* Backdrop tech image & ambient lighting */}
+        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
+          <Image src="/images/company_tech_bg.jpg" alt="" fill className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080d19]/95 via-[#080d19]/90 to-[#080d19] pointer-events-none" />
+        <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500/15 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/15 blur-[110px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-800">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 font-heading">
+              <h2 className="text-xl font-bold text-white font-heading">
                 Accredited Host Organizations
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Showing {filteredCompanies.length} live verified enterprise profiles
               </p>
             </div>
 
             <Link href="/sign-up">
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white text-xs shadow-sm">
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-500 text-white text-xs shadow-md shadow-blue-600/25">
                 Register as Host Company
               </Button>
             </Link>
@@ -153,7 +162,7 @@ export default function CompaniesPage() {
 
           {loading ? (
             <div className="flex justify-center py-24">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
             </div>
           ) : filteredCompanies.length === 0 ? (
             <motion.div
@@ -161,9 +170,9 @@ export default function CompaniesPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col items-center justify-center py-20 text-center"
             >
-              <Inbox className="h-12 w-12 text-slate-400 mb-3" />
-              <h3 className="font-heading text-lg font-semibold text-slate-800">No companies found</h3>
-              <p className="mt-1 text-sm text-slate-500 max-w-sm">
+              <Inbox className="h-12 w-12 text-slate-500 mb-3" />
+              <h3 className="font-heading text-lg font-semibold text-white">No companies found</h3>
+              <p className="mt-1 text-sm text-slate-400 max-w-sm">
                 No organizations matched your search. Clear filters or browse all partner institutions.
               </p>
             </motion.div>
@@ -177,61 +186,61 @@ export default function CompaniesPage() {
 
                 return (
                   <MotionItem key={company.id} motion="pop">
-                    <AnimatedCard className="h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <AnimatedCard className="h-full rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md p-7 shadow-xl hover:shadow-2xl hover:border-blue-400 hover:bg-slate-800/90 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group text-white">
                       <div>
                         <div className="flex items-start gap-4">
-                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 group-hover:scale-105 transition-transform">
+                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-950/80 text-blue-400 border border-blue-500/30 group-hover:scale-105 transition-transform">
                             <Building2 className="h-7 w-7" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                              <h3 className="font-heading text-lg font-bold text-slate-900 truncate">{company.name}</h3>
-                              <BadgeCheck className="h-5 w-5 shrink-0 text-blue-600" />
+                              <h3 className="font-heading text-lg font-bold text-white truncate">{company.name}</h3>
+                              <BadgeCheck className="h-5 w-5 shrink-0 text-blue-400" />
                             </div>
                             {industryNameOf(shape) && (
-                              <p className="text-xs text-slate-500 font-medium truncate">{industryNameOf(shape)}</p>
+                              <p className="text-xs text-slate-400 font-medium truncate">{industryNameOf(shape)}</p>
                             )}
                           </div>
                         </div>
 
                         {company.description && (
-                          <p className="mt-4 text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                          <p className="mt-4 text-xs text-slate-300 line-clamp-3 leading-relaxed">
                             {company.description}
                           </p>
                         )}
 
                         <div className="mt-5 flex flex-wrap gap-2">
                           {location && (
-                            <Badge variant="secondary" className="text-[10px] bg-slate-100 text-slate-700">
+                            <Badge variant="secondary" className="text-[10px] bg-slate-800 text-slate-300 border border-slate-700">
                               <MapPin className="mr-1 h-3 w-3" />
                               {location}
                             </Badge>
                           )}
                           {(company.size ?? company.size_bracket) && (
-                            <Badge variant="outline" className="text-[10px] border-slate-200">
+                            <Badge variant="outline" className="text-[10px] border-slate-700 text-slate-400">
                               {company.size ?? company.size_bracket}
                             </Badge>
                           )}
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
                         {company.website ? (
                           <a
                             href={company.website}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                            className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
                           >
                             <Globe className="w-3.5 h-3.5" />
                             <span>Website</span>
                           </a>
                         ) : (
-                          <span className="text-xs text-slate-400">Verified Partner</span>
+                          <span className="text-xs text-slate-500">Verified Partner</span>
                         )}
 
                         <Link href={`/mantech-internship?company=${encodeURIComponent(company.name)}`}>
-                          <Button size="sm" variant="ghost" className="text-xs text-slate-700 hover:text-blue-600 hover:bg-blue-50">
+                          <Button size="sm" variant="ghost" className="text-xs text-slate-300 hover:text-white hover:bg-slate-800">
                             <span>View Openings</span>
                             <ArrowRight className="w-3.5 h-3.5 ml-1" />
                           </Button>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -56,35 +56,35 @@ function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean 
 
   return (
     <article
-      className={`flex h-full flex-col rounded-2xl border p-7 transition-shadow duration-200 hover:shadow-card-hover ${
+      className={`flex h-full flex-col rounded-3xl border p-7 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 ${
         recommended
-          ? "border-primary/40 bg-gradient-mantech-light shadow-card ring-1 ring-primary/15"
-          : "border-border/80 bg-white shadow-card"
+          ? "border-blue-500/80 bg-slate-900/95 ring-2 ring-blue-500/20 shadow-xl shadow-blue-500/10 text-white"
+          : "border-slate-800 bg-slate-900/85 text-white shadow-lg backdrop-blur-md"
       }`}
     >
       {recommended && (
-        <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
+        <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow-md">
           Most popular
         </span>
       )}
 
-      <h3 className="font-heading text-lg font-bold text-foreground">{plan.name}</h3>
+      <h3 className="font-heading text-lg font-bold text-white">{plan.name}</h3>
       {/* Fixed height so prices align across the row even when descriptions
           differ in length. */}
-      <p className="mt-2 min-h-10 text-sm text-muted-foreground">{plan.description}</p>
+      <p className="mt-2 min-h-10 text-sm text-slate-300 leading-relaxed">{plan.description}</p>
 
-      <p className="mt-5 font-heading text-3xl font-extrabold text-foreground">
+      <p className="mt-5 font-heading text-3xl font-extrabold text-white">
         {plan.priceXAF === 0 ? "Free" : plan.priceXAF.toLocaleString("en-US")}
         {plan.priceXAF > 0 && (
-          <span className="ml-1.5 text-sm font-medium text-muted-foreground">XAF</span>
+          <span className="ml-1.5 text-sm font-medium text-slate-400">XAF</span>
         )}
       </p>
-      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-400">
         {plan.code === "ENTERPRISE" ? "per semester / annual" : "per month"}
       </p>
 
       {wide && (
-        <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-white/70 p-4 text-xs sm:grid-cols-4">
+        <div className="mt-4 grid grid-cols-2 gap-3 rounded-2xl border border-slate-800 bg-slate-950/80 p-4 text-xs sm:grid-cols-4">
           {[
             { label: "Active roles", value: plan.opportunityLimit },
             { label: "Candidate views", value: plan.candidateSearchLimit },
@@ -92,8 +92,8 @@ function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean 
             { label: "Featured slots", value: plan.featuredOpportunitiesLimit },
           ].map((stat) => (
             <div key={stat.label}>
-              <dt className="text-muted-foreground">{stat.label}</dt>
-              <dd className="mt-0.5 font-semibold text-foreground">
+              <dt className="text-slate-400">{stat.label}</dt>
+              <dd className="mt-0.5 font-semibold text-white">
                 {stat.value >= 999 ? "Unlimited" : stat.value}
               </dd>
             </div>
@@ -104,8 +104,8 @@ function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean 
       <ul className={`${wide ? "sm:grid sm:grid-cols-2 sm:gap-x-8" : ""} mt-6 flex-1 space-y-3`}>
         {plan.features.map((feature) => (
           <li key={feature} className="flex items-start gap-2">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
-            <span className="text-sm text-foreground/80">{feature}</span>
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden="true" />
+            <span className="text-sm text-slate-300">{feature}</span>
           </li>
         ))}
       </ul>
@@ -120,10 +120,10 @@ function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean 
           )}&body=${encodeURIComponent(
             `Hello MANTECH Nexus,\n\nI would like to subscribe to the ${plan.name} package (${plan.code}).\n\nMy organization:\nNumber of interns to hire:\n\nThank you.`
           )}`}
-          className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
+          className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
             recommended
-              ? "bg-primary text-white hover:bg-primary/90"
-              : "border border-border bg-white text-foreground hover:bg-secondary"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/25 hover:bg-blue-500"
+              : "border border-slate-700 bg-slate-800/90 text-white hover:bg-slate-700"
           }`}
         >
           <Mail className="h-4 w-4" aria-hidden="true" />
@@ -133,7 +133,7 @@ function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean 
           href={packageWhatsAppLink(plan)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#128C7E]"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-green-600/25 transition-colors hover:bg-[#128C7E]"
         >
           <WhatsAppIcon className="h-4 w-4" title="WhatsApp" />
           Subscribe on WhatsApp
@@ -191,35 +191,40 @@ export default function PricingPage() {
   const universityPlan = orderedPackages.find((pkg) => pkg.code === "ENTERPRISE");
 
   return (
-    <div className="overflow-hidden">
-      <section className="surface-page relative overflow-hidden border-b border-border/70">
-        <div className="pointer-events-none absolute inset-0 bg-grid opacity-35" />
-        <div className="container-mantech relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <div className="overflow-hidden bg-slate-950 text-white">
+      <section className="relative overflow-hidden border-b border-slate-800/80 bg-gradient-to-br from-slate-950 via-[#0a1222] to-slate-950 py-20">
+        <div className="pointer-events-none absolute inset-0 bg-grid opacity-25" />
+        <div className="container-mantech relative px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.65 }}
             className="mx-auto max-w-3xl text-center"
           >
-            <span className="mb-5 inline-flex rounded-full border border-primary/15 bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary shadow-sm">
-              Pricing
+            <span className="mb-5 inline-flex rounded-full border border-blue-500/30 bg-blue-950/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-300 shadow-sm">
+              Pricing Catalogue
             </span>
-            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            <h1 className="font-heading text-4xl font-bold tracking-tight text-white sm:text-5xl">
               Simple, transparent pricing
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-300">
               MANTECH primarily monetizes organizations. Interns always have
               free access. All prices in XAF/FCFA.
             </p>
           </motion.div>
         </div>
       </section>
-{/* Member plan first: an intern should learn the price is zero before
+
+      {/* Member plan first: an intern should learn the price is zero before
           they ever see an organization's prices. */}
       <MemberPlanSection />
 
-      <section className="section-padding bg-white">
-        <div className="container-mantech">
+      <section className="section-padding bg-[#070d18] relative overflow-hidden border-b border-slate-800/80 text-white">
+        {/* Subtle ambient lighting */}
+        <div className="absolute top-1/3 left-10 w-96 h-96 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-500/10 blur-[110px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech relative z-10">
           <SectionHeader
             eyebrow="For organizations"
             title="Plans for companies and universities"
@@ -229,7 +234,7 @@ export default function PricingPage() {
             <p role="alert" className="mt-8 text-center text-sm text-destructive">{error}</p>
           )}
           {loading ? (
-            <p className="mt-12 text-center text-muted-foreground" role="status">Loading current packagesâ€¦</p>
+            <p className="mt-12 text-center text-slate-400" role="status">Loading current packages...</p>
           ) : (
           <>
           {/* The three commercial plans, side by side. */}
@@ -262,23 +267,22 @@ export default function PricingPage() {
       {/* Questions block. The email button is visually primary because a
           subscription is a written commitment we need a record of; WhatsApp
           sits beside it at equal size for a faster conversation. */}
-      <section className="section-padding bg-slate-50">
+      <section className="section-padding bg-slate-950 relative overflow-hidden border-b border-slate-900 text-white">
         <div className="container-mantech">
           <FadeIn>
-            <div className="rounded-3xl border border-primary/15 bg-gradient-mantech-light p-8 text-center sm:p-12">
-              <h2 className="font-heading text-3xl font-bold text-foreground">
+            <div className="rounded-3xl border border-slate-800 bg-[#0c1424] p-8 text-center sm:p-12 shadow-2xl relative overflow-hidden">
+              <div className="absolute -top-24 right-1/4 w-80 h-80 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+              <h2 className="font-heading text-3xl font-bold text-white relative z-10">
                 Have questions about pricing?
               </h2>
-              <p className="mt-4 text-muted-foreground">
+              <p className="mt-4 text-slate-300 max-w-xl mx-auto relative z-10">
                 We discuss commercial details directly. No online payment
-                processing â€” just a conversation.
+                processing — just a direct conversation.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                {/* Email and WhatsApp sit side by side with equal weight: email
-                    is the written record we can actually quote back, WhatsApp
-                    is faster for a live question. */}
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center relative z-10">
+                {/* Email and WhatsApp sit side by side with equal weight */}
                 <a href={`mailto:${APP_CONFIG.support.email}`}>
-                  <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-primary/90">
+                  <button className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/25 transition-all hover:bg-blue-500">
                     <Mail className="h-4 w-4" aria-hidden="true" />
                     Email us
                   </button>
@@ -288,13 +292,13 @@ export default function PricingPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-primary/90">
+                  <button className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-green-600/25 transition-all hover:bg-[#128C7E]">
                     <WhatsAppIcon className="h-4 w-4" title="WhatsApp" />
                     Chat on WhatsApp
                   </button>
                 </a>
                 <Link href="/contact">
-                  <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-6 py-3 text-sm font-semibold text-foreground transition-all hover:border-primary/30 hover:text-primary">
+                  <button className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-6 py-3 text-sm font-semibold text-slate-200 transition-all hover:bg-slate-700 hover:text-white">
                     Contact form <ArrowRight className="h-4 w-4" />
                   </button>
                 </Link>

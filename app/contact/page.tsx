@@ -93,8 +93,12 @@ export default function ContactPage() {
       </section>
 
       {/* ── SPLIT INTERACTIVE SECTION ── */}
-      <section className="py-20 sm:py-24 bg-white">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-20 sm:py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50/80 relative overflow-hidden border-b border-slate-200/80">
+        {/* Ambient atmospheric glows */}
+        <div className="absolute top-1/4 -left-10 w-80 h-80 bg-blue-500/10 blur-[90px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-1/4 -right-10 w-80 h-80 bg-emerald-500/10 blur-[90px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-start">
             {/* Left Column: Direct channels */}
             <motion.div

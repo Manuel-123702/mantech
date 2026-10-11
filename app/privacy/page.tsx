@@ -20,9 +20,9 @@ export default function PrivacyPage() {
           </motion.h1>
         </div>
       </section>
-      <section className="pb-20 bg-white">
-        <div className="container-mantech max-w-3xl px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-sm max-w-none space-y-6 rounded-2xl border border-slate-200 bg-white p-6 text-muted-foreground shadow-sm sm:p-8">
+      <section className="pb-24 pt-6 bg-gradient-to-b from-slate-50 via-white to-slate-50/80 relative overflow-hidden border-b border-slate-200/80">
+        <div className="container-mantech max-w-3xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="prose prose-sm max-w-none space-y-6 rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-sm p-7 text-muted-foreground shadow-md sm:p-10">
             <div>
               <h2 className="font-heading text-xl font-bold text-foreground">
                 1. Data Collection

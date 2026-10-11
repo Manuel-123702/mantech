@@ -14,30 +14,34 @@ import { APP_CONFIG } from "@/lib/config";
  */
 export function MemberPlanSection() {
   return (
-    <section className="section-padding bg-slate-50">
-      <div className="container-mantech">
+    <section className="section-padding bg-[#061713] border-b border-slate-800/80 relative overflow-hidden text-white">
+      {/* Ambient emerald & teal lighting */}
+      <div className="absolute top-10 right-10 w-96 h-96 bg-emerald-500/15 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-teal-500/10 blur-[110px] rounded-full pointer-events-none" />
+      
+      <div className="container-mantech relative z-10">
         <FadeIn>
-          <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-white shadow-card">
-            {/* Soft colour behind the panel, purely decorative. */}
+          <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-slate-900/90 backdrop-blur-md shadow-2xl">
+            {/* Ambient inner glow */}
             <div
               aria-hidden="true"
-              className="absolute inset-x-0 top-0 h-32 bg-gradient-to-r from-emerald-100/70 via-sky-50/40 to-transparent"
+              className="absolute inset-x-0 top-0 h-32 bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-transparent pointer-events-none"
             />
 
             <div className="relative grid gap-10 p-8 sm:p-12 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
               {/* Left: the promise */}
               <div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-200">
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-950/80 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300 ring-1 ring-emerald-500/30">
+                  <Sparkles className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
                   For every intern
                 </span>
 
-                <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl">
                   Internships are free.
-                  <span className="block text-emerald-600">Always.</span>
+                  <span className="block text-emerald-400">Always.</span>
                 </h2>
 
-                <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+                <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-300">
                   Searching listings, applying and tracking every stage of your
                   application cost you nothing. MANTECH earns from the organizations
                   who hire, so a student is never the one paying.
@@ -64,15 +68,15 @@ export function MemberPlanSection() {
                   ].map((item) => (
                     <li
                       key={item.title}
-                      className="rounded-2xl border border-border/70 bg-slate-50/70 p-4"
+                      className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4"
                     >
-                      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-emerald-600 shadow-sm">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 shadow-sm">
                         <item.icon className="h-5 w-5" aria-hidden="true" />
                       </span>
-                      <p className="mt-2.5 text-sm font-semibold text-foreground">
+                      <p className="mt-2.5 text-sm font-semibold text-white">
                         {item.title}
                       </p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      <p className="mt-1 text-xs leading-relaxed text-slate-400">
                         {item.text}
                       </p>
                     </li>
@@ -82,50 +86,43 @@ export function MemberPlanSection() {
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
                     href="/internships"
-                    className="inline-flex h-12 items-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700"
+                    className="inline-flex h-12 items-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white shadow-md shadow-emerald-600/30 transition-colors hover:bg-emerald-500"
                   >
                     Browse free internships
                     <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                   </Link>
                   <Link
                     href="/register/intern"
-                    className="inline-flex h-12 items-center rounded-xl border border-border bg-white px-6 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+                    className="inline-flex h-12 items-center rounded-xl border border-slate-700 bg-slate-800/80 px-6 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-700 hover:text-white"
                   >
                     Create your free profile
                   </Link>
                 </div>
               </div>
-              {/* Right: what is included */}
-              <div className="rounded-2xl border border-border/80 bg-white p-7 shadow-sm lg:p-8">
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-heading text-xl font-bold text-foreground">
-                    Member plan
-                  </h3>
-                  <p className="text-right">
-                    <span className="block font-heading text-4xl font-extrabold leading-none text-emerald-600">
-                      Free
-                    </span>
-                    <span className="mt-1 block text-xs text-muted-foreground">
-                      for the whole internship
-                    </span>
-                  </p>
-                </div>
 
-                <ul className="mt-7 space-y-3.5">
+              {/* Right: what is included */}
+              <div className="rounded-3xl border border-emerald-500/30 bg-slate-950/80 p-7 shadow-xl lg:p-8">
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  Included with every account
+                </span>
+                <p className="mt-2 text-sm font-semibold text-white">
+                  Everything a student needs to secure an internship in Cameroon:
+                </p>
+
+                <ul className="mt-6 space-y-3.5">
                   {[
-                    "Every internship listing, unfiltered",
-                    "Unlimited applications and saved jobs",
-                    "Intern Passport with verified documents",
+                    "Search and filter all verified internship listings",
+                    "Intern Passport with cryptographic verification ID",
                     "Application tracker with real status updates",
                     "Readiness score and profile checklist",
                     "Interview schedule and placement history",
                     "Direct messaging with recruiters",
                   ].map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-                        <Check className="h-3 w-3 text-emerald-700" aria-hidden="true" />
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-950 border border-emerald-500/30">
+                        <Check className="h-3 w-3 text-emerald-400" aria-hidden="true" />
                       </span>
-                      <span className="text-sm leading-relaxed text-muted-foreground">
+                      <span className="text-sm leading-relaxed text-slate-300">
                         {feature}
                       </span>
                     </li>
@@ -133,9 +130,9 @@ export function MemberPlanSection() {
                 </ul>
 
                 {/* Answers the obvious question before it is asked. */}
-                <div className="mt-7 rounded-xl border border-dashed border-border bg-slate-50 p-4">
-                  <p className="text-xs leading-relaxed text-muted-foreground">
-                    <strong className="font-semibold text-foreground">Who pays?</strong>{" "}
+                <div className="mt-7 rounded-xl border border-dashed border-slate-800 bg-slate-900/80 p-4">
+                  <p className="text-xs leading-relaxed text-slate-400">
+                    <strong className="font-semibold text-white">Who pays?</strong>{" "}
                     Companies and universities pay for recruiter tools and visibility.
                     That is the only money MANTECH takes.
                   </p>
@@ -184,17 +181,18 @@ export function SubscriptionProcess({
 }) {
   return (
     <div
-      className={`rounded-3xl border border-slate-200/90 bg-white p-7 shadow-lg sm:p-10 ${className}`}
+      className={`rounded-3xl border border-slate-800 bg-[#080e1c] p-7 sm:p-10 shadow-2xl relative overflow-hidden text-white backdrop-blur-md ${className}`}
     >
-      <div className="max-w-2xl">
-        <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 ring-1 ring-blue-200">
-          <Users className="h-3.5 w-3.5" aria-hidden="true" />
+      <div className="absolute top-0 right-1/4 w-80 h-80 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+      <div className="max-w-2xl relative z-10">
+        <span className="inline-flex items-center gap-2 rounded-full bg-blue-950/80 border border-blue-500/30 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-300">
+          <Users className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
           Subscription Onboarding
         </span>
-        <h3 className="mt-4 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-          Three Simple Steps. No Automated Card Charges.
+        <h3 className="mt-4 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+          Three Simple Steps. Zero Automated Card Charges.
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">
+        <p className="mt-2 text-sm leading-relaxed text-slate-300">
           Every organization account is verified and activated by our team after confirming your payment. Zero automatic rebilling, zero stored credit card data.
         </p>
       </div>
@@ -202,45 +200,53 @@ export function SubscriptionProcess({
       <MotionSection
         motion={motion}
         stagger={0.1}
-        className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 relative z-10"
       >
         {SUBSCRIPTION_STEPS.map((step, index) => (
           <MotionItem key={step.title} motion={motion} className="h-full">
-            <div className="flex h-full flex-col rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50/90 to-white p-6 transition-all duration-200 hover:border-blue-300 hover:shadow-md">
-              <div className="flex items-center justify-between mb-4">
-                <span
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold shadow-sm ${
-                    step.tone === "blue"
-                      ? "bg-blue-600 text-white shadow-blue-600/20"
-                      : step.tone === "amber"
-                        ? "bg-amber-500 text-white shadow-amber-500/20"
-                        : "bg-emerald-600 text-white shadow-emerald-600/20"
-                  }`}
-                >
-                  0{index + 1}
-                </span>
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Stage 0{index + 1}
-                </span>
+            <div className="flex h-full flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md p-7 transition-all duration-300 hover:border-blue-400 hover:shadow-xl hover:bg-slate-800/90 hover:-translate-y-1 relative overflow-hidden group">
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent group-hover:via-blue-500 transition-colors" />
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <span
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold shadow-sm ${
+                      step.tone === "blue"
+                        ? "bg-blue-600 text-white shadow-blue-600/20"
+                        : step.tone === "amber"
+                          ? "bg-amber-500 text-white shadow-amber-500/20"
+                          : "bg-emerald-600 text-white shadow-emerald-600/20"
+                    }`}
+                  >
+                    0{index + 1}
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-700">
+                    Stage 0{index + 1}
+                  </span>
+                </div>
+
+                <h4 className="font-heading text-lg font-bold text-white">
+                  {step.title}
+                </h4>
+                <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-slate-300">
+                  {step.text}
+                </p>
               </div>
 
-              <h4 className="font-heading text-base font-bold text-slate-900">
-                {step.title}
-              </h4>
-              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600 flex-1">
-                {step.text}
-              </p>
+              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] font-semibold text-slate-400">
+                <span>Verified Step</span>
+                <Check className="w-4 h-4 text-emerald-400" />
+              </div>
             </div>
           </MotionItem>
         ))}
       </MotionSection>
 
-      <div className="mt-8 flex flex-col gap-5 rounded-2xl border border-slate-200 bg-slate-50/80 p-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mt-8 flex flex-col gap-5 rounded-2xl border border-slate-800 bg-slate-950/80 backdrop-blur-md p-6 lg:flex-row lg:items-center lg:justify-between shadow-lg relative z-10">
         <div className="space-y-0.5">
-          <p className="text-sm font-bold text-slate-900">
+          <p className="text-sm font-bold text-white">
             Need a tailored enterprise or institutional convention?
           </p>
-          <p className="text-xs text-slate-600">
+          <p className="text-xs text-slate-400">
             Tell us your recruitment volume or university scope, and our team will prepare a direct quote in XAF.
           </p>
         </div>
@@ -251,7 +257,7 @@ export function SubscriptionProcess({
             )}&body=${encodeURIComponent(
               "Hello MANTECH Nexus,\n\nI would like to subscribe to a plan. Here is what I need:\n\nOrganization:\nRole(s) to fill:\nNumber of interns:\n\nThank you."
             )}`}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-xs font-bold text-white shadow-md shadow-blue-600/25 transition-colors hover:bg-blue-500"
           >
             <Mail className="h-3.5 w-3.5" aria-hidden="true" />
             Email Concierge
@@ -260,14 +266,14 @@ export function SubscriptionProcess({
             href={APP_CONFIG.support.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-[#128C7E]"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 text-xs font-bold text-white shadow-md shadow-green-600/25 transition-colors hover:bg-[#128C7E]"
           >
             <WhatsAppIcon className="h-3.5 w-3.5" title="WhatsApp" />
             WhatsApp
           </a>
           <Link
             href="/contact"
-            className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-300 bg-white px-4 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-100"
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-700 bg-slate-800/80 px-4 text-xs font-bold text-slate-200 transition-colors hover:bg-slate-700 hover:text-white"
           >
             Contact Form
           </Link>

@@ -308,7 +308,10 @@ export default async function InternPassportsPage(props: PageProps) {
         </div>
       </section>
 
-      <section className="container-mantech px-4 py-8 sm:px-6 lg:px-8">
+      <section className="py-16 bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 border-b border-slate-200/80 relative overflow-hidden">
+        <div className="absolute top-10 right-10 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
         <Card className="border border-slate-200 shadow-sm">
           <CardContent className="p-4 sm:p-6">
             <form action="/intern-passports" method="get" className="space-y-4">
@@ -702,6 +705,7 @@ export default async function InternPassportsPage(props: PageProps) {
             </div>
           </div>
         )}
+        </div>
       </section>
     </main>
   );

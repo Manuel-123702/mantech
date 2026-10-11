@@ -69,7 +69,7 @@ export default function LocationsPage() {
   ];
 
   return (
-    <div className="bg-slate-50 min-h-screen overflow-hidden">
+    <div className="bg-[#070d18] min-h-screen overflow-hidden">
       {/* ── HERO WITH BLUR REVEAL ── */}
       <section className="relative py-20 lg:py-28 bg-gradient-to-br from-slate-950 via-teal-950 to-slate-900 overflow-hidden">
         <div
@@ -118,12 +118,15 @@ export default function LocationsPage() {
       </section>
 
       {/* ── REGIONS GRID WITH SLIDE-LEFT STAGGER ── */}
-      <section className="py-20">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-24 relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #070d18 0%, #0a1220 50%, #070e18 100%)' }}>
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06] mix-blend-luminosity" style={{ backgroundImage: "url('/images/portal_tech_bg.jpg')" }} />
+        <div className="absolute top-10 right-10 w-96 h-96 bg-teal-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           {regionsError ? (
-            <div role="alert" className="py-16 text-center text-sm text-red-700">{regionsError}</div>
+            <div role="alert" className="py-16 text-center text-sm text-red-400">{regionsError}</div>
           ) : regionsLoading ? (
-            <div className="py-16 text-center text-sm text-slate-500">Loading regions and cities…</div>
+            <div className="py-16 text-center text-sm text-slate-400">Loading regions and cities…</div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-16 text-slate-400">
               <MapPin className="w-10 h-10 mx-auto mb-3 opacity-40" />
@@ -140,7 +143,7 @@ export default function LocationsPage() {
                     <AnimatedCard className="h-full">
                       <Link
                         href={`/locations/${encodeURIComponent(region.code.toLowerCase())}`}
-                        className="group block h-full bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                        className="group block h-full bg-slate-900/80 backdrop-blur-md rounded-3xl border border-slate-700/60 shadow-lg hover:shadow-2xl hover:border-teal-500/40 transition-all duration-300 overflow-hidden flex flex-col justify-between"
                       >
                         {/* Colored header */}
                         <div className={`bg-gradient-to-br ${gradient} p-5 relative overflow-hidden`}>
@@ -167,14 +170,14 @@ export default function LocationsPage() {
                             <p className="text-xs text-slate-400 uppercase tracking-wide mb-2.5 font-bold">Key Cities</p>
                             <div className="flex flex-wrap gap-1.5 mb-4">
                               {cities.map((city) => (
-                                <span key={city} className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">
+                                <span key={city} className="px-2.5 py-0.5 rounded-full bg-slate-700/60 text-slate-300 text-xs font-medium border border-slate-600/50">
                                   {city}
                                 </span>
                               ))}
                             </div>
                           </div>
-                          <div className="flex items-center justify-end pt-3 border-t border-slate-100">
-                            <span className="text-xs font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                          <div className="flex items-center justify-end pt-3 border-t border-slate-700/50">
+                            <span className="text-xs font-semibold text-teal-400 flex items-center gap-1 group-hover:gap-2 transition-all">
                               View Opportunities <ArrowRight className="w-3.5 h-3.5" />
                             </span>
                           </div>
@@ -190,8 +193,11 @@ export default function LocationsPage() {
       </section>
 
       {/* ── STATS BANNER WITH SCALE-IN ── */}
-      <section className="py-16 bg-white border-t border-slate-200">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-16 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #070e18 0%, #080d1c 100%)' }}>
+        {/* Subtle decorative glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500/8 blur-[100px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <MotionSection motion="scaleIn" stagger={0.08} className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             {[
               { label: 'Administrative Regions', value: String(regions.length) },
@@ -200,9 +206,9 @@ export default function LocationsPage() {
               { label: 'Active Opportunities', value: marketStats ? String(marketStats.activeInternships) : '—' },
             ].map((stat) => (
               <MotionItem key={stat.label} motion="scaleIn">
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-5">
-                  <div className="text-3xl font-extrabold text-blue-600 font-heading">{stat.value}</div>
-                  <div className="text-xs text-slate-600 font-medium mt-1">{stat.label}</div>
+                <div className="rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-sm p-6 shadow-lg hover:shadow-teal-500/10 hover:border-teal-500/40 transition-all">
+                  <div className="text-3xl font-extrabold text-teal-400 font-heading">{stat.value}</div>
+                  <div className="text-xs text-slate-400 font-semibold mt-1">{stat.label}</div>
                 </div>
               </MotionItem>
             ))}

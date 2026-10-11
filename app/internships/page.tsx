@@ -462,27 +462,30 @@ export default function InternshipsPage() {
       </section>
 
       {/* ───── INTERNSHIP CARDS GRID ───── */}
-      <section className="py-20 bg-slate-50">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
+      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #070d1b 0%, #0a1220 50%, #070e18 100%)' }}>
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.05] mix-blend-luminosity" style={{ backgroundImage: "url('/images/company_tech_bg.jpg')" }} />
+        <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/8 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative z-10">
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700/60">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 font-heading">
+              <h2 className="text-xl font-bold text-white font-heading">
                 Available Positions
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Showing {internships.length} live verified openings
               </p>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-xs text-slate-500 font-medium hidden sm:inline">
+              <span className="text-xs text-slate-400 font-medium hidden sm:inline">
                 Cameroon Nationwide
               </span>
 
               {/* Sort control — "Best match" only works once a match profile
                   has loaded, so it stays disabled (with a hint) for guests. */}
               <div
-                className="flex items-center rounded-lg border border-slate-300 bg-white p-0.5"
+                className="flex items-center rounded-lg border border-slate-700 bg-slate-800/80 p-0.5"
                 role="group"
                 aria-label="Sort internships"
               >
@@ -492,8 +495,8 @@ export default function InternshipsPage() {
                   aria-pressed={sortMode === "default"}
                   className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                     sortMode === "default"
-                      ? "bg-slate-900 text-white"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-slate-100 text-slate-900"
+                      : "text-slate-400 hover:text-white"
                   }`}
                 >
                   Default
@@ -532,15 +535,15 @@ export default function InternshipsPage() {
 
           {loading ? (
             <div className="flex justify-center py-24">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
             </div>
           ) : internships.length === 0 ? (
-            <div className="py-20 text-center bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-              <Inbox className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-slate-800">
+            <div className="py-20 text-center bg-slate-900/80 rounded-3xl border border-slate-700/60 p-8 shadow-lg">
+              <Inbox className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-white">
                 No matching internships found
               </h3>
-              <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+              <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
                 Try broadening your search keywords, selecting &apos;All
                 Professional Fields&apos;, or resetting regional filters.
               </p>
@@ -548,7 +551,7 @@ export default function InternshipsPage() {
                 variant="outline"
                 size="sm"
                 onClick={resetFilters}
-                className="mt-4 text-xs"
+                className="mt-4 text-xs border-slate-600 text-slate-300 hover:bg-slate-700"
               >
                 Reset All Filters
               </Button>
@@ -563,7 +566,7 @@ export default function InternshipsPage() {
                 return (
                   <MotionItem key={opp.id} motion="pop">
                     <AnimatedCard className="h-full">
-                      <div className="flex h-full flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all group">
+                      <div className="flex h-full flex-col justify-between rounded-3xl border border-slate-700/60 bg-slate-900/85 backdrop-blur-md p-6 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all group">
                         <div>
                           <div className="flex items-center justify-between gap-2 mb-3">
                             <Badge
@@ -646,24 +649,24 @@ export default function InternshipsPage() {
                         ) : null}
                       </div>
 
-                      <h3 className="font-heading text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      <h3 className="font-heading text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
                         {opp.title}
                       </h3>
 
-                      <div className="flex items-center gap-2 text-xs text-slate-500 mt-1 font-medium">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      <div className="flex items-center gap-2 text-xs text-slate-400 mt-1 font-medium">
+                        <MapPin className="w-3.5 h-3.5 text-slate-500" />
                         <span>
                           {opp.city},{" "}
                           {regionNameOf(opp as unknown as Record<string, unknown>) ||
                             "Cameroon"}
                         </span>
                         <span>•</span>
-                        <span className="uppercase font-semibold text-slate-700">
+                        <span className="uppercase font-semibold text-slate-300">
                           {String(opp.workMode || opp.work_mode || "ONSITE")}
                         </span>
                       </div>
 
-                      <p className="mt-3 text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                      <p className="mt-3 text-xs text-slate-400 line-clamp-2 leading-relaxed">
                         {opp.description ||
                           opp.summary ||
                           "Professional internship position with verified mentor supervision."}
@@ -673,7 +676,7 @@ export default function InternshipsPage() {
                         {skills.slice(0, 3).map((skill: string, i: number) => (
                           <span
                             key={i}
-                            className="px-2 py-0.5 rounded-lg bg-slate-100 text-[10px] text-slate-700 font-medium"
+                            className="px-2 py-0.5 rounded-lg bg-slate-700/60 text-[10px] text-slate-300 font-medium"
                           >
                             {skill}
                           </span>
@@ -681,8 +684,8 @@ export default function InternshipsPage() {
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-xs text-slate-400 font-mono">
+                    <div className="mt-6 pt-4 border-t border-slate-700/50 flex items-center justify-between">
+                      <span className="text-xs text-slate-500 font-mono">
                         {opp.durationMonths || opp.duration_months || 3} Months
                         Duration
                       </span>

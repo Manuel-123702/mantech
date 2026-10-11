@@ -102,8 +102,10 @@ export default function FieldsPage() {
       </section>
 
       {/* ── FIELDS GRID WITH 3D PERSPECTIVE FLIP ── */}
-      <section className="py-20">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-b border-slate-200/80 relative overflow-hidden">
+        <div className="absolute top-10 right-10 w-96 h-96 bg-violet-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           {error && <p role="alert" className="mb-6 text-center text-sm text-red-700">{error}</p>}
           
           <MotionSection motion="flip3D" stagger={0.06} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -163,8 +165,11 @@ export default function FieldsPage() {
       </section>
 
       {/* ── CTA WITH SCALE-IN ── */}
-      <section className="py-20 bg-white border-t border-slate-200">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-2xl mx-auto">
+      <section className="py-20 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-t border-slate-200/80 relative overflow-hidden">
+        {/* Subtle decorative glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-2xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}

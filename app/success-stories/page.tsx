@@ -507,7 +507,7 @@ const CAT_COLORS: Record<SuccessStory['outcomeCategory'], string> = {
 
 export default function SuccessStoriesPage() {
   return (
-    <div className="overflow-hidden bg-slate-50 min-h-screen">
+    <div className="overflow-hidden bg-[#070d18] min-h-screen">
       <section className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
         <div className="absolute inset-0 opacity-10"
           style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-opacity='0.3'%3E%3Cpolygon fill='%23a78bfa' points='50 0 60 40 100 50 60 60 50 100 40 60 0 50 40 40'/%3E%3C/g%3E%3C/svg%3E\")" }}
@@ -538,8 +538,10 @@ export default function SuccessStoriesPage() {
         </div>
       </section>
 
-      <section className="py-16 sm:py-20">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-20 relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0a1220 50%, #070d18 100%)' }}>
+        <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <StaggerContainer className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:gap-7">
             {SUCCESS_STORIES.map((story, idx) => (
               <StaggerItem key={story.id}>
@@ -547,9 +549,9 @@ export default function SuccessStoriesPage() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.03, duration: 0.5 }}
-                  className="group h-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl"
+                  className="group h-full overflow-hidden rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-2xl hover:border-blue-500/40"
                 >
-                  <header className="relative overflow-hidden border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white px-6 py-5">
+                  <header className="relative overflow-hidden border-b border-slate-700/50 bg-slate-800/50 px-6 py-5">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-center gap-3">
                         <PersonAvatar
@@ -558,7 +560,7 @@ export default function SuccessStoriesPage() {
                           className="h-12 w-12 shrink-0 rounded-xl shadow-md ring-1 ring-slate-900/5"
                         />
                         <div>
-                          <h3 className="font-heading text-lg font-bold text-slate-900 group-hover:text-blue-700">
+                          <h3 className="font-heading text-lg font-bold text-white group-hover:text-blue-400">
                             {story.internName}
                           </h3>
                           <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1.5">
@@ -572,7 +574,7 @@ export default function SuccessStoriesPage() {
                       </Badge>
                     </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-2 text-[11px] text-slate-500">
+                    <div className="mt-4 grid grid-cols-2 gap-2 text-[11px] text-slate-400">
                       <div className="flex items-center gap-1.5">
                         <Building2 className="w-3.5 h-3.5 text-blue-500" />
                         <span className="truncate">{story.hostCompany}</span>
@@ -593,16 +595,16 @@ export default function SuccessStoriesPage() {
                   </header>
 
                   <div className="px-6 py-5">
-                    <h4 className="font-semibold text-base leading-snug text-slate-900">
+                    <h4 className="font-semibold text-base leading-snug text-white">
                       {story.headline}
                     </h4>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    <p className="mt-2 text-sm leading-relaxed text-slate-400">
                       {story.excerpt}
                     </p>
 
                     <div className="mt-4 flex flex-wrap gap-1.5">
                       {story.keySkills.map((s) => (
-                        <span key={s} className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-600">
+                        <span key={s} className="rounded-full border border-slate-700/60 bg-slate-700/40 px-2 py-0.5 text-[11px] font-medium text-slate-300">
                           {s}
                         </span>
                       ))}
@@ -610,7 +612,7 @@ export default function SuccessStoriesPage() {
 
                     <ul className="mt-4 space-y-1.5">
                       {story.highlights.slice(0, 3).map((h) => (
-                        <li key={h} className="flex items-start gap-2 text-[12px] leading-relaxed text-slate-700">
+                        <li key={h} className="flex items-start gap-2 text-[12px] leading-relaxed text-slate-400">
                           <ChevronRight className="mt-0.5 w-3.5 h-3.5 shrink-0 text-blue-600" />
                           <span>{h}</span>
                         </li>
@@ -624,16 +626,17 @@ export default function SuccessStoriesPage() {
         </div>
       </section>
 
-      <section className="pb-20">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white px-6 py-10 text-center shadow-card sm:px-10 sm:py-14">
+      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #070e1a 0%, #0c1828 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md px-6 py-10 text-center shadow-lg sm:px-10 sm:py-14">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600/10 text-blue-600">
               <Award className="h-7 w-7" />
             </div>
-            <h2 className="mt-5 font-heading text-xl font-semibold text-slate-900 sm:text-2xl">
+            <h2 className="mt-5 font-heading text-xl font-semibold text-white sm:text-2xl">
               Share your own MANTECH Journey
             </h2>
-            <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
               If you completed an internship via MANTECH Nexus and would like to share your story (with your explicit consent and after verification), contact MANTECH on WhatsApp. We only publish journeys that are fully documented in the verified Intern Passport.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
@@ -643,7 +646,7 @@ export default function SuccessStoriesPage() {
                 </button>
               </Link>
               <Link href="/mantech-internship">
-                <button className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:border-blue-300 hover:text-blue-700">
+                <button className="inline-flex items-center gap-1.5 rounded-xl border border-slate-600 bg-slate-800 px-5 py-2.5 text-sm font-semibold text-slate-200 hover:border-blue-500 hover:text-blue-400 transition-all">
                   Browse IT internships
                 </button>
               </Link>

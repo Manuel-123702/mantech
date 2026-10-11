@@ -22,12 +22,12 @@ export default function AccessibilityPage() {
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">MANTECH Nexus is committed to making internship management accessible to all users across Cameroon.</p>
         </div>
       </section>
-      <section className="pb-20 bg-white">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="pb-24 pt-4 bg-gradient-to-b from-slate-50 via-white to-blue-50/20 relative overflow-hidden border-b border-slate-200/80">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f, idx) => (
               <FadeIn key={f.title} delay={idx * 0.05}>
-                <div className="h-full rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <div className="h-full rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-sm p-6 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary"><f.icon className="h-6 w-6" /></div>
                   <h3 className="mt-4 font-heading text-base font-semibold text-foreground">{f.title}</h3>
                   <p className="mt-2 text-sm text-muted-foreground">{f.description}</p>

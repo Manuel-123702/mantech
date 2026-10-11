@@ -83,12 +83,16 @@ export default function TestimonialsPage() {
         </MotionSection>
       </section>
 
-      <div className="mx-auto max-w-6xl px-6 py-16">
-        {/* Form first, so the page opens with a way to contribute. */}
-        <FadeIn>
-          <TestimonialsClient />
-        </FadeIn>
-      </div>
+      <section className="py-20 relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0a1220 50%, #070d18 100%)' }}>
+        <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10 max-w-6xl mx-auto">
+          {/* Form first, so the page opens with a way to contribute. */}
+          <FadeIn>
+            <TestimonialsClient />
+          </FadeIn>
+        </div>
+      </section>
     </>
   );
 }

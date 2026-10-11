@@ -520,7 +520,7 @@ export function Navbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
 
-                  <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50">
+                  <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50 focus:text-blue-950 data-[highlighted]:text-blue-950">
                     <Link href={dashboardLink} className="flex items-center gap-2.5 text-xs font-semibold text-blue-950">
                       <LayoutDashboard className="h-4 w-4 text-blue-700" />
                       <span>{roleLabel} Dashboard</span>
@@ -528,7 +528,7 @@ export function Navbar() {
                   </DropdownMenuItem>
 
                   {canBrowsePassports && (
-                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50">
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50 focus:text-blue-950 data-[highlighted]:text-blue-950">
                       <Link href="/intern-passports" className="flex items-center gap-2.5 text-xs font-semibold text-blue-950">
                         <Award className="h-4 w-4 text-blue-700" />
                         <span>Intern Passports</span>
@@ -537,7 +537,7 @@ export function Navbar() {
                   )}
 
                   {userRole === 'INTERN' && (
-                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-amber-50">
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-amber-50 focus:text-blue-950 data-[highlighted]:text-blue-950">
                       <Link href="/dashboard/intern/passport" className="flex items-center gap-2.5 text-xs font-semibold text-blue-950">
                         <Award className="h-4 w-4 text-amber-700" />
                         <span>My Intern Passport</span>
@@ -545,7 +545,7 @@ export function Navbar() {
                     </DropdownMenuItem>
                   )}
 
-                  <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50">
+                  <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50 focus:text-blue-950 data-[highlighted]:text-blue-950">
                     <Link href="/settings" className="flex items-center gap-2.5 text-xs font-semibold text-blue-950">
                       <ShieldCheck className="h-4 w-4 text-blue-950/55" />
                       <span>Security & Privacy</span>

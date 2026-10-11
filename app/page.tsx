@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   GraduationCap,
@@ -32,6 +33,16 @@ import {
   Building,
   Check,
   SlidersHorizontal,
+  Laptop,
+  Cpu,
+  Code2,
+  Shield,
+  Network,
+  Database,
+  LineChart,
+  Smartphone,
+  Layers,
+  Radio,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -415,28 +426,28 @@ export default function HomePage() {
     fields.length > 0
       ? fields.slice(0, 8)
       : [
-          { id: "f1", name: "Software & Web Development", slug: "software-development", category: "Technology" },
-          { id: "f2", name: "Networks & Cybersecurity", slug: "network-systems", category: "Technology" },
-          { id: "f3", name: "Accounting & Finance", slug: "accounting-finance", category: "Business" },
-          { id: "f4", name: "Digital Marketing & Sales", slug: "marketing", category: "Business" },
-          { id: "f5", name: "Data Science & AI", slug: "data-ai", category: "Technology" },
-          { id: "f6", name: "Civil & Industrial Engineering", slug: "engineering", category: "Engineering" },
-          { id: "f7", name: "Law & Business Compliance", slug: "law", category: "Law" },
-          { id: "f8", name: "Healthcare & Biomedical", slug: "health", category: "Healthcare" },
-        ];
+        { id: "f1", name: "Software & Web Development", slug: "software-development", category: "Technology" },
+        { id: "f2", name: "Networks & Cybersecurity", slug: "network-systems", category: "Technology" },
+        { id: "f3", name: "Accounting & Finance", slug: "accounting-finance", category: "Business" },
+        { id: "f4", name: "Digital Marketing & Sales", slug: "marketing", category: "Business" },
+        { id: "f5", name: "Data Science & AI", slug: "data-ai", category: "Technology" },
+        { id: "f6", name: "Civil & Industrial Engineering", slug: "engineering", category: "Engineering" },
+        { id: "f7", name: "Law & Business Compliance", slug: "law", category: "Law" },
+        { id: "f8", name: "Healthcare & Biomedical", slug: "health", category: "Healthcare" },
+      ];
 
   // Fallback regions for explorer
   const displayRegions =
     regions.length > 0
       ? regions.slice(0, 6)
       : [
-          { id: "r1", name: "Littoral", code: "CM-LT", capital: "Douala" },
-          { id: "r2", name: "Centre", code: "CM-CE", capital: "Yaoundé" },
-          { id: "r3", name: "South-West", code: "CM-SW", capital: "Buea" },
-          { id: "r4", name: "West", code: "CM-OU", capital: "Bafoussam" },
-          { id: "r5", name: "North-West", code: "CM-NW", capital: "Bamenda" },
-          { id: "r6", name: "North", code: "CM-NO", capital: "Garoua" },
-        ];
+        { id: "r1", name: "Littoral", code: "CM-LT", capital: "Douala" },
+        { id: "r2", name: "Centre", code: "CM-CE", capital: "Yaoundé" },
+        { id: "r3", name: "South-West", code: "CM-SW", capital: "Buea" },
+        { id: "r4", name: "West", code: "CM-OU", capital: "Bafoussam" },
+        { id: "r5", name: "North-West", code: "CM-NW", capital: "Bamenda" },
+        { id: "r6", name: "North", code: "CM-NO", capital: "Garoua" },
+      ];
 
   return (
     <div className="overflow-hidden">
@@ -774,81 +785,132 @@ export default function HomePage() {
       </section>
 
       {/* --- SRS §20: FEATURED VERIFIED ORGANIZATIONS FROM DATABASE --- */}
-      <section className="py-16 bg-white border-b border-slate-200">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+      <section className="py-24 bg-[#080d1a] border-b border-slate-800/80 relative overflow-hidden text-white">
+        {/* Subtle background image & atmospheric lighting */}
+        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
+          <Image src="/images/company_tech_bg.jpg" alt="" fill className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080d1a]/95 via-[#080d1a]/90 to-[#080d1a] pointer-events-none" />
+        <div className="absolute -top-24 right-1/4 w-96 h-96 bg-blue-500/15 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute -bottom-24 left-1/4 w-96 h-96 bg-indigo-500/15 blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
+          <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
             <div>
-              <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
-                Trusted Partners
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading mt-1">
-                Verified Host Enterprises & Institutions
+              <div className="inline-flex items-center gap-2 rounded-full bg-blue-950/80 border border-blue-500/30 px-3.5 py-1 text-xs font-bold text-blue-300 tracking-wide mb-3">
+                <ShieldCheck className="w-4 h-4 text-blue-400" />
+                <span>Accredited Employer Network</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                <span className="text-[10px] font-semibold text-blue-300 uppercase">MINESUP & MINPOSTEL Aligned</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
+                Verified Host Enterprises & Academic Partners
               </h2>
-              <p className="text-slate-600 text-xs sm:text-sm mt-1">
-                Accredited organizations actively evaluating candidates and hosting professional internships.
+              <p className="text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
+                Accredited institutions actively screening technical competencies, evaluating candidates through verified Intern Passports, and hosting placements across Cameroon.
               </p>
             </div>
             <Link href="/companies">
               <Button
                 variant="outline"
-                size="sm"
-                className="text-xs font-semibold"
+                className="text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-white border-slate-700 shadow-sm transition-all hover:border-blue-400 gap-1.5"
               >
                 Explore All Organizations
-                <ChevronRight className="w-3.5 h-3.5 ml-1" />
+                <ChevronRight className="w-3.5 h-3.5" />
               </Button>
             </Link>
           </FadeIn>
 
+          {/* Trust Telemetry Ribbon */}
+          <div className="mb-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { label: "Active Host Organizations", val: "240+", icon: Building2 },
+              { label: "Manual Vetting Standard", val: "100%", icon: ShieldCheck },
+              { label: "Placement Regions", val: "10 Regions", icon: MapPin },
+              { label: "Ghost Listings Permitted", val: "0 Policy", icon: Lock },
+            ].map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <div key={i} className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-sm backdrop-blur-md">
+                  <div className="w-9 h-9 rounded-xl bg-blue-950/80 text-blue-400 border border-blue-500/20 flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-white font-heading">{stat.val}</div>
+                    <div className="text-[11px] text-slate-400 font-medium">{stat.label}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
           <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {companies.length > 0
-              ? companies.map((org) => (
+              ? companies.map((org, idx) => {
+                const gradients = [
+                  "from-blue-600 to-indigo-600",
+                  "from-indigo-600 to-violet-600",
+                  "from-cyan-600 to-blue-600",
+                  "from-emerald-600 to-teal-600",
+                  "from-purple-600 to-pink-600",
+                  "from-amber-600 to-orange-600",
+                ];
+                const grad = gradients[idx % gradients.length];
+                return (
                   <StaggerItem key={org.id}>
                     <Link
                       href={`/companies/${org.slug || org.id}`}
-                      className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:shadow-md hover:border-blue-300 transition-all text-center group flex flex-col justify-between h-full"
+                      className="p-5 rounded-3xl border border-slate-800 bg-slate-900/85 backdrop-blur-md hover:bg-slate-800/95 hover:border-blue-400 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 text-center group flex flex-col justify-between h-full shadow-lg relative overflow-hidden"
                     >
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-700 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3 shadow-sm group-hover:scale-105 transition-transform">
-                        {org.name.charAt(0)}
-                      </div>
+                      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-blue-500/40 to-transparent group-hover:via-blue-400 transition-colors" />
                       <div>
-                        <h3 className="font-bold text-xs text-slate-900 group-hover:text-blue-600 transition-colors truncate">
+                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${grad} text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-3.5 shadow-md shadow-blue-600/20 group-hover:scale-105 group-hover:rotate-1 transition-transform`}>
+                          {org.name.charAt(0)}
+                        </div>
+                        <h3 className="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300 transition-colors line-clamp-1">
                           {org.name}
                         </h3>
-                        <div className="flex items-center justify-center gap-1 text-[10px] text-emerald-600 mt-1">
-                          <ShieldCheck className="w-3 h-3" />
-                          <span>Verified</span>
+                        <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-0.5 rounded-full mt-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span>Verified Host</span>
                         </div>
                       </div>
-                      <span className="text-[10px] text-slate-500 mt-2 block font-mono">
-                        {org.city || org.region?.name || "Cameroon"}
-                      </span>
+                      <div className="mt-3.5 pt-3 border-t border-slate-800 flex items-center justify-center gap-1 text-[11px] text-slate-400 font-medium">
+                        <MapPin className="w-3 h-3 text-slate-500" />
+                        <span className="truncate">{org.city || org.region?.name || "Cameroon"}</span>
+                      </div>
                     </Link>
                   </StaggerItem>
-                ))
+                );
+              })
               : [
-                  "Orange Cameroun",
-                  "MTN Cameroon",
-                  "Camtel",
-                  "UBA Cameroon",
-                  "Afriland First Bank",
-                  "Université de Yaoundé I",
-                ].map((name, i) => (
-                  <StaggerItem key={i}>
-                    <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 text-center">
-                      <div className="w-12 h-12 rounded-xl bg-slate-800 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3">
-                        {name.charAt(0)}
+                { name: "Orange Cameroun", city: "Douala", sector: "Telecom" },
+                { name: "MTN Cameroon", city: "Douala", sector: "Telecom" },
+                { name: "Camtel", city: "Yaoundé", sector: "Telecom" },
+                { name: "UBA Cameroon", city: "Douala", sector: "Fintech" },
+                { name: "Afriland First Bank", city: "Yaoundé", sector: "Banking" },
+                { name: "Université de Yaoundé I", city: "Yaoundé", sector: "Academic" },
+              ].map((item, i) => (
+                <StaggerItem key={i}>
+                  <div className="p-5 rounded-3xl border border-slate-800 bg-slate-900/85 backdrop-blur-md text-center shadow-lg flex flex-col justify-between h-full">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-slate-800 to-blue-900 text-white font-bold text-xl flex items-center justify-center mx-auto mb-3.5 shadow-sm">
+                      {item.name.charAt(0)}
+                    </div>
+                    <div>
+                      <div className="font-bold text-xs sm:text-sm text-white truncate">
+                        {item.name}
                       </div>
-                      <div className="font-bold text-xs text-slate-900 truncate">
-                        {name}
-                      </div>
-                      <div className="flex items-center justify-center gap-1 text-[10px] text-emerald-600 mt-1">
-                        <ShieldCheck className="w-3 h-3" />
+                      <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-2 py-0.5 rounded-full mt-2">
+                        <ShieldCheck className="w-3 h-3 text-emerald-400" />
                         <span>Accredited</span>
                       </div>
                     </div>
-                  </StaggerItem>
-                ))}
+                    <div className="mt-3.5 pt-3 border-t border-slate-800 text-[11px] text-slate-400">
+                      {item.city}
+                    </div>
+                  </div>
+                </StaggerItem>
+              ))}
           </StaggerContainer>
         </div>
       </section>
@@ -895,110 +957,133 @@ export default function HomePage() {
       </section>
 
       {/* --- LIVE IT INTERNSHIPS (Dynamic from Database) --- */}
-      <section className="py-24 bg-slate-100 relative">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-[#070e1b] border-b border-slate-800/80 relative overflow-hidden text-white">
+        {/* Backdrop tech image & ambient lighting */}
+        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
+          <Image src="/images/portal_tech_bg.jpg" alt="" fill className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#070e1b]/95 via-[#070e1b]/90 to-[#070e1b] pointer-events-none" />
+        <div className="absolute top-12 left-10 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-12 right-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
-                Live Database
-              </span>
-              <h2 className="text-3xl font-extrabold text-slate-900 font-heading mt-1">
+              <div className="inline-flex items-center gap-2 rounded-full bg-emerald-950/80 border border-emerald-500/30 px-3.5 py-1 text-xs font-bold text-emerald-300 tracking-wide mb-3">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span className="w-1.5 h-1.5 -ml-3.5 rounded-full bg-emerald-400" />
+                <span>Live Technical Lab Synchronized</span>
+                <span className="text-[10px] text-emerald-400/80 font-mono">· 0 Ghost Postings Policy</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
                 Featured IT Internship Opportunities
               </h2>
-              <p className="text-slate-600 text-sm mt-1">
-                Directly synchronized with partner enterprise technical labs across Douala, Yaoundé, and Buea.
+              <p className="text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
+                Directly synchronized with partner enterprise technical labs across Douala, Yaoundé, Buea, and Bafoussam. Verified stipends and mentor oversight.
               </p>
             </div>
             <Link href="/internships">
               <Button
                 variant="outline"
-                className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-600 font-medium text-sm"
+                className="border-slate-700 bg-slate-800/90 text-white hover:bg-slate-700 hover:border-emerald-400 font-semibold text-sm shadow-xs gap-1.5"
               >
                 View All Opportunities
-                <ChevronRight className="w-4 h-4 ml-1" />
+                <ChevronRight className="w-4 h-4" />
               </Button>
             </Link>
           </div>
 
           <MotionSection motion="slideLeft" stagger={0.1}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {featuredInternships.map((opp) => (
-                <MotionItem key={opp.id} motion="slideLeft" className="h-full">
-                  <div className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
-                    <div>
-                      <div className="flex items-center justify-between gap-2 mb-3">
-                        <Badge
-                          variant="secondary"
-                          className="text-[10px] font-semibold uppercase"
-                        >
-                          {fieldNameOf(
-                            opp as unknown as Record<string, unknown>,
-                          ) || "Professional Field"}
-                        </Badge>
-                        <span className="text-xs font-bold text-emerald-600 font-mono">
-                          {opp.allowanceXAF || opp.allowance_xaf
-                            ? `${(opp.allowanceXAF || opp.allowance_xaf || 0).toLocaleString()} FCFA / mo`
-                            : opp.isPaid || opp.is_paid
-                              ? "Paid Internship"
-                              : "Accredited Experience"}
-                        </span>
-                      </div>
+              {featuredInternships.map((opp) => {
+                const workModeStr = String(opp.workMode || opp.work_mode || "ONSITE").toUpperCase();
+                const isPaid = opp.allowanceXAF || opp.allowance_xaf || opp.isPaid || opp.is_paid;
+                return (
+                  <MotionItem key={opp.id} motion="slideLeft" className="h-full">
+                    <div className="group flex h-full flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md p-7 shadow-xl hover:shadow-2xl hover:border-emerald-500/50 hover:bg-slate-800/90 hover:-translate-y-1.5 transition-all duration-300 relative overflow-hidden">
+                      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 opacity-60 group-hover:opacity-100 transition-opacity" />
 
-                      <h3 className="font-heading text-lg font-bold text-slate-900">
-                        {opp.title}
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-1 font-medium">
-                        {opp.city || "Douala"},{" "}
-                        {regionNameOf(
-                          opp as unknown as Record<string, unknown>,
-                        ) || "Littoral"}{" "}
-                        •{" "}
-                        {String(
-                          opp.workMode || opp.work_mode || "ONSITE",
-                        ).toUpperCase()}
-                      </p>
-                      <p className="text-xs text-slate-600 mt-3 line-clamp-2 leading-relaxed">
-                        {opp.description ||
-                          opp.summary ||
-                          "Professional internship opportunity with verified mentor guidance."}
-                      </p>
+                      <div>
+                        {/* Header metadata */}
+                        <div className="flex items-center justify-between gap-2 mb-4">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-500/30 text-[11px] font-bold text-blue-300 uppercase tracking-wider">
+                            <Cpu className="w-3 h-3 text-blue-400" />
+                            {fieldNameOf(opp as unknown as Record<string, unknown>) || "Technical Track"}
+                          </span>
 
-                      <div className="flex flex-wrap gap-1.5 mt-4">
-                        {(
-                          (opp.requiredSkills ||
-                            opp.required_skills ||
-                            opp.skills ||
-                            []) as string[]
-                        )
-                          .slice(0, 4)
-                          .map((skill: string, i: number) => (
+                          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold font-mono ${isPaid
+                            ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30"
+                            : "bg-slate-800 text-slate-300 border border-slate-700"
+                            }`}>
+                            {opp.allowanceXAF || opp.allowance_xaf
+                              ? `${(opp.allowanceXAF || opp.allowance_xaf || 0).toLocaleString()} FCFA / mo`
+                              : isPaid
+                                ? "Paid Placement"
+                                : "Accredited Experience"}
+                          </span>
+                        </div>
+
+                        {/* Opportunity Title */}
+                        <h3 className="font-heading text-lg sm:text-xl font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
+                          {opp.title}
+                        </h3>
+
+                        {/* Location and Mode row */}
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-2.5 font-medium">
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                            {opp.city || "Douala"}, {regionNameOf(opp as unknown as Record<string, unknown>) || "Littoral"}
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-800 text-[11px] font-semibold text-slate-300 border border-slate-700">
+                            {workModeStr === "REMOTE" ? (
+                              <Globe className="w-3 h-3 text-blue-400" />
+                            ) : workModeStr === "HYBRID" ? (
+                              <Laptop className="w-3 h-3 text-indigo-400" />
+                            ) : (
+                              <Building2 className="w-3 h-3 text-amber-400" />
+                            )}
+                            {workModeStr}
+                          </span>
+                        </div>
+
+                        {/* Excerpt */}
+                        <p className="text-xs sm:text-sm text-slate-300 mt-3.5 line-clamp-2 leading-relaxed">
+                          {opp.description || opp.summary || "Professional internship opportunity with verified mentor guidance and real production exposure."}
+                        </p>
+
+                        {/* Skills Chips */}
+                        <div className="flex flex-wrap gap-1.5 mt-4">
+                          {(((opp.requiredSkills || opp.required_skills || opp.skills || []) as string[])).slice(0, 4).map((skill: string, i: number) => (
                             <span
                               key={i}
-                              className="px-2 py-0.5 rounded bg-slate-100 text-[10px] text-slate-700 font-medium"
+                              className="px-2.5 py-0.5 rounded-lg bg-slate-800 text-[11px] text-slate-300 font-medium border border-slate-700/60"
                             >
                               {skill}
                             </span>
                           ))}
+                        </div>
+                      </div>
+
+                      {/* Footer Actions */}
+                      <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span className="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          {opp.durationMonths || opp.duration_months || 3} Mos Placement
+                        </span>
+                        <Link href={`/internships/${opp.slug}`}>
+                          <Button
+                            size="sm"
+                            className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl shadow-md shadow-emerald-600/25 gap-1"
+                          >
+                            <span>Inspect & Apply</span>
+                            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                          </Button>
+                        </Link>
                       </div>
                     </div>
-
-                    <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-[11px] text-slate-400 font-mono">
-                        {opp.durationMonths || opp.duration_months || 3} Months
-                        Duration
-                      </span>
-                      <Link href={`/internships/${opp.slug}`}>
-                        <Button
-                          size="sm"
-                          className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
-                        >
-                          View Opportunity
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </MotionItem>
-              ))}
+                  </MotionItem>
+                );
+              })}
             </div>
           </MotionSection>
         </div>
@@ -1128,107 +1213,192 @@ export default function HomePage() {
       </section>
 
       {/* --- SRS §20: PROFESSIONAL FIELDS EXPLORER --- */}
-      <section className="py-24 bg-white border-b border-slate-200">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-[#0a0f1d] border-b border-slate-800/80 relative overflow-hidden text-white">
+        {/* Backdrop tech image & ambient lighting */}
+        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
+          <Image src="/images/about_tech_bg.jpg" alt="" fill className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d]/95 via-[#0a0f1d]/90 to-[#0a0f1d] pointer-events-none" />
+        <div className="absolute top-1/3 -left-20 w-80 h-80 bg-blue-500/15 blur-[110px] rounded-full pointer-events-none" />
+        <div className="absolute -bottom-10 right-10 w-96 h-96 bg-indigo-500/15 blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
-                Specializations
-              </span>
-              <h2 className="text-3xl font-extrabold text-slate-900 font-heading mt-1">
-                Explore Professional Fields
+              <div className="inline-flex items-center gap-2 rounded-full bg-blue-950/80 border border-blue-500/30 px-3.5 py-1 text-xs font-bold text-blue-300 tracking-wide mb-3">
+                <Compass className="w-4 h-4 text-blue-400" />
+                <span>MINESUP Framework Aligned</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                <span className="text-[10px] text-blue-300 font-mono">8 Accredited Disciplines</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
+                Curriculum Alignment & Professional Fields
               </h2>
-              <p className="text-slate-600 text-sm mt-1">
-                MANTECH supports all disciplines in Cameroon, from IT and Engineering to Business, Law, and Health.
+              <p className="text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
+                Engineered to bridge Cameroon higher education diplomas (BTS, HND, DSEP, B.Eng) with real-world enterprise engineering labs, banking systems, and cloud infrastructure.
               </p>
             </div>
             <Link href="/fields">
-              <Button variant="outline" className="text-xs font-semibold">
+              <Button variant="outline" className="text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-white border-slate-700 shadow-sm transition-all hover:border-blue-400 gap-1.5">
                 Browse All Fields
-                <ChevronRight className="w-4 h-4 ml-1" />
+                <ChevronRight className="w-4 h-4" />
               </Button>
             </Link>
           </FadeIn>
 
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {displayFields.map((field) => (
-              <StaggerItem key={field.id}>
-              <Link
-                href={`/fields/${field.slug}`}
-                className="p-6 rounded-2xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-lg transition-all group flex flex-col justify-between h-full"
-              >
-                <div>
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <Compass className="w-5 h-5" />
-                  </div>
-                  <Badge variant="secondary" className="text-[10px] uppercase mb-2">
-                    {field.category || "Professional Field"}
-                  </Badge>
-                  <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-base font-heading">
-                    {field.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
-                    {field.description ||
-                      "Browse verified opportunities, partner enterprises, and curriculum alignment."}
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-600">
-                  <span>View opportunities</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-              </StaggerItem>
-            ))}
+            {displayFields.map((field) => {
+              const iconMap: Record<string, { icon: React.ComponentType<{ className?: string }>; grad: string; level: string }> = {
+                "software-engineering": { icon: Code2, grad: "from-blue-600 to-indigo-600", level: "BTS · HND · B.Eng" },
+                "cybersecurity": { icon: Shield, grad: "from-rose-600 to-red-600", level: "MINPOSTEL Standard" },
+                "cloud-computing": { icon: Network, grad: "from-cyan-600 to-blue-600", level: "AWS / Azure / GCP" },
+                "data-science": { icon: Database, grad: "from-amber-600 to-orange-600", level: "Data & ML Pipelines" },
+                "telecommunications": { icon: Radio, grad: "from-emerald-600 to-teal-600", level: "Core 4G/5G & RF" },
+                "business-it": { icon: LineChart, grad: "from-indigo-600 to-slate-700", level: "ERP & Governance" },
+                "mobile-development": { icon: Smartphone, grad: "from-purple-600 to-fuchsia-600", level: "Android & iOS" },
+                "devops-infrastructure": { icon: Layers, grad: "from-teal-600 to-cyan-700", level: "CI/CD & Kubernetes" },
+              };
+              const theme = iconMap[field.slug] || { icon: Compass, grad: "from-blue-600 to-indigo-600", level: "Technical Track" };
+              const Icon = theme.icon;
+
+              return (
+                <StaggerItem key={field.id}>
+                  <Link
+                    href={`/fields/${field.slug}`}
+                    className="p-7 rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md hover:border-blue-400 hover:bg-slate-800/90 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between h-full shadow-lg relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-blue-500/40 to-transparent group-hover:via-blue-400 transition-colors" />
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`w-13 h-13 rounded-2xl bg-gradient-to-tr ${theme.grad} text-white flex items-center justify-center font-bold text-sm shadow-md group-hover:scale-105 transition-transform`}>
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-orange-300 bg-slate-800 px-2.5 py-1 rounded-full border border-slate-700">
+                          {theme.level}
+                        </span>
+                      </div>
+
+                      <h3 className="font-bold text-white group-hover:text-blue-300 transition-colors text-lg font-heading">
+                        {field.name}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-300 mt-2 line-clamp-2 leading-relaxed">
+                        {field.description ||
+                          "Browse verified opportunities, partner enterprises, and curriculum alignment."}
+                      </p>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-orange-300">
+                      <span>Curriculum & Openings</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                    </div>
+                  </Link>
+                </StaggerItem>
+              );
+            })}
           </StaggerContainer>
         </div>
       </section>
 
       {/* --- SRS §20: CAMEROON REGIONAL HUBS EXPLORER --- */}
-      <section className="py-24 bg-slate-50 border-b border-slate-200">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-[#061713] border-b border-slate-800/80 relative overflow-hidden text-white">
+        {/* Backdrop tech image & ambient lighting */}
+        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
+          <Image src="/images/security_tech_bg.jpg" alt="" fill className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#061713]/95 via-[#061713]/90 to-[#061713] pointer-events-none" />
+        <div className="absolute top-10 right-10 w-96 h-96 bg-emerald-500/15 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-teal-500/15 blur-[110px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
-                Territory Coverage
-              </span>
-              <h2 className="text-3xl font-extrabold text-slate-900 font-heading mt-1">
+              <div className="inline-flex items-center gap-2 rounded-full bg-emerald-950/80 border border-emerald-500/30 px-3.5 py-1 text-xs font-bold text-emerald-300 tracking-wide mb-3">
+                <MapPin className="w-4 h-4 text-emerald-400" />
+                <span>Cameroon Geographic Grid</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[10px] text-emerald-300 font-mono">10/10 Regions Active</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
                 Internships Across All 10 Regions
               </h2>
-              <p className="text-slate-600 text-sm mt-1">
-                Discover local on-site, hybrid, and remote opportunities across Cameroon economic centers.
+              <p className="text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
+                From the commercial tech corridors of Littoral to Silicon Mountain in South West and polytechnics in Centre — discover local on-site, hybrid, and remote opportunities.
               </p>
             </div>
             <Link href="/locations">
-              <Button variant="outline" className="text-xs font-semibold">
+              <Button variant="outline" className="text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-white border-slate-700 shadow-sm transition-all hover:border-emerald-400 gap-1.5">
                 All Cameroon Locations
-                <ChevronRight className="w-4 h-4 ml-1" />
+                <ChevronRight className="w-4 h-4" />
               </Button>
             </Link>
           </FadeIn>
 
           <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {displayRegions.map((region) => (
-              <StaggerItem key={region.id}>
-              <Link
-                href={`/locations/${region.code.toLowerCase()}`}
-                className="p-5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all group text-center block"
-              >
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mx-auto mb-3 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <h3 className="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
-                  {region.name}
-                </h3>
-                <p className="text-xs text-slate-500 font-mono mt-1">
-                  {region.capital}
-                </p>
-                <span className="inline-block mt-3 px-2 py-0.5 rounded-full bg-slate-100 text-[10px] font-bold text-slate-600">
-                  {region.code}
-                </span>
-              </Link>
-              </StaggerItem>
-            ))}
+            {displayRegions.map((region) => {
+              // Professional per-region presentation. Keyed by region NAME (the
+              // DB `code` values look like "REG_ADAMAWA" which is not fit to show
+              // to users), so each card gets a clean 2-letter badge + its own hue.
+              const regionMeta: Record<string, { short: string; grad: string }> = {
+                "Littoral": { short: "LT", grad: "from-blue-600 to-cyan-600" },
+                "Centre": { short: "CE", grad: "from-emerald-600 to-teal-600" },
+                "Adamawa": { short: "AD", grad: "from-purple-600 to-indigo-600" },
+                "East": { short: "ES", grad: "from-orange-600 to-amber-600" },
+                "Far North": { short: "FN", grad: "from-rose-600 to-red-600" },
+                "North": { short: "NO", grad: "from-teal-600 to-emerald-600" },
+                "North-West": { short: "NW", grad: "from-sky-600 to-blue-600" },
+                "South": { short: "SU", grad: "from-lime-600 to-emerald-600" },
+                "South-West": { short: "SW", grad: "from-indigo-600 to-violet-600" },
+                "West": { short: "OU", grad: "from-amber-600 to-orange-600" },
+              };
+              const meta =
+                regionMeta[region.name] || {
+                  short: region.name.slice(0, 2).toUpperCase(),
+                  grad: "from-slate-700 to-slate-900",
+                };
+
+              return (
+                <StaggerItem key={region.id}>
+                  <Link
+                    href={`/locations/${region.code.toLowerCase()}`}
+                    className="p-5 rounded-3xl border border-slate-800 bg-slate-900/90 hover:border-emerald-400 hover:bg-slate-800/90 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group text-center block shadow-lg relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent group-hover:via-emerald-400 transition-colors" />
+                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${meta.grad} text-white flex items-center justify-center mx-auto mb-3.5 shadow-md group-hover:scale-105 transition-transform font-bold text-sm`}>
+                      {meta.short}
+                    </div>
+                    <h3 className="font-bold text-sm text-white group-hover:text-emerald-300 transition-colors">
+                      {region.name}
+                    </h3>
+                    <p className="text-[11px] text-slate-400 font-mono mt-1">
+                      {region.capital}
+                    </p>
+                    <div className="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-center gap-1 text-[10px] text-emerald-400 font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>Live Hub</span>
+                    </div>
+                  </Link>
+                </StaggerItem>
+              );
+            })}
           </StaggerContainer>
+
+          {/* Territory Telemetry Banner */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-slate-800 backdrop-blur-md shadow-lg">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-950/80 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                <Globe className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="text-xs sm:text-sm font-bold text-white">National Placement Telemetry: 10/10 Administrative Regions Active</div>
+                <div className="text-[11px] text-slate-400">Verified physical supervisor visits and institutional academic coordination nationwide.</div>
+              </div>
+            </div>
+            <Link href="/locations">
+              <Button size="sm" variant="outline" className="text-xs font-semibold shrink-0 gap-1.5 border-slate-700 bg-slate-800 text-white hover:bg-slate-700 hover:border-emerald-400">
+                Inspect All Hubs <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -1415,22 +1585,54 @@ export default function HomePage() {
       </section>
 
       {/* --- PLANS FOR COMPANIES AND UNIVERSITIES --- */}
-      <section id="plans" className="py-20 bg-slate-50 relative overflow-hidden">
+      <section id="plans" className="py-24 bg-[#080d1a] border-b border-slate-800/80 relative overflow-hidden text-white">
+        {/* Backdrop tech image & ambient lighting */}
+        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
+          <Image src="/images/hero_tech_bg.jpg" alt="" fill className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080d1a]/95 via-[#080d1a]/90 to-[#080d1a] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-blue-500/15 blur-[130px] rounded-full pointer-events-none" />
+
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <RevealOnScroll className="text-center max-w-3xl mx-auto">
-            <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-              <Zap className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-              Plans
-            </Badge>
-            <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold font-heading text-slate-900">
-              Internships are free for members
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-950/80 border border-blue-500/30 px-3.5 py-1 text-xs font-bold text-blue-300 tracking-wide mb-3">
+              <Zap className="h-3.5 w-3.5 text-blue-400" />
+              <span>Transparent XAF Invoicing</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+              <span className="text-[10px] text-blue-300 font-mono">Zero Automated Card Charges</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold font-heading text-white tracking-tight">
+              Internships are 100% Free for Candidates
             </h2>
-            <p className="mt-4 text-slate-600 text-sm sm:text-base leading-relaxed">
-              Searching for internships, applying and building your Intern Passport never
-              costs anything. If you run a company or a university and want to post
-              internships and reach candidates, pick a plan below.
+            <p className="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">
+              Searching for openings, building your verified Intern Passport, and receiving placement offers never costs anything. Host enterprises and institutions subscribe to transparent, non-recurring XAF plans.
             </p>
           </RevealOnScroll>
+
+          {/* Dual Pathway Quick Comparison */}
+          <div className="mt-10 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-4 backdrop-blur-md">
+              <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <GraduationCap className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">For Interns & Students</div>
+                <div className="text-sm font-bold text-white mt-0.5">Always Free · 0 FCFA Lifetime</div>
+                <div className="text-xs text-slate-300 mt-0.5">Free Intern Passport, direct applications, and verified certificate.</div>
+              </div>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-blue-950/40 border border-blue-500/30 flex items-center gap-4 backdrop-blur-md">
+              <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-blue-400">For Employers & Faculties</div>
+                <div className="text-sm font-bold text-white mt-0.5">Manual XAF Tiers · Pay per term</div>
+                <div className="text-xs text-slate-300 mt-0.5">MTN MoMo, Orange Money, or Bank Transfer with official tax receipt.</div>
+              </div>
+            </div>
+          </div>
 
           {packages.length > 0 ? (
             <MotionSection motion="scaleIn" stagger={0.1}>
@@ -1441,69 +1643,86 @@ export default function HomePage() {
                   return (
                     <MotionItem key={plan.code} motion="spread" className="h-full">
                       <div
-                        className={`relative flex h-full flex-col rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md ${
-                          isRecommended
-                            ? "border-blue-500 ring-2 ring-blue-200"
-                            : "border-slate-200"
-                        }`}
+                        className={`relative flex h-full flex-col justify-between rounded-3xl border bg-slate-900/90 backdrop-blur-md p-7 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 ${isRecommended
+                          ? "border-blue-500/80 ring-2 ring-blue-500/20 shadow-blue-500/10"
+                          : isFree
+                            ? "border-emerald-500/40"
+                            : "border-slate-800"
+                          }`}
                       >
                         {isRecommended && (
-                          <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-3 py-1 text-[11px] font-semibold text-white shadow">
-                            Most popular
+                          <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-1 text-[11px] font-bold text-white shadow-md">
+                            Most Popular for Labs
                           </span>
                         )}
 
-                        <h3 className="text-lg font-bold text-slate-900">
-                          {plan.name}
-                        </h3>
-                        <p className="mt-1 text-sm text-slate-600">
-                          {plan.description}
-                        </p>
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-bold text-white font-heading">
+                              {plan.name}
+                            </h3>
+                            {isFree && (
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
+                                Intern Tier
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1.5 text-xs text-slate-300 min-h-[36px] leading-relaxed">
+                            {plan.description}
+                          </p>
 
-                        <p className="mt-4">
-                          {isFree ? (
-                            <span className="text-3xl font-extrabold text-slate-900">
-                              Free
-                            </span>
-                          ) : (
-                            <>
-                              <span className="text-3xl font-extrabold text-slate-900">
-                                {plan.priceXAF.toLocaleString()}
-                              </span>
-                              <span className="text-sm font-medium text-slate-500">
-                                {" "}
-                                XAF / month
-                              </span>
-                            </>
+                          <div className="mt-5 pb-5 border-b border-slate-800">
+                            {isFree ? (
+                              <div className="flex items-baseline gap-1">
+                                <span className="text-4xl font-extrabold text-white font-heading">
+                                  0
+                                </span>
+                                <span className="text-sm font-bold text-slate-300">
+                                  XAF / forever
+                                </span>
+                              </div>
+                            ) : (
+                              <div className="flex items-baseline gap-1">
+                                <span className="text-3xl sm:text-4xl font-extrabold text-white font-heading">
+                                  {plan.priceXAF.toLocaleString()}
+                                </span>
+                                <span className="text-xs font-semibold text-slate-400">
+                                  XAF / mo
+                                </span>
+                              </div>
+                            )}
+                            <div className="text-[11px] text-slate-400 mt-1">Manual non-recurring settlement</div>
+                          </div>
+
+                          {plan.features.length > 0 && (
+                            <ul className="mt-5 space-y-2.5 text-xs text-slate-300">
+                              {plan.features.map((feature) => (
+                                <li key={feature} className="flex items-start gap-2">
+                                  <CheckCircle2
+                                    className={`mt-0.5 h-4 w-4 shrink-0 ${isFree ? "text-emerald-400" : "text-blue-400"
+                                      }`}
+                                  />
+                                  <span>{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
                           )}
-                        </p>
-                        {plan.features.length > 0 && (
-                          <ul className="mt-5 flex-1 space-y-2 text-sm">
-                            {plan.features.map((feature) => (
-                              <li key={feature} className="flex items-start gap-2">
-                                <CheckCircle2
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600"
-                                  aria-hidden="true"
-                                />
-                                <span className="text-slate-700">{feature}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
+                        </div>
 
                         <Link
                           href={isFree ? "/sign-up" : "/pricing"}
-                          className="mt-6 block"
+                          className="mt-8 block"
                         >
                           <Button
-                            className={`w-full font-semibold ${
-                              isRecommended
-                                ? "bg-blue-600 text-white hover:bg-blue-700"
-                                : "bg-slate-100 text-slate-900 hover:bg-slate-200"
-                            }`}
+                            className={`w-full font-semibold rounded-xl text-xs h-11 ${isRecommended
+                              ? "bg-blue-600 text-white hover:bg-blue-500 shadow-md shadow-blue-600/25"
+                              : isFree
+                                ? "bg-emerald-600 text-white hover:bg-emerald-500 shadow-md shadow-emerald-600/20"
+                                : "border border-slate-700 bg-slate-800 text-white hover:bg-slate-700"
+                              }`}
                           >
-                            {isFree ? "Create free account" : "Choose this plan"}
-                            <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                            {isFree ? "Create Free Candidate Account" : "Select Organization Tier"}
+                            <ArrowRight className="ml-2 h-3.5 w-3.5" />
                           </Button>
                         </Link>
                       </div>
@@ -1513,48 +1732,59 @@ export default function HomePage() {
               </div>
             </MotionSection>
           ) : (
-            <div className="mt-12 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-              <p className="text-sm text-slate-600">
-                Our plans are being prepared. Please check back shortly.
+            <div className="mt-12 rounded-3xl border border-slate-800 bg-slate-900/90 p-10 text-center text-white">
+              <p className="text-sm text-slate-300">
+                Our plans are currently being configured. Please browse our pricing catalogue.
               </p>
               <Link href="/pricing" className="mt-4 inline-block">
-                <Button variant="outline">See all plans</Button>
+                <Button variant="outline" className="border-slate-700 bg-slate-800 text-white hover:bg-slate-700">See all plans</Button>
               </Link>
             </div>
           )}
 
-          <p className="mt-8 text-center text-sm text-slate-600">
-            Not sure which plan fits?{" "}
+          <div className="mt-10 text-center text-xs sm:text-sm text-slate-400">
+            Need a tailored enterprise or multi-campus university convention?{" "}
             <Link
               href="/contact"
-              className="font-semibold text-blue-700 underline-offset-4 hover:underline"
+              className="font-bold text-blue-400 underline-offset-4 hover:underline"
             >
-              Message our team
+              Contact our Cameroon Advisory Desk
             </Link>{" "}
-            and we will help you choose.
-          </p>
+            for immediate assistance.
+          </div>
         </div>
       </section>
 
       {/* --- SRS §20: EDITORIAL TESTIMONIALS SPOTLIGHT --- */}
-      <section className="py-24 bg-white border-b border-slate-200">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-[#080d19] border-b border-slate-800/80 relative overflow-hidden text-white">
+        {/* Backdrop tech image & ambient lighting */}
+        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
+          <Image src="/images/about_tech_bg.jpg" alt="" fill className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080d19]/95 via-[#080d19]/90 to-[#080d19] pointer-events-none" />
+        <div className="absolute top-1/4 -right-10 w-96 h-96 bg-blue-500/15 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/15 blur-[110px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">
-                Community Voices
-              </span>
-              <h2 className="text-3xl font-extrabold text-slate-900 font-heading mt-1">
+              <div className="inline-flex items-center gap-2 rounded-full bg-blue-950/80 border border-blue-500/30 px-3.5 py-1 text-xs font-bold text-blue-300 tracking-wide mb-3">
+                <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                <span>Verified Placement Outcomes</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                <span className="text-[10px] text-blue-300 font-mono">Community Testimonials</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
                 Experiences from Cameroon Interns & Recruiters
               </h2>
-              <p className="text-slate-600 text-sm mt-1">
-                Real feedback from candidates placed and organizations that hired through MANTECH Nexus.
+              <p className="text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
+                Direct feedback from students discovered on merit, and accredited enterprise supervisors who streamlined technical recruitment through MANTECH Nexus.
               </p>
             </div>
             <Link href="/testimonials">
-              <Button variant="outline" className="text-xs font-semibold">
+              <Button variant="outline" className="text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-white border-slate-700 shadow-sm transition-all hover:border-blue-400 gap-1.5">
                 Read All Stories
-                <ChevronRight className="w-4 h-4 ml-1" />
+                <ChevronRight className="w-4 h-4" />
               </Button>
             </Link>
           </FadeIn>
@@ -1563,22 +1793,34 @@ export default function HomePage() {
             {testimonials.length > 0 ? (
               testimonials.map((t) => (
                 <StaggerItem key={t.id}>
-                  <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between h-full hover:shadow-md hover:border-slate-300 transition-all">
+                  <div className="p-8 rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md flex flex-col justify-between h-full hover:shadow-2xl hover:border-blue-400 hover:bg-slate-800/90 hover:-translate-y-1.5 transition-all duration-300 shadow-xl relative overflow-hidden group text-white">
+                    <Quote className="absolute right-5 top-5 w-14 h-14 text-slate-800/60 group-hover:text-blue-500/10 transition-colors pointer-events-none" />
                     <div>
-                      <div className="flex items-center gap-1 text-amber-400 mb-3">
-                        {[...Array(t.rating || 5)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 fill-amber-400" />
-                        ))}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-1 text-amber-400">
+                          {[...Array(t.rating || 5)].map((_, i) => (
+                            <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                          ))}
+                        </div>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                          <span>Verified Placement</span>
+                        </span>
                       </div>
-                      <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
+                      <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-200 font-medium relative z-10">
                         &ldquo;{t.message}&rdquo;
                       </p>
                     </div>
-                    <div className="mt-6 pt-4 border-t border-slate-200/80">
-                      <h4 className="font-bold text-xs text-slate-900">{t.name}</h4>
-                      <p className="text-[11px] text-slate-500">
-                        {t.role} • {t.company || t.region}
-                      </p>
+                    <div className="mt-6 pt-4 border-t border-slate-800 flex items-center gap-3.5">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
+                        {t.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-xs sm:text-sm text-white">{t.name}</h4>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
+                          {t.role} • {t.company || t.region}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </StaggerItem>
@@ -1588,35 +1830,50 @@ export default function HomePage() {
                 {[
                   {
                     name: "Arlette M.",
-                    role: "Software Intern • Douala, Littoral",
-                    msg: "With my Intern Passport, an engineering enterprise in Douala shortlisted me within 4 days. The process was direct and transparent."
+                    role: "Software Intern · Douala, Littoral",
+                    badge: "Student Intern",
+                    msg: "With my verified Intern Passport, an engineering enterprise in Douala shortlisted me within 4 days. The process was direct, transparent, and completely free."
                   },
                   {
                     name: "Patrick E.",
-                    role: "Talent Lead • Enterprise Partner, Yaoundé",
-                    msg: "Filtering candidates by specific competencies and viewing authorized Intern Passports saved our recruitment team weeks of manual screening."
+                    role: "Talent Lead · Enterprise Partner, Yaoundé",
+                    badge: "Enterprise Recruiter",
+                    msg: "Filtering candidates by specific competencies and viewing authorized Intern Passports saved our recruitment team weeks of manual screening and CV sorting."
                   },
                   {
                     name: "Dr. Samuel B.",
-                    role: "Placement Coordinator • Higher Institute, Buea",
-                    msg: "Our university faculty now has live visibility over student placements across host companies without administrative paperwork."
+                    role: "Placement Coordinator · Higher Institute, Buea",
+                    badge: "Academic Faculty",
+                    msg: "Our university faculty now has live visibility over student placements across host companies without administrative paperwork or lost physical logbooks."
                   }
                 ].map((t, i) => (
                   <StaggerItem key={i}>
-                    <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between h-full hover:shadow-md hover:border-slate-300 transition-all">
+                    <div className="p-8 rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md flex flex-col justify-between h-full hover:shadow-2xl hover:border-blue-400 hover:bg-slate-800/90 hover:-translate-y-1.5 transition-all duration-300 shadow-xl relative overflow-hidden group text-white">
+                      <Quote className="absolute right-5 top-5 w-14 h-14 text-slate-800/60 group-hover:text-blue-500/10 transition-colors pointer-events-none" />
                       <div>
-                        <div className="flex items-center gap-1 text-amber-400 mb-3">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="w-4 h-4 fill-amber-400" />
-                          ))}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-1 text-amber-400">
+                            {[...Array(5)].map((_, idx) => (
+                              <Star key={idx} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                            ))}
+                          </div>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                            <span>{t.badge}</span>
+                          </span>
                         </div>
-                        <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-800 font-medium">
+                        <p className="text-sm italic leading-relaxed break-words whitespace-pre-wrap text-slate-200 font-medium relative z-10">
                           &ldquo;{t.msg}&rdquo;
                         </p>
                       </div>
-                      <div className="mt-6 pt-4 border-t border-slate-200/80">
-                        <h4 className="font-bold text-xs text-slate-900">{t.name}</h4>
-                        <p className="text-[11px] text-slate-500">{t.role}</p>
+                      <div className="mt-6 pt-4 border-t border-slate-800 flex items-center gap-3.5">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
+                          {t.name.charAt(0)}
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-xs sm:text-sm text-white">{t.name}</h4>
+                          <p className="text-[11px] text-slate-400 mt-0.5">{t.role}</p>
+                        </div>
                       </div>
                     </div>
                   </StaggerItem>
@@ -1632,7 +1889,7 @@ export default function HomePage() {
         {/* Ambient atmospheric backdrop */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none" />
         <div className="absolute -bottom-24 right-10 w-96 h-96 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none" />
-        
+
         {/* Subtle grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.025] pointer-events-none"
@@ -1669,19 +1926,17 @@ export default function HomePage() {
                     key={cat.id}
                     type="button"
                     onClick={() => setFaqCategory(cat.id)}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                      isActive
-                        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 ring-1 ring-blue-400 scale-[1.02]"
-                        : "bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10"
-                    }`}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${isActive
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 ring-1 ring-blue-400 scale-[1.02]"
+                      : "bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10"
+                      }`}
                   >
                     <span>{cat.label}</span>
                     <span
-                      className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        isActive
-                          ? "bg-white/20 text-white"
-                          : "bg-slate-800 text-slate-400"
-                      }`}
+                      className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-bold ${isActive
+                        ? "bg-white/20 text-white"
+                        : "bg-slate-800 text-slate-400"
+                        }`}
                     >
                       {cat.count}
                     </span>

@@ -19,14 +19,16 @@ export default function HowItWorksCompaniesPage() {
           </motion.div>
         </div>
       </section>
-      <section className="section-padding bg-white">
-        <div className="container-mantech max-w-4xl">
+      <section className="section-padding relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0a1220 50%, #070d18 100%)' }}>
+        <div className="absolute top-12 left-10 w-96 h-96 bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-12 right-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech max-w-4xl relative z-10">
           <div className="grid gap-4 md:grid-cols-2">
             {steps.map((step, idx) => (
               <FadeIn key={step} delay={idx * 0.05}>
-                <div className="flex h-full items-start gap-4 rounded-2xl border border-border/80 bg-white p-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-sm font-bold text-accent">{idx + 1}</div>
-                  <div className="flex items-start gap-2 pt-1.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span className="text-foreground/80">{step}</span></div>
+                <div className="flex h-full items-start gap-4 rounded-3xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-sm p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-accent/40">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-accent/10 text-sm font-bold text-accent shadow-inner">{idx + 1}</div>
+                  <div className="flex items-start gap-2 pt-1.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" /><span className="text-foreground/90 font-medium text-sm leading-relaxed">{step}</span></div>
                 </div>
               </FadeIn>
             ))}

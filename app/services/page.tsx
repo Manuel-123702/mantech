@@ -47,13 +47,17 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="section-padding bg-white">
-        <div className="container-mantech">
+      <section className="section-padding relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0a1220 50%, #070d18 100%)' }}>
+        {/* Subtle atmospheric glow */}
+        <div className="absolute top-1/4 left-10 w-96 h-96 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/10 blur-[110px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech relative z-10">
           <StaggerContainer className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             {services.map((s) => (
               <StaggerItem key={s.title}>
                 <Link href={s.href} className="group block h-full">
-                  <div className="relative h-full overflow-hidden rounded-2xl border border-border/80 bg-white shadow-card transition-all hover:-translate-y-1 hover:shadow-card-hover">
+                  <div className="relative h-full overflow-hidden rounded-3xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-sm shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-blue-500/40">
                     <div className="relative h-48 overflow-hidden">
                       <div 
                         className="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"

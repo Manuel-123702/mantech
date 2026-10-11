@@ -20,26 +20,28 @@ export default function CompanyServicesPage() {
           </motion.div>
         </div>
       </section>
-      <section className="section-padding bg-white">
-        <div className="container-mantech">
+      <section className="section-padding relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0a1220 50%, #070d18 100%)' }}>
+        <div className="absolute top-12 left-10 w-96 h-96 bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-12 right-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech relative z-10">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <FadeIn className="rounded-2xl border border-border/80 bg-white p-8 shadow-card">
+            <FadeIn className="rounded-3xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-sm p-8 shadow-lg hover:shadow-2xl transition-all duration-300">
               <h2 className="font-heading text-2xl font-bold text-foreground">Manage your internship pipeline</h2>
-              <ul className="mt-6 space-y-3">{companyFeatures.map((f) => (<li key={f} className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" /><span className="text-foreground/80">{f}</span></li>))}</ul>
+              <ul className="mt-6 space-y-3">{companyFeatures.map((f) => (<li key={f} className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent" /><span className="text-foreground/90 font-medium text-sm leading-relaxed">{f}</span></li>))}</ul>
             </FadeIn>
             <FadeIn delay={0.15}>
-              <div className="rounded-2xl border border-primary/15 bg-gradient-mantech-light p-8 shadow-card">
+              <div className="rounded-3xl border border-blue-500/20 bg-slate-800/60 backdrop-blur-sm p-8 shadow-lg hover:shadow-2xl transition-all duration-300">
                 <h3 className="font-heading text-lg font-semibold text-foreground">Three Application Methods</h3>
                 <p className="mt-2 text-sm text-muted-foreground">Every internship can use one of three methods:</p>
                 <div className="mt-4 space-y-3">
                   {[{ title: 'Apply on MANTECH', desc: 'Students complete the MANTECH application with documents.' }, { title: 'Apply on Company Website', desc: 'Open your configured official application page.' }, { title: 'Apply Externally', desc: 'LinkedIn, university portals, or other platforms.' }].map((m) => (
-                    <div key={m.title} className="rounded-xl border border-border/70 bg-white p-4"><div className="text-sm font-semibold text-foreground">{m.title}</div><div className="mt-1 text-xs text-muted-foreground">{m.desc}</div></div>
+                    <div key={m.title} className="rounded-2xl border border-slate-700/60 bg-slate-800/60 backdrop-blur-sm p-4 shadow-sm hover:border-accent/40 transition-colors"><div className="text-sm font-semibold text-foreground">{m.title}</div><div className="mt-1 text-xs text-muted-foreground">{m.desc}</div></div>
                   ))}
                 </div>
               </div>
             </FadeIn>
           </div>
-          <div className="mt-12 text-center"><Link href="/sign-up"><button className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white shadow-card transition-all hover:bg-primary/90 hover:shadow-card-hover">Register your company <ArrowRight className="h-4 w-4" /></button></Link></div>
+          <div className="mt-12 text-center"><Link href="/sign-up"><button className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition-all duration-200 hover:bg-accent/90 hover:scale-[1.02]">Register your company <ArrowRight className="h-4 w-4" /></button></Link></div>
         </div>
       </section>
     </div>

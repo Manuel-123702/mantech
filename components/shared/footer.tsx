@@ -14,8 +14,8 @@ import { APP_CONFIG } from "@/lib/config";
  */
 const footerLinks = {
   Platform: {
-    accent: 'group-hover:text-white',
-    heading: 'text-blue-100',
+    accent: 'group-hover:text-blue-200',
+    heading: 'text-blue-300',
     links: [
       { href: "/about", label: "About Us" },
       { href: "/how-it-works", label: "How It Works" },
@@ -24,8 +24,8 @@ const footerLinks = {
     ],
   },
   Discover: {
-    accent: 'group-hover:text-white',
-    heading: 'text-blue-100',
+    accent: 'group-hover:text-cyan-200',
+    heading: 'text-cyan-300',
     links: [
       { href: "/internships", label: "Find Internships" },
       { href: "/companies", label: "Companies" },
@@ -34,8 +34,8 @@ const footerLinks = {
     ],
   },
   Resources: {
-    accent: 'group-hover:text-white',
-    heading: 'text-blue-100',
+    accent: 'group-hover:text-emerald-200',
+    heading: 'text-emerald-300',
     links: [
       { href: "/resources", label: "Resource Center" },
       { href: "/success-stories", label: "Success Stories" },
@@ -44,8 +44,8 @@ const footerLinks = {
     ],
   },
   Legal: {
-    accent: 'group-hover:text-white',
-    heading: 'text-blue-100',
+    accent: 'group-hover:text-violet-200',
+    heading: 'text-violet-300',
     links: [
       { href: "/security", label: "Security" },
       { href: "/privacy", label: "Privacy Policy" },
@@ -200,7 +200,7 @@ export function Footer() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: 0.05 + colIdx * 0.05, ease: QUART_OUT }}
               >
-                <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-slate-200">
+                <h3 className={`mb-4 text-xs font-bold uppercase tracking-wider ${group.heading}`}>
                   {category}
                 </h3>
                 <ul className="space-y-2.5">
@@ -208,11 +208,11 @@ export function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="group inline-flex items-center text-xs sm:text-sm text-slate-400 transition-colors hover:text-white"
+                        className={`group inline-flex items-center text-xs sm:text-sm text-slate-300 transition-colors ${group.accent}`}
                       >
                         <span
                           aria-hidden="true"
-                          className="mr-0 h-px w-0 bg-cyan-400 transition-all duration-200 group-hover:mr-2 group-hover:w-2.5"
+                          className="mr-0 h-px w-0 bg-current opacity-60 transition-all duration-200 group-hover:mr-2 group-hover:w-2.5"
                         />
                         {link.label}
                       </Link>

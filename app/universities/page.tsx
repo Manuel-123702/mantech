@@ -80,14 +80,17 @@ export default function UniversitiesPage() {
       </section>
 
       {/* ───── UNIVERSITIES LISTING WITH SCALE-IN MOTION ───── */}
-      <section className="py-20 bg-slate-50 min-h-[500px]">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-200">
+      <section className="py-24 relative overflow-hidden min-h-[500px]" style={{ background: 'linear-gradient(180deg, #060f19 0%, #0a1220 60%, #061713 100%)' }}>
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06] mix-blend-luminosity" style={{ backgroundImage: "url('/images/about_tech_bg.jpg')" }} />
+        <div className="absolute top-10 right-10 w-96 h-96 bg-emerald-500/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-500/8 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-700/60">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 font-heading">
+              <h2 className="text-xl font-bold text-white font-heading">
                 Accredited Higher Education Institutions
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-400 mt-0.5">
                 {universities.length} partnered faculties and engineering polytechnics across Cameroon
               </p>
             </div>
@@ -101,7 +104,7 @@ export default function UniversitiesPage() {
 
           {loading ? (
             <div className="flex justify-center py-24">
-              <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
             </div>
           ) : universities.length === 0 ? (
             <motion.div
@@ -109,9 +112,9 @@ export default function UniversitiesPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col items-center justify-center py-20 text-center"
             >
-              <Inbox className="h-12 w-12 text-slate-400 mb-3" />
-              <h3 className="font-heading text-lg font-semibold text-slate-800">No partner universities yet</h3>
-              <p className="mt-1 text-sm text-slate-500">
+              <Inbox className="h-12 w-12 text-slate-500 mb-3" />
+              <h3 className="font-heading text-lg font-semibold text-white">No partner universities yet</h3>
+              <p className="mt-1 text-sm text-slate-400">
                 Universities are being verified by MANTECH administrators.
               </p>
             </motion.div>
@@ -137,49 +140,49 @@ export default function UniversitiesPage() {
 
                 return (
                   <MotionItem key={uni.id} motion="scaleIn">
-                    <AnimatedCard className="h-full rounded-2xl border border-slate-200 bg-white p-7 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <AnimatedCard className="h-full rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md p-7 shadow-lg hover:shadow-2xl hover:border-emerald-500/40 transition-all flex flex-col justify-between group">
                       <div>
                         <div className="flex items-start gap-4">
-                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 group-hover:scale-105 transition-transform">
+                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 group-hover:scale-105 transition-transform">
                             <School className="h-7 w-7" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                              <h3 className="font-heading text-lg font-bold text-slate-900 truncate">{uni.name}</h3>
-                              <BadgeCheck className="h-5 w-5 shrink-0 text-emerald-600" />
+                              <h3 className="font-heading text-lg font-bold text-white truncate">{uni.name}</h3>
+                              <BadgeCheck className="h-5 w-5 shrink-0 text-emerald-400" />
                             </div>
                             {uniMeta && (
-                              <p className="text-xs text-slate-500 font-medium mt-0.5 truncate">{uniMeta}</p>
+                              <p className="text-xs text-slate-400 font-medium mt-0.5 truncate">{uniMeta}</p>
                             )}
                           </div>
                         </div>
 
                         {uni.description && (
-                          <p className="mt-4 text-xs text-slate-600 leading-relaxed line-clamp-3">
+                          <p className="mt-4 text-xs text-slate-400 leading-relaxed line-clamp-3">
                             {uni.description}
                           </p>
                         )}
 
                         <div className="mt-5 flex flex-wrap gap-2">
                           {(uni.city || regionNameOf(uniShape)) && (
-                            <Badge variant="secondary" className="text-[10px] bg-slate-100 text-slate-700">
+                            <Badge variant="secondary" className="text-[10px] bg-slate-700/60 text-slate-300 border border-slate-600/40">
                               <MapPin className="mr-1 h-3 w-3" />
                               {[uni.city, regionNameOf(uniShape)].filter(Boolean).join(', ')}
                             </Badge>
                           )}
-                          <Badge variant="outline" className="text-[10px] text-emerald-700 border-emerald-300">
+                          <Badge variant="outline" className="text-[10px] text-emerald-400 border-emerald-600/50">
                             Verified Accreditation
                           </Badge>
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <div className="mt-6 pt-4 border-t border-slate-700/50 flex items-center justify-between">
                         {uni.website ? (
                           <a
                             href={uni.website}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                            className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
                           >
                             <Globe className="w-3.5 h-3.5" />
                             <span>Official Portal</span>
@@ -189,7 +192,7 @@ export default function UniversitiesPage() {
                         )}
 
                         <Link href="/services">
-                          <Button size="sm" variant="ghost" className="text-xs text-slate-700 hover:text-emerald-600 hover:bg-emerald-50">
+                          <Button size="sm" variant="ghost" className="text-xs text-slate-400 hover:text-emerald-400 hover:bg-emerald-900/30">
                             <span>University Services</span>
                             <ArrowRight className="w-3.5 h-3.5 ml-1" />
                           </Button>

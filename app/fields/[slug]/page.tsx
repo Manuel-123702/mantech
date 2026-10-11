@@ -174,8 +174,10 @@ export default function FieldDetailPage() {
       </section>
 
       {/* ── OPPORTUNITIES ── */}
-      <section className="py-16">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-b border-slate-200/80 relative overflow-hidden">
+        <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-violet-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-heading text-xl font-bold text-slate-900">
               Available Positions

@@ -172,9 +172,13 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* ───── TIMELINE SECTION WITH ALTERNATING MOTIONS ───── */}
-      <section className="py-24 bg-white relative">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      {/* ───── TIMELINE SECTION WITH REFINED MOTIONS ───── */}
+      <section className="py-24 relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0a1220 50%, #070d18 100%)' }}>
+        {/* Subtle ambient lighting */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 blur-[110px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <SectionHeader
             eyebrow="8-Stage Pathway"
             title="The Lifecycle from Search to Certification"
@@ -192,17 +196,17 @@ export default function HowItWorksPage() {
                 return (
                   <motion.div
                     key={step.title}
-                    initial={{ opacity: 0, x: isEven ? 60 : -60 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-60px" }}
-                    transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className={`flex flex-col gap-6 lg:flex-row lg:items-center ${
                       isEven ? "lg:flex-row-reverse" : ""
                     }`}
                   >
                     <div className="flex-1">
                       <AnimatedCard
-                        className={`rounded-3xl border border-slate-200/90 bg-white p-7 sm:p-8 shadow-sm hover:shadow-xl transition-all ${
+                        className={`rounded-3xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md p-7 sm:p-8 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all ${
                           isEven ? "lg:text-right" : ""
                         }`}
                       >
@@ -221,10 +225,10 @@ export default function HowItWorksPage() {
                             {step.badge}
                           </Badge>
                         </div>
-                        <h3 className="font-heading text-xl font-bold text-slate-900">
+                        <h3 className="font-heading text-xl font-bold text-white">
                           {step.title}
                         </h3>
-                        <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                        <p className="mt-2 text-sm text-slate-400 leading-relaxed">
                           {step.description}
                         </p>
                       </AnimatedCard>
@@ -263,7 +267,7 @@ export default function HowItWorksPage() {
               const Icon = flow.icon;
               return (
                 <MotionItem key={flow.title} motion="flip3D">
-                  <AnimatedCard className="h-full rounded-3xl border border-slate-200/90 bg-white p-8 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between">
+                  <AnimatedCard className="h-full rounded-3xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md p-8 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-5">
                         <div
@@ -279,11 +283,11 @@ export default function HowItWorksPage() {
                         </Badge>
                       </div>
 
-                      <h3 className="font-heading text-xl font-bold text-slate-900 mb-4">
+                      <h3 className="font-heading text-xl font-bold text-white mb-4">
                         {flow.title}
                       </h3>
 
-                      <ol className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
+                      <ol className="space-y-2.5 text-xs text-slate-400 leading-relaxed">
                         {flow.steps.map((st, i) => (
                           <li key={st} className="flex items-start gap-2">
                             <span className="font-bold text-blue-600 shrink-0">

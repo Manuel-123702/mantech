@@ -126,8 +126,13 @@ export default function AboutPage() {
       </section>
 
       {/* ───── MISSION & VISION DUAL-SLIDE MOTIONS ───── */}
-      <section className="py-24 bg-white relative">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-24 relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0a1220 50%, #070d18 100%)' }}>
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06] mix-blend-luminosity" style={{ backgroundImage: "url('/images/about_tech_bg.jpg')" }} />
+        {/* Ambient atmospheric glows */}
+        <div className="absolute top-1/3 left-10 w-96 h-96 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="absolute -bottom-10 right-10 w-96 h-96 bg-cyan-500/10 blur-[110px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <SectionHeader
             eyebrow="Foundation"
             title="Strategic National Mandate"
@@ -143,28 +148,28 @@ export default function AboutPage() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <AnimatedCard className="h-full rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 p-8 sm:p-10 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group">
+              <AnimatedCard className="h-full rounded-3xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md p-8 sm:p-10 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-colors" />
                 <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-md shadow-blue-600/20 mb-6 group-hover:scale-110 transition-transform">
                   <Target className="h-7 w-7" />
                 </div>
-                <h2 className="font-heading text-2xl font-bold text-slate-900 mb-3">
+                <h2 className="font-heading text-2xl font-bold text-white mb-3">
                   Our National Mission
                 </h2>
-                <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                <p className="text-slate-400 text-sm leading-relaxed mb-6">
                   To serve as the trusted digital backbone for professional
                   internship management across Cameroon. Providing bilingual
                   verification, tripartite university agreements, structured
                   interview scorecards, and verifiable Intern Passports.
                 </p>
-                <div className="flex flex-wrap gap-2 text-xs text-blue-700 font-medium">
-                  <span className="bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+                <div className="flex flex-wrap gap-2 text-xs text-blue-300 font-medium">
+                  <span className="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/30">
                     Bilingual (EN / FR)
                   </span>
-                  <span className="bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+                  <span className="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/30">
                     Audited PII Protection
                   </span>
-                  <span className="bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+                  <span className="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/30">
                     10 Regions Covered
                   </span>
                 </div>
@@ -178,28 +183,28 @@ export default function AboutPage() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
             >
-              <AnimatedCard className="h-full rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-cyan-50/30 p-8 sm:p-10 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group">
+              <AnimatedCard className="h-full rounded-3xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md p-8 sm:p-10 shadow-lg hover:shadow-2xl hover:border-cyan-500/40 transition-all relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-colors" />
                 <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-600 text-white shadow-md shadow-cyan-600/20 mb-6 group-hover:scale-110 transition-transform">
                   <Eye className="h-7 w-7" />
                 </div>
-                <h2 className="font-heading text-2xl font-bold text-slate-900 mb-3">
+                <h2 className="font-heading text-2xl font-bold text-white mb-3">
                   Our Pan-African Vision
                 </h2>
-                <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                <p className="text-slate-400 text-sm leading-relaxed mb-6">
                   A modern African digital economy where every ambitious student
                   is discovered on merit, and where companies access authentic,
                   pre-screened engineering and professional talent with
                   verifiable skill credentials.
                 </p>
-                <div className="flex flex-wrap gap-2 text-xs text-cyan-800 font-medium">
-                  <span className="bg-cyan-50 px-3 py-1 rounded-full border border-cyan-200">
+                <div className="flex flex-wrap gap-2 text-xs text-cyan-300 font-medium">
+                  <span className="bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/30">
                     Merit-Based Placement
                   </span>
-                  <span className="bg-cyan-50 px-3 py-1 rounded-full border border-cyan-200">
+                  <span className="bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/30">
                     Host Partner Network
                   </span>
-                  <span className="bg-cyan-50 px-3 py-1 rounded-full border border-cyan-200">
+                  <span className="bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/30">
                     Cryptographic Records
                   </span>
                 </div>
@@ -210,8 +215,10 @@ export default function AboutPage() {
       </section>
 
       {/* ───── PILLARS WITH 3D FLIP ANIMATIONS ───── */}
-      <section className="py-20 bg-slate-50 border-y border-slate-200">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #070e1a 0%, #0c1828 100%)' }}>
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.05] mix-blend-luminosity" style={{ backgroundImage: "url('/images/security_tech_bg.jpg')" }} />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-indigo-900/10 pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <SectionHeader
             eyebrow="Three Pillars"
             title="Tripartite Ecosystem Collaboration"
@@ -224,19 +231,19 @@ export default function AboutPage() {
               const Icon = pillar.icon;
               return (
                 <MotionItem key={pillar.role} motion="flip3D">
-                  <AnimatedCard className="h-full rounded-2xl border border-slate-200 bg-white p-7 shadow-sm hover:shadow-lg transition-all">
+                  <AnimatedCard className="h-full rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md p-7 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all">
                     <div className="flex items-center justify-between mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                      <div className="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <Badge variant="outline" className="text-[11px] font-semibold text-slate-600">
+                      <Badge variant="outline" className="text-[11px] font-semibold text-slate-400 border-slate-600">
                         {pillar.tag}
                       </Badge>
                     </div>
-                    <h3 className="font-heading text-lg font-bold text-slate-900 mb-2">
+                    <h3 className="font-heading text-lg font-bold text-white mb-2">
                       {pillar.role}
                     </h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">
+                    <p className="text-xs text-slate-400 leading-relaxed">
                       {pillar.desc}
                     </p>
                   </AnimatedCard>

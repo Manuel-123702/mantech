@@ -41,16 +41,18 @@ export default function SecurityPage() {
       </section>
 
       {/* ───── SECURITY SPECIFICATIONS ───── */}
-      <section className="py-20 bg-slate-50">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+      <section className="py-24 relative overflow-hidden border-b border-slate-800/60" style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0b1120 50%, #070d18 100%)' }}>
+        <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/10 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <Badge className="bg-blue-100 text-blue-800 uppercase tracking-widest text-[10px] mb-3">
               SRS Sections 7 & 47-50 Compliant
             </Badge>
-            <h2 className="text-3xl font-extrabold text-slate-900 font-heading">
+            <h2 className="text-3xl font-extrabold text-white font-heading">
               Enterprise Safeguards in Depth
             </h2>
-            <p className="mt-3 text-slate-600 text-sm">
+            <p className="mt-3 text-slate-400 text-sm">
               Comprehensive defense mechanisms preventing unauthorized access, data leakage, and system tampering.
             </p>
           </div>
@@ -61,14 +63,14 @@ export default function SecurityPage() {
               return (
                 <div
                   key={idx}
-                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+                  className="rounded-3xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-sm p-7 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
                 >
                   <div>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 mb-4 border border-blue-100">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600/20 text-blue-400 mb-4 border border-blue-500/30">
                       <Icon className="h-6 w-6" />
                     </div>
-                    <h3 className="font-heading text-base font-bold text-slate-900">{f.title}</h3>
-                    <p className="mt-2 text-xs text-slate-600 leading-relaxed">{f.description}</p>
+                    <h3 className="font-heading text-base font-bold text-white">{f.title}</h3>
+                    <p className="mt-2 text-xs text-slate-400 leading-relaxed">{f.description}</p>
                   </div>
                 </div>
               );

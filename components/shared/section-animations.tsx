@@ -39,30 +39,30 @@ export function SectionHeader({
     >
       {eyebrow && (
         <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45, ease: QUART_OUT }}
+          initial={{ opacity: 0, y: 22, scale: 0.92 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.5, ease: QUART_OUT }}
           className="mb-3 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary border border-primary/15 shadow-sm"
         >
           {eyebrow}
         </motion.span>
       )}
       <motion.h2
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 35 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.05, ease: QUART_OUT }}
+        viewport={{ once: true, margin: '-20px' }}
+        transition={{ duration: 0.65, delay: 0.05, ease: QUART_OUT }}
         className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
       >
         {title}
       </motion.h2>
       {description && (
         <motion.p
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1, ease: QUART_OUT }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.65, delay: 0.1, ease: QUART_OUT }}
           className={cn(
             'mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed',
             align === 'center' ? 'mx-auto' : '',
@@ -86,10 +86,10 @@ interface FadeInProps {
 
 export function FadeIn({ children, delay = 0, className, direction = 'up' }: FadeInProps) {
   const axes: Record<string, { x: number; y: number }> = {
-    up: { y: 14, x: 0 },
-    down: { y: -14, x: 0 },
-    left: { x: -14, y: 0 },
-    right: { x: 14, y: 0 },
+    up: { y: 40, x: 0 },
+    down: { y: -40, x: 0 },
+    left: { x: -45, y: 0 },
+    right: { x: 45, y: 0 },
     none: { x: 0, y: 0 },
   };
   const { x, y } = axes[direction];
@@ -97,8 +97,8 @@ export function FadeIn({ children, delay = 0, className, direction = 'up' }: Fad
     <motion.div
       initial={{ opacity: 0, x, y }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay, ease: QUART_OUT }}
+      viewport={{ once: true, margin: '-20px' }}
+      transition={{ duration: 0.65, delay, ease: QUART_OUT }}
       className={className}
     >
       {children}
@@ -114,17 +114,17 @@ interface StaggerContainerProps {
   stagger?: number;
 }
 
-export function StaggerContainer({ children, className, stagger = 0.07 }: StaggerContainerProps) {
+export function StaggerContainer({ children, className, stagger = 0.09 }: StaggerContainerProps) {
   return (
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-40px' }}
+      viewport={{ once: true, margin: '-20px' }}
       variants={{
         hidden: { opacity: 0 },
         visible: {
           opacity: 1,
-          transition: { staggerChildren: stagger, delayChildren: 0.04 },
+          transition: { staggerChildren: stagger, delayChildren: 0.05 },
         },
       }}
       className={className}
@@ -138,11 +138,12 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 14 },
+        hidden: { opacity: 0, y: 35, scale: 0.95 },
         visible: {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.45, ease: QUART_OUT },
+          scale: 1,
+          transition: { duration: 0.6, ease: QUART_OUT },
         },
       }}
       className={className}
@@ -155,96 +156,98 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
 /* ─────────────── SECTION_MOTION ─────────────── */
 
 export const SECTION_MOTION = {
-  /** Gentle vertical rise for headings and prose. */
+  /** Expressive vertical rise for headings, cards, and sections. */
   rise: {
-    hidden: { opacity: 0, y: 14 },
+    hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: QUART_OUT },
+      transition: { duration: 0.65, ease: QUART_OUT },
     },
   },
 
-  /** Left-edge subtle reveal. */
+  /** Left-edge reveal with visible travel. */
   slideLeft: {
-    hidden: { opacity: 0, x: -14 },
+    hidden: { opacity: 0, x: -50 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: { duration: 0.5, ease: QUART_OUT },
+      transition: { duration: 0.65, ease: QUART_OUT },
     },
   },
 
-  /** Right-edge subtle reveal. */
+  /** Right-edge reveal with visible travel. */
   slideRight: {
-    hidden: { opacity: 0, x: 14 },
+    hidden: { opacity: 0, x: 50 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: { duration: 0.5, ease: QUART_OUT },
+      transition: { duration: 0.65, ease: QUART_OUT },
     },
   },
 
-  /** Gentle entrance for card grids. */
+  /** Dynamic entrance for card grids with scale and rise. */
   spread: {
-    hidden: { opacity: 0, y: 12 },
+    hidden: { opacity: 0, y: 42, scale: 0.94 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.45, ease: QUART_OUT },
+      scale: 1,
+      transition: { duration: 0.6, ease: QUART_OUT },
     },
   },
 
-  /** Soft scale-up for stats and pricing cards. */
+  /** High-impact zoom and rise for stats and pricing. */
   scaleIn: {
-    hidden: { opacity: 0, scale: 0.98, y: 8 },
+    hidden: { opacity: 0, scale: 0.88, y: 30 },
     visible: {
       opacity: 1,
       scale: 1,
       y: 0,
-      transition: { duration: 0.45, ease: QUART_OUT },
+      transition: { duration: 0.6, ease: QUART_OUT },
     },
   },
 
-  /** Clean reveal for step sequences. */
+  /** Bold wipe reveal for step sequences. */
   wipe: {
-    hidden: { opacity: 0, y: 12 },
+    hidden: { opacity: 0, y: 35 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: QUART_OUT },
+      transition: { duration: 0.6, ease: QUART_OUT },
     },
   },
 
-  /** Controlled spring pop for badges and interactive chips. */
+  /** Snappy spring pop for badges and cards. */
   pop: {
-    hidden: { opacity: 0, scale: 0.94, y: 8 },
+    hidden: { opacity: 0, scale: 0.82, y: 24 },
     visible: {
       opacity: 1,
       scale: 1,
       y: 0,
-      transition: { type: 'spring', damping: 22, stiffness: 280, mass: 0.7 },
+      transition: { type: 'spring', damping: 18, stiffness: 280, mass: 0.7 },
     },
   },
 
-  /** Subtle blur-to-sharp for feature highlights. */
+  /** Blur-to-sharp focus for highlights. */
   blurReveal: {
-    hidden: { opacity: 0, filter: 'blur(4px)', y: 10 },
+    hidden: { opacity: 0, filter: 'blur(10px)', y: 35 },
     visible: {
       opacity: 1,
       filter: 'blur(0px)',
       y: 0,
-      transition: { duration: 0.5, ease: QUART_OUT },
+      transition: { duration: 0.7, ease: QUART_OUT },
     },
   },
 
-  /** Refined elevation tilt for category cards. */
+  /** Dynamic 3D perspective tilt reveal. */
   flip3D: {
-    hidden: { opacity: 0, y: 12 },
+    hidden: { opacity: 0, y: 40, scale: 0.93 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.45, ease: QUART_OUT },
+      scale: 1,
+      transition: { duration: 0.65, ease: QUART_OUT },
     },
   },
 } as const;
@@ -263,17 +266,17 @@ interface MotionSectionProps {
 export function MotionSection({
   children,
   motion: style = 'rise',
-  stagger = 0.08,
+  stagger = 0.09,
   className,
 }: MotionSectionProps) {
   return (
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-60px' }}
+      viewport={{ once: true, margin: '-20px' }}
       variants={{
         hidden: {},
-        visible: { transition: { staggerChildren: stagger } },
+        visible: { transition: { staggerChildren: stagger, delayChildren: 0.05 } },
       }}
       className={className}
     >
@@ -307,7 +310,7 @@ export function AnimatedCard({
 }) {
   return (
     <motion.div
-      whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
+      whileHover={{ y: -6, scale: 1.015, transition: { type: 'spring', stiffness: 350, damping: 22 } }}
       whileTap={{ scale: 0.98 }}
       className={className}
     >
@@ -327,8 +330,8 @@ export function FloatingBadge({
 }) {
   return (
     <motion.span
-      animate={{ y: [0, -3, 0] }}
-      transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+      animate={{ y: [0, -4, 0] }}
+      transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
       className={cn('inline-flex items-center', className)}
     >
       {children}
@@ -349,10 +352,10 @@ export function RevealOnScroll({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.6, delay, ease: QUART_OUT }}
+      viewport={{ once: true, margin: '-20px' }}
+      transition={{ duration: 0.65, delay, ease: QUART_OUT }}
       className={className}
     >
       {children}
@@ -373,10 +376,10 @@ export function StatReveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14, scale: 0.97 }}
+      initial={{ opacity: 0, y: 35, scale: 0.88 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.55, delay, ease: QUART_OUT }}
+      viewport={{ once: true, margin: '-20px' }}
+      transition={{ duration: 0.6, delay, ease: QUART_OUT }}
       className={className}
     >
       {children}
