@@ -84,7 +84,7 @@ export default async function InternDashboardPage() {
       cvUrl: true,
       profileCompleted: true,
       user: { select: { fullName: true, avatarUrl: true } },
-      passport: { select: { viewCount: true } },
+      passport: { select: { viewCount: true, summary: true, headline: true } },
       skills: { select: { id: true }, take: 1 },
       educations: { select: { id: true }, take: 1 },
       applications: {
@@ -171,7 +171,10 @@ export default async function InternDashboardPage() {
     hasEducation: profile.educations.length > 0,
     hasLocation: Boolean(profile.regionId && profile.city),
     hasAvailability: Boolean(profile.availability),
-    hasSummary: false,
+    // The Passport headline doubles as the professional summary (SRS §7), so
+    // either one satisfies this item. Derived from real saved data — never
+    // hardcoded — so finishing registration with a headline reaches 100%.
+    hasSummary: Boolean(profile.passport?.summary || profile.passport?.headline),
   });
   const computedReadiness = readinessPercent(checklist);
   const todo = nextActions(checklist);

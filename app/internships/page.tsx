@@ -82,17 +82,21 @@ export default function InternshipsPage() {
     const map = new Map<string, number>();
     if (!matchProfile) return map;
     for (const opp of internships) {
-      const { score } = calculateMatch(matchProfile, {
-        requiredSkills: (opp.requiredSkills || opp.required_skills || opp.skills || []) as string[],
-        preferredSkills: (opp.preferredSkills || opp.preferred_skills || []) as string[],
-        fieldSlug: (opp as any).fieldSlug ?? null,
-        fieldName: (opp.field as string) ?? null,
-        city: opp.city ?? null,
-        regionName: (regionNameOf(opp as unknown as Record<string, unknown>) as string) ?? null,
-        workMode: (opp.workMode || opp.work_mode || null) as string | null,
-        isPaid: opp.isPaid ?? opp.is_paid ?? null,
-      });
-      map.set(opp.id, score);
+      try {
+        const { score } = calculateMatch(matchProfile, {
+          requiredSkills: (opp.requiredSkills || opp.required_skills || opp.skills || []) as string[],
+          preferredSkills: (opp.preferredSkills || opp.preferred_skills || []) as string[],
+          fieldSlug: (opp as any).fieldSlug ?? null,
+          fieldName: (opp.field as string) ?? null,
+          city: opp.city ?? null,
+          regionName: (regionNameOf(opp as unknown as Record<string, unknown>) as string) ?? null,
+          workMode: (opp.workMode || opp.work_mode || null) as string | null,
+          isPaid: opp.isPaid ?? opp.is_paid ?? null,
+        });
+        if (typeof score === 'number' && !Number.isNaN(score)) map.set(opp.id, score);
+      } catch {
+        // A single malformed record must never crash the whole listings page.
+      }
     }
     return map;
   }, [matchProfile, internships]);

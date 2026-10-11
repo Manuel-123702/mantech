@@ -47,6 +47,30 @@ const registrationSchema = z.object({
   skills: z.array(z.string()).min(1),
   headline: z.string().optional(),
   summary: z.string().optional(),
+  // SRS §7 — optional Passport history the intern may add at registration.
+  experiences: z
+    .array(
+      z.object({
+        companyName: z.string().min(1).max(200),
+        roleTitle: z.string().min(1).max(200),
+        durationMonths: z.number().int().positive().max(600),
+        location: z.string().min(1).max(200),
+      }),
+    )
+    .max(20)
+    .optional(),
+  achievements: z
+    .array(
+      z.object({
+        title: z.string().min(1).max(200),
+        category: z.string().min(1).max(80),
+        issuer: z.string().min(1).max(200),
+        issueDate: z.string().min(1),
+        description: z.string().max(2000).optional(),
+      }),
+    )
+    .max(30)
+    .optional(),
   isPhonePublic: z.boolean().optional(),
   isCvSearchable: z.boolean().optional(),
   cvUrl: z.string().url(),
@@ -118,15 +142,45 @@ export async function POST(request: Request) {
     // Create passport
     const passportNumber = `MN-${region?.code || 'CM'}-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
     
-    await prisma.internPassport.create({
+    const passport = await prisma.internPassport.create({
       data: {
         internProfileId: internProfile.id,
         passportNumber,
         headline: validatedData.headline,
-        summary: validatedData.summary,
+        // The headline doubles as the professional summary when the intern did
+        // not write a separate one, so a completed registration reaches a full
+        // readiness score instead of stalling at 90%.
+        summary: validatedData.summary || validatedData.headline || null,
         isVerified: false,
       },
     });
+
+    // SRS §7 — persist any experience / achievements the intern entered so the
+    // Passport shows real history instead of an empty-state placeholder.
+    for (const exp of validatedData.experiences ?? []) {
+      await prisma.passportExperience.create({
+        data: {
+          passportId: passport.id,
+          companyName: exp.companyName,
+          roleTitle: exp.roleTitle,
+          durationMonths: exp.durationMonths,
+          location: exp.location,
+        },
+      });
+    }
+    for (const ach of validatedData.achievements ?? []) {
+      const issueDate = new Date(ach.issueDate);
+      await prisma.passportAchievement.create({
+        data: {
+          passportId: passport.id,
+          title: ach.title,
+          category: ach.category,
+          issuer: ach.issuer,
+          issueDate: Number.isNaN(issueDate.getTime()) ? new Date() : issueDate,
+          description: ach.description ?? null,
+        },
+      });
+    }
 
     // Create education record
     await prisma.education.create({

@@ -109,9 +109,8 @@ function Stars({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((n) => (
         <Star
           key={n}
-          className={`h-3.5 w-3.5 ${
-            n <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-200'
-          }`}
+          className={`h-3.5 w-3.5 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-200'
+            }`}
           aria-hidden="true"
         />
       ))}
@@ -415,7 +414,7 @@ function SharePanel(props: SharePanelProps) {
                 Open to everyone
               </span>
 
-              <h2 className="mt-5 text-2xl font-extrabold leading-tight sm:text-3xl">
+              <h2 className="mt-5 text-2xl font-extrabold text-orange-500 leading-tight sm:text-3xl">
                 Tell us what you think
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-blue-50/90">
@@ -582,9 +581,8 @@ function SharePanel(props: SharePanelProps) {
                           className="rounded p-0.5 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                         >
                           <Star
-                            className={`h-7 w-7 ${
-                              n <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'
-                            }`}
+                            className={`h-7 w-7 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'
+                              }`}
                             aria-hidden="true"
                           />
                         </button>
@@ -732,8 +730,8 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
     <section className="mt-16">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-extrabold text-slate-900">What people have said</h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <h2 className="text-2xl font-extrabold text-orange-500">What people have said</h2>
+          <p className="mt-1 text-sm text-orange-300">
             Real messages from interns, universities and organizations using MANTECH.
           </p>
         </div>
@@ -768,73 +766,71 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
         >
           {items.map((item) => (
             <MotionItem key={item.id} className="min-w-0">
-            <figure
-              className={`group relative flex h-full min-w-0 flex-col rounded-2xl border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg ${
-                item.pending
+              <figure
+                className={`group relative flex h-full min-w-0 flex-col rounded-2xl border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg ${item.pending
                   ? 'border-amber-200 bg-amber-50/40 hover:border-amber-300'
                   : 'border-slate-200 hover:border-blue-200'
-              }`}
-            >
-              <Quote
-                className={`absolute right-5 top-5 h-8 w-8 transition-colors ${
-                  item.pending ? 'text-amber-100' : 'text-blue-50 group-hover:text-blue-100'
-                }`}
-                aria-hidden="true"
-              />
+                  }`}
+              >
+                <Quote
+                  className={`absolute right-5 top-5 h-8 w-8 transition-colors ${item.pending ? 'text-amber-100' : 'text-blue-50 group-hover:text-blue-100'
+                    }`}
+                  aria-hidden="true"
+                />
 
-              {item.pending ? (
-                <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
-                  Waiting for review
-                </span>
-              ) : (
-                <Stars rating={item.rating} />
-              )}
-
-              <blockquote className="mt-4 flex-1 break-words whitespace-pre-wrap text-sm font-medium leading-relaxed text-slate-800">
-                {item.message}
-              </blockquote>
-
-              {/* The longer answer, folded away until the reader wants it. */}
-              <details className="group/story mt-3">
-                <summary className="cursor-pointer list-none text-xs font-semibold text-blue-700 hover:text-blue-800">
-                  Read the full story
-                </summary>
-                <p className="mt-2 break-words whitespace-pre-wrap text-sm leading-relaxed text-slate-600">{item.details}</p>
-              </details>
-
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700">
-                  {item.focus}
-                </span>
-                <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-600">
-                  {item.region}
-                </span>
-              </div>
-
-              <figcaption className="mt-4 flex items-center gap-3 border-t border-slate-100 pt-4">
-                {item.photoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={item.photoUrl}
-                    alt=""
-                    className="h-10 w-10 shrink-0 rounded-full object-cover"
-                  />
-                ) : (
-                  <span
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${tintFor(item.name)}`}
-                    aria-hidden="true"
-                  >
-                    {item.name.charAt(0).toUpperCase()}
+                {item.pending ? (
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
+                    Waiting for review
                   </span>
+                ) : (
+                  <Stars rating={item.rating} />
                 )}
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-slate-900">{item.name}</p>
-                  <p className="truncate text-xs text-slate-500">
-                    {item.role} · {item.company}
-                  </p>
+
+                <blockquote className="mt-4 flex-1 break-words whitespace-pre-wrap text-sm font-medium leading-relaxed text-slate-800">
+                  {item.message}
+                </blockquote>
+
+                {/* The longer answer, folded away until the reader wants it. */}
+                <details className="group/story mt-3">
+                  <summary className="cursor-pointer list-none text-xs font-semibold text-blue-700 hover:text-blue-800">
+                    Read the full story
+                  </summary>
+                  <p className="mt-2 break-words whitespace-pre-wrap text-sm leading-relaxed text-slate-600">{item.details}</p>
+                </details>
+
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700">
+                    {item.focus}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-600">
+                    {item.region}
+                  </span>
                 </div>
-              </figcaption>
-            </figure>
+
+                <figcaption className="mt-4 flex items-center gap-3 border-t border-slate-100 pt-4">
+                  {item.photoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={item.photoUrl}
+                      alt=""
+                      className="h-10 w-10 shrink-0 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${tintFor(item.name)}`}
+                      aria-hidden="true"
+                    >
+                      {item.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-slate-900">{item.name}</p>
+                    <p className="truncate text-xs text-slate-500">
+                      {item.role} · {item.company}
+                    </p>
+                  </div>
+                </figcaption>
+              </figure>
             </MotionItem>
           ))}
         </MotionSection>

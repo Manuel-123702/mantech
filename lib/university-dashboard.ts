@@ -7,7 +7,9 @@ export type UniversityDashboardMode = 'placement' | 'recruiter';
 export async function requireUniversityDashboard(opts?: { requireOrg?: boolean }) {
   const user = await syncDbUser();
   if (!user) redirect('/sign-in?redirect_url=/dashboard/university');
-  if (user.role !== 'UNIVERSITY' && user.role !== 'ADMIN') redirect('/dashboard');
+  // Access is controlled by the email two-factor gate in middleware.ts, so any
+  // signed-in member who verified may open the University workspace. Members
+  // with no organization yet are sent to setup by the caller (requireOrg).
 
   const membership = user.organizationMembers[0];
   if (!membership) {

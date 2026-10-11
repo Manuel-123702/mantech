@@ -30,7 +30,7 @@ const links = [
   },
   {
     href: "/dashboard/intern/passport",
-    label: "My Intern Passport",
+    label: "My Passport",
     icon: User,
   },
   {

@@ -35,7 +35,10 @@ export function sendEmail(params: EmailParams): Promise<boolean> {
         }),
       });
       resolveResult(response.ok);
-      if (!response.ok) console.error('EmailJS rejected a notification email.', response.status);
+      if (!response.ok) {
+        const detail = await response.text().catch(() => '');
+        console.error('EmailJS rejected a notification email.', response.status, detail.slice(0, 500));
+      }
     } catch (error) {
       resolveResult(false);
       console.error('EmailJS notification delivery failed.', error);

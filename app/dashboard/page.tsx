@@ -36,7 +36,7 @@ const WORKSPACES = [
   },
   {
     href: '/dashboard/intern/passport',
-    title: 'Intern Passport',
+    title: 'My Passport',
     description:
       'Your professional profile, your experience, your certificates and your privacy settings.',
     icon: IdCard,
@@ -46,17 +46,19 @@ const WORKSPACES = [
     href: '/dashboard/company',
     title: 'Company Dashboard',
     description:
-      'Post internships, search for candidates, review CVs, arrange interviews and recruit.',
+      'Post internships, search for candidates, review CVs, arrange interviews and recruit. Open to every member after a quick email verification.',
     icon: Building2,
-    roles: ['company', 'admin'],
+    roles: ['intern', 'company', 'university', 'admin'],
+    openToAll: true,
   },
   {
     href: '/dashboard/university',
     title: 'University Dashboard',
     description:
-      'Help students find internships, and recruit interns to work at the institution.',
+      'Help students find internships, and recruit interns to work at the institution. Open to every member after a quick email verification.',
     icon: GraduationCap,
-    roles: ['university', 'admin'],
+    roles: ['intern', 'company', 'university', 'admin'],
+    openToAll: true,
   },
   {
     href: '/dashboard/admin',
@@ -108,9 +110,15 @@ export default function DashboardRootPage() {
             const Icon = workspace.icon;
             // The server decides access. While /api/me is still loading we fall
             // back to the role list so the UI never lies about permissions.
-            const permitted = allowed
-              ? allowed.includes(workspace.href)
-              : (workspace.roles as readonly string[]).includes(role);
+            // Company & University are open to every signed-in member; the
+            // email two-factor gate (not a role list) protects them, so we show
+            // them as available with a "Verify by email" hint.
+            const isOpenToAll = (workspace as { openToAll?: boolean }).openToAll === true;
+            const permitted =
+              isOpenToAll ||
+              (allowed
+                ? allowed.includes(workspace.href)
+                : (workspace.roles as readonly string[]).includes(role));
 
             return (
               <Link key={workspace.href} href={workspace.href} className="group">
@@ -127,7 +135,9 @@ export default function DashboardRootPage() {
                         <Icon className="h-5 w-5 text-blue-700" aria-hidden="true" />
                       </span>
                       {permitted ? (
-                        <Badge className="bg-blue-600">You can open this</Badge>
+                        <Badge className={isOpenToAll ? 'bg-blue-600' : 'bg-blue-600'}>
+                          {isOpenToAll ? 'Verify by email' : 'You can open this'}
+                        </Badge>
                       ) : (
                         <Badge variant="outline">Needs permission</Badge>
                       )}

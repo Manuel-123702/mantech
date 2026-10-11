@@ -22,12 +22,11 @@ const PROTECTED_PREFIXES = ['/dashboard', '/intern-passports', '/applications', 
 // Dashboards that are checked for permission on every visit.
 // Whether a person may open one of these is decided by the rules in
 // lib/roles.ts, which reads the email lists from the .env settings file.
-const GUARDED_DASHBOARDS = [
-  '/dashboard/intern',
-  '/dashboard/company',
-  '/dashboard/university',
-  '/dashboard/admin',
-];
+// Dashboards that are still gated by the role allowlist (lib/roles.ts).
+// Company and University are intentionally NOT here: they are open to any
+// signed-in member who passes the email two-factor gate below, so their
+// access is controlled by the OTP cookie rather than a role email list.
+const GUARDED_DASHBOARDS = ['/dashboard/intern', '/dashboard/admin'];
 
 /**
  * Content-Security-Policy.
@@ -251,6 +250,34 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
       }
       const gate = new URL('/dashboard/admin-verify', request.url);
       if (pathname !== '/dashboard/admin') gate.searchParams.set('next', pathname);
+      return NextResponse.redirect(gate);
+    }
+  }
+
+  // ── Company / University two-factor (OTP) gate ───────────────────────────
+  // These workspaces are open to ANY signed-in member, but only after they
+  // prove control of their sign-in inbox with the 6-digit email code (same
+  // signed cookie as the admin gate). The verify page lives outside the
+  // guarded prefixes so the dashboard layouts cannot lock their own door.
+  const isWorkspacePage =
+    pathname === '/dashboard/company' ||
+    pathname.startsWith('/dashboard/company/') ||
+    pathname === '/dashboard/university' ||
+    pathname.startsWith('/dashboard/university/');
+  if (isWorkspacePage) {
+    let verified = false;
+    try {
+      const token = request.cookies.get(ADMIN_OTP_COOKIE)?.value;
+      const session = await verifyAdminOtpSession(token, { secret: getOtpSessionSecret() });
+      verified = Boolean(session);
+    } catch {
+      verified = false;
+    }
+    if (!verified) {
+      const area = pathname.startsWith('/dashboard/university') ? 'university' : 'company';
+      const gate = new URL('/dashboard/verify', request.url);
+      gate.searchParams.set('area', area);
+      gate.searchParams.set('next', pathname);
       return NextResponse.redirect(gate);
     }
   }

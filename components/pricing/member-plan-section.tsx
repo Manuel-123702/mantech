@@ -18,7 +18,7 @@ export function MemberPlanSection() {
       {/* Ambient emerald & teal lighting */}
       <div className="absolute top-10 right-10 w-96 h-96 bg-emerald-500/15 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-80 h-80 bg-teal-500/10 blur-[110px] rounded-full pointer-events-none" />
-      
+
       <div className="container-mantech relative z-10">
         <FadeIn>
           <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-slate-900/90 backdrop-blur-md shadow-2xl">
@@ -189,7 +189,7 @@ export function SubscriptionProcess({
           <Users className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
           Subscription Onboarding
         </span>
-        <h3 className="mt-4 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+        <h3 className="mt-4 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-blue-500">
           Three Simple Steps. Zero Automated Card Charges.
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-slate-300">
@@ -209,13 +209,12 @@ export function SubscriptionProcess({
               <div>
                 <div className="flex items-center justify-between mb-5">
                   <span
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold shadow-sm ${
-                      step.tone === "blue"
-                        ? "bg-blue-600 text-white shadow-blue-600/20"
-                        : step.tone === "amber"
-                          ? "bg-amber-500 text-white shadow-amber-500/20"
-                          : "bg-emerald-600 text-white shadow-emerald-600/20"
-                    }`}
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold shadow-sm ${step.tone === "blue"
+                      ? "bg-blue-600 text-white shadow-blue-600/20"
+                      : step.tone === "amber"
+                        ? "bg-amber-500 text-white shadow-amber-500/20"
+                        : "bg-emerald-600 text-white shadow-emerald-600/20"
+                      }`}
                   >
                     0{index + 1}
                   </span>
@@ -232,7 +231,7 @@ export function SubscriptionProcess({
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] font-semibold text-slate-400">
+              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] font-semibold text-orange-400">
                 <span>Verified Step</span>
                 <Check className="w-4 h-4 text-emerald-400" />
               </div>

@@ -57,6 +57,10 @@ export default function InternRegistrationPage() {
     headline: '',
     summary: '',
 
+    // Passport history (SRS §7) — optional, shown on the Intern Passport.
+    experiences: [] as { companyName: string; roleTitle: string; durationMonths: string; location: string }[],
+    achievements: [] as { title: string; category: string; issuer: string; issueDate: string; description: string }[],
+
     // Privacy
     isPhonePublic: false,
     isCvSearchable: true,
@@ -177,6 +181,10 @@ export default function InternRegistrationPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          experiences: (formData.experiences || [])
+            .filter((e) => e.companyName.trim() && e.roleTitle.trim())
+            .map((e) => ({ ...e, durationMonths: Number(e.durationMonths) || 1 })),
+          achievements: (formData.achievements || []).filter((a) => a.title.trim() && a.issuer.trim()),
           cvUrl: cvData.url,
           cvFileKey: cvData.fileKey,
           cvFileName: cvData.fileName,
@@ -627,6 +635,160 @@ export default function InternRegistrationPage() {
                       placeholder="Brief description of your professional background and career goals..."
                       rows={4}
                     />
+                  </div>
+
+                  {/* Passport history (SRS §7) — optional */}
+                  <div className="space-y-4 pt-4 border-t">
+                    <div>
+                      <h3 className="font-semibold text-sm">Experience (optional)</h3>
+                      <p className="text-xs text-slate-500">
+                        Any internships or jobs you have done. These appear on your Intern Passport.
+                      </p>
+                    </div>
+                    {formData.experiences.map((exp, idx) => (
+                      <div key={idx} className="rounded-lg border border-slate-200 p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-slate-500">Experience {idx + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleInputChange('experiences', formData.experiences.filter((_, i) => i !== idx))
+                            }
+                            className="text-xs font-medium text-red-600 hover:text-red-700"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <Input
+                            placeholder="Company / organization"
+                            value={exp.companyName}
+                            onChange={(e) => {
+                              const next = [...formData.experiences];
+                              next[idx] = { ...next[idx], companyName: e.target.value };
+                              handleInputChange('experiences', next);
+                            }}
+                          />
+                          <Input
+                            placeholder="Your role / title"
+                            value={exp.roleTitle}
+                            onChange={(e) => {
+                              const next = [...formData.experiences];
+                              next[idx] = { ...next[idx], roleTitle: e.target.value };
+                              handleInputChange('experiences', next);
+                            }}
+                          />
+                          <Input
+                            type="number"
+                            min={1}
+                            placeholder="Duration (months)"
+                            value={exp.durationMonths}
+                            onChange={(e) => {
+                              const next = [...formData.experiences];
+                              next[idx] = { ...next[idx], durationMonths: e.target.value };
+                              handleInputChange('experiences', next);
+                            }}
+                          />
+                          <Input
+                            placeholder="Location (city)"
+                            value={exp.location}
+                            onChange={(e) => {
+                              const next = [...formData.experiences];
+                              next[idx] = { ...next[idx], location: e.target.value };
+                              handleInputChange('experiences', next);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleInputChange('experiences', [
+                          ...formData.experiences,
+                          { companyName: '', roleTitle: '', durationMonths: '', location: '' },
+                        ])
+                      }
+                      className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                    >
+                      + Add experience
+                    </button>
+                  </div>
+
+                  {/* Achievements & certifications (SRS §7) — optional */}
+                  <div className="space-y-4 pt-4 border-t">
+                    <div>
+                      <h3 className="font-semibold text-sm">Achievements &amp; Certifications (optional)</h3>
+                      <p className="text-xs text-slate-500">
+                        Certificates, awards or qualifications you want to showcase.
+                      </p>
+                    </div>
+                    {formData.achievements.map((ach, idx) => (
+                      <div key={idx} className="rounded-lg border border-slate-200 p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-slate-500">Achievement {idx + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleInputChange('achievements', formData.achievements.filter((_, i) => i !== idx))
+                            }
+                            className="text-xs font-medium text-red-600 hover:text-red-700"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <Input
+                            placeholder="Title (e.g. Cisco CCNA)"
+                            value={ach.title}
+                            onChange={(e) => {
+                              const next = [...formData.achievements];
+                              next[idx] = { ...next[idx], title: e.target.value };
+                              handleInputChange('achievements', next);
+                            }}
+                          />
+                          <Input
+                            placeholder="Issued by"
+                            value={ach.issuer}
+                            onChange={(e) => {
+                              const next = [...formData.achievements];
+                              next[idx] = { ...next[idx], issuer: e.target.value };
+                              handleInputChange('achievements', next);
+                            }}
+                          />
+                          <Input
+                            placeholder="Category (certification, award…)"
+                            value={ach.category}
+                            onChange={(e) => {
+                              const next = [...formData.achievements];
+                              next[idx] = { ...next[idx], category: e.target.value };
+                              handleInputChange('achievements', next);
+                            }}
+                          />
+                          <Input
+                            type="date"
+                            value={ach.issueDate}
+                            onChange={(e) => {
+                              const next = [...formData.achievements];
+                              next[idx] = { ...next[idx], issueDate: e.target.value };
+                              handleInputChange('achievements', next);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleInputChange('achievements', [
+                          ...formData.achievements,
+                          { title: '', category: '', issuer: '', issueDate: '', description: '' },
+                        ])
+                      }
+                      className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                    >
+                      + Add achievement
+                    </button>
                   </div>
 
                   {/* Privacy Settings */}

@@ -42,9 +42,17 @@
   * {
     @apply border-border;
   }
+  html {
+    /* Phones must never swipe the whole page left/right. Any element that is
+       accidentally wider than the viewport is clipped instead of creating a
+       horizontal scrollbar (the classic "site swipes sideways on mobile"). */
+    overflow-x: hidden;
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 }
 
