@@ -11,6 +11,8 @@ import {
   Bell,
   CalendarClock,
   Sparkles,
+  UserPlus,
+  MessageCircle,
 } from 'lucide-react';
 
 import { requireUser } from '@/lib/authz';
@@ -18,9 +20,13 @@ import { prisma } from '@/lib/prisma';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ShareButton } from '@/components/shared/share-button';
+import { waReferralLink } from '@/lib/whatsapp';
+import { getReferralStats } from '@/lib/referrals';
 import { buildReadinessChecklist, readinessPercent, nextActions } from '@/lib/readiness';
 import { loadInternHistory } from '@/lib/intern-history-data';
 import { statusLabel } from '@/lib/intern-history';
+import { calculateMatch, matchLabel, type MatchProfile } from '@/lib/matching';
 
 export const metadata = {
   title: 'Intern Dashboard | MANTECH Nexus',
@@ -75,6 +81,7 @@ export default async function InternDashboardPage() {
   const profile = await prisma.internProfile.findUnique({
     where: { userId: user.id },
     select: {
+      id: true,
       phone: true,
       qualification: true,
       fieldOfStudyId: true,
@@ -91,6 +98,7 @@ export default async function InternDashboardPage() {
         select: {
           id: true,
           status: true,
+          opportunityId: true,
           opportunity: {
             select: { title: true, organization: { select: { name: true } } },
           },
@@ -193,6 +201,75 @@ export default async function InternDashboardPage() {
   );
 
   const history = await loadInternHistory(user.id);
+
+  // Growth loop: the intern's personal referral code + live counters.
+  const referralStats = await getReferralStats(user.id);
+
+  // ───── RANKED RECOMMENDATIONS ─────
+  // "Recommended for you" — scored with the same matching engine that powers
+  // the Best-match sort on /internships. Only live (PUBLISHED, non-expired)
+  // openings the intern has NOT already applied to are considered.
+  const matchSource = await prisma.internProfile.findUnique({
+    where: { userId: user.id },
+    select: {
+      city: true,
+      preferredWorkMode: true,
+      fieldOfStudy: { select: { name: true, slug: true } },
+      region: { select: { name: true } },
+      skills: { select: { skill: { select: { name: true } } } },
+    },
+  });
+  const matchProfile: MatchProfile = {
+    skills: matchSource?.skills.map((entry) => entry.skill.name) ?? [],
+    fieldSlug: matchSource?.fieldOfStudy?.slug ?? null,
+    fieldName: matchSource?.fieldOfStudy?.name ?? null,
+    city: matchSource?.city ?? null,
+    regionName: matchSource?.region?.name ?? null,
+    preferredWorkMode: matchSource?.preferredWorkMode ?? null,
+    wantsPaid: null,
+  };
+  const appliedOpportunityIds = profile.applications.map(
+    (application) => application.opportunityId,
+  );
+  const openOpportunities = await prisma.internshipOpportunity.findMany({
+    where: {
+      moderationStatus: 'PUBLISHED',
+      deadline: { gte: new Date() },
+      id: { notIn: appliedOpportunityIds },
+    },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      city: true,
+      workMode: true,
+      isPaid: true,
+      requiredSkills: true,
+      preferredSkills: true,
+      field: { select: { name: true, slug: true } },
+      region: { select: { name: true } },
+      organization: { select: { name: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 60,
+  });
+  const recommended = openOpportunities
+    .map((opportunity) => ({
+      opportunity,
+      ...calculateMatch(matchProfile, {
+        requiredSkills: opportunity.requiredSkills,
+        preferredSkills: opportunity.preferredSkills,
+        fieldSlug: opportunity.field?.slug ?? null,
+        fieldName: opportunity.field?.name ?? null,
+        city: opportunity.city,
+        regionName: opportunity.region?.name ?? null,
+        workMode: opportunity.workMode,
+        isPaid: opportunity.isPaid,
+      }),
+    }))
+    .filter((entry) => entry.score >= 30)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
 
   const stats = [
     { label: 'Applications', value: String(applications.length), icon: Briefcase, tone: 'text-blue-600' },
@@ -359,6 +436,64 @@ export default async function InternDashboardPage() {
           </CardContent>
         </Card>
       </div>
+      {recommended.length > 0 && (
+        <Card className="shadow-sm">
+          <CardContent className="p-6">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
+                <Sparkles className="h-4 w-4 text-blue-600" aria-hidden="true" />
+                Recommended for you
+              </h2>
+              <Link
+                href="/internships"
+                className="text-sm font-medium text-blue-700 hover:underline"
+              >
+                Browse all internships
+              </Link>
+            </div>
+            <p className="mt-1 text-sm text-slate-600">
+              Ranked by how well each live opening matches your skills, field and location.
+            </p>
+            <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              {recommended.map(({ opportunity, score, reasons }) => {
+                const color =
+                  score >= 70
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : score >= 45
+                      ? 'bg-amber-100 text-amber-700'
+                      : 'bg-slate-100 text-slate-600';
+                return (
+                  <li key={opportunity.id}>
+                    <Link
+                      href={`/internships/${opportunity.slug}`}
+                      className="flex h-full flex-col rounded-xl border border-slate-200 p-4 transition-colors hover:border-blue-300 hover:bg-blue-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-sm font-semibold text-slate-900">
+                          {opportunity.title}
+                        </p>
+                        <span
+                          className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${color}`}
+                        >
+                          {score}%
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-600">
+                        {opportunity.organization.name} · {opportunity.city}
+                      </p>
+                      <p className="mt-2 text-xs text-slate-500">
+                        {matchLabel(score)}
+                        {reasons.length > 0 ? ` · ${reasons.slice(0, 2).join(' · ')}` : ''}
+                      </p>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="shadow-sm">
         <CardContent className="p-0">
           <div className="flex items-center justify-between border-b px-6 py-4">
@@ -427,6 +562,44 @@ export default async function InternDashboardPage() {
               <ChevronRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </Button>
           </Link>
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-sm">
+        <CardContent className="flex flex-wrap items-center justify-between gap-4 p-6">
+          <div className="flex items-start gap-3">
+            <UserPlus className="mt-0.5 h-5 w-5 text-blue-600" aria-hidden="true" />
+            <div>
+              <h2 className="text-base font-semibold text-slate-900">Invite friends</h2>
+              <p className="mt-0.5 text-sm text-slate-600">
+                Your code{' '}
+                <span className="font-mono font-semibold text-slate-900">{referralStats.code}</span>
+                {' — '}
+                {referralStats.invited} joined
+                {referralStats.qualified > 0
+                  ? `, ${referralStats.qualified} completed onboarding`
+                  : ''}
+                .
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <ShareButton
+              path={`/sign-up?ref=${referralStats.code}`}
+              title="Join me on MANTECH Nexus"
+              text="Create your free account and discover verified internships in Cameroon."
+              label="Copy invite link"
+            />
+            <a
+              href={waReferralLink(referralStats.code)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Share on WhatsApp
+            </a>
+          </div>
         </CardContent>
       </Card>
     </div>

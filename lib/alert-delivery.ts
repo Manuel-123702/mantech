@@ -15,8 +15,8 @@
 
 import { prisma } from '@/lib/prisma';
 import { sendEmail, emailTemplates } from '@/lib/emailjs';
-import { matchesAlert, type AlertCriteria } from '@/lib/alert-matching';
-import { buildOpportunityAlert, type AlertOpportunityCard } from '@/lib/alert-messages';
+import { findAlertMatches, matchesAlert, type AlertCriteria } from '@/lib/alert-matching';
+import { buildOpportunityAlert, buildOpportunityDigest, type AlertOpportunityCard } from '@/lib/alert-messages';
 
 export type PublishedOpportunityInput = {
   id: string;
@@ -88,5 +88,104 @@ export async function notifyMatchingAlerts(opp: PublishedOpportunityInput): Prom
   } catch (error) {
     console.error('[alert-delivery] notifyMatchingAlerts failed:', error);
     return 0;
+  }
+}
+
+/**
+ * Weekly digest (driven by /api/cron/weekly-digest).
+ *
+ * For every saved alert, collect the opportunities published since `days`
+ * ago that match the alert's preferences and send ONE digest message per
+ * intern (in-app notification + best-effort email). Alert holders already
+ * get a single-alert notification at publish time, so the digest is the
+ * safety net for busy weeks and for interns who muted individual alerts.
+ *
+ * Like notifyMatchingAlerts, this NEVER throws — a digest failure must not
+ * take a cron invocation down. Returns how many digests were sent.
+ */
+export async function sendWeeklyDigests(
+  opts?: { days?: number },
+): Promise<{ sent: number; opportunities: number }> {
+  try {
+    const days = opts?.days ?? 7;
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+    const alerts = await prisma.candidateAlert.findMany({
+      select: { userId: true, regions: true, cities: true, workModes: true },
+    });
+    if (alerts.length === 0) return { sent: 0, opportunities: 0 };
+
+    // Fresh, still-open opportunities from the last `days` days.
+    const opportunities = await prisma.internshipOpportunity.findMany({
+      where: {
+        moderationStatus: 'PUBLISHED',
+        deadline: { gte: new Date() },
+        createdAt: { gte: since },
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        city: true,
+        workMode: true,
+        region: { select: { name: true } },
+        organization: { select: { name: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 100,
+    });
+    if (opportunities.length === 0) return { sent: 0, opportunities: 0 };
+
+    // One query for everyone who will receive something.
+    const users = await prisma.user.findMany({
+      where: { id: { in: alerts.map((a) => a.userId) }, status: 'active' },
+      select: { id: true, email: true, fullName: true },
+    });
+    const usersById = new Map(users.map((u) => [u.id, u]));
+
+    let sent = 0;
+    for (const alert of alerts) {
+      const user = usersById.get(alert.userId);
+      if (!user) continue;
+
+      const criteria: AlertCriteria = {
+        regions: (alert.regions as string[]) ?? [],
+        cities: (alert.cities as string[]) ?? [],
+        workModes: (alert.workModes as string[]) ?? [],
+      };
+      const matches = findAlertMatches(criteria, opportunities);
+      if (matches.length === 0) continue;
+
+      const cards: AlertOpportunityCard[] = matches.slice(0, 10).map((opp) => ({
+        title: opp.title,
+        organizationName: opp.organization?.name ?? null,
+        city: opp.city,
+        regionName: opp.region?.name ?? null,
+        workMode: opp.workMode,
+        url: `${APP_URL}/internships/${opp.slug}`,
+      }));
+      const { subject, message } = buildOpportunityDigest(cards);
+
+      await prisma.notification.create({
+        data: {
+          userId: user.id,
+          title: subject,
+          message,
+          category: 'system',
+          link: '/internships',
+        },
+      });
+      if (user.email) {
+        void sendEmail(
+          emailTemplates.notification(user.fullName || 'there', user.email, subject, message),
+        ).catch(() => {});
+      }
+      sent += 1;
+    }
+
+    return { sent, opportunities: opportunities.length };
+  } catch (error) {
+    console.error('[alert-delivery] sendWeeklyDigests failed:', error);
+    return { sent: 0, opportunities: 0 };
   }
 }

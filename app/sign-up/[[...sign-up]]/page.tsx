@@ -1,6 +1,7 @@
 import { SignUp } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Logo } from '@/components/shared/logo';
+import { ReferralCapture } from '@/components/shared/referral-capture';
 import { ShieldCheck } from 'lucide-react';
 import { Suspense } from 'react';
 
@@ -10,6 +11,10 @@ export default function SignUpPage() {
       className="min-h-screen relative flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-cover bg-center"
       style={{ backgroundImage: "url('/images/about_tech_bg.jpg')" }}
     >
+      {/* Invisible: remembers ?ref=CODE so the server can credit the referrer. */}
+      <Suspense fallback={null}>
+        <ReferralCapture />
+      </Suspense>
       <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-[2px]" />
 
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md text-center">

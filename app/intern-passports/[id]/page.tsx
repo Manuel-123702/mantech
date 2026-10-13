@@ -15,8 +15,11 @@ import {
   Award,
   CheckCircle,
   Phone,
+  MessageCircle,
 } from "lucide-react";
 import { CvDownloadButton } from "@/components/cv-download-button";
+import { ShareButton } from "@/components/shared/share-button";
+import { waSharePassportLink } from "@/lib/whatsapp";
 import type {
   PassportAchievement,
   PassportExperience,
@@ -281,6 +284,26 @@ export default async function InternPassportDetailPage({
                 {passport?.passportNumber || "N/A"}
               </div>
               <div className="text-sm text-slate-500">Passport Number</div>
+              <ShareButton
+                path={`/intern-passports/${id}`}
+                title={`${profileUser.fullName} — Intern Passport on MANTECH Nexus`}
+                text={`Meet ${profileUser.fullName} (${fieldOfStudy?.name || "intern"}) — view their verified Intern Passport on MANTECH Nexus.`}
+                label="Share passport"
+                className="mt-3"
+              />
+              <a
+                href={waSharePassportLink({
+                  name: profileUser.fullName,
+                  headline: passport?.headline,
+                  fieldName: fieldOfStudy?.name,
+                  profileId: id,
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-800"
+              >
+                <MessageCircle className="h-4 w-4" /> Share on WhatsApp
+              </a>
             </div>
           </div>
         </div>

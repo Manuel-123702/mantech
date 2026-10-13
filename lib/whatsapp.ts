@@ -84,6 +84,22 @@ export function waReferralLink(code: string): string {
   return `https://wa.me/?text=${encodeURIComponent(msg)}`;
 }
 
+/** Intern shares THEIR OWN passport to a recruiter / group via WhatsApp (viral loop). */
+export function waSharePassportLink(opts: {
+  name: string;
+  headline?: string | null;
+  fieldName?: string | null;
+  profileId?: string;
+}): string {
+  const base =
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : process.env.NEXT_PUBLIC_APP_URL || 'https://mantech.nexus';
+  const url = opts.profileId ? `${base}/intern-passports/${opts.profileId}` : base;
+  const msg = `🎓 Meet ${opts.name} on MANTECH Nexus\n\n📌 ${opts.headline || opts.fieldName || 'Verified intern'}\n\n👉 View passport: ${url}\n\n— via MANTECH Nexus`;
+  return `https://wa.me/?text=${encodeURIComponent(msg)}`;
+}
+
 /** Phone display, e.g. +237 650 921 917 */
 export function waDisplayPhone(): string {
   return APP_CONFIG.contacts.whatsappFormatted || APP_CONFIG.contacts.whatsapp;

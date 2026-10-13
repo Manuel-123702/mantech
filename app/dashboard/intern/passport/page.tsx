@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShareButton } from "@/components/shared/share-button";
+import { waSharePassportLink } from "@/lib/whatsapp";
 import {
   Download,
   Edit,
@@ -22,6 +23,7 @@ import {
   UserCheck,
   Trophy,
   Building,
+  MessageCircle,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -133,6 +135,20 @@ export default async function InternPassportDashboardPage() {
             title={`${profile.user.fullName} — Intern Passport`}
             text={`${profile.user.fullName}'s verified Intern Passport on MANTECH Nexus.`}
           />
+          <a
+            href={waSharePassportLink({
+              name: profile.user.fullName,
+              headline: profile.passport?.headline,
+              fieldName: profile.fieldOfStudy?.name,
+              profileId: profile.id,
+            })}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+          >
+            <MessageCircle className="h-4 w-4" />
+            Share on WhatsApp
+          </a>
         </div>
       </div>
 

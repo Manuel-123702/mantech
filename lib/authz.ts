@@ -1,8 +1,10 @@
 import { auth, currentUser } from '@clerk/nextjs/server';
+import { cookies } from 'next/headers';
 import type { Organization, OrganizationMember, User, UserRole } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { AuthError, assertRecruiterAccess as assertRecruiterAccessPolicy, isUniqueConstraintViolation } from '@/lib/authz-policy';
 import { resolveRole } from '@/lib/roles';
+import { attributeReferral, REFERRAL_COOKIE } from '@/lib/referrals';
 
 // Re-exported so existing call sites keep importing from '@/lib/authz'.
 export { AuthError, jsonError } from '@/lib/authz-policy';
@@ -79,7 +81,7 @@ export async function syncDbUser(): Promise<SyncedUser | null> {
   // "someone else already created it" and re-reading makes first-visit sync
   // idempotent under concurrency.
   try {
-    return await prisma.user.create({
+    const created = await prisma.user.create({
       data: {
         clerkId,
         email,
@@ -89,6 +91,22 @@ export async function syncDbUser(): Promise<SyncedUser | null> {
       },
       include: USER_INCLUDE,
     });
+
+    // Best-effort referral attribution: link this new account to whoever
+    // shared /sign-up?ref=CODE (the code travelled in a first-party cookie,
+    // see components/shared/referral-capture). A referral problem must never
+    // block sign-up, so every failure here is swallowed on purpose.
+    try {
+      const cookieStore = await cookies();
+      const rawCode = cookieStore.get(REFERRAL_COOKIE)?.value;
+      if (rawCode) {
+        await attributeReferral(rawCode, created.id);
+      }
+    } catch {
+      // No request cookies available or a transient DB hiccup — skip.
+    }
+
+    return created;
   } catch (error) {
     if (!isUniqueConstraintViolation(error)) throw error;
 
