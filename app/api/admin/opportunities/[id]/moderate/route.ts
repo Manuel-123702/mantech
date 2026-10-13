@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { notifyUser, writeAudit } from '@/lib/audit';
 import { jsonError } from '@/lib/authz';
 import { requireAdminUser } from '@/lib/admin-dashboard';
+import { notifyMatchingAlerts } from '@/lib/alert-delivery';
 
 const schema = z.object({
   action: z.enum(['approve', 'publish', 'reject', 'suspend', 'restore', 'archive']),
@@ -27,7 +28,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
     const opportunity = await prisma.internshipOpportunity.findUnique({
       where: { id },
-      include: { organization: { include: { members: true } } },
+      include: { organization: { include: { members: true } }, region: { select: { name: true } } },
     });
     if (!opportunity) {
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
@@ -59,10 +60,24 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       )
     );
 
+    // When an opportunity goes live, alert every intern whose saved alert
+    // preferences match it. Never throws — moderation must not fail on this.
+    if (nextStatus === 'PUBLISHED') {
+      await notifyMatchingAlerts({
+        id: opportunity.id,
+        title: opportunity.title,
+        slug: opportunity.slug,
+        organizationName: opportunity.organization?.name ?? null,
+        regionName: opportunity.region?.name ?? null,
+        city: opportunity.city ?? null,
+        workMode: String(opportunity.workMode ?? ''),
+      });
+    }
+
     await writeAudit({
-      actorId: admin.id,
-      actorRole: admin.role,
-      action: 'OPPORTUNITY_MODERATED',
+        actorId: admin.id,
+        actorRole: admin.role,
+        action: 'OPPORTUNITY_MODERATED',
       entityType: 'InternshipOpportunity',
       entityId: opportunity.id,
       details: { action: body.action, from: opportunity.moderationStatus, to: nextStatus, reason: body.reason },
