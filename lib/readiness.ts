@@ -118,6 +118,11 @@ export function readinessPercent(items: ChecklistItem[]): number {
   return Math.round((done / items.length) * 100);
 }
 
+/** Derived readiness percentage for a profile checklist (used for display). */
+export function readinessPercentForProfile(profile: ReadinessProfile): number {
+  return readinessPercent(buildReadinessChecklist(profile));
+}
+
 /** The next items the intern should tackle, worst first. */
 export function nextActions(items: ChecklistItem[], limit = 3): ChecklistItem[] {
   return items.filter((item) => !item.done).slice(0, limit);

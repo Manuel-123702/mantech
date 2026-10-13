@@ -156,6 +156,11 @@ model InternProfile {
   isCvSearchable     Boolean   @default(true) // Profile discoverability setting
   readinessScore     Int       @default(40)
   profileCompleted   Boolean   @default(false)
+  // Career & job-acquisition signals used to increase readiness over time.
+  targetRole         String?
+  targetIndustries   String?
+  careerGoals        String?
+  skillsToImprove    String?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
