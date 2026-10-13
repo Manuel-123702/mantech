@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { CvDownloadButton } from "@/components/cv-download-button";
 import { ShareButton } from "@/components/shared/share-button";
+import { ReportButton } from "@/components/shared/report-button";
 import { waSharePassportLink } from "@/lib/whatsapp";
 import type {
   PassportAchievement,
@@ -304,6 +305,12 @@ export default async function InternPassportDetailPage({
               >
                 <MessageCircle className="h-4 w-4" /> Share on WhatsApp
               </a>
+              {/* Trust & safety: report someone else's passport (never your own). */}
+              {internProfile.userId !== user.id && (
+                <div className="mt-2 flex justify-end">
+                  <ReportButton targetType="PASSPORT" targetId={internProfile.id} />
+                </div>
+              )}
             </div>
           </div>
         </div>

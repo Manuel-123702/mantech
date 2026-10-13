@@ -128,6 +128,7 @@ model User {
   savedOpportunities SavedOpportunity[]
   candidateApplications CandidateApplication[]
   candidateAlerts    CandidateAlert?
+  reportsFiled       Report[]    @relation("ReportReporter")
 
   @@index([email])
   @@index([clerkId])
@@ -797,4 +798,56 @@ model AdminOtp {
 
   @@index([email, createdAt])
   @@index([expiresAt])
+}
+
+// ---------------------------------------------------------------------------
+// Moderation reports (trust & safety).
+//
+// Signed-in members flag content they believe is scammy, misleading or
+// inappropriate; national admins review the queue and act (suspend/reject
+// through the existing moderation tools) or dismiss. Distinct from the
+// deprecated academic reports API (app/api/reports -> 410 Gone).
+// ---------------------------------------------------------------------------
+
+enum ReportTargetType {
+  OPPORTUNITY // an internship posting (targetId = InternshipOpportunity.id)
+  PASSPORT // a public intern passport (targetId = InternProfile.id)
+}
+
+enum ReportReason {
+  SCAM // fake internship, asks for money, phishing
+  MISLEADING // description does not match the actual role
+  SPAM // duplicate or low-effort posting
+  INAPPROPRIATE // offensive or discriminatory content
+  OTHER // anything else (details expected)
+}
+
+enum ReportStatus {
+  OPEN // filed, waiting for an admin
+  REVIEWING // an admin picked it up
+  ACTIONED // admin acted on the reported content
+  DISMISSED // reviewed, no action needed
+}
+
+model Report {
+  id           String           @id @default(cuid())
+  reporterId   String
+  reporter     User             @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType   ReportTargetType
+  targetId     String // id of the reported opportunity / passport
+  targetTitle  String // snapshot at report time (survives deletion)
+  reason       ReportReason
+  details      String? // free text from the reporter
+  status       ReportStatus     @default(OPEN)
+  resolution   String? // admin note explaining the decision
+  reviewedAt   DateTime?
+  reviewedById String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  // One open report per member per target — filing twice just re-files the
+  // same case, so the unique key turns it into a no-op instead.
+  @@unique([reporterId, targetType, targetId])
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
 }

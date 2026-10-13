@@ -14,6 +14,7 @@ import {
   specializationNameOf,
 } from "@/lib/catalog-shape";
 import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
+import { ReportButton } from "@/components/shared/report-button";
 import { APP_CONFIG } from "@/lib/config";
 import { waShareInternshipLink, waApplyLink } from "@/lib/whatsapp";
 import { jobPostingJsonLd } from "@/lib/seo";
@@ -448,6 +449,13 @@ export default function InternshipDetailPage() {
               <Share2 className="w-4 h-4" />
               <span>{copied ? "Copied!" : "Copy"}</span>
             </Button>
+            {opportunity?.id && (
+              <ReportButton
+                targetType="OPPORTUNITY"
+                targetId={opportunity.id}
+                className="h-9 px-2 gap-1.5 text-xs text-slate-500 hover:text-red-600"
+              />
+            )}
           </div>
         </div>
       </div>

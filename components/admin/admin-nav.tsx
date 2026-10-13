@@ -17,6 +17,7 @@ import {
   BarChart3,
   Headphones,
   Quote,
+  Flag,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -26,6 +27,7 @@ const links = [
   { href: '/dashboard/admin/verification', label: 'Verification', icon: ShieldCheck },
   { href: '/dashboard/admin/organizations', label: 'Organizations', icon: Building2 },
   { href: '/dashboard/admin/moderation', label: 'Moderation', icon: ClipboardList },
+  { href: '/dashboard/admin/reports', label: 'Reports', icon: Flag },
   { href: '/dashboard/admin/testimonials', label: 'Testimonials', icon: Quote },
   { href: '/dashboard/admin/featured', label: 'Featured', icon: Star },
   { href: '/dashboard/admin/users', label: 'Users', icon: Users },
