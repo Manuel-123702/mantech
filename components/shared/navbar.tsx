@@ -564,8 +564,10 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              /* Signed-Out Call-to-Actions */
-              <div className="flex items-center gap-2">
+              /* Signed-Out Call-to-Actions (desktop only — on mobile these live
+                 inside the hamburger drawer, where there is room and nothing
+                 wraps to two lines). */
+              <div className="hidden lg:flex items-center gap-2">
                 {/* Quick access to the four role dashboards */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

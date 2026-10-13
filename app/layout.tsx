@@ -6,6 +6,7 @@ import { Navbar } from '@/components/shared/navbar';
 import { Footer } from '@/components/shared/footer';
 import { LoadingScreen } from '@/components/shared/loading-screen';
 import { WhatsAppFloat } from '@/components/shared/whatsapp-float';
+import { ScrollToTop } from '@/components/shared/scroll-to-top';
 import { Toaster } from '@/components/ui/sonner';
 import { SITE_URL, organizationJsonLd } from '@/lib/seo';
 
@@ -70,6 +71,7 @@ export default function RootLayout({
           <main className="min-h-screen pt-24">{children}</main>
           <Footer />
           <WhatsAppFloat />
+          <ScrollToTop />
           <Toaster position="top-center" richColors closeButton />
         </AuthProvider>
       </body>
