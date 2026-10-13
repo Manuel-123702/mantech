@@ -129,6 +129,10 @@ export default async function SettingsPage() {
                     profile
                       ? {
                           id: profile.id,
+                          avatarUrl: user.avatarUrl ?? null,
+                          cvUrl: profile.cvUrl ?? null,
+                          cvFileName: profile.cvFileName ?? null,
+                          cvFileSize: profile.cvFileSize ?? null,
                           phone: profile.phone,
                           bio:
                             profile.passport?.summary ??
@@ -144,6 +148,10 @@ export default async function SettingsPage() {
                           fieldName: profile.fieldOfStudy?.name ?? null,
                           qualification: profile.qualification,
                           readinessScore: profile.readinessScore,
+                          targetRole: profile.targetRole,
+                          targetIndustries: profile.targetIndustries,
+                          careerGoals: profile.careerGoals,
+                          skillsToImprove: profile.skillsToImprove,
                         }
                       : null
                   }

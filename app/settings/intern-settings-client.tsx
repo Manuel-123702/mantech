@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Save, CheckCircle2, User as UserIcon } from "lucide-react";
+import { Loader2, Save, CheckCircle2, User as UserIcon, Download } from "lucide-react";
 
 export type InternSettingsMode = "profile" | "notifications";
 export type InternSettingsUser = {
@@ -19,6 +20,10 @@ export type InternSettingsUser = {
 };
 export type InternSettingsProfile = {
   id: string;
+  avatarUrl: string | null;
+  cvUrl: string | null;
+  cvFileName: string | null;
+  cvFileSize: number | null;
   phone: string | null;
   bio: string | null;
   availability: string | null;
@@ -31,6 +36,10 @@ export type InternSettingsProfile = {
   fieldName: string | null;
   qualification: string | null;
   readinessScore: number;
+  targetRole: string | null;
+  targetIndustries: string | null;
+  careerGoals: string | null;
+  skillsToImprove: string | null;
 } | null;
 
 export function InternSettingsClient({
@@ -95,7 +104,31 @@ function InternProfileForm({
     city: profile?.city ?? "",
     isPhonePublic: profile?.isPhonePublic ?? true,
     isCvSearchable: profile?.isCvSearchable ?? true,
+    avatarUrl: profile?.avatarUrl ?? "",
+    cvUrl: profile?.cvUrl ?? "",
+    cvFileKey: "",
+    cvFileName: profile?.cvFileName ?? "",
+    cvFileSize: profile?.cvFileSize ?? 0,
+    targetRole: profile?.targetRole ?? "",
+    targetIndustries: profile?.targetIndustries ?? "",
+    careerGoals: profile?.careerGoals ?? "",
+    skillsToImprove: profile?.skillsToImprove ?? "",
   });
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [cvFile, setCvFile] = useState<File | null>(null);
+
+  async function uploadFile(file: File, type: "cv" | "photo") {
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("type", type);
+    const res = await fetch("/api/upload", { method: "POST", body: fd });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      throw new Error(d.error || "Upload failed");
+    }
+    return res.json();
+  }
 
   async function saveProfile(e: React.FormEvent) {
     e.preventDefault();
@@ -236,7 +269,127 @@ function InternProfileForm({
         </div>
       </div>
 
-      <div className="mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div className="sm:col-span-2">
+          <Label htmlFor="photo">Profile photo</Label>
+          <div className="mt-1.5 flex items-center gap-4">
+            {form.avatarUrl ? (
+              <Image
+                src={form.avatarUrl}
+                alt="Profile"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full object-cover border border-slate-200"
+              />
+            ) : (
+              <div className="h-12 w-12 rounded-full bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-slate-400">
+                <UserIcon className="h-5 w-5" />
+              </div>
+            )}
+            <Input
+              id="photo"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={async (e) => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                setError(null);
+                setAvatarFile(f);
+                try {
+                  const u = await uploadFile(f, 'photo');
+                  // Persist the photo on the user record so the Intern
+                  // Passport directory shows it (replaces the initial letter).
+                  const saved = await fetch('/api/me/avatar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ avatarUrl: u.url }),
+                  });
+                  if (!saved.ok) throw new Error('Could not save your photo');
+                  setForm((prev) => ({ ...prev, avatarUrl: u.url }));
+                } catch (err) {
+                  setError(err instanceof Error ? err.message : 'Could not upload your photo');
+                } finally {
+                  setAvatarFile(null);
+                }
+              }}
+              className="flex-1"
+            />
+          </div>
+          {form.avatarUrl && (
+            <p className="mt-1 text-xs text-slate-500">
+              Photo saved. Remove the file above to select a new one.
+            </p>
+          )}
+        </div>
+        <div className="sm:col-span-2">
+          <Label htmlFor="cv">Resume / CV (PDF)</Label>
+          <div className="mt-1.5 flex flex-wrap items-center gap-3">
+            {form.cvUrl ? (
+              <a
+                href={form.cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-blue-700 hover:underline"
+              >
+                <Download className="h-4 w-4" />
+                {form.cvFileName || form.cvUrl.split("/").pop()}
+              </a>
+            ) : (
+              <span className="text-sm text-slate-500">No CV uploaded yet.</span>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!!cvFile}
+              onClick={() => document.getElementById("cv")?.click()}
+            >
+              <Download className="h-4 w-4 mr-1" />
+              {cvFile ? "Uploading…" : form.cvUrl ? "Replace CV" : "Upload CV"}
+            </Button>
+            <Input
+              id="cv"
+              type="file"
+              accept="application/pdf"
+              onChange={async (e) => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                setError(null);
+                setCvFile(f);
+                try {
+                  const u = await uploadFile(f, "cv");
+                  setForm((prev) => ({
+                    ...prev,
+                    cvUrl: u.url,
+                    cvFileKey: u.fileKey ?? "",
+                    cvFileName: u.fileName ?? prev.cvFileName,
+                    cvFileSize: u.fileSize ?? prev.cvFileSize,
+                  }));
+                } catch (err) {
+                  setError(
+                    err instanceof Error ? err.message : "Could not upload your CV",
+                  );
+                } finally {
+                  setCvFile(null);
+                  // Reset the input so selecting the same file again still fires.
+                  e.target.value = "";
+                }
+              }}
+              className="hidden"
+            />
+            {cvFile && (
+              <span className="text-xs text-slate-500">Uploading {cvFile.name}…</span>
+            )}
+          </div>
+          <p className="mt-1 text-xs text-slate-500">
+            Your CV is only shared through verified organizations. Set
+            &ldquo;Show my Passport in recruiter search&rdquo; below to control
+            discoverability.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
           Privacy controls
         </h4>
@@ -268,6 +421,59 @@ function InternProfileForm({
             checked={!!form.isCvSearchable}
             onCheckedChange={(v) => setForm({ ...form, isCvSearchable: v })}
           />
+        </div>
+      </div>
+
+      {/* Career acquisition signals — improve readiness over time. */}
+      <div className="mt-4 space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          Career signals
+        </h4>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <Label htmlFor="targetRole">Target role</Label>
+            <Input
+              id="targetRole"
+              value={form.targetRole}
+              onChange={(e) => setForm({ ...form, targetRole: e.target.value })}
+              placeholder="e.g. Software Engineer, Data Analyst"
+            />
+          </div>
+          <div>
+            <Label htmlFor="targetIndustries">Target industries</Label>
+            <Input
+              id="targetIndustries"
+              value={form.targetIndustries}
+              onChange={(e) =>
+                setForm({ ...form, targetIndustries: e.target.value })
+              }
+              placeholder="e.g. Fintech, HealthTech, E-commerce"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="careerGoals">Career goals</Label>
+            <Textarea
+              id="careerGoals"
+              rows={2}
+              value={form.careerGoals}
+              onChange={(e) =>
+                setForm({ ...form, careerGoals: e.target.value })
+              }
+              placeholder="Where you want to be in 2-3 years"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="skillsToImprove">Skills to improve</Label>
+            <Textarea
+              id="skillsToImprove"
+              rows={2}
+              value={form.skillsToImprove}
+              onChange={(e) =>
+                setForm({ ...form, skillsToImprove: e.target.value })
+              }
+              placeholder="What to work on next"
+            />
+          </div>
         </div>
       </div>
 

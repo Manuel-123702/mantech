@@ -267,9 +267,17 @@ const profilePatchSchema = z.object({
   city: z.string().max(120).optional(),
   isPhonePublic: z.boolean().optional(),
   isCvSearchable: z.boolean().optional(),
+  cvUrl: z.string().url().optional(),
+  cvFileKey: z.string().optional(),
+  cvFileName: z.string().max(500).optional(),
+  cvFileSize: z.number().int().min(0).optional(),
   qualification: z.string().max(200).optional(),
   academicLevel: z.string().max(80).optional(),
   institution: z.string().max(200).optional(),
+  targetRole: z.string().max(200).optional(),
+  targetIndustries: z.string().max(300).optional(),
+  careerGoals: z.string().max(2000).optional(),
+  skillsToImprove: z.string().max(2000).optional(),
 });
 
 function normalizeWorkMode(value?: string) {
@@ -301,6 +309,9 @@ export async function PATCH(request: Request) {
 
     const preferredWorkMode = body.preferredWorkMode || normalizeWorkMode(body.workMode);
 
+    const isReplacingCv =
+      typeof body.cvFileKey === 'string' && body.cvFileKey.length > 0;
+
     await prisma.internProfile.update({
       where: { id: profile.id },
       data: {
@@ -310,11 +321,37 @@ export async function PATCH(request: Request) {
         ...(body.city !== undefined ? { city: body.city } : {}),
         ...(body.isPhonePublic !== undefined ? { isPhonePublic: body.isPhonePublic } : {}),
         ...(body.isCvSearchable !== undefined ? { isCvSearchable: body.isCvSearchable } : {}),
+        ...(body.cvUrl !== undefined ? { cvUrl: body.cvUrl } : {}),
+        ...(body.cvFileName !== undefined ? { cvFileName: body.cvFileName } : {}),
+        ...(body.cvFileSize !== undefined ? { cvFileSize: body.cvFileSize } : {}),
+        ...(isReplacingCv ? { cvUploadedAt: new Date() } : {}),
         ...(body.qualification !== undefined ? { qualification: body.qualification } : {}),
         ...(body.academicLevel !== undefined ? { academicLevel: body.academicLevel } : {}),
         ...(body.institution !== undefined ? { institution: body.institution } : {}),
+        ...(body.targetRole !== undefined ? { targetRole: body.targetRole } : {}),
+        ...(body.targetIndustries !== undefined ? { targetIndustries: body.targetIndustries } : {}),
+        ...(body.careerGoals !== undefined ? { careerGoals: body.careerGoals } : {}),
+        ...(body.skillsToImprove !== undefined ? { skillsToImprove: body.skillsToImprove } : {}),
       },
     });
+
+    // When a new CV is uploaded, replace the secure CV metadata so the
+    // Download button (which reads CVFileMetadata, not InternProfile.cvUrl)
+    // serves the freshly uploaded file instead of the previous one.
+    if (isReplacingCv && body.cvUrl) {
+      await prisma.cVFileMetadata.deleteMany({ where: { internProfileId: profile.id } });
+      await prisma.cVFileMetadata.create({
+        data: {
+          internProfileId: profile.id,
+          fileKey: body.cvFileKey as string,
+          fileName: body.cvFileName || 'cv.pdf',
+          fileUrl: body.cvUrl,
+          fileSize: body.cvFileSize ?? 0,
+          mimeType: 'application/pdf',
+          isSecure: true,
+        },
+      });
+    }
 
     if (body.bio !== undefined || body.headline !== undefined) {
       await prisma.internPassport.upsert({
