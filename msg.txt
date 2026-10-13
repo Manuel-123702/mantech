@@ -1,1 +1,0 @@
-Intern settings: fix CV/photo replace + persist; use next/image for avatar
