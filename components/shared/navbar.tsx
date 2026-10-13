@@ -232,7 +232,7 @@ export function Navbar() {
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'border-b border-blue-950/10 bg-white/1 shadow-[0_4px_30px_-8px_rgba(11,23,44,0.10)] backdrop-blur-xl'
+          ? 'border-b border-blue-950/10 bg-white shadow-[0_4px_30px_-8px_rgba(11,23,44,0.10)] backdrop-blur-xl'
           : 'border-b border-blue-950/[0.06] bg-white/1 backdrop-blur-md'
       )}
     >
@@ -312,7 +312,7 @@ export function Navbar() {
                             </Badge>
                           )}
                         </div>
-                        <p className="text-[11px] text-blue-950/55 line-clamp-1 mt-0.5">
+                        <p className="text-[11px] text-orange-600 line-clamp-1 mt-0.5">
                           {item.description}
                         </p>
                       </div>
@@ -377,7 +377,7 @@ export function Navbar() {
                             </Badge>
                           )}
                         </div>
-                        <p className="text-[11px] text-blue-950/55 line-clamp-1 mt-0.5">
+                        <p className="text-[11px] text-orange-600 line-clamp-1 mt-0.5">
                           {item.description}
                         </p>
                       </div>
@@ -435,7 +435,7 @@ export function Navbar() {
                         <span className="text-xs font-bold text-blue-950 group-hover:text-blue-700 transition-colors">
                           {item.label}
                         </span>
-                        <p className="text-[11px] text-blue-950/55 line-clamp-1 mt-0.5">
+                        <p className="text-[11px] text-orange-600 line-clamp-1 mt-0.5">
                           {item.description}
                         </p>
                       </div>
@@ -547,7 +547,7 @@ export function Navbar() {
 
                   <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50 focus:text-blue-950 data-[highlighted]:text-blue-950">
                     <Link href="/settings" className="flex items-center gap-2.5 text-xs font-semibold text-blue-950">
-                      <ShieldCheck className="h-4 w-4 text-blue-950/55" />
+                      <ShieldCheck className="h-4 w-4 text-orange-600" />
                       <span>Security & Privacy</span>
                     </Link>
                   </DropdownMenuItem>
@@ -617,7 +617,7 @@ export function Navbar() {
                           href={item.href}
                           className="flex items-center gap-2.5 text-xs font-semibold text-blue-950"
                         >
-                          <item.icon className="h-4 w-4 text-blue-950/55" />
+                          <item.icon className="h-4 w-4 text-orange-600" />
                           <span>{item.label}</span>
                         </Link>
                       </DropdownMenuItem>
@@ -753,7 +753,7 @@ export function Navbar() {
                       onClick={closeMobile}
                       className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/60 text-xs font-semibold text-blue-950"
                     >
-                      <Building2 className="h-4 w-4 text-blue-950/55" />
+                      <Building2 className="h-4 w-4 text-orange-600" />
                       <span>About MANTECH</span>
                     </Link>
                     <Link
@@ -761,7 +761,7 @@ export function Navbar() {
                       onClick={closeMobile}
                       className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/60 text-xs font-semibold text-blue-950"
                     >
-                      <MessageCircle className="h-4 w-4 text-blue-950/55" />
+                      <MessageCircle className="h-4 w-4 text-orange-600" />
                       <span>Contact Us</span>
                     </Link>
                   </div>
@@ -790,7 +790,7 @@ export function Navbar() {
                       <Link
                         href={dashboardLink}
                         onClick={closeMobile}
-                        className="flex items-center justify-center gap-2 w-full p-3 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs transition-colors"
+                        className="flex items-center justify-center gap-2 w-full p-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs transition-colors"
                       >
                         <LayoutDashboard className="h-4 w-4" />
                         <span>Go to {roleLabel} Dashboard</span>
@@ -811,7 +811,7 @@ export function Navbar() {
                   ) : (
                     <div className="space-y-2">
                       <Link href="/sign-in" onClick={closeMobile}>
-                        <Button className="w-full text-xs font-bold bg-blue-700 hover:bg-blue-800 text-white">
+                        <Button className="w-full text-xs font-bold bg-orange-500 hover:bg-orange-600 text-white">
                           <LogIn className="w-3.5 h-3.5 mr-1.5" />
                           Sign In
                         </Button>
@@ -825,7 +825,7 @@ export function Navbar() {
                             variant="outline"
                             className="w-full text-xs font-bold justify-start"
                           >
-                            <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-blue-950/55" />
+                            <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-orange-600" />
                             Intern
                           </Button>
                         </Link>
@@ -834,7 +834,7 @@ export function Navbar() {
                             variant="outline"
                             className="w-full text-xs font-bold justify-start"
                           >
-                            <Building2 className="w-3.5 h-3.5 mr-1.5 text-blue-950/55" />
+                            <Building2 className="w-3.5 h-3.5 mr-1.5 text-orange-600" />
                             Company
                           </Button>
                         </Link>
@@ -843,7 +843,7 @@ export function Navbar() {
                             variant="outline"
                             className="w-full text-xs font-bold justify-start"
                           >
-                            <BookOpen className="w-3.5 h-3.5 mr-1.5 text-blue-950/55" />
+                            <BookOpen className="w-3.5 h-3.5 mr-1.5 text-orange-600" />
                             University
                           </Button>
                         </Link>
@@ -852,7 +852,7 @@ export function Navbar() {
                             variant="outline"
                             className="w-full text-xs font-bold justify-start"
                           >
-                            <ShieldCheck className="w-3.5 h-3.5 mr-1.5 text-blue-950/55" />
+                            <ShieldCheck className="w-3.5 h-3.5 mr-1.5 text-orange-600" />
                             Admin
                           </Button>
                         </Link>

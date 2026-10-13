@@ -105,9 +105,18 @@ export default function InternshipsPage() {
   // (guests, or a profile that could not be loaded) keep the default order —
   // the toggle is disabled in that case so the two never disagree.
   const sortedInternships = useMemo(() => {
-    if (sortMode !== "match" || matchScores.size === 0) return internships;
+    if (sortMode === "match" && matchScores.size > 0) {
+      // Re-rank by the signed-in intern's match score (best → worst).
+      return [...internships].sort(
+        (a, b) =>
+          (matchScores.get(b.id) ?? -1) - (matchScores.get(a.id) ?? -1),
+      );
+    }
+    // "Default": deterministic newest-first order (a real sort, not a
+    // passthrough of the backend array).
     return [...internships].sort(
-      (a, b) => (matchScores.get(b.id) ?? -1) - (matchScores.get(a.id) ?? -1),
+      (a, b) =>
+        new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime(),
     );
   }, [internships, matchScores, sortMode]);
 
@@ -528,12 +537,6 @@ export default function InternshipsPage() {
                 </button>
               </div>
 
-              <Badge
-                variant="outline"
-                className="text-xs font-mono border-slate-300"
-              >
-                Live Database
-              </Badge>
             </div>
           </div>
 

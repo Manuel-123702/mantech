@@ -738,7 +738,7 @@ export default function HomePage() {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="absolute -top-5 -right-5 bg-white text-slate-900 rounded-xl shadow-2xl border border-slate-100 px-4 py-2.5 flex items-center gap-2.5 z-20"
+                className="absolute -top-12 -right-5 bg-white text-slate-900 rounded-xl shadow-2xl border border-slate-100 px-4 py-2.5 flex items-center gap-2.5 z-20"
               >
                 <div className="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
                   <CheckCircle2 className="h-4 w-4" />
