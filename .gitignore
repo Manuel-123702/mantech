@@ -36,3 +36,14 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
+# --- dev scratch / build logs (do not commit) ---
+/build-output.txt
+/test-output.txt
+/test-runner-out.txt
+/tsc-output.txt
+/tsc-check.txt
+/dev*.txt
+/scan.txt
+/commit-msg.txt
+/msg*.txt
