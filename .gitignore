@@ -47,3 +47,6 @@ next-env.d.ts
 /scan.txt
 /commit-msg.txt
 /msg*.txt
+
+dev.log
+*.log
