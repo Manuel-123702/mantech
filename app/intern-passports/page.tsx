@@ -312,399 +312,399 @@ export default async function InternPassportsPage(props: PageProps) {
         <div className="absolute top-10 right-10 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
-        <Card className="border border-slate-200 shadow-sm">
-          <CardContent className="p-4 sm:p-6">
-            <form action="/intern-passports" method="get" className="space-y-4">
-              <div className="flex flex-wrap items-stretch gap-3">
-                <div className="relative flex-1 min-w-[240px]">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input
-                    name="q"
-                    defaultValue={keyword}
-                    placeholder="Search by name, field, skills, headline…"
-                    className="pl-10 h-11 bg-white"
-                  />
-                </div>
-                <Select name="sort" defaultValue={sort}>
-                  <SelectTrigger className="w-full sm:w-60 h-11 gap-2 bg-white">
-                    <ArrowUpDown className="h-4 w-4 text-slate-400" />
-                    <SelectValue placeholder="Sort candidates" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SORTS.map((s) => (
-                      <SelectItem key={s.value} value={s.value}>
-                        {s.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button
-                  type="submit"
-                  className="h-11 bg-emerald-600 hover:bg-emerald-700 text-white"
-                >
-                  <Filter className="mr-2 h-4 w-4" />
-                  Apply search
-                </Button>
-                {activeFilterCount > 0 && (
-                  <Link
-                    href="/intern-passports"
-                    className="inline-flex h-11 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+          <Card className="border border-slate-200 shadow-sm">
+            <CardContent className="p-4 sm:p-6">
+              <form action="/intern-passports" method="get" className="space-y-4">
+                <div className="flex flex-wrap items-stretch gap-3">
+                  <div className="relative flex-1 min-w-[240px]">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Input
+                      name="q"
+                      defaultValue={keyword}
+                      placeholder="Search by name, field, skills, headline…"
+                      className="pl-10 h-11 bg-white"
+                    />
+                  </div>
+                  <Select name="sort" defaultValue={sort}>
+                    <SelectTrigger className="w-full sm:w-60 h-11 gap-2 bg-white">
+                      <ArrowUpDown className="h-4 w-4 text-slate-400" />
+                      <SelectValue placeholder="Sort candidates" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SORTS.map((s) => (
+                        <SelectItem key={s.value} value={s.value}>
+                          {s.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    type="submit"
+                    className="h-11 bg-emerald-600 hover:bg-emerald-700 text-white"
                   >
-                    <XCircle className="h-4 w-4" />
-                    Clear filters ({activeFilterCount})
-                  </Link>
-                )}
-              </div>
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <SlidersHorizontal className="h-4 w-4 text-slate-500" />
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Advanced filters
-                  </h3>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  <div>
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                      Field of study
-                    </label>
-                    <Select name="fieldId" defaultValue={fieldId || "all"}>
-                      <SelectTrigger className="mt-1 h-10 bg-white">
-                        <SelectValue placeholder="Any field" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All fields</SelectItem>
-                        {fields.map((f: any) => (
-                          <SelectItem key={f.id} value={f.id}>
-                            {f.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                      Region
-                    </label>
-                    <Select name="regionId" defaultValue={regionId || "all"}>
-                      <SelectTrigger className="mt-1 h-10 bg-white">
-                        <SelectValue placeholder="Any region" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All regions</SelectItem>
-                        {regions.map((r: any) => (
-                          <SelectItem key={r.id} value={r.id}>
-                            {r.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                      Qualification
-                    </label>
-                    <Select name="qualification" defaultValue={qualification || "all"}>
-                      <SelectTrigger className="mt-1 h-10 bg-white">
-                        <SelectValue placeholder="Any qualification" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All qualifications</SelectItem>
-                        {qualificationGroups.map((q) => (
-                          <SelectItem key={q.value} value={q.value}>
-                            {q.value} ({q.count})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                      Work mode
-                    </label>
-                    <Select name="workMode" defaultValue={workMode || "all"}>
-                      <SelectTrigger className="mt-1 h-10 bg-white">
-                        <SelectValue placeholder="Any mode" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Any</SelectItem>
-                        {WORK_MODES.map((m) => (
-                          <SelectItem key={m} value={m}>
-                            {m.replace("_", " ")}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                      Availability
-                    </label>
-                    <Select name="availability" defaultValue={availability || "all"}>
-                      <SelectTrigger className="mt-1 h-10 bg-white">
-                        <SelectValue placeholder="Any availability" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Any</SelectItem>
-                        {AVAILABILITY_OPTIONS.map((a) => (
-                          <SelectItem key={a} value={a}>
-                            {a.replace(/_/g, " ")}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-slate-600">
-            Showing{" "}
-            <span className="font-semibold text-slate-900">{list.length}</span>{" "}
-            of <span className="font-semibold text-slate-900">{total}</span>{" "}
-            searchable candidates
-            {keyword && (
-              <>
-                {" "}
-                matching “<span className="font-semibold">{keyword}</span>”
-              </>
-            )}
-          </p>
-          {user.role === "ADMIN" && (
-            <Link
-              href="/dashboard/admin/interns"
-              className="text-xs font-semibold text-blue-600 hover:underline"
-            >
-              Open Admin · Interns &amp; Passports →
-            </Link>
-          )}
-        </div>
-
-        <div className="mt-4">
-          {list.length === 0 ? (
-            <Card className="border border-dashed border-slate-300">
-              <CardContent className="py-16 text-center">
-                <GraduationCap className="mx-auto h-10 w-10 text-slate-300" />
-                <p className="mt-3 font-semibold text-slate-800">
-                  No candidates match your filters.
-                </p>
-                <p className="mt-1 text-sm text-slate-500">
-                  Try removing filters or adjusting the keyword.
-                </p>
-                <div className="mt-5 flex justify-center gap-2">
-                  <Link href="/intern-passports">
-                    <Button size="sm" variant="outline">
-                      Reset filters
-                    </Button>
-                  </Link>
-                  <Link href="/dashboard/company/candidates">
-                    <Button
-                      size="sm"
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                    <Filter className="mr-2 h-4 w-4" />
+                    Apply search
+                  </Button>
+                  {activeFilterCount > 0 && (
+                    <Link
+                      href="/intern-passports"
+                      className="inline-flex h-11 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-600 hover:bg-slate-50"
                     >
-                      Candidate discovery
-                    </Button>
-                  </Link>
+                      <XCircle className="h-4 w-4" />
+                      Clear filters ({activeFilterCount})
+                    </Link>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              {list.map((intern: any) => {
-                const fullName = intern.user?.fullName || "Candidate";
-                const avatar = intern.user?.avatarUrl;
-                const field = intern.fieldOfStudy?.name;
-                const spec = intern.specialization?.name;
-                const region = intern.region?.name;
-                const avail = intern.availability;
-                const wm = intern.workMode;
-                const qual = intern.qualification;
-                const readiness = intern.readinessScore ?? 0;
-                const skills = (intern.skills || []).map((s: any) => s.skill);
-                return (
-                  <article
-                    key={intern.id}
-                    className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:border-emerald-200"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3 min-w-0">
-                        {avatar ? (
-                          <Image
-                            src={avatar}
-                            alt={fullName}
-                            width={52}
-                            height={52}
-                            className="w-13 h-13 rounded-xl object-cover shadow-sm border border-white ring-1 ring-slate-200"
-                          />
-                        ) : (
-                          <div className="w-[52px] h-[52px] rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
-                            {fullName.charAt(0)}
+
+                <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <SlidersHorizontal className="h-4 w-4 text-slate-500" />
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Advanced filters
+                    </h3>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <div>
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Field of study
+                      </label>
+                      <Select name="fieldId" defaultValue={fieldId || "all"}>
+                        <SelectTrigger className="mt-1 h-10 bg-white">
+                          <SelectValue placeholder="Any field" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All fields</SelectItem>
+                          {fields.map((f: any) => (
+                            <SelectItem key={f.id} value={f.id}>
+                              {f.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Region
+                      </label>
+                      <Select name="regionId" defaultValue={regionId || "all"}>
+                        <SelectTrigger className="mt-1 h-10 bg-white">
+                          <SelectValue placeholder="Any region" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All regions</SelectItem>
+                          {regions.map((r: any) => (
+                            <SelectItem key={r.id} value={r.id}>
+                              {r.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Qualification
+                      </label>
+                      <Select name="qualification" defaultValue={qualification || "all"}>
+                        <SelectTrigger className="mt-1 h-10 bg-white">
+                          <SelectValue placeholder="Any qualification" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All qualifications</SelectItem>
+                          {qualificationGroups.map((q) => (
+                            <SelectItem key={q.value} value={q.value}>
+                              {q.value} ({q.count})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Work mode
+                      </label>
+                      <Select name="workMode" defaultValue={workMode || "all"}>
+                        <SelectTrigger className="mt-1 h-10 bg-white">
+                          <SelectValue placeholder="Any mode" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Any</SelectItem>
+                          {WORK_MODES.map((m) => (
+                            <SelectItem key={m} value={m}>
+                              {m.replace("_", " ")}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Availability
+                      </label>
+                      <Select name="availability" defaultValue={availability || "all"}>
+                        <SelectTrigger className="mt-1 h-10 bg-white">
+                          <SelectValue placeholder="Any availability" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Any</SelectItem>
+                          {AVAILABILITY_OPTIONS.map((a) => (
+                            <SelectItem key={a} value={a}>
+                              {a.replace(/_/g, " ")}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-slate-600">
+              Showing{" "}
+              <span className="font-semibold text-slate-900">{list.length}</span>{" "}
+              of <span className="font-semibold text-slate-900">{total}</span>{" "}
+              searchable candidates
+              {keyword && (
+                <>
+                  {" "}
+                  matching “<span className="font-semibold">{keyword}</span>”
+                </>
+              )}
+            </p>
+            {user.role === "ADMIN" && (
+              <Link
+                href="/dashboard/admin/interns"
+                className="text-xs font-semibold text-blue-600 hover:underline"
+              >
+                Open Admin · Interns &amp; Passports →
+              </Link>
+            )}
+          </div>
+
+          <div className="mt-4">
+            {list.length === 0 ? (
+              <Card className="border border-dashed border-slate-300">
+                <CardContent className="py-16 text-center">
+                  <GraduationCap className="mx-auto h-10 w-10 text-slate-300" />
+                  <p className="mt-3 font-semibold text-slate-800">
+                    No candidates match your filters.
+                  </p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Try removing filters or adjusting the keyword.
+                  </p>
+                  <div className="mt-5 flex justify-center gap-2">
+                    <Link href="/intern-passports">
+                      <Button size="sm" variant="outline">
+                        Reset filters
+                      </Button>
+                    </Link>
+                    <Link href="/dashboard/company/candidates">
+                      <Button
+                        size="sm"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                      >
+                        Candidate discovery
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                {list.map((intern: any) => {
+                  const fullName = intern.user?.fullName || "Candidate";
+                  const avatar = intern.user?.avatarUrl;
+                  const field = intern.fieldOfStudy?.name;
+                  const spec = intern.specialization?.name;
+                  const region = intern.region?.name;
+                  const avail = intern.availability;
+                  const wm = intern.workMode;
+                  const qual = intern.qualification;
+                  const readiness = intern.readinessScore ?? 0;
+                  const skills = (intern.skills || []).map((s: any) => s.skill);
+                  return (
+                    <article
+                      key={intern.id}
+                      className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:border-emerald-200"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3 min-w-0">
+                          {avatar ? (
+                            <Image
+                              src={avatar}
+                              alt={fullName}
+                              width={52}
+                              height={52}
+                              className="w-13 h-13 rounded-xl object-cover shadow-sm border border-white ring-1 ring-slate-200"
+                            />
+                          ) : (
+                            <div className="w-[52px] h-[52px] rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+                              {fullName.charAt(0)}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-slate-900 truncate">
+                              {fullName}
+                            </h3>
+                            <p className="text-xs text-slate-500 truncate">
+                              {intern.passport?.headline ||
+                                field ||
+                                spec ||
+                                "Internship seeker"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0 ml-3">
+                          <div
+                            className={classNames(
+                              "text-xl font-extrabold font-mono",
+                              readiness >= 80
+                                ? "text-emerald-600"
+                                : readiness >= 60
+                                  ? "text-amber-600"
+                                  : "text-slate-500",
+                            )}
+                          >
+                            {readiness}%
+                          </div>
+                          <div className="text-[10px] uppercase tracking-wider text-slate-400">
+                            Readiness
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-xs mb-4">
+                        {field && (
+                          <div className="inline-flex items-center gap-1.5 text-slate-600">
+                            <Briefcase className="h-3.5 w-3.5 text-slate-400" />
+                            <span className="truncate">{field}</span>
                           </div>
                         )}
-                        <div className="min-w-0">
-                          <h3 className="font-bold text-slate-900 truncate">
-                            {fullName}
-                          </h3>
-                          <p className="text-xs text-slate-500 truncate">
-                            {intern.passport?.headline ||
-                              field ||
-                              spec ||
-                              "Internship seeker"}
-                          </p>
-                        </div>
+                        {region && (
+                          <div className="inline-flex items-center gap-1.5 text-slate-600">
+                            <MapPin className="h-3.5 w-3.5 text-slate-400" />
+                            <span className="truncate">{region}</span>
+                          </div>
+                        )}
+                        {qual && (
+                          <div className="inline-flex items-center gap-1.5 text-slate-600">
+                            <Award className="h-3.5 w-3.5 text-slate-400" />
+                            <span className="truncate">{qual}</span>
+                          </div>
+                        )}
+                        {avail && (
+                          <div className="inline-flex items-center gap-1.5 text-slate-600">
+                            <Clock className="h-3.5 w-3.5 text-slate-400" />
+                            <span className="truncate">
+                              {avail.replace(/_/g, " ")}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                      <div className="text-right shrink-0 ml-3">
-                        <div
-                          className={classNames(
-                            "text-xl font-extrabold font-mono",
-                            readiness >= 80
-                              ? "text-emerald-600"
-                              : readiness >= 60
-                                ? "text-amber-600"
-                                : "text-slate-500",
+
+                      {spec && (
+                        <p className="mb-3 text-xs text-slate-500">
+                          <span className="font-semibold text-slate-600">
+                            Specialization:
+                          </span>{" "}
+                          {spec}
+                        </p>
+                      )}
+
+                      {skills.length > 0 && (
+                        <div className="mb-4 flex flex-wrap gap-1.5">
+                          {skills.slice(0, 4).map(
+                            (s: any) =>
+                              s && (
+                                <Badge
+                                  key={s.id}
+                                  variant="secondary"
+                                  className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[11px]"
+                                >
+                                  {s.name}
+                                </Badge>
+                              ),
                           )}
-                        >
-                          {readiness}%
+                          {skills.length > 4 && (
+                            <Badge variant="outline" className="text-[11px]">
+                              +{skills.length - 4} more
+                            </Badge>
+                          )}
                         </div>
-                        <div className="text-[10px] uppercase tracking-wider text-slate-400">
-                          Readiness
-                        </div>
-                      </div>
-                    </div>
+                      )}
 
-                    <div className="grid grid-cols-2 gap-2 text-xs mb-4">
-                      {field && (
-                        <div className="inline-flex items-center gap-1.5 text-slate-600">
-                          <Briefcase className="h-3.5 w-3.5 text-slate-400" />
-                          <span className="truncate">{field}</span>
-                        </div>
-                      )}
-                      {region && (
-                        <div className="inline-flex items-center gap-1.5 text-slate-600">
-                          <MapPin className="h-3.5 w-3.5 text-slate-400" />
-                          <span className="truncate">{region}</span>
-                        </div>
-                      )}
-                      {qual && (
-                        <div className="inline-flex items-center gap-1.5 text-slate-600">
-                          <Award className="h-3.5 w-3.5 text-slate-400" />
-                          <span className="truncate">{qual}</span>
-                        </div>
-                      )}
-                      {avail && (
-                        <div className="inline-flex items-center gap-1.5 text-slate-600">
-                          <Clock className="h-3.5 w-3.5 text-slate-400" />
-                          <span className="truncate">
-                            {avail.replace(/_/g, " ")}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {spec && (
-                      <p className="mb-3 text-xs text-slate-500">
-                        <span className="font-semibold text-slate-600">
-                          Specialization:
-                        </span>{" "}
-                        {spec}
-                      </p>
-                    )}
-
-                    {skills.length > 0 && (
-                      <div className="mb-4 flex flex-wrap gap-1.5">
-                        {skills.slice(0, 4).map(
-                          (s: any) =>
-                            s && (
-                              <Badge
-                                key={s.id}
-                                variant="secondary"
-                                className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[11px]"
-                              >
-                                {s.name}
-                              </Badge>
-                            ),
-                        )}
-                        {skills.length > 4 && (
+                      {wm && (
+                        <div className="mb-4 flex items-center gap-2">
                           <Badge variant="outline" className="text-[11px]">
-                            +{skills.length - 4} more
+                            {wm.replace(/_/g, " ")}
                           </Badge>
-                        )}
-                      </div>
-                    )}
+                        </div>
+                      )}
 
-                    {wm && (
-                      <div className="mb-4 flex items-center gap-2">
-                        <Badge variant="outline" className="text-[11px]">
-                          {wm.replace(/_/g, " ")}
-                        </Badge>
+                      <div className="flex items-center justify-between border-t border-slate-100 pt-4 gap-2">
+                        <Link
+                          href={`/intern-passports/${intern.id}`}
+                          className="flex-1 inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-700 transition"
+                        >
+                          View Passport &amp; CV
+                        </Link>
                       </div>
-                    )}
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
-                    <div className="flex items-center justify-between border-t border-slate-100 pt-4 gap-2">
-                      <Link
-                        href={`/intern-passports/${intern.id}`}
-                        className="flex-1 inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-700 transition"
-                      >
-                        View Passport &amp; CV
-                      </Link>
-                    </div>
-                  </article>
-                );
-              })}
+          {list.length > 0 && (
+            <div className="mt-12 rounded-3xl bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-8 text-white sm:p-10">
+              <div className="grid gap-6 lg:grid-cols-[1.2fr,auto] lg:items-center">
+                <div>
+                  <h2 className="font-heading text-2xl font-bold sm:text-3xl">
+                    Need a hand sourcing a cohort?
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-emerald-100">
+                    MANTECH runs managed candidate-sourcing for enterprises and
+                    institutions. Tell us your role, field, and start date — our
+                    team shortlists 10-30 Passports and coordinates interviews on
+                    your behalf.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/dashboard/company/candidates">
+                    <Button
+                      size="lg"
+                      className="bg-white text-emerald-700 hover:bg-emerald-50"
+                    >
+                      Advanced candidate search
+                    </Button>
+                  </Link>
+                  <a
+                    href={
+                      process.env.NEXT_PUBLIC_MANTECH_WHATSAPP_LINK ||
+                      "https://wa.me/237650921917"
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="border-white/40 text-white bg-white/10"
+                    >
+                      Contact MANTECH
+                    </Button>
+                  </a>
+                </div>
+              </div>
             </div>
           )}
-        </div>
-
-        {list.length > 0 && (
-          <div className="mt-12 rounded-3xl bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-8 text-white sm:p-10">
-            <div className="grid gap-6 lg:grid-cols-[1.2fr,auto] lg:items-center">
-              <div>
-                <h2 className="font-heading text-2xl font-bold sm:text-3xl">
-                  Need a hand sourcing a cohort?
-                </h2>
-                <p className="mt-2 max-w-2xl text-emerald-100">
-                  MANTECH runs managed candidate-sourcing for enterprises and
-                  institutions. Tell us your role, field, and start date — our
-                  team shortlists 10-30 Passports and coordinates interviews on
-                  your behalf.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Link href="/dashboard/company/candidates">
-                  <Button
-                    size="lg"
-                    className="bg-white text-emerald-700 hover:bg-emerald-50"
-                  >
-                    Advanced candidate search
-                  </Button>
-                </Link>
-                <a
-                  href={
-                    process.env.NEXT_PUBLIC_MANTECH_WHATSAPP_LINK ||
-                    "https://wa.me/237650921917"
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-white/40 text-white hover:bg-white/10"
-                  >
-                    Contact MANTECH
-                  </Button>
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
         </div>
       </section>
     </main>

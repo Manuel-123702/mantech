@@ -474,7 +474,7 @@ export function Navbar() {
 
           {/* Right-Side Actions: WhatsApp Concierge + User Auth Area */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Intern Passports directory — signed-in recruiters only */}
+            {/* Propiska directory — signed-in recruiters only */}
             {canBrowsePassports && (
               <Link
                 href="/intern-passports"

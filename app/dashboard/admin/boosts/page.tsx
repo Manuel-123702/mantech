@@ -47,7 +47,7 @@ export default async function AdminBoostsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-bold text-slate-900">Boost requests</h2>
+        <h2 className="text-lg font-bold text-orange-500">Boost requests</h2>
         <p className="mt-1 text-xs text-slate-500">
           Companies request a time-boxed featured placement for a published opportunity. Approving
           sorts the posting first in listings until the window ends; the organization&apos;s package
@@ -60,11 +60,10 @@ export default async function AdminBoostsPage({
           <Link
             key={value}
             href={`/dashboard/admin/boosts?status=${value}`}
-            className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition-colors ${
-              activeStatus === value
-                ? 'bg-slate-900 text-white'
-                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-            }`}
+            className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition-colors ${activeStatus === value
+              ? 'bg-slate-900 text-white'
+              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+              }`}
           >
             {BOOST_STATUS_LABELS[value]} ({countFor(value)})
           </Link>

@@ -48,7 +48,7 @@ export function sendEmail(params: EmailParams): Promise<boolean> {
         body: JSON.stringify({
           service_id: serviceId,
           template_id: templateId,
-          user_id: privateKey,
+          user_id: publicKey,
           template_params: params,
         }),
       });
