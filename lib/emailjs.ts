@@ -16,6 +16,7 @@ function readEmailConfig() {
     serviceId: (process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '').trim(),
     templateId: (process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '').trim(),
     publicKey: (process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '').trim(),
+    privateKey: (process.env.EMAILJS_PRIVATE_KEY || '').trim(),
   };
 }
 
@@ -32,8 +33,8 @@ let emailQueue: Promise<void> = Promise.resolve();
 let nextSendAt = 0;
 
 export function sendEmail(params: EmailParams): Promise<boolean> {
-  const { serviceId, templateId, publicKey } = readEmailConfig();
-  if (!serviceId || !templateId || !publicKey) return Promise.resolve(false);
+  const { serviceId, templateId, publicKey, privateKey } = readEmailConfig();
+  if (!serviceId || !templateId || !publicKey || !privateKey) return Promise.resolve(false);
   let resolveResult: (result: boolean) => void;
   const result = new Promise<boolean>(resolve => { resolveResult = resolve; });
   emailQueue = emailQueue.then(async () => {
@@ -47,7 +48,7 @@ export function sendEmail(params: EmailParams): Promise<boolean> {
         body: JSON.stringify({
           service_id: serviceId,
           template_id: templateId,
-          user_id: publicKey,
+          user_id: privateKey,
           template_params: params,
         }),
       });
