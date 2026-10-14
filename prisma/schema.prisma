@@ -129,6 +129,7 @@ model User {
   candidateApplications CandidateApplication[]
   candidateAlerts    CandidateAlert?
   reportsFiled       Report[]    @relation("ReportReporter")
+  boostRequests      Boost[]     @relation("BoostRequester")
 
   @@index([email])
   @@index([clerkId])
@@ -385,6 +386,7 @@ model Organization {
   savedCandidates    SavedCandidate[]
   candidateContacts  CandidateContact[]
   subscriptions      OrganizationSubscription[]
+  boosts             Boost[]
 
   @@index([slug])
   @@index([type])
@@ -485,6 +487,7 @@ model InternshipOpportunity {
   candidateApplications CandidateApplication[]
   savedOpportunities  SavedOpportunity[]
   featuredEntry       FeaturedOpportunity?
+  boosts              Boost[]
 
   @@index([slug])
   @@index([organizationId])
@@ -850,4 +853,50 @@ model Report {
   @@unique([reporterId, targetType, targetId])
   @@index([status, createdAt])
   @@index([targetType, targetId])
+}
+
+// ---------------------------------------------------------------------------
+// Boosts — paid/organic visibility boosts for published opportunities.
+//
+// Flow: a company requests a boost for one of its PUBLISHED opportunities,
+// an admin approves (or rejects with a note). Approval flips the existing
+// isFeatured/FeaturedOpportunity machinery — the same one the admin feature
+// route uses — so boosted opportunities sort first in listings
+// (orderBy isFeatured desc in /api/internships and /api/candidates/check).
+// When endsAt passes the boost expires and the feature flag is switched off.
+// ---------------------------------------------------------------------------
+
+enum BoostStatus {
+  REQUESTED // waiting for admin review
+  APPROVED // active window running (isFeatured = true)
+  REJECTED // admin declined (resolution holds the reason)
+  EXPIRED // window elapsed, feature flag switched off
+}
+
+model Boost {
+  id             String           @id @default(cuid())
+  opportunityId  String
+  opportunity    InternshipOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  requestedById  String
+  requestedBy    User             @relation("BoostRequester", fields: [requestedById], references: [id], onDelete: Cascade)
+  status         BoostStatus      @default(REQUESTED)
+  days           Int              // requested boost length in days (1-90)
+  note           String? // optional message from the company
+  resolution     String? // admin decision note
+  startsAt       DateTime? // set on approval
+  endsAt         DateTime? // set on approval (startsAt + days)
+  reviewedAt     DateTime?
+  reviewedById   String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  // At most one live request per opportunity; approvals create history rows
+  // only after the previous one is terminal (rejected/expired), enforced in
+  // lib/boosts.ts rather than a partial unique index (Neon supports it but
+  // Prisma cannot express it portably).
+  @@index([status, createdAt])
+  @@index([organizationId])
+  @@index([opportunityId])
 }

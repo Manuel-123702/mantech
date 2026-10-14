@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { sendWeeklyDigests } from '@/lib/alert-delivery';
+import { expireDueBoosts } from '@/lib/boosts';
 
 /**
  * Weekly opportunity digest — GET /api/cron/weekly-digest
@@ -29,6 +30,11 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const result = await sendWeeklyDigests({ days: 7 });
-  return NextResponse.json({ ok: true, ...result });
+  const [result, expiredBoosts] = await Promise.all([
+    sendWeeklyDigests({ days: 7 }),
+    // Safety net for boost windows — the dedicated daily
+    // /api/cron/expire-boosts sweep is the primary driver.
+    expireDueBoosts().catch(() => 0),
+  ]);
+  return NextResponse.json({ ok: true, expiredBoosts, ...result });
 }

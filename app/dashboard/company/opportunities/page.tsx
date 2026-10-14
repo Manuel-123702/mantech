@@ -5,17 +5,33 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { StatusBadge } from '@/components/company/status-badge';
 import { OpportunityActions } from '@/components/dashboard/opportunity-actions';
+import { BoostRequestButton } from '@/components/company/boost-request-button';
 import { Plus, Eye, Users } from 'lucide-react';
 
 export default async function CompanyOpportunitiesPage() {
   const { organization } = await requireCompanyDashboard();
   if (!organization) return null;
 
-  const opportunities = await prisma.internshipOpportunity.findMany({
-    where: { organizationId: organization.id },
-    include: { applications: true, region: true, field: true },
-    orderBy: { createdAt: 'desc' },
-  });
+  const [opportunities, boosts] = await Promise.all([
+    prisma.internshipOpportunity.findMany({
+      where: { organizationId: organization.id },
+      include: { applications: true, region: true, field: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+    // Latest live or terminal boost per opportunity (for the boost control).
+    prisma.boost.findMany({
+      where: { organizationId: organization.id },
+      orderBy: { createdAt: 'desc' },
+      select: { opportunityId: true, status: true, endsAt: true, resolution: true, createdAt: true },
+    }),
+  ]);
+
+  const boostByOpportunity = new Map<string, (typeof boosts)[number]>();
+  for (const boost of boosts) {
+    if (!boostByOpportunity.has(boost.opportunityId)) {
+      boostByOpportunity.set(boost.opportunityId, boost);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -51,10 +67,15 @@ export default async function CompanyOpportunitiesPage() {
                 </div>
                 <OpportunityActions id={opp.id} status={opp.moderationStatus} opportunitiesBase="/dashboard/company/opportunities" />
               </div>
-              <div className="mt-4 flex items-center gap-4 border-t pt-3 text-sm text-slate-500">
+              <div className="mt-4 flex flex-wrap items-center gap-4 border-t pt-3 text-sm text-slate-500">
                 <span><Users className="mr-1 inline h-4 w-4" />{opp.applications.length} applications</span>
                 <span><Eye className="mr-1 inline h-4 w-4" />{opp.viewCount} views</span>
                 <Link href={`/internships/${opp.slug}`} className="text-blue-600 hover:underline">Public page</Link>
+                <BoostRequestButton
+                  opportunityId={opp.id}
+                  moderationStatus={opp.moderationStatus}
+                  boost={boostByOpportunity.get(opp.id) ?? null}
+                />
               </div>
             </div>
           ))}

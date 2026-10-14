@@ -18,6 +18,7 @@ import {
   Headphones,
   Quote,
   Flag,
+  Rocket,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -30,6 +31,7 @@ const links = [
   { href: '/dashboard/admin/reports', label: 'Reports', icon: Flag },
   { href: '/dashboard/admin/testimonials', label: 'Testimonials', icon: Quote },
   { href: '/dashboard/admin/featured', label: 'Featured', icon: Star },
+  { href: '/dashboard/admin/boosts', label: 'Boosts', icon: Rocket },
   { href: '/dashboard/admin/users', label: 'Users', icon: Users },
   { href: '/dashboard/admin/interns', label: 'Interns & Passports', icon: GraduationCap },
   { href: '/dashboard/admin/applications', label: 'Applications', icon: FileText },
