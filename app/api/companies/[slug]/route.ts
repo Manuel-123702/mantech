@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { logDatabaseUnavailable } from '@/lib/db-health';
+import { getOrganizationResponseStats } from '@/lib/response-rate';
 
 export async function GET(
   _request: Request,
@@ -36,7 +37,11 @@ export async function GET(
       orderBy: { createdAt: 'desc' },
     });
 
-    return NextResponse.json({ company: organization, opportunities });
+    // Trust signal for interns: how consistently this company replies to
+    // applicants, computed from real application history.
+    const responseRate = await getOrganizationResponseStats(organization.id);
+
+    return NextResponse.json({ company: organization, opportunities, responseRate });
   } catch (dbError) {
     logDatabaseUnavailable(`companies/${slug}`, dbError);
     // Option A: detail pages never invent a company — report the outage honestly.

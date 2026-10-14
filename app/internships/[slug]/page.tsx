@@ -15,6 +15,8 @@ import {
 } from "@/lib/catalog-shape";
 import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
 import { ReportButton } from "@/components/shared/report-button";
+import { ResponseRateBadge } from "@/components/shared/response-rate-badge";
+import type { ResponseRateStats } from "@/lib/response-rate";
 import { APP_CONFIG } from "@/lib/config";
 import { waShareInternshipLink, waApplyLink } from "@/lib/whatsapp";
 import { jobPostingJsonLd } from "@/lib/seo";
@@ -54,6 +56,8 @@ export default function InternshipDetailPage() {
     null,
   );
   const [organization, setOrganization] = useState<Organization | null>(null);
+  const [responseRate, setResponseRate] =
+    useState<ResponseRateStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [applied, setApplied] = useState(false);
   const [coverNote, setCoverNote] = useState("");
@@ -72,6 +76,7 @@ export default function InternshipDetailPage() {
           const data = await res.json();
           setOpportunity(data.opportunity);
           setOrganization(data.company || data.organization || null);
+          setResponseRate(data.responseRate ?? null);
         } else {
           // Fallback search in catalog
           const catRes = await fetch("/api/internships");
@@ -822,6 +827,8 @@ export default function InternshipDetailPage() {
                   </div>
                 </div>
               </div>
+
+              <ResponseRateBadge stats={responseRate} surface="light" />
 
               <p className="text-xs text-slate-600 line-clamp-3">
                 {organization?.description ||

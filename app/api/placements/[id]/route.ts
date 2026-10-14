@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { notifyUser, writeAudit } from '@/lib/audit';
 import { AuthError, jsonError, requireRecruiterContext } from '@/lib/authz';
+import { inviteSuccessStory } from '@/lib/success-stories';
 
 const patchSchema = z.object({
   department: z.string().optional(),
@@ -20,7 +21,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     const placement = await prisma.placement.findUnique({
       where: { id },
-      include: { internProfile: true, application: { include: { opportunity: true } } },
+      include: {
+        internProfile: { include: { user: { select: { id: true, email: true } } } },
+        application: { include: { opportunity: true } },
+      },
     });
     if (!placement || placement.organizationId !== organization.id) {
       throw new AuthError(404, 'Placement not found');
@@ -58,6 +62,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
             create: { status: 'COMPLETED', note: 'Placement completed', actorName: user.fullName },
           },
         },
+      });
+      // Invite the intern to tell their story on /testimonials — consent
+      // based, never auto-posted, and at most once per person.
+      await inviteSuccessStory({
+        userId: placement.internProfile.userId,
+        email: placement.internProfile.user.email,
+        organizationName: organization.name,
+        internshipTitle: placement.application.opportunity.title,
       });
     }
 

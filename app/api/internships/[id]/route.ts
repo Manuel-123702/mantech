@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { logDatabaseUnavailable } from '@/lib/db-health';
+import { getOrganizationResponseStats } from '@/lib/response-rate';
 
 export async function GET(
   _request: NextRequest,
@@ -35,7 +36,11 @@ export async function GET(
       // Non-fatal: view counter update failure should not break page render
     }
 
-    return NextResponse.json({ opportunity, organization: opportunity.organization });
+    // Trust signal: the employer's historical reply behaviour, shown next to
+    // the posting so interns can weigh "will I even hear back?".
+    const responseRate = await getOrganizationResponseStats(opportunity.organizationId);
+
+    return NextResponse.json({ opportunity, organization: opportunity.organization, responseRate });
   } catch (dbError) {
     logDatabaseUnavailable(`internships/${id}`, dbError);
     // Option A: detail pages never invent an opportunity — report the outage honestly.

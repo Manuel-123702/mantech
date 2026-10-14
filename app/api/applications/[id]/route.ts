@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { notifyUser, writeAudit } from '@/lib/audit';
 import { AuthError, jsonError, requireRecruiterContext } from '@/lib/authz';
 import { redactPrivateInternData } from '@/lib/privacy';
+import { inviteSuccessStory } from '@/lib/success-stories';
 
 const PIPELINE: ApplicationStatus[] = [
   'SUBMITTED',
@@ -151,6 +152,17 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           applicationId: application.id,
         },
       });
+
+      // A finished internship is the perfect moment to ask for a success
+      // story — invite the intern to /testimonials (never auto-post).
+      if (body.status === 'COMPLETED') {
+        await inviteSuccessStory({
+          userId: application.internProfile.userId,
+          email: application.internProfile.user.email,
+          organizationName: application.opportunity.organization?.name ?? 'your host organization',
+          internshipTitle: application.opportunity.title,
+        });
+      }
     }
 
     return NextResponse.json({ application: updated });

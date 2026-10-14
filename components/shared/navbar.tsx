@@ -479,10 +479,10 @@ export function Navbar() {
               <Link
                 href="/intern-passports"
                 className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-blue-950/15 bg-blue-50/60 px-5 py-4 text-xs font-bold text-blue-700 shadow-sm transition-all hover:border-blue-800/25 hover:bg-blue-100/70"
-                title="Browse verified Intern Passports"
+                title="Browse verified Passports"
               >
                 <Award className="h-3.5 w-3.5" />
-                <span>Talent Directory</span>
+                <span>Propiska</span>
               </Link>
             )}
 
@@ -531,7 +531,7 @@ export function Navbar() {
                     <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 focus:bg-blue-50 focus:text-blue-950 data-[highlighted]:text-blue-950">
                       <Link href="/intern-passports" className="flex items-center gap-2.5 text-xs font-semibold text-blue-950">
                         <Award className="h-4 w-4 text-blue-700" />
-                        <span>Talent Directory</span>
+                        <span>Propiska</span>
                       </Link>
                     </DropdownMenuItem>
                   )}
@@ -780,7 +780,7 @@ export function Navbar() {
                       className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/60 text-xs font-semibold text-blue-950"
                     >
                       <Award className="h-4 w-4 text-blue-700" />
-                      <span>Talent Directory</span>
+                      <span>Propiska</span>
                     </Link>
                   </div>
                 )}

@@ -47,7 +47,7 @@ export function ScrollToTop() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ duration: 0.2 }}
-          className="fixed bottom-24 left-6 z-40 flex h-14 w-12 items-center justify-center rounded-2xl border border-blue-950/10 bg-white/85 text-blue-800 shadow-lg backdrop-blur-md transition-colors hover:bg-orange-500 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2"
+          className="fixed bottom-10 right-6 z-40 flex h-14 w-12 items-center justify-center rounded-2xl border border-blue-950/10 bg-orange-500/20 text-orange-400 shadow-lg backdrop-blur-md transition-colors hover:bg-orange-500 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2"
         >
           <motion.span
             animate={reduceMotion ? undefined : { y: [0, -4, 0] }}

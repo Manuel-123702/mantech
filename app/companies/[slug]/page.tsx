@@ -21,9 +21,11 @@ import {
   Phone,
 } from "lucide-react";
 import type { Company, InternshipOpportunity } from "@/lib/types";
+import type { ResponseRateStats } from "@/lib/response-rate";
 import { industryNameOf, regionNameOf, fieldNameOf } from "@/lib/catalog-shape";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ResponseRateBadge } from "@/components/shared/response-rate-badge";
 
 export default function CompanyDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -31,6 +33,8 @@ export default function CompanyDetailPage() {
   const [opportunities, setOpportunities] = useState<InternshipOpportunity[]>(
     [],
   );
+  const [responseRate, setResponseRate] =
+    useState<ResponseRateStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -46,6 +50,7 @@ export default function CompanyDetailPage() {
         const data = await res.json();
         setCompany(data.company);
         setOpportunities(data.opportunities || []);
+        setResponseRate(data.responseRate ?? null);
       } catch {
         setNotFound(true);
       } finally {
@@ -126,6 +131,7 @@ export default function CompanyDetailPage() {
                     <BadgeCheck className="w-3.5 h-3.5" /> Verified
                   </span>
                 )}
+                <ResponseRateBadge stats={responseRate} />
               </div>
 
               <div className="flex flex-wrap gap-4 text-sm text-slate-400 mb-5">
