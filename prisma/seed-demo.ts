@@ -294,6 +294,137 @@ async function main() {
   }
 
   console.log(`   opportunities: ${opportunityCount}`);
+
+  // ── Seed public Job listings (for /jobs marketplace) ─────────────────────
+  const JOBS: Array<{
+    slug: string;
+    orgSlug: string;
+    title: string;
+    department: string;
+    description: string;
+    field: string;
+    region: string;
+    city: string;
+    workMode: "ONSITE" | "HYBRID" | "REMOTE";
+    type: string;
+    salaryMinXAF?: number;
+    salaryMaxXAF?: number;
+    requiredSkills: string[];
+    educationLevel: string;
+    expiryDate: Date;
+    moderationStatus: string;
+  }> = [
+    {
+      slug: "software-engineer-mantech-labs",
+      orgSlug: "mantech-labs-cameroon",
+      title: "Software Engineer",
+      department: "Engineering",
+      description: "Build scalable web platforms for Cameroonian businesses. React, Node.js, PostgreSQL.",
+      field: "Technology & Software",
+      region: "Centre",
+      city: "Yaounde",
+      workMode: "HYBRID",
+      type: "FULL_TIME",
+      salaryMinXAF: 400000,
+      salaryMaxXAF: 700000,
+      requiredSkills: ["JavaScript", "React", "Node.js", "PostgreSQL"],
+      educationLevel: "Bachelor",
+      expiryDate: inDays(60),
+      moderationStatus: "PUBLISHED",
+    },
+    {
+      slug: "finance-analyst-douala-digital",
+      orgSlug: "douala-digital-services",
+      title: "Finance Analyst",
+      department: "Finance",
+      description: "Financial planning and analysis for telecom operations in Douala.",
+      field: "Fintech & Financial Services",
+      region: "Littoral",
+      city: "Douala",
+      workMode: "ONSITE",
+      type: "FULL_TIME",
+      salaryMinXAF: 350000,
+      salaryMaxXAF: 550000,
+      requiredSkills: ["Excel", "Financial Analysis", "Accounting"],
+      educationLevel: "Bachelor",
+      expiryDate: inDays(45),
+      moderationStatus: "PUBLISHED",
+    },
+    {
+      slug: "agri-tech-coordinator-bafoussam",
+      orgSlug: "bafoussam-agritech",
+      title: "Agritech Field Coordinator",
+      department: "Operations",
+      description: "Coordinate cocoa and coffee value chain modernization across West region.",
+      field: "Agro-Industry & Agribusiness",
+      region: "West",
+      city: "Bafoussam",
+      workMode: "ONSITE",
+      type: "FULL_TIME",
+      salaryMinXAF: 300000,
+      salaryMaxXAF: 450000,
+      requiredSkills: ["Project Management", "Agriculture", "Field Work"],
+      educationLevel: "Bachelor",
+      expiryDate: inDays(90),
+      moderationStatus: "PUBLISHED",
+    },
+    {
+      slug: "research-assistant-university-buea",
+      orgSlug: "university-of-buea",
+      title: "Research Assistant",
+      department: "Computer Science",
+      description: "Support research projects in AI and machine learning for African languages.",
+      field: "Higher Education & Research",
+      region: "South-West",
+      city: "Buea",
+      workMode: "HYBRID",
+      type: "PART_TIME",
+      salaryMinXAF: 200000,
+      salaryMaxXAF: 300000,
+      requiredSkills: ["Python", "Machine Learning", "Research"],
+      educationLevel: "Master",
+      expiryDate: inDays(30),
+      moderationStatus: "PUBLISHED",
+    },
+  ];
+
+  let jobCount = 0;
+  for (const job of JOBS) {
+    const organizationId = orgIdBySlug.get(job.orgSlug);
+    if (!organizationId) continue;
+
+    await prisma.job.upsert({
+      where: { slug: job.slug },
+      update: {},
+      create: {
+        organizationId,
+        title: job.title,
+        slug: job.slug,
+        description: job.description,
+        department: job.department,
+        fieldId: findByName(fields, job.field)?.id ?? null,
+        regionId: findByName(regions, job.region)?.id ?? null,
+        city: job.city,
+        workMode: job.workMode,
+        type: job.type,
+        salaryMinXAF: job.salaryMinXAF ?? null,
+        salaryMaxXAF: job.salaryMaxXAF ?? null,
+        requiredSkills: job.requiredSkills,
+        educationLevel: job.educationLevel,
+        postingDate: new Date(),
+        expiryDate: job.expiryDate,
+        moderationStatus: job.moderationStatus as any,
+        applicationMethod: "MANTECH",
+        isFeatured: false,
+        isRemote: job.workMode === "REMOTE",
+      },
+    });
+    jobCount += 1;
+  }
+
+  console.log(`   jobs: ${jobCount}`);
+  console.log("âœ… Demo data seeded (organizations PENDING, opportunities DRAFT).");
+  console.log("   Publish them in /dashboard/admin to show them on /internships.");
   console.log("âœ… Demo data seeded (organizations PENDING, opportunities DRAFT).");
   console.log("   Publish them in /dashboard/admin to show them on /internships.");
 }

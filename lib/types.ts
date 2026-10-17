@@ -632,3 +632,38 @@ export interface CandidateSavedItem {
   isFeatured: boolean;
   savedAt: string;
 }
+
+// ------------------------------------------------------------------------
+// JOBS (public marketplace)
+// ------------------------------------------------------------------------
+
+export type JobType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'INTERNSHIP' | 'VOLUNTEER' | 'FREELANCE';
+
+export interface Job {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  summary?: string | null;
+  department?: string | null;
+  type: JobType | string;
+  workMode: string;
+  city: string;
+  location?: string | null;
+  region?: string | null;
+  requiredSkills?: string[] | null;
+  preferredSkills?: string[] | null;
+  educationLevel?: string | null;
+  salaryMinXAF?: number | null;
+  salaryMaxXAF?: number | null;
+  postingDate?: string | null;
+  expiryDate?: string | null;
+  isRemote?: boolean;
+  isFeatured?: boolean;
+  moderationStatus?: string | null;
+  field?: { id: string; name: string; slug: string } | null;
+  specialization?: { id: string; name: string; slug: string } | null;
+  organization?: { id: string; name: string; type: string } | null;
+  createdAt?: string;
+  updatedAt?: string;
+}

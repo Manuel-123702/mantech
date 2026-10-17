@@ -48,19 +48,18 @@ export function getOtpSessionSecret(): string {
 }
 
 /**
- * Cryptographically random 6-digit code, zero-padded ("042113").
- * Uses rejection sampling so every digit string is exactly uniform.
+ * Cryptographically random 4-char code: exactly 3 digits + 1 uppercase letter,
+ * shuffled for readability (e.g. "K4M2").
  */
 export function generateOtpCode(): string {
-  const bound = 1_000_000; // 10^6
-  const cutoff = Math.floor(0x1_0000_0000 / bound) * bound; // multiples of 1e6 below 2^32
-  const sample = new Uint32Array(1);
-  let value: number;
-  do {
-    crypto.getRandomValues(sample);
-    value = sample[0];
-  } while (value >= cutoff);
-  return String(value % bound).padStart(6, '0');
+  const digits = Array.from({ length: 3 }, () => String.fromCharCode(48 + Math.floor(Math.random() * 10)));
+  const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+  const chars = [digits[0], digits[1], digits[2], letter];
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+  return chars.join('');
 }
 
 function bytesToBase64Url(bytes: Uint8Array): string {
@@ -124,9 +123,12 @@ export async function verifyOtpHash(opts: {
   return timingSafeEqualString(candidate, opts.storedHash);
 }
 
-/** Shape check before hashing: exactly 6 numeric digits. */
+/** Shape check before hashing: exactly 3 digits + 1 letter (e.g. "K4M2"). */
 export function isWellFormedOtpCode(code: unknown): code is string {
-  return typeof code === 'string' && /^\d{6}$/.test(code);
+  if (typeof code !== 'string' || code.length !== 4) return false;
+  const digitCount = (code.match(/\d/g) || []).length;
+  const letterCount = (code.match(/[A-Za-z]/g) || []).length;
+  return digitCount === 3 && letterCount === 1;
 }
 
 // ── Verified-session cookie (signed, tamper-evident) ────────────────────────

@@ -132,7 +132,7 @@ export default function AboutPage() {
         <div className="absolute top-1/3 left-10 w-96 h-96 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
         <div className="absolute -bottom-10 right-10 w-96 h-96 bg-cyan-500/10 blur-[110px] rounded-full pointer-events-none" />
 
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 text-orange-400 relative z-10">
           <SectionHeader
             eyebrow="Foundation"
             title="Strategic National Mandate"

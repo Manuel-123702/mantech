@@ -1,4 +1,4 @@
-﻿import { clerkMiddleware } from '@clerk/nextjs/server';
+import { clerkMiddleware } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { rateLimit, clientKey, rateLimitHeaders, RATE_LIMITS } from '@/lib/rate-limit';
@@ -13,7 +13,7 @@ import { ADMIN_OTP_COOKIE, getOtpSessionSecret, verifyAdminOtpSession } from '@/
  * 3. Route Protection & Role-Based Access Control (Intern, Company, University, Admin)
  * 4. Intern Passport Eligibility (Interns, Companies, Universities ONLY)
  * 5. Anti-Enumeration & Hacker Shield
- * 6. Rate limiting on API traffic (SRS §20)
+ * 6. Rate limiting on API traffic (SRS Â§20)
  */
 
 // Routes requiring active authenticated session
@@ -39,7 +39,7 @@ const GUARDED_DASHBOARDS = ['/dashboard/intern', '/dashboard/admin'];
 function buildCsp(isDev: boolean): string {
   // Clerk's bot protection renders Cloudflare Turnstile, which loads its script
   // from and frames itself on challenges.cloudflare.com. Clerk's abuse/fraud
-  // checks run on *.protect.clerk.com (note the required `:*` — those hosts are
+  // checks run on *.protect.clerk.com (note the required `:*` â€” those hosts are
   // served on ports other than 443).
   const turnstile = 'https://challenges.cloudflare.com';
   const clerkProtection = 'https://*.protect.clerk.com';
@@ -94,7 +94,7 @@ function buildCsp(isDev: boolean): string {
  *
  * The address is not always included, and it may be labelled differently
  * depending on how the sign-in service is set up, so we check the usual names.
- * Returns nothing when it is not there — callers must treat that as "unknown"
+ * Returns nothing when it is not there â€” callers must treat that as "unknown"
  * rather than guessing.
  */
 function readEmailFromClaims(claims: Record<string, unknown>): string | undefined {
@@ -124,7 +124,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
     'max-age=31536000; includeSubDomains; preload'
   );
 
-  // ── Rate limiting (API traffic only) ──────────────────────────────────────
+  // â”€â”€ Rate limiting (API traffic only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // Public page rendering is left alone so that a slow crawler or a burst of
   // navigation can never lock a legitimate user out of the marketplace.
   if (pathname.startsWith('/api/')) {
@@ -222,7 +222,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
     }
   }
 
-  // ── Admin two-factor (OTP) gate ──────────────────────────────────────────
+  // â”€â”€ Admin two-factor (OTP) gate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // The admin dashboard requires a second factor: after the normal Clerk
   // email+password sign-in, a signed httpOnly cookie proves the 6-digit
   // WhatsApp code was verified within the last 60 minutes. Fails closed on
@@ -254,34 +254,6 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
     }
   }
 
-  // ── Company / University two-factor (OTP) gate ───────────────────────────
-  // These workspaces are open to ANY signed-in member, but only after they
-  // prove control of their sign-in inbox with the 6-digit email code (same
-  // signed cookie as the admin gate). The verify page lives outside the
-  // guarded prefixes so the dashboard layouts cannot lock their own door.
-  const isWorkspacePage =
-    pathname === '/dashboard/company' ||
-    pathname.startsWith('/dashboard/company/') ||
-    pathname === '/dashboard/university' ||
-    pathname.startsWith('/dashboard/university/');
-  if (isWorkspacePage) {
-    let verified = false;
-    try {
-      const token = request.cookies.get(ADMIN_OTP_COOKIE)?.value;
-      const session = await verifyAdminOtpSession(token, { secret: getOtpSessionSecret() });
-      verified = Boolean(session);
-    } catch {
-      verified = false;
-    }
-    if (!verified) {
-      const area = pathname.startsWith('/dashboard/university') ? 'university' : 'company';
-      const gate = new URL('/dashboard/verify', request.url);
-      gate.searchParams.set('area', area);
-      gate.searchParams.set('next', pathname);
-      return NextResponse.redirect(gate);
-    }
-  }
-
   return response;
 });
 
@@ -297,3 +269,4 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
+

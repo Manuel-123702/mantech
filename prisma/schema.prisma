@@ -297,6 +297,7 @@ model Field {
   specializations Specialization[]
   opportunities   InternshipOpportunity[]
   internProfiles  InternProfile[]
+  jobs            Job[]
 }
 
 model Specialization {
@@ -310,6 +311,7 @@ model Specialization {
 
   internProfiles InternProfile[]
   opportunities  InternshipOpportunity[]
+  jobs           Job[]
 
   @@unique([fieldId, name])
 }
@@ -337,6 +339,7 @@ model Region {
   internProfiles InternProfile[]
   opportunities  InternshipOpportunity[]
   organizations  Organization[]
+  jobs           Job[]
 }
 
 model Location {
@@ -387,6 +390,7 @@ model Organization {
   candidateContacts  CandidateContact[]
   subscriptions      OrganizationSubscription[]
   boosts             Boost[]
+  jobs               Job[]
 
   @@index([slug])
   @@index([type])
@@ -871,6 +875,51 @@ enum BoostStatus {
   APPROVED // active window running (isFeatured = true)
   REJECTED // admin declined (resolution holds the reason)
   EXPIRED // window elapsed, feature flag switched off
+}
+
+// ------------------------------------------------------------------------
+// JOBS — public marketplace listings (companies post jobs here)
+// ------------------------------------------------------------------------
+
+model Job {
+  id                String            @id @default(uuid())
+  organizationId    String
+  organization      Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  title             String
+  slug              String            @unique
+  description       String?
+  department        String?
+  fieldId           String?
+  field             Field?            @relation(fields: [fieldId], references: [id])
+  specializationId  String?
+  specialization    Specialization?   @relation(fields: [specializationId], references: [id])
+  requiredSkills    String[]          @default([])
+  preferredSkills   String[]          @default([])
+  educationLevel    String?
+  regionId          String?
+  region            Region?           @relation(fields: [regionId], references: [id])
+  city              String
+  location          String?
+  workMode          WorkMode          @default(ONSITE)
+  applicationMethod ApplicationMethod @default(MANTECH)
+  salaryMinXAF      Int?
+  salaryMaxXAF      Int?
+  type              String            @default("FULL_TIME")
+  postingDate       DateTime          @default(now())
+  expiryDate        DateTime
+  isRemote          Boolean           @default(false)
+  isFeatured        Boolean           @default(false)
+  moderationStatus  ModerationStatus  @default(PENDING_REVIEW)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([slug])
+  @@index([organizationId])
+  @@index([moderationStatus])
+  @@index([workMode])
+  @@index([type])
+  @@index([salaryMinXAF])
+  @@index([city])
 }
 
 model Boost {
