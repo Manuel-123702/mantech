@@ -29,7 +29,10 @@ export default async function CompanyApplicationsPage() {
 
   const applications = await prisma.application.findMany({
     where: {
-      opportunity: { organizationId: organization.id },
+      OR: [
+        { opportunity: { organizationId: organization.id } },
+        { job: { organizationId: organization.id } },
+      ],
     },
     include: {
       internProfile: {
@@ -40,6 +43,12 @@ export default async function CompanyApplicationsPage() {
         },
       },
       opportunity: {
+        include: {
+          field: true,
+          region: true,
+        },
+      },
+      job: {
         include: {
           field: true,
           region: true,
@@ -90,7 +99,7 @@ export default async function CompanyApplicationsPage() {
                   </div>
                   <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
                     <Briefcase className="w-3 h-3" />
-                    <span>{application.opportunity.title}</span>
+                    <span>{application.opportunity?.title ?? application.job?.title ?? 'Application'}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
                     <Calendar className="w-3 h-3" />

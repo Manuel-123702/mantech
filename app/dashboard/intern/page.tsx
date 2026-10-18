@@ -102,6 +102,9 @@ export default async function InternDashboardPage() {
           opportunity: {
             select: { title: true, organization: { select: { name: true } } },
           },
+          job: {
+            select: { title: true, organization: { select: { name: true } } },
+          },
           interviews: { select: { id: true, scheduledAt: true, status: true } },
         },
         orderBy: { createdAt: 'desc' },
@@ -228,9 +231,9 @@ export default async function InternDashboardPage() {
     preferredWorkMode: matchSource?.preferredWorkMode ?? null,
     wantsPaid: null,
   };
-  const appliedOpportunityIds = profile.applications.map(
-    (application) => application.opportunityId,
-  );
+  const appliedOpportunityIds = profile.applications
+    .map((application) => application.opportunityId)
+    .filter((id): id is string => typeof id === 'string' && id.length > 0);
   const openOpportunities = await prisma.internshipOpportunity.findMany({
     where: {
       moderationStatus: 'PUBLISHED',
@@ -319,8 +322,8 @@ export default async function InternDashboardPage() {
                     <CalendarClock className="h-4 w-4 text-blue-600" aria-hidden="true" />
                     <span className="font-medium text-slate-900">Interview</span>
                     <span className="text-slate-600">
-                      {interview.application.opportunity.title} ·{' '}
-                      {interview.application.opportunity.organization.name}
+                      {interview.application?.opportunity?.title ?? 'Unknown opportunity'} ·{' '}
+                      {interview.application?.opportunity?.organization?.name ?? 'Unknown organization'}
                     </span>
                     <span className="text-xs text-slate-500">
                       {new Date(interview.scheduledAt).toLocaleString()}
@@ -526,10 +529,10 @@ export default async function InternDashboardPage() {
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-slate-900">
-                      {application.opportunity.title}
+                      {application.opportunity?.title ?? application.job?.title ?? 'Application'}
                     </p>
                     <p className="truncate text-sm text-slate-600">
-                      {application.opportunity.organization.name}
+                      {application.opportunity?.organization.name ?? application.job?.organization.name ?? ''}
                     </p>
                   </div>
                   <span

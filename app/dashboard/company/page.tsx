@@ -130,7 +130,7 @@ export default async function CompanyOverviewPage() {
               >
                 <div>
                   <p className="font-medium text-slate-900">{app.internProfile.user.fullName}</p>
-                  <p className="text-xs text-slate-500">{app.opportunity.title}</p>
+                  <p className="text-xs text-slate-500">{app.opportunity?.title ?? 'No opportunity'}</p>
                 </div>
                 <StatusBadge status={app.status} />
               </Link>

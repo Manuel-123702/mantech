@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { logDatabaseUnavailable } from '@/lib/db-health';
+import { notifyMatchingAlerts } from '@/lib/alert-delivery';
 
 const WORK_MODE_STRINGS = ['ONSITE', 'HYBRID', 'REMOTE'];
 const APP_METHOD_STRINGS = ['MANTECH', 'COMPANY_WEBSITE', 'EXTERNAL'];
@@ -27,8 +28,13 @@ export async function GET(request: NextRequest) {
 
   const where: Prisma.JobWhereInput = {
     moderationStatus: 'PUBLISHED',
-    expiryDate: { gte: new Date() },
   };
+  const availability = params.get('availability');
+  if (availability === 'active') {
+    where.expiryDate = { gte: new Date() };
+  } else if (availability === 'expired') {
+    where.expiryDate = { lt: new Date() };
+  }
   const field = params.get('field');
   const specialization = params.get('specialization');
   const region = params.get('region');
@@ -84,6 +90,7 @@ export async function POST(request: NextRequest) {
       requiredSkills, preferredSkills, educationLevel, regionId, city,
       location, workMode, salaryMinXAF, salaryMaxXAF, type,
       postingDate, expiryDate, isRemote, isFeatured, moderationStatus, organizationId,
+      applicationUrl,
     } = body;
 
     if (!title || !organizationId || !city || !expiryDate) {
@@ -114,6 +121,7 @@ export async function POST(request: NextRequest) {
         isFeatured: isFeatured ?? false,
         moderationStatus: moderationStatus || 'PENDING_REVIEW',
         organizationId,
+        applicationUrl: applicationUrl || null,
       },
       include: {
         organization: { include: { companyProfile: true, universityProfile: true } },
@@ -122,6 +130,21 @@ export async function POST(request: NextRequest) {
         region: true,
       },
     });
+
+    // Job created already PUBLISHED (e.g. seed/admin fast-path) → same
+    // instant fan-out as a moderation publish. Never throws.
+    if (job.moderationStatus === 'PUBLISHED') {
+      await notifyMatchingAlerts({
+        id: job.id,
+        title: job.title,
+        slug: job.slug,
+        organizationName: job.organization?.name ?? null,
+        regionName: job.region?.name ?? null,
+        city: job.city ?? null,
+        workMode: String(job.workMode ?? ''),
+        kind: 'job',
+      });
+    }
 
     return NextResponse.json({ job }, { status: 201 });
   } catch (error) {

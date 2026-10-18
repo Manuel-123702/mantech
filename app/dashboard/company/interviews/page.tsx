@@ -129,7 +129,8 @@ export default async function CompanyInterviewsPage() {
                               </Badge>
                             </div>
                             <p className="text-sm text-slate-600 mt-1">
-                              {interview.application.opportunity.title}
+{interview.application?.opportunity?.title ?? 'No opportunity assigned'}
+                              {interview.application?.opportunity?.title ?? 'No opportunity assigned'}
                             </p>
                             <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
                               <div className="flex items-center gap-1">
@@ -229,7 +230,7 @@ export default async function CompanyInterviewsPage() {
                               </Badge>
                             </div>
                             <p className="text-sm text-slate-600 mt-1">
-                              {interview.application.opportunity.title}
+                              {interview.application?.opportunity?.title ?? 'No opportunity assigned'}
                             </p>
                             <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
                               <div className="flex items-center gap-1">

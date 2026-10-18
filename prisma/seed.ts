@@ -198,6 +198,10 @@ async function seedAll() {
       name: "Construction & Real Estate",
       description: "Buildings, BIM and civil works.",
     },
+    {
+      name: "Retail & E-Commerce",
+      description: "Retail chains, marketplaces and online commerce platforms.",
+    },
   ];
 
   for (const { name, description } of industries) {

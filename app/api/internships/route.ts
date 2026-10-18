@@ -36,8 +36,13 @@ export async function GET(request: NextRequest) {
 
   const where: Prisma.InternshipOpportunityWhereInput = {
     moderationStatus: 'PUBLISHED',
-    deadline: { gte: new Date() },
   };
+  const availability = params.get('availability');
+  if (availability === 'active') {
+    where.deadline = { gte: new Date() };
+  } else if (availability === 'expired') {
+    where.deadline = { lt: new Date() };
+  }
   const field = params.get('field');
   const specialization = params.get('specialization');
   const region = params.get('region');

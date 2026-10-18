@@ -10,18 +10,28 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2020",
-    "lib": ["es2020"],
+    "lib": [
+      "es2020"
+    ],
     "noEmit": false,
     "incremental": false,
     "allowImportingTsExtensions": false,
     "baseUrl": "..",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "ts-node": {
     "transpileOnly": true,
-    "require": ["tsconfig-paths/register"]
+    "require": [
+      "tsconfig-paths/register"
+    ]
   },
-  "include": ["seed.ts", "../lib/**/*.ts"]
+  "include": [
+    "seed.ts",
+    "../lib/**/*.ts",
+    "seed-cameroon.ts"
+  ]
 }

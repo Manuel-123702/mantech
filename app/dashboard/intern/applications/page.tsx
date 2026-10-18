@@ -135,12 +135,12 @@ export default async function InternApplicationsPage() {
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex-1 min-w-0">
                             <div className="flex flex-wrap items-center gap-1.5">
-                              {app.opportunity.field && (
+                              {app.opportunity?.field && (
                                 <Badge variant="secondary" className="text-[11px]">
                                   {app.opportunity.field.name}
                                 </Badge>
                               )}
-                              {app.opportunity.workMode && (
+                              {app.opportunity?.workMode && (
                                 <Badge variant="outline" className="text-[11px]">
                                   {String(app.opportunity.workMode).replace('_', ' ')}
                                 </Badge>
@@ -148,15 +148,15 @@ export default async function InternApplicationsPage() {
                             </div>
                             <h3 className="mt-3 text-base font-bold text-slate-900 leading-tight">
                               <Link
-                                href={`/internships/${app.opportunity.slug}`}
+                                href={`/internships/${app.opportunity?.slug || ''}`}
                                 className="hover:text-blue-700 line-clamp-2"
                               >
-                                {app.opportunity.title}
+                                {app.opportunity?.title || 'Untitled opportunity'}
                               </Link>
                             </h3>
                             <p className="mt-1 truncate text-sm text-slate-600 flex items-center gap-1.5">
                               <Building2 className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-                              {app.opportunity.organization?.name || 'Organization'}
+                              {app.opportunity?.organization?.name || 'Organization'}
                             </p>
                           </div>
                           <span
@@ -180,18 +180,18 @@ export default async function InternApplicationsPage() {
                             <span className="font-medium text-slate-700 flex items-center gap-1">
                               <Briefcase className="h-3 w-3" /> Duration
                             </span>
-                            <div className="mt-0.5">{app.opportunity.durationMonths || 6} months</div>
+                            <div className="mt-0.5">{app.opportunity?.durationMonths || 6} months</div>
                           </div>
                         </div>
 
                         <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
                           <span className="text-xs text-slate-500">
-                            Deadline: {app.opportunity.deadline
+                            Deadline: {app.opportunity?.deadline
                               ? new Date(app.opportunity.deadline).toLocaleDateString()
                               : 'Rolling'}
                           </span>
                           <Link
-                            href={`/internships/${app.opportunity.slug}`}
+                            href={`/internships/${app.opportunity?.slug || ''}`}
                             className="text-xs font-semibold text-blue-600 hover:text-blue-700"
                           >
                             View posting →

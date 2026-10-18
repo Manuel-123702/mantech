@@ -7,6 +7,7 @@ export const candidateAlertResponseSchema = z.object({
   regions: z.array(z.string()),
   cities: z.array(z.string()),
   workModes: z.array(z.enum(['onsite', 'on-site', 'hybrid', 'remote'])),
+  whatsappOptIn: z.boolean().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });

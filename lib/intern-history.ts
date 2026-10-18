@@ -52,7 +52,8 @@ export type HistoryApplication = {
   id: string;
   status: string;
   createdAt: Date;
-  opportunity: { title: string; organization: { name: string } };
+  opportunity: { title: string; organization: { name: string } } | null;
+  job?: { title: string; organization: { name: string } } | null;
   statusHistory?: { id: string; status: string; createdAt: Date }[];
   interviews?: { id: string; scheduledAt: Date; status: string; type: string }[];
   placement?: {
@@ -189,8 +190,8 @@ export function buildInternHistory(input: InternHistoryInput): HistoryEntry[] {
   }
 
   for (const app of input.applications) {
-    const orgName = app.opportunity.organization.name;
-    const opportunityTitle = app.opportunity.title;
+    const orgName = app.opportunity?.organization.name ?? app.job?.organization.name ?? 'MANTECH partner';
+    const opportunityTitle = app.opportunity?.title ?? app.job?.title ?? 'Placement application';
 
     entries.push({
       id: `application:${app.id}`,

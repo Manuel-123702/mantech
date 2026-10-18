@@ -63,3 +63,29 @@ export function buildOpportunityDigest(
   body.push('', `— ${SITE}`);
   return { subject, message: body.join('\n') };
 }
+
+export type ListingKind = 'internship' | 'job';
+
+/**
+ * Instant WhatsApp text for a newly published listing.
+ *
+ * Kept short and plain-text on purpose: WhatsApp gateway payloads (Meta /
+ * Twilio / CallMeBot) truncate long messages, and most Cameroonian users read
+ * alerts on low-end devices. The in-app notification + email keep the longer
+ * formatted version; this is the "tap now" ping.
+ */
+export function buildListingWhatsAppAlert(opp: AlertOpportunityCard & { kind?: ListingKind }): string {
+  const kindLabel = opp.kind === 'job' ? 'New job' : 'New internship';
+  const lines = [
+    `🎓 *${SITE}* — ${kindLabel} alert!`,
+    ``,
+    `📌 *${opp.title}*`,
+    opp.organizationName ? `🏢 ${opp.organizationName}` : null,
+    `📍 ${locationLabel(opp)} · ${modeLabel(opp)}`,
+    ``,
+    `👉 Apply here: ${opp.url}`,
+    ``,
+    `— Reply STOP to unsubscribe from these alerts.`,
+  ].filter((line): line is string => line !== null);
+  return lines.join('\n');
+}

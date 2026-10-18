@@ -663,7 +663,30 @@ export interface Job {
   moderationStatus?: string | null;
   field?: { id: string; name: string; slug: string } | null;
   specialization?: { id: string; name: string; slug: string } | null;
-  organization?: { id: string; name: string; type: string } | null;
+  organization?: {
+    id: string;
+    name: string;
+    slug?: string;
+    type?: string;
+    logoUrl?: string | null;
+    website?: string | null;
+    city?: string | null;
+    address?: string | null;
+    description?: string | null;
+    size?: string | null;
+    verificationStatus?: string | null;
+    companyProfile?: {
+      techStack?: string[];
+      perks?: string[];
+      branches?: string[];
+    } | null;
+    universityProfile?: {
+      universityType?: string | null;
+      canRecruitInterns?: boolean;
+      supportsPlacementCoordination?: boolean;
+      faculties?: string[];
+    } | null;
+  } | null;
   createdAt?: string;
   updatedAt?: string;
 }

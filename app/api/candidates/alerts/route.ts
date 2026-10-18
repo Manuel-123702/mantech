@@ -11,6 +11,7 @@ const alertResponseSchema = z.object({
   regions: z.array(z.string()),
   cities: z.array(z.string()),
   workModes: z.array(z.enum(['onsite', 'on-site', 'hybrid', 'remote'])),
+  whatsappOptIn: z.boolean().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -29,6 +30,7 @@ const alertInputSchema = z.object({
   regions: z.array(z.string()).default([]),
   cities: z.array(z.string()).default([]),
   workModes: z.array(z.enum(['onsite', 'on-site', 'hybrid', 'remote'])).default([]),
+  whatsappOptIn: z.boolean().optional(),
 });
 
 const alertActionSchema = z.object({
@@ -54,6 +56,7 @@ export async function GET(request: NextRequest) {
           regions: true,
           cities: true,
           workModes: true,
+          whatsappOptIn: true,
           createdAt: true,
           updatedAt: true,
         },
@@ -105,6 +108,7 @@ export async function POST(request: NextRequest) {
           regions: data?.regions ?? [],
           cities: data?.cities ?? [],
           workModes: data?.workModes ?? [],
+          whatsappOptIn: data?.whatsappOptIn ?? true,
         },
       });
 

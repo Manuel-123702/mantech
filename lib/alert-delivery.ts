@@ -16,7 +16,14 @@
 import { prisma } from '@/lib/prisma';
 import { sendEmail, emailTemplates } from '@/lib/emailjs';
 import { findAlertMatches, matchesAlert, type AlertCriteria } from '@/lib/alert-matching';
-import { buildOpportunityAlert, buildOpportunityDigest, type AlertOpportunityCard } from '@/lib/alert-messages';
+import {
+  buildOpportunityAlert,
+  buildOpportunityDigest,
+  buildListingWhatsAppAlert,
+  type AlertOpportunityCard,
+  type ListingKind,
+} from '@/lib/alert-messages';
+import { sendWhatsAppDirect } from '@/lib/whatsapp-notifications';
 
 export type PublishedOpportunityInput = {
   id: string;
@@ -26,45 +33,105 @@ export type PublishedOpportunityInput = {
   regionName?: string | null;
   city?: string | null;
   workMode?: string | null;
+  /** 'internship' (default) or 'job' — drives the listing URL + wording. */
+  kind?: ListingKind;
 };
 
 const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || '').replace(/\/+$/, '');
+
+function listingPath(kind: ListingKind, slug: string): string {
+  return kind === 'job' ? `/jobs/${slug}` : `/internships/${slug}`;
+}
+
+/**
+ * Instant WhatsApp fan-out for a freshly published listing.
+ *
+ * Recipients: the matched, active users passed in (already filtered by alert
+ * preferences). Phone numbers come from `User.phone` first, then the intern
+ * profile's mandatory `phone` — interns always have one after registration.
+ *
+ * Delivery is best-effort and non-blocking: each send runs through the
+ * configured gateway (`WHATSAPP_API_URL`/`WHATSAPP_API_TOKEN`) and failures
+ * are logged, never thrown — publishing must never fail because WhatsApp did.
+ */
+async function sendListingWhatsAppBlast(opts: {
+  card: AlertOpportunityCard & { kind: ListingKind };
+  recipients: { id: string; fullName: string | null; phone: string | null; profilePhone: string | null }[];
+}): Promise<{ attempted: number; sent: number }> {
+  const text = buildListingWhatsAppAlert(opts.card);
+  let attempted = 0;
+  let sent = 0;
+  // Sequential sends: gateways (especially free-tier ones) rate-limit hard,
+  // and a burst of parallel sends would get the sender number throttled.
+  for (const recipient of opts.recipients) {
+    const phone = recipient.phone || recipient.profilePhone;
+    if (!phone) continue;
+    attempted += 1;
+    try {
+      const result = await sendWhatsAppDirect(phone, text);
+      if (result.sent) {
+        sent += 1;
+      } else {
+        console.warn(`[alert-delivery] WhatsApp send failed for user ${recipient.id}:`, result.error);
+      }
+    } catch (error) {
+      console.warn(`[alert-delivery] WhatsApp send threw for user ${recipient.id}:`, error);
+    }
+  }
+  return { attempted, sent };
+}
 
 export async function notifyMatchingAlerts(opp: PublishedOpportunityInput): Promise<number> {
   try {
     // 1. Load every saved alert (one per user — the relation is one-to-one).
     const alerts = await prisma.candidateAlert.findMany({
-      select: { userId: true, regions: true, cities: true, workModes: true },
+      select: { userId: true, regions: true, cities: true, workModes: true, whatsappOptIn: true },
     });
     if (alerts.length === 0) return 0;
 
     // 2. Keep the alerts whose preferences match this opportunity.
+    // WhatsApp opt-outs still get in-app + email; only the WA ping is gated.
     const matchedUserIds = new Set<string>();
+    const whatsappUserIds = new Set<string>();
     for (const a of alerts) {
       const criteria: AlertCriteria = {
         regions: (a.regions as string[]) ?? [],
         cities: (a.cities as string[]) ?? [],
         workModes: (a.workModes as string[]) ?? [],
       };
-      if (matchesAlert(criteria, opp)) matchedUserIds.add(a.userId);
+      if (matchesAlert(criteria, opp)) {
+        matchedUserIds.add(a.userId);
+        if ((a as { whatsappOptIn?: boolean }).whatsappOptIn !== false) {
+          whatsappUserIds.add(a.userId);
+        }
+      }
     }
     if (matchedUserIds.size === 0) return 0;
 
-    // 3. Load the active users behind those alerts (email + display name).
+    // 3. Load the active users behind those alerts (email + display name +
+    // phone for the instant WhatsApp ping).
+    const kind: ListingKind = opp.kind ?? 'internship';
     const users = await prisma.user.findMany({
       where: { id: { in: Array.from(matchedUserIds) }, status: 'active' },
-      select: { id: true, email: true, fullName: true },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        phone: true,
+        internProfile: { select: { phone: true } },
+      },
     });
     if (users.length === 0) return 0;
 
     // 4. Build the message once, reuse for every recipient.
+    const path = listingPath(kind, opp.slug);
     const card: AlertOpportunityCard = {
       title: opp.title,
       organizationName: opp.organizationName,
       city: opp.city,
       regionName: opp.regionName,
       workMode: opp.workMode,
-      url: `${APP_URL}/internships/${opp.slug}`,
+      url: `${APP_URL}${path}`,
     };
     const { subject, message } = buildOpportunityAlert(card);
 
@@ -76,12 +143,35 @@ export async function notifyMatchingAlerts(opp: PublishedOpportunityInput): Prom
           title: subject,
           message,
           category: 'system',
-          link: `/internships/${opp.slug}`,
+          link: path,
         },
       });
       if (u.email) {
         void sendEmail(emailTemplates.notification(u.fullName || 'there', u.email, subject, message)).catch(() => {});
       }
+    }
+
+    // 6. Instant WhatsApp ping — fire-and-forget AFTER the DB writes so the
+    // publish response is never blocked. Recipients opted in via
+    // `whatsappOptIn` (default true); users without a phone are skipped
+    // silently. Opt-outs already got their in-app + email above.
+    const waRecipients = users.filter((u) => whatsappUserIds.has(u.id));
+    if (waRecipients.length > 0) {
+      void sendListingWhatsAppBlast({
+        card: { ...card, kind },
+        recipients: waRecipients.map((u) => ({
+          id: u.id,
+          fullName: u.fullName,
+          phone: u.phone,
+          profilePhone: u.internProfile?.phone ?? null,
+        })),
+      })
+        .then(({ attempted, sent }) => {
+          console.log(`[alert-delivery] WhatsApp blast for ${kind} ${opp.slug}: ${sent}/${attempted} sent.`);
+        })
+        .catch((error) => {
+          console.warn('[alert-delivery] WhatsApp blast failed (non-fatal):', error);
+        });
     }
 
     return users.length;

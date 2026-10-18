@@ -132,6 +132,41 @@ export const APP_CONFIG = {
       category: 'Legal & Policy',
       specializations: ['OHADA Corporate Law', 'Data Protection & Privacy', 'Contracts & Intellectual Property', 'Regulatory Compliance'],
     },
+    {
+      id: 'field_agro',
+      name: 'Agro-Industry, Agriculture & Environment',
+      slug: 'agriculture-environment',
+      category: 'Agriculture & Nature',
+      specializations: ['Agronomy & Crop Science', 'Agro-Industrial Food Processing', 'Forestry & Wood Technology', 'Environmental Impact Assessment', 'Livestock & Veterinary'],
+    },
+    {
+      id: 'field_oil',
+      name: 'Mining, Petroleum & Chemical Engineering',
+      slug: 'mining-petroleum-chemical',
+      category: 'Energy & Heavy Industry',
+      specializations: ['Petroleum Geosciences', 'Drilling & Well Operations', 'Refinery Process Engineering', 'Mining Geology & Extraction', 'Metallurgy'],
+    },
+    {
+      id: 'field_comm',
+      name: 'Media, Journalism & Bilingual Communication',
+      slug: 'media-journalism-communication',
+      category: 'Media & Arts',
+      specializations: ['Bilingual Translation & Interpretation', 'Broadcast Journalism', 'Public Relations & Corporate Media', 'Audiovisual Production'],
+    },
+    {
+      id: 'field_edu',
+      name: 'Education, Teaching & Academic Research',
+      slug: 'education-teaching-research',
+      category: 'Education & Academia',
+      specializations: ['Secondary School Pedagogy', 'Higher Education Lecturing', 'Educational Administration', 'Scientific Lab Research'],
+    },
+    {
+      id: 'field_hosp',
+      name: 'Hospitality, Tourism & Catering Management',
+      slug: 'hospitality-tourism-catering',
+      category: 'Hospitality & Services',
+      specializations: ['Hotel Operations & Front Office', 'Culinary Arts & Food Production', 'Banquet & Event Management', 'Tourism Travel Planning'],
+    },
   ],
 
   // Monetization Packages (Section 16 - Payment via WhatsApp direct concierge)

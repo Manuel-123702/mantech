@@ -30,6 +30,7 @@ export async function GET() {
         where: { internProfileId: user.internProfile.id },
         include: {
           opportunity: { include: { organization: true } },
+          job: { include: { organization: true } },
           statusHistory: { orderBy: { createdAt: "desc" } },
         },
         orderBy: { createdAt: "desc" },
@@ -43,7 +44,12 @@ export async function GET() {
     if (!organization) return NextResponse.json({ applications: [] });
 
     const applications = await prisma.application.findMany({
-      where: { opportunity: { organizationId: organization.id } },
+      where: {
+        OR: [
+          { opportunity: { organizationId: organization.id } },
+          { job: { organizationId: organization.id } },
+        ],
+      },
       include: {
         internProfile: {
           include: {
@@ -53,6 +59,7 @@ export async function GET() {
           },
         },
         opportunity: true,
+        job: true,
         interviews: { orderBy: { scheduledAt: "desc" } },
         placement: true,
         statusHistory: { orderBy: { createdAt: "desc" } },

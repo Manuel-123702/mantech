@@ -58,6 +58,13 @@ export default async function AdminApplicationsPage({
             organization: { select: { name: true, type: true, verificationStatus: true } },
           },
         },
+        job: {
+          select: {
+            title: true,
+            slug: true,
+            organization: { select: { name: true, type: true, verificationStatus: true } },
+          },
+        },
       },
       orderBy: { createdAt: 'desc' },
       take: 80,
@@ -135,7 +142,10 @@ export default async function AdminApplicationsPage({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {applications.map((application) => (
+                {applications.map((application) => {
+                  const listing = application.opportunity ?? application.job;
+                  const orgRow = listing?.organization;
+                  return (
                   <tr key={application.id} className="hover:bg-slate-50">
                     <td className="px-4 py-3">
                       <p className="font-semibold text-slate-900">{application.internProfile.user.fullName}</p>
@@ -144,15 +154,16 @@ export default async function AdminApplicationsPage({
                       </p>
                     </td>
                     <td className="px-4 py-3 text-slate-700">
-                      <p className="max-w-[240px] truncate font-medium">{application.opportunity.title}</p>
+                      <p className="max-w-[240px] truncate font-medium">{listing?.title ?? "—"}</p>
+                      <p className="text-[10px] text-slate-400">{application.job ? "Job" : "Internship"}</p>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-slate-700">{application.opportunity.organization.name}</p>
+                      <p className="text-slate-700">{orgRow?.name ?? "—"}</p>
                       <p className="text-[10px] text-slate-500">
-                        {application.opportunity.organization.type}
-                        {application.opportunity.organization.verificationStatus !== 'VERIFIED' && (
+                        {orgRow?.type}
+                        {orgRow && orgRow.verificationStatus !== 'VERIFIED' && (
                           <span className="ml-1 text-amber-600">
-                            · {application.opportunity.organization.verificationStatus}
+                            · {orgRow.verificationStatus}
                           </span>
                         )}
                       </p>
@@ -167,7 +178,8 @@ export default async function AdminApplicationsPage({
                       {application.createdAt.toISOString().slice(0, 10)}
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

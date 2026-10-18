@@ -55,6 +55,14 @@ interface NavMenuItem {
 
 const INTERNSHIP_MENU: NavMenuItem[] = [
   {
+    href: '/jobs',
+    label: 'All Cameroon Jobs',
+    description: 'Explore 130+ career vacancies across 120+ top employers',
+    icon: Briefcase,
+    badge: '130+ Jobs',
+    color: 'text-emerald-800 bg-emerald-50/70',
+  },
+  {
     href: '/internships',
     label: 'All Opportunities',
     description: 'Explore live, verified postings across Cameroon',
@@ -76,12 +84,12 @@ const INTERNSHIP_MENU: NavMenuItem[] = [
     color: 'text-blue-800 bg-blue-50/70',
   },
   {
-    href: '/dashboard/intern/passport',
-    label: 'Intern Passport',
-    description: 'Verifiable digital credential for candidates',
+    href: '/register/intern',
+    label: 'Register & Intern Passport',
+    description: 'Fill credentials to get your verified digital passport',
     icon: Award,
-    badge: 'Core Feature',
-    color: 'text-blue-800 bg-blue-50/70',
+    badge: 'Register Now',
+    color: 'text-amber-700 bg-amber-50/80',
   },
 ];
 
@@ -257,6 +265,21 @@ export function Navbar() {
 
           {/* Desktop Navigation Links with Animated Mega Dropdowns */}
           <div className="hidden items-center gap-x-1 lg:flex">
+            {/* 0. Direct Link: Jobs */}
+            <Link
+              href="/jobs"
+              className={cn(
+                'group inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold transition-all duration-150',
+                'hover:bg-orange-300 hover:text-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600',
+                pathname.startsWith('/jobs')
+                  ? 'text-orange-500 font-bold'
+                  : 'text-orange-500'
+              )}
+            >
+              <Briefcase className="h-4 w-4 text-orange-500 group-hover:text-blue-800 transition-colors" />
+              <span>Jobs</span>
+            </Link>
+
             {/* 1. Internships Dropdown */}
             <DropdownMenu
               open={activeDropdown === 'internships'}
@@ -627,6 +650,16 @@ export function Navbar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
+                <Link href="/register/intern">
+                  <Button
+                    size="sm"
+                    className="h-10 px-3.5 text-xs font-bold bg-white hover:bg-white/80 text-orange-600 rounded-xl shadow-sm hover:shadow transition-all"
+                  >
+                    <Award className="w-3.5 h-3.5 mr-1.5 text-orange-500" />
+                    <span className='text-orange-600'>Register</span>
+                  </Button>
+                </Link>
+
                 <Link href="/sign-in">
                   <Button
                     variant="ghost"
@@ -812,6 +845,12 @@ export function Navbar() {
                     </>
                   ) : (
                     <div className="space-y-2">
+                      <Link href="/register/intern" onClick={closeMobile}>
+                        <Button className="w-full text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-sm flex items-center justify-center gap-2 mb-2">
+                          <Award className="w-4 h-4 text-amber-300" />
+                          <span>Register</span>
+                        </Button>
+                      </Link>
                       <Link href="/sign-in" onClick={closeMobile}>
                         <Button className="w-full text-xs font-bold bg-orange-500 hover:bg-orange-600 text-white">
                           <LogIn className="w-3.5 h-3.5 mr-1.5" />

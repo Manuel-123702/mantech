@@ -28,12 +28,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         application: {
           include: {
             opportunity: true,
+            job: true,
             internProfile: true,
           },
         },
       },
     });
-    if (!interview || interview.application.opportunity.organizationId !== organization.id) {
+    const listingOrgId = interview?.application?.opportunity?.organizationId ?? interview?.application?.job?.organizationId ?? null;
+    if (!interview || listingOrgId !== organization.id) {
       throw new AuthError(404, 'Interview not found');
     }
 
@@ -69,7 +71,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       await notifyUser({
         userId: interview.application.internProfile.userId,
         title: nextStatus === 'cancelled' ? 'Interview cancelled' : 'Interview rescheduled',
-        message: `Your interview for ${interview.application.opportunity.title} was ${nextStatus}.`,
+        message: `Your interview for ${interview.application?.opportunity?.title ?? interview.application?.job?.title ?? 'your application'} was ${nextStatus}.`,
         category: 'interview',
         link: '/dashboard/intern',
       });

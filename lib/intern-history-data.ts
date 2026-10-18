@@ -38,6 +38,9 @@ export async function loadInternHistory(userId: string): Promise<HistoryEntry[]>
           opportunity: {
             select: { title: true, organization: { select: { name: true } } },
           },
+          job: {
+            select: { title: true, organization: { select: { name: true } } },
+          },
           statusHistory: {
             select: { id: true, status: true, createdAt: true },
           },

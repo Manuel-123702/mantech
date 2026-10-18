@@ -19,6 +19,7 @@ export type WhatsAppAlertEvent =
   | 'INTERVIEW_SCHEDULED'
   | 'OFFER_MADE'
   | 'APPLICATION_REJECTED'
+  | 'NEW_LISTING_PUBLISHED'
   | 'GENERAL_STATUS_UPDATE';
 
 /**

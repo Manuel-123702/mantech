@@ -9,6 +9,7 @@ export interface CandidateAlert {
   regions: string[];
   cities: string[];
   workModes: string[];
+  whatsappOptIn?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -26,6 +27,7 @@ export function toCandidateAlert(dbRow: Record<string, unknown>): CandidateAlert
     regions: Array.isArray(dbRow.regions) ? (dbRow.regions as string[]) : [],
     cities: Array.isArray(dbRow.cities) ? (dbRow.cities as string[]) : [],
     workModes: Array.isArray(dbRow.workModes) ? (dbRow.workModes as string[]) : [],
+    whatsappOptIn: typeof dbRow.whatsappOptIn === 'boolean' ? dbRow.whatsappOptIn : true,
     createdAt: toIso(dbRow.createdAt),
     updatedAt: toIso(dbRow.updatedAt),
   };

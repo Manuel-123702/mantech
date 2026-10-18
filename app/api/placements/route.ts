@@ -22,7 +22,7 @@ export async function GET() {
       where: { organizationId: organization.id },
       include: {
         internProfile: { include: { user: { select: { fullName: true, email: true, avatarUrl: true } } } },
-        application: { include: { opportunity: true } },
+        application: { include: { opportunity: true, job: true } },
         onboardingItems: true,
       },
       orderBy: { createdAt: 'desc' },
@@ -43,9 +43,10 @@ export async function POST(request: Request) {
     const body = createSchema.parse(await request.json());
     const application = await prisma.application.findUnique({
       where: { id: body.applicationId },
-      include: { opportunity: true, internProfile: true, placement: true },
+      include: { opportunity: true, job: true, internProfile: true, placement: true },
     });
-    if (!application || application.opportunity.organizationId !== organization.id) {
+    const listingOrgId = application?.opportunity?.organizationId ?? application?.job?.organizationId ?? null;
+    if (!application || listingOrgId !== organization.id) {
       throw new AuthError(404, 'Application not found');
     }
     if (application.status !== 'SELECTED' && application.status !== 'PLACEMENT_PENDING') {
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
         applicationId: application.id,
         internProfileId: application.internProfileId,
         organizationId: organization.id,
-        department: body.department || application.opportunity.department,
+        department: body.department || application.opportunity?.department || null,
         startDate: new Date(body.startDate),
         endDate: new Date(body.endDate),
         objectives: body.objectives,

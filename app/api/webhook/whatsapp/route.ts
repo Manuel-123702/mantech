@@ -57,6 +57,61 @@ export async function POST(request: NextRequest) {
 
     const upperText = trimmed.toUpperCase();
 
+    // ── Command 0: STOP / START — WhatsApp alert opt-out / opt-in ─────────
+    // Users text STOP to mute new-listing pings (in-app + email continue),
+    // START to re-enable them. Matched by phone on User.phone or the intern
+    // profile phone. Never errors — an unknown number just gets guidance.
+    const isStop = /^(STOP|STOPALERTS|STOP\s*ALERTS|ARRET|UNSUBSCRIBE)\b/.test(upperText);
+    const isStart = /^(START|START\s*ALERTS|REPRENDRE|SUBSCRIBE)\b/.test(upperText);
+    if (isStop || isStart) {
+      const digits = cleanSender.replace(/\D/g, '');
+      let matched = 0;
+      if (digits.length >= 8) {
+        const tail = digits.slice(-8);
+        const users = await prisma.user.findMany({
+          where: {
+            OR: [
+              { phone: { contains: tail } },
+              { internProfile: { phone: { contains: tail } } },
+            ],
+          },
+          select: { id: true },
+        });
+        if (users.length > 0) {
+          const result = await prisma.candidateAlert.updateMany({
+            where: { userId: { in: users.map((u) => u.id) } },
+            data: { whatsappOptIn: isStart },
+          });
+          matched = result.count;
+        }
+      }
+      const reply = isStop
+        ? [
+            `🔕 *MANTECH Nexus job alerts paused.*`,
+            ``,
+            matched > 0
+              ? `You will no longer receive WhatsApp pings for new postings. Your in-app and email alerts stay on.`
+              : `We could not match this number to an account — reply from the number on your MANTECH profile. Your in-app and email alerts are unaffected.`,
+            ``,
+            `Reply *START* any time to resume WhatsApp alerts.`,
+          ].join('\n')
+        : [
+            `🔔 *MANTECH Nexus job alerts resumed!*`,
+            ``,
+            matched > 0
+              ? `You will now receive instant WhatsApp pings for postings matching your alert preferences.`
+              : `We could not match this number to an account — make sure your MANTECH profile phone is up to date, then reply *START* again.`,
+            ``,
+            `Reply *STOP* any time to pause them.`,
+          ].join('\n');
+      return NextResponse.json({
+        status: isStop ? 'unsubscribed' : 'subscribed',
+        reply,
+        sender: cleanSender,
+        type: 'alert_preference',
+      });
+    }
+
     // ── Command 1: STATUS Inquiry (e.g. "STATUS 12345" or "STATUS" or 8-char reference) ──
     const isStatusQuery = upperText.startsWith('STATUS') || upperText.startsWith('STATUT');
     const refMatch = trimmed.match(/[a-f0-9-]{6,36}/i);
@@ -91,7 +146,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      if (application) {
+      if (application && application.opportunity) {
         const nextInterview = application.interviews[0];
         const reply = formatStatusQueryWhatsAppResponse({
           candidateName: application.internProfile.user.fullName,
@@ -146,6 +201,7 @@ export async function POST(request: NextRequest) {
       `2️⃣ *INTERNSHIPS* — Get latest featured IT openings across Cameroon`,
       `3️⃣ *PASSPORT* — Information on verifying your Intern Passport`,
       `4️⃣ *SUPPORT* — Connect with a human recruitment concierge`,
+      `5️⃣ *STOP* — Pause instant job-alert pings (*START* to resume)`,
       ``,
       `🌐 Portal: ${APP_CONFIG.url}`,
       `📞 Emergency Support: ${APP_CONFIG.contacts.whatsapp}`,

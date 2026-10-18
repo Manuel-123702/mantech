@@ -15,6 +15,7 @@ import {
 import {
   buildOpportunityAlert,
   buildOpportunityDigest,
+  buildListingWhatsAppAlert,
   type AlertOpportunityCard,
 } from '../lib/alert-messages.ts';
 
@@ -108,4 +109,45 @@ test('digest email lists every opportunity and pluralises the subject', () => {
   assert.match(message, /Data Intern/);
   assert.match(message, /https:\/\/x\/1/);
   assert.match(message, /https:\/\/x\/2/);
+});
+
+test('instant WhatsApp alert names the listing kind and deep link', () => {
+  const wa = buildListingWhatsAppAlert({
+    title: 'Backend Intern',
+    organizationName: 'Orange Cameroun',
+    city: 'Douala',
+    regionName: 'Littoral',
+    workMode: 'hybrid',
+    url: 'https://mantech.test/internships/backend-intern',
+    kind: 'internship',
+  });
+  assert.match(wa, /New internship alert/);
+  assert.match(wa, /Backend Intern/);
+  assert.match(wa, /Orange Cameroun/);
+  assert.match(wa, /Douala, Littoral/);
+  assert.match(wa, /https:\/\/mantech\.test\/internships\/backend-intern/);
+  assert.match(wa, /STOP/);
+});
+
+test('instant WhatsApp alert labels jobs and routes to /jobs', () => {
+  const wa = buildListingWhatsAppAlert({
+    title: 'Senior Accountant',
+    organizationName: 'SABC',
+    city: 'Yaoundé',
+    workMode: 'onsite',
+    url: 'https://mantech.test/jobs/senior-accountant',
+    kind: 'job',
+  });
+  assert.match(wa, /New job alert/);
+  assert.match(wa, /Senior Accountant/);
+  assert.match(wa, /https:\/\/mantech\.test\/jobs\/senior-accountant/);
+});
+
+test('instant WhatsApp alert never crashes when the org is missing', () => {
+  const wa = buildListingWhatsAppAlert({
+    title: 'Field Volunteer',
+    url: 'https://mantech.test/internships/field-volunteer',
+  });
+  assert.match(wa, /Field Volunteer/);
+  assert.match(wa, /Cameroon/);
 });

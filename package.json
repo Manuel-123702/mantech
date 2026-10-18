@@ -12,6 +12,7 @@
     "db:push": "prisma db push",
     "db:seed": "node --env-file=.env node_modules/ts-node/dist/bin.js --project prisma/tsconfig.seed.json prisma/seed.ts",
     "db:seed:demo": "node --env-file=.env node_modules/ts-node/dist/bin.js --project prisma/tsconfig.seed.json prisma/seed-demo.ts",
+    "db:seed:cameroon": "node --env-file=.env node_modules/ts-node/dist/bin.js --project prisma/tsconfig.seed.json prisma/seed-cameroon.ts",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate"
   },

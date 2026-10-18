@@ -68,13 +68,15 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
           },
         },
         opportunity: true,
+        job: true,
         interviews: { orderBy: { scheduledAt: 'desc' } },
         placement: { include: { onboardingItems: true } },
         statusHistory: { orderBy: { createdAt: 'desc' } },
       },
     });
 
-    if (!application || application.opportunity.organizationId !== organization.id) {
+    const listingOrgId = application?.opportunity?.organizationId ?? application?.job?.organizationId ?? null;
+    if (!application || listingOrgId !== organization.id) {
       throw new AuthError(404, 'Application not found');
     }
 
@@ -96,11 +98,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       where: { id },
       include: {
         opportunity: { include: { organization: { select: { name: true } } } },
+        job: { include: { organization: { select: { name: true } } } },
         internProfile: { include: { user: true } },
       },
     });
 
-    if (!application || application.opportunity.organizationId !== organization.id) {
+    const listingOrgId = application?.opportunity?.organizationId ?? application?.job?.organizationId ?? null;
+    if (!application || listingOrgId !== organization.id) {
       throw new AuthError(404, 'Application not found');
     }
 
@@ -138,15 +142,17 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     });
 
     if (statusChanged && body.status) {
+      const listingTitle = application.opportunity?.title ?? application.job?.title ?? 'your application';
+      const orgName = application.opportunity?.organization?.name ?? application.job?.organization?.name ?? 'the company';
       await notifyUser({
         userId: application.internProfile.userId,
         title: 'Application status updated',
-        message: `Your application for ${application.opportunity.title} is now ${body.status.replaceAll('_', ' ').toLowerCase()}.`,
+        message: `Your application for ${listingTitle} is now ${body.status.replaceAll('_', ' ').toLowerCase()}.`,
         category: 'application',
         link: '/dashboard/intern',
         whatsApp: {
-          opportunityTitle: application.opportunity.title,
-          companyName: application.opportunity.organization?.name ?? 'the company',
+          opportunityTitle: listingTitle,
+          companyName: orgName,
           newStatus: body.status,
           note: body.notes ?? null,
           applicationId: application.id,
@@ -159,8 +165,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         await inviteSuccessStory({
           userId: application.internProfile.userId,
           email: application.internProfile.user.email,
-          organizationName: application.opportunity.organization?.name ?? 'your host organization',
-          internshipTitle: application.opportunity.title,
+          organizationName: orgName !== 'the company' ? orgName : 'your host organization',
+          internshipTitle: listingTitle,
         });
       }
     }

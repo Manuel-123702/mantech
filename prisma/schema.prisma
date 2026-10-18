@@ -507,8 +507,10 @@ model Application {
   id                String            @id @default(uuid())
   internProfileId   String
   internProfile     InternProfile     @relation(fields: [internProfileId], references: [id], onDelete: Cascade)
-  opportunityId     String
-  opportunity       InternshipOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  opportunityId     String?
+  opportunity       InternshipOpportunity? @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  jobId             String?
+  job               Job?                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
   applicationMethod ApplicationMethod @default(MANTECH)
   status            ApplicationStatus @default(SUBMITTED)
   coverLetter       String?
@@ -526,6 +528,7 @@ model Application {
 
   @@unique([internProfileId, opportunityId])
   @@index([opportunityId])
+  @@index([jobId])
   @@index([internProfileId])
   @@index([status])
 }
@@ -661,6 +664,10 @@ model CandidateAlert {
   regions      String[] @default([])
   cities       String[] @default([])
   workModes    String[] @default([])
+  // Instant WhatsApp ping for newly published matching listings. Defaults ON
+  // because alert subscribers asked to be notified — they can mute WhatsApp
+  // while keeping in-app + email alerts.
+  whatsappOptIn Boolean @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -902,6 +909,10 @@ model Job {
   location          String?
   workMode          WorkMode          @default(ONSITE)
   applicationMethod ApplicationMethod @default(MANTECH)
+  applicationUrl    String?
+  externalPlatform  String?
+  instructions      String?
+  contactEmail      String?
   salaryMinXAF      Int?
   salaryMaxXAF      Int?
   type              String            @default("FULL_TIME")
@@ -912,6 +923,7 @@ model Job {
   moderationStatus  ModerationStatus  @default(PENDING_REVIEW)
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
+  applications      Application[]
 
   @@index([slug])
   @@index([organizationId])

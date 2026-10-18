@@ -26,12 +26,20 @@ export async function GET() {
     if (!organization) throw new AuthError(400, 'Organization profile required');
 
     const interviews = await prisma.interview.findMany({
-      where: { application: { opportunity: { organizationId: organization.id } } },
+      where: {
+        application: {
+          OR: [
+            { opportunity: { organizationId: organization.id } },
+            { job: { organizationId: organization.id } },
+          ],
+        },
+      },
       include: {
         application: {
           include: {
             internProfile: { include: { user: { select: { fullName: true, email: true } } } },
             opportunity: true,
+            job: true,
           },
         },
       },
@@ -55,10 +63,12 @@ export async function POST(request: Request) {
       where: { id: body.applicationId },
       include: {
         opportunity: { include: { organization: { select: { name: true } } } },
+        job: { include: { organization: { select: { name: true } } } },
         internProfile: { include: { user: true } },
       },
     });
-    if (!application || application.opportunity.organizationId !== organization.id) {
+    const listingOrgId = application?.opportunity?.organizationId ?? application?.job?.organizationId ?? null;
+    if (!application || listingOrgId !== organization.id) {
       throw new AuthError(404, 'Application not found');
     }
 
@@ -100,10 +110,12 @@ export async function POST(request: Request) {
     });
 
     // ── In-app + email notification ────────────────────────────────────────────
+    const listingTitle = application.opportunity?.title ?? application.job?.title ?? 'your application';
+    const orgName = application.opportunity?.organization?.name ?? application.job?.organization?.name ?? 'the company';
     await notifyUser({
       userId: application.internProfile.userId,
       title: 'Interview scheduled',
-      message: `An interview was scheduled for ${application.opportunity.title}.`,
+      message: `An interview was scheduled for ${listingTitle}.`,
       category: 'interview',
       link: '/dashboard/intern',
     });
@@ -111,11 +123,10 @@ export async function POST(request: Request) {
     // ── WhatsApp interview alert (fire-and-forget) ─────────────────────────────
     const internPhone = application.internProfile.phone;
     if (internPhone) {
-      const companyName = application.opportunity.organization?.name ?? 'the company';
       const waText = formatInterviewWhatsAppAlert({
         candidateName: application.internProfile.user.fullName,
-        opportunityTitle: application.opportunity.title,
-        companyName,
+        opportunityTitle: listingTitle,
+        companyName: orgName,
         scheduledAt: body.scheduledAt,
         durationMinutes: body.durationMinutes || 45,
         type: body.type || 'online',

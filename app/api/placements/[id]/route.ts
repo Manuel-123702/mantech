@@ -23,7 +23,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       where: { id },
       include: {
         internProfile: { include: { user: { select: { id: true, email: true } } } },
-        application: { include: { opportunity: true } },
+        application: { include: { opportunity: true, job: true } },
       },
     });
     if (!placement || placement.organizationId !== organization.id) {
@@ -54,6 +54,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       });
     }
     if (body.status === 'COMPLETED') {
+      if (!placement.application || (!placement.application.opportunity && !placement.application.job)) {
+        throw new AuthError(404, 'Application not found');
+      }
       await prisma.application.update({
         where: { id: placement.applicationId },
         data: {
@@ -69,7 +72,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         userId: placement.internProfile.userId,
         email: placement.internProfile.user.email,
         organizationName: organization.name,
-        internshipTitle: placement.application.opportunity.title,
+        internshipTitle: placement.application.opportunity?.title ?? placement.application.job?.title ?? 'Placement',
       });
     }
 

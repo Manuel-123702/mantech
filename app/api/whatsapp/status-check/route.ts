@@ -69,8 +69,8 @@ export async function GET(request: NextRequest) {
 
     const nextInterview = application.interviews[0] || null;
     const candidateName = application.internProfile.user.fullName;
-    const opportunityTitle = application.opportunity.title;
-    const companyName = application.opportunity.organization.name;
+    const opportunityTitle = application.opportunity?.title ?? 'Unknown opportunity';
+    const companyName = application.opportunity?.organization.name ?? 'Unknown organization';
 
     const formattedWhatsAppReply = formatStatusQueryWhatsAppResponse({
       candidateName,
