@@ -3,7 +3,6 @@ import { requireAdminDashboard } from '@/lib/admin-dashboard';
 import {
   Headphones,
   MessageCircle,
-  Mail,
   BookOpen,
   ShieldAlert,
   FileQuestion,
@@ -34,15 +33,16 @@ export default async function AdminSupportPage() {
       badge: 'Primary channel',
     },
     {
-      title: 'Email support',
+      title: 'WhatsApp support',
       description:
-        'Async channel for detailed issues, document attachments, and escalation follow-ups. Organizations can attach screenshots, invoices, or signed contracts.',
-      value: APP_CONFIG.contacts.email,
-      href: `mailto:${APP_CONFIG.contacts.email}`,
-      icon: Mail,
-      tone: 'bg-blue-50 border-blue-200',
-      iconTone: 'text-blue-600',
-      badge: 'Async · 24h SLA',
+        'Instant channel for quick questions, urgent issues, and real-time escalation. Organizations can share screenshots and documents directly via WhatsApp.',
+      value: APP_CONFIG.contacts.whatsapp,
+      href: APP_CONFIG.support.whatsapp,
+      target: '_blank',
+      icon: WhatsAppIcon,
+      tone: 'bg-emerald-50 border-emerald-200',
+      iconTone: 'text-emerald-600',
+      badge: 'Instant · 15min SLA',
     },
     {
       title: 'Operational HQ',

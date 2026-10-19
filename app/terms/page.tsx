@@ -98,7 +98,7 @@ const SECTIONS = [
     bg: 'bg-teal-500/10 border-teal-500/20',
     content: [
       'These Terms are governed by the laws of the Republic of Cameroon. Any dispute arising from the use of MANTECH Nexus that cannot be resolved through direct conciliation shall be submitted to the competent courts of Douala, Cameroon.',
-      `For questions about these Terms, contact the MANTECH legal and compliance team at ${APP_CONFIG.support.email} or via WhatsApp Concierge at ${APP_CONFIG.support.phoneDisplay}. Response time for formal legal inquiries: within 3 business days.`,
+      `For questions about these Terms, contact the MANTECH legal and compliance team via WhatsApp Concierge at ${APP_CONFIG.support.phoneDisplay}. Response time for formal legal inquiries: within 3 business days.`,
       'MANTECH reserves the right to modify these Terms at any time. Continued use of the Platform after notification of material changes constitutes acceptance. Users who disagree with changes must delete their account within 14 days of notification.',
     ],
   },

@@ -16,7 +16,6 @@ import {
   Shield,
   Bell,
   Lock,
-  Mail,
   History,
   Briefcase,
   FileText,
@@ -231,18 +230,7 @@ export default async function InternSettingsDashboardPage() {
                   Get help with your profile or applications
                 </p>
               </a>
-              <a
-                href={`mailto:${APP_CONFIG.contacts.email}`}
-                className="block rounded-lg bg-blue-50 border border-blue-200 p-3 hover:bg-blue-100 transition"
-              >
-                <p className="font-semibold text-blue-900 inline-flex items-center gap-1.5">
-                  <Mail className="h-4 w-4" />
-                  Email support
-                </p>
-                <p className="text-blue-800 text-xs">
-                  {APP_CONFIG.contacts.email}
-                </p>
-              </a>
+
             </CardContent>
           </Card>
         </div>

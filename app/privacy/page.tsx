@@ -97,7 +97,7 @@ const PRIVACY_SECTIONS = [
     bg: 'bg-orange-500/10 border-orange-500/20',
     content: [
       'You have the following rights regarding your data on MANTECH: (1) Access — request a full export of all personal data we hold about you. (2) Correction — update any inaccurate data through your profile settings or by contacting us. (3) Deletion — request complete account deletion and data removal. (4) Portability — receive your profile data in a structured JSON format. (5) Restriction — request that we restrict processing of your data while a dispute is being resolved.',
-      `To exercise these rights, log into your MANTECH account and navigate to Settings > Privacy, or contact our data team at ${APP_CONFIG.support.email} with the subject line "Privacy Rights Request". We respond to all privacy rights requests within 5 business days.`,
+      `To exercise these rights, log into your MANTECH account and navigate to Settings > Privacy, or contact our data team via WhatsApp Concierge at ${APP_CONFIG.support.phoneDisplay} with the message "Privacy Rights Request". We respond to all privacy rights requests within 5 business days.`,
     ],
   },
 ];
@@ -204,8 +204,13 @@ export default function PrivacyPage() {
           <div className="flex flex-wrap items-center gap-4">
             <Link href="/terms" className="text-violet-400 hover:underline">Terms of Service</Link>
             <Link href="/security" className="text-emerald-400 hover:underline">Security</Link>
-            <a href={`mailto:${APP_CONFIG.support.email}`} className="text-cyan-400 hover:underline">
-              {APP_CONFIG.support.email}
+            <a
+              href={APP_CONFIG.support.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cyan-400 hover:underline"
+            >
+              {APP_CONFIG.support.phoneDisplay}
             </a>
           </div>
         </div>

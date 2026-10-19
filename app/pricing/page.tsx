@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Check, ArrowRight, Mail } from "lucide-react";
-import { MemberPlanSection, SubscriptionProcess } from "@/components/pricing/member-plan-section";
+import { Check, ArrowRight } from "lucide-react";
+import { MemberPlanSection } from "@/components/pricing/member-plan-section";
 import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
 import {
   SectionHeader,
@@ -73,14 +73,13 @@ function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean 
           differ in length. */}
       <p className="mt-2 min-h-10 text-sm text-slate-300 leading-relaxed">{plan.description}</p>
 
+      {/* Every plan is free right now — package data (priceXAF) is kept in
+          the database for later, but the public display says Free. */}
       <p className="mt-5 font-heading text-3xl font-extrabold text-white">
-        {plan.priceXAF === 0 ? "Free" : plan.priceXAF.toLocaleString("en-US")}
-        {plan.priceXAF > 0 && (
-          <span className="ml-1.5 text-sm font-medium text-slate-400">XAF</span>
-        )}
+        Free
       </p>
-      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-400">
-        {plan.code === "ENTERPRISE" ? "per semester / annual" : "per month"}
+      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-emerald-400">
+        {plan.code === "ENTERPRISE" ? "unlimited access" : "all features included"}
       </p>
 
       {wide && (
@@ -110,38 +109,24 @@ function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean 
         ))}
       </ul>
 
-      {/* Email is the primary route for a written record of the commitment,
-          WhatsApp the equal, faster alternative. Both appear on every card so
-          a visitor never has to hunt for a contact method. */}
-      <div className="mt-8 space-y-2.5">
+      {/* WhatsApp is the primary subscribe route; the contact form is the fallback. */}
+      <div className="mt-8 space-y-2.5 text-center">
         <a
-          href={`mailto:${APP_CONFIG.support.email}?subject=${encodeURIComponent(
-            `Subscription enquiry: ${plan.name}`
-          )}&body=${encodeURIComponent(
-            `Hello MANTECH Nexus,\n\nI would like to subscribe to the ${plan.name} package (${plan.code}).\n\nMy organization:\nNumber of interns to hire:\n\nThank you.`
-          )}`}
-          className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
-            recommended
-              ? "bg-blue-600 text-white shadow-md shadow-blue-600/25 hover:bg-blue-500"
-              : "border border-slate-700 bg-slate-800/90 text-white hover:bg-slate-700"
-          }`}
-        >
-          <Mail className="h-4 w-4" aria-hidden="true" />
-          Subscribe by email
-        </a>
-        <a
-          href={packageWhatsAppLink(plan)}
+          href={WHATSAPP_CTA}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-green-600/25 transition-colors hover:bg-[#128C7E]"
-        >
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-green-600/25 transition-all hover:bg-[#128C7E]"
+>
           <WhatsAppIcon className="h-4 w-4" title="WhatsApp" />
           Subscribe on WhatsApp
         </a>
+        <Link
+          href="/contact"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/90 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-all hover:bg-slate-700 hover:text-white"
+>
+          Contact us
+        </Link>
       </div>
-    </article>
-  );
-}
 
 export default function PricingPage() {
   const [packages, setPackages] = useState<PublicPackage[]>([]);
@@ -264,9 +249,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Questions block. The email button is visually primary because a
-          subscription is a written commitment we need a record of; WhatsApp
-          sits beside it at equal size for a faster conversation. */}
+      {/* Questions block: WhatsApp first, contact form as fallback. */}
       <section className="section-padding bg-slate-950 relative overflow-hidden border-b border-slate-900 text-white">
         <div className="container-mantech">
           <FadeIn>
@@ -277,16 +260,10 @@ export default function PricingPage() {
               </h2>
               <p className="mt-4 text-slate-300 max-w-xl mx-auto relative z-10">
                 We discuss commercial details directly. No online payment
-                processing — just a direct conversation.
+                processing - just a direct conversation.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center relative z-10">
-                {/* Email and WhatsApp sit side by side with equal weight */}
-                <a href={`mailto:${APP_CONFIG.support.email}`}>
-                  <button className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/25 transition-all hover:bg-blue-500">
-                    <Mail className="h-4 w-4" aria-hidden="true" />
-                    Email us
-                  </button>
-                </a>
+                {/* WhatsApp is the primary contact channel. */}
                 <a
                   href={WHATSAPP_CTA}
                   target="_blank"

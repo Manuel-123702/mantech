@@ -104,3 +104,13 @@ export function waSharePassportLink(opts: {
 export function waDisplayPhone(): string {
   return APP_CONFIG.contacts.whatsappFormatted || APP_CONFIG.contacts.whatsapp;
 }
+
+/** Recruiter → candidate on WhatsApp (uses the intern's own phone number). */
+export function waCandidateLink(phone: string | null | undefined, context?: string): string | null {
+  const raw = (phone || '').replace(/\D/g, '');
+  if (!raw) return null;
+  // Normalise local Cameroon numbers (6XXXXXXXX) to international form.
+  const to = raw.length === 9 ? `237${raw}` : raw;
+  const msg = `Hello${context ? ` — ${context}` : ''}. I am a recruiter on MANTECH Nexus and would like to discuss an opportunity with you.`;
+  return `https://wa.me/${to}?text=${encodeURIComponent(msg)}`;
+}

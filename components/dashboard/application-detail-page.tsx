@@ -26,6 +26,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { WhatsAppIcon } from '@/components/shared/whatsapp-icon';
+import { waCandidateLink } from '@/lib/whatsapp';
 import {
   ArrowLeft,
   FileText,
@@ -1173,12 +1175,18 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
               <CardTitle>Contact</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
-              <Button variant="outline" asChild className="w-full justify-start">
-                <a href={`mailto:${app.internProfile.user.email}`}>
-                  <Mail className="mr-2 h-4 w-4" />
-                  Email candidate
-                </a>
-              </Button>
+              {waCandidateLink(app.internProfile.phone) ? (
+                <Button variant="outline" asChild className="w-full justify-start">
+                  <a
+                    href={waCandidateLink(app.internProfile.phone, 'regarding your application on MANTECH Nexus')!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <WhatsAppIcon className="mr-2 h-4 w-4" title="WhatsApp" />
+                    WhatsApp candidate
+                  </a>
+                </Button>
+              ) : null}
               {app.internProfile.phone && (
                 <Button variant="outline" asChild className="w-full justify-start">
                   <a href={`tel:${app.internProfile.phone}`}>

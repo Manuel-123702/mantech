@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Clock,
-  Mail,
   MapPin,
   MessageCircle,
   Send,
@@ -96,8 +95,6 @@ export default function ContactPage() {
     subject: INQUIRY_PRESETS[0].subject,
     message: '',
   });
-
-  const EMAIL = APP_CONFIG.support.email;
 
   const handlePresetSelect = (preset: InquiryPreset) => {
     setSelectedPreset(preset.id);
@@ -271,24 +268,7 @@ export default function ContactPage() {
                 </div>
               </a>
 
-              {/* SECONDARY CHANNEL: EMAIL */}
-              <a
-                href={`mailto:${EMAIL}?subject=${encodeURIComponent(form.subject)}`}
-                className="block group rounded-3xl border border-slate-800 bg-slate-900/70 p-5 shadow-lg hover:border-blue-500/50 hover:bg-slate-850/80 transition-all"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 group-hover:scale-105 transition-transform">
-                    <Mail className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-sm text-white group-hover:text-blue-300 transition-colors">
-                      Official Written Inquiries
-                    </div>
-                    <div className="text-xs font-mono text-cyan-300 mt-0.5">{EMAIL}</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">Formal correspondence & conventions</div>
-                  </div>
-                </div>
-              </a>
+
 
               {/* HEADQUARTERS & REGIONAL OFFICES */}
               <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 space-y-4">

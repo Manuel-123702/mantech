@@ -1,0 +1,10 @@
+﻿                <a
+                  href={WHATSAPP_CTA}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <button className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-green-600/25 transition-all hover:bg-[#128C7E]">
+                    <WhatsAppIcon className="h-4 w-4" title="WhatsApp" />
+                    Chat on WhatsApp
+                  </button>
+                </a>

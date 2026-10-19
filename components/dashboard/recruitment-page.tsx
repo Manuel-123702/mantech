@@ -561,11 +561,6 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                             Application
                           </Button>
                         </Link>
-                        <Button size="sm" variant="ghost" asChild>
-                          <a href={`mailto:${p.internProfile.user.email}`}>
-                            Email
-                          </a>
-                        </Button>
                       </div>
                     </CardContent>
                   </Card>

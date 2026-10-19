@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, ArrowRight, Sparkles, ShieldCheck, Zap, Users, Mail } from "lucide-react";
+import { Check, ArrowRight, Sparkles, ShieldCheck, Zap, Users } from "lucide-react";
 import { FadeIn, MotionSection, MotionItem } from "@/components/shared/section-animations";
 import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
 import { APP_CONFIG } from "@/lib/config";
@@ -251,15 +251,13 @@ export function SubscriptionProcess({
         </div>
         <div className="flex flex-wrap gap-2.5 sm:flex-nowrap lg:shrink-0">
           <a
-            href={`mailto:${APP_CONFIG.support.email}?subject=${encodeURIComponent(
-              "MANTECH Nexus subscription enquiry"
-            )}&body=${encodeURIComponent(
-              "Hello MANTECH Nexus,\n\nI would like to subscribe to a plan. Here is what I need:\n\nOrganization:\nRole(s) to fill:\nNumber of interns:\n\nThank you."
-            )}`}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-xs font-bold text-white shadow-md shadow-blue-600/25 transition-colors hover:bg-blue-500"
+            href={APP_CONFIG.support.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 text-xs font-bold text-white shadow-md shadow-green-600/25 transition-colors hover:bg-[#128C7E]"
           >
-            <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-            Email Concierge
+            <WhatsAppIcon className="h-3.5 w-3.5" title="WhatsApp" />
+            Message on WhatsApp
           </a>
           <a
             href={APP_CONFIG.support.whatsapp}

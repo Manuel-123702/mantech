@@ -170,10 +170,12 @@ export default function AccessibilityPage() {
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <a
-                href={`mailto:${process.env.NEXT_PUBLIC_MANTECH_EMAIL || 'tessohmanuel@gmail.com'}?subject=Accessibility Feedback`}
-                className="inline-flex items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-600/30"
+                href={process.env.NEXT_PUBLIC_MANTECH_WHATSAPP || process.env.MANTECH_WHATSAPP || 'https://wa.me/237650921917'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/30"
               >
-                Email Accessibility Team <ArrowRight className="w-4 h-4" />
+                WhatsApp Accessibility Team <ArrowRight className="w-4 h-4" />
               </a>
               <Link href="/contact">
                 <button className="rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-all">

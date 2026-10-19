@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { rateLimit, clientKey, rateLimitHeaders, RATE_LIMITS } from '@/lib/rate-limit';
 import { resolveRoles, dashboardsForRoles, type PlatformRole } from '@/lib/roles';
-import { ADMIN_OTP_COOKIE, getOtpSessionSecret, verifyAdminOtpSession } from '@/lib/admin-otp';
 
 /**
  * MANTECH Nexus Security & Authorization Middleware
@@ -221,39 +220,6 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
       // (route-level guards will catch unauthorized access)
     }
   }
-
-  // â”€â”€ Admin two-factor (OTP) gate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  // The admin dashboard requires a second factor: after the normal Clerk
-  // email+password sign-in, a signed httpOnly cookie proves the 6-digit
-  // WhatsApp code was verified within the last 60 minutes. Fails closed on
-  // any configuration problem. The verify page itself (/dashboard/admin-verify)
-  // is intentionally not covered by these prefixes.
-  const isAdminPage =
-    pathname === '/dashboard/admin' || pathname.startsWith('/dashboard/admin/');
-  const isAdminApi =
-    pathname.startsWith('/api/admin') || pathname.startsWith('/api/dashboard/admin');
-  if (isAdminPage || isAdminApi) {
-    let verified = false;
-    try {
-      const token = request.cookies.get(ADMIN_OTP_COOKIE)?.value;
-      const session = await verifyAdminOtpSession(token, { secret: getOtpSessionSecret() });
-      verified = Boolean(session);
-    } catch {
-      verified = false;
-    }
-    if (!verified) {
-      if (isAdminApi) {
-        return NextResponse.json(
-          { error: 'Admin two-factor verification required.' },
-          { status: 401, headers: response.headers },
-        );
-      }
-      const gate = new URL('/dashboard/admin-verify', request.url);
-      if (pathname !== '/dashboard/admin') gate.searchParams.set('next', pathname);
-      return NextResponse.redirect(gate);
-    }
-  }
-
   return response;
 });
 

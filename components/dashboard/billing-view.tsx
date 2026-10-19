@@ -246,8 +246,8 @@ export async function BillingView({ organization }: { organization: BillingOrgan
                 <span>Use the WhatsApp concierge button</span>
               </p>
               <p>
-                <span className="font-semibold text-slate-700">Email:</span>{' '}
-                {APP_CONFIG.contacts.email}
+                <span className="font-semibold text-slate-700">Phone:</span>{' '}
+                {APP_CONFIG.contacts.whatsappFormatted}
               </p>
               <p>
                 <span className="font-semibold text-slate-700">Working hours:</span>{' '}

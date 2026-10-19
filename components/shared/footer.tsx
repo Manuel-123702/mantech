@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Logo } from "@/components/shared/logo";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
 import { SubscriptionProcess } from "@/components/pricing/member-plan-section";
 import { APP_CONFIG } from "@/lib/config";
 
@@ -178,15 +179,17 @@ export function Footer() {
                   </svg>
                 </motion.a>
 
-                {/* Email */}
+                {/* WhatsApp */}
                 <motion.a
-                  href={`mailto:${SUPPORT.email}`}
+                  href={SOCIAL.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ y: -2, scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-300 transition-colors hover:bg-cyan-600/30 hover:border-cyan-500/40 hover:text-white"
-                  aria-label="Email"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-300 transition-colors hover:bg-emerald-600/30 hover:border-emerald-500/40 hover:text-white"
+                  aria-label="WhatsApp"
                 >
-                  <Mail className="h-4 w-4" />
+                  <WhatsAppIcon className="h-4 w-4" title="WhatsApp" />
                 </motion.a>
               </div>
             </motion.div>
@@ -256,10 +259,12 @@ export function Footer() {
                 Security
               </Link>
               <a
-                href={`mailto:${SUPPORT.email}`}
+                href={SUPPORT.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hover:text-slate-300 transition-colors"
               >
-                {SUPPORT.email}
+                {SUPPORT.phoneDisplay}
               </a>
             </div>
           </div>

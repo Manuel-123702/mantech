@@ -288,12 +288,14 @@ export default async function AdminConfigurationPage() {
               </a>
             </li>
             <li>
-              • Email support:{" "}
+              • WhatsApp support:
               <a
-                href={`mailto:${APP_CONFIG.support.email}`}
-                className="font-semibold text-blue-700 hover:underline"
+                href={APP_CONFIG.support.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-emerald-600 hover:underline"
               >
-                {APP_CONFIG.support.email}
+                {APP_CONFIG.support.phoneDisplay}
               </a>
             </li>
             <li>• Package catalog and usage limits are managed from the Packages page.</li>
