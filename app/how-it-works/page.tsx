@@ -144,26 +144,37 @@ const roleFlows = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="overflow-hidden">
-      {/* ───── HERO SECTION (BLUR-REVEAL) ───── */}
-      <section className="surface-page relative overflow-hidden border-b border-border/70 py-20 lg:py-28">
-        <div className="pointer-events-none absolute inset-0 bg-grid opacity-30" />
-        <div className="container-mantech relative px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
+    <div className="overflow-hidden bg-[#070d18]">
+      {/* ───── HERO SECTION: DARK NEXUS + AMBER ───── */}
+      <section className="relative overflow-hidden border-b border-slate-800/80 py-24 lg:py-32">
+        <div
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage: "url('/images/amber_tech_bg.jpg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            mixBlendMode: 'luminosity',
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#070d18]/95 via-[#0a1422]/90 to-[#070d18]/95" />
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-amber-600/12 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-cyan-600/12 blur-[130px] rounded-full pointer-events-none" />
+        <div className="container-mantech relative z-10 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, filter: "blur(10px)", y: 24 }}
-            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <FloatingBadge className="mb-4">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary shadow-sm">
-                <Sparkles className="w-3.5 h-3.5" />
-                The Complete Lifecycle Architecture
+            <span className="mb-5 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-amber-300 backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5" /> The Complete Lifecycle Architecture
+            </span>
+            <h1 className="font-heading text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl mt-2">
+              End-to-End{' '}
+              <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
+                Internship Governance
               </span>
-            </FloatingBadge>
-            <h1 className="font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              End-to-End Internship Governance
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
               MANTECH manages every single phase from opportunity discovery to
               verified credential endorsement — delivering an audited ecosystem,
               not an unregulated job board.
@@ -249,7 +260,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* ───── ROLE-SPECIFIC FLOWS WITH FLIP3D ───── */}
-      <section className="py-24 surface-page border-t border-border/70 relative">
+      <section className="py-24 bg-[#060c17] border-t border-slate-800/80 relative">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="Targeted Workflows"
@@ -299,7 +310,7 @@ export default function HowItWorksPage() {
                       </ol>
                     </div>
 
-                    <div className="mt-8 pt-5 border-t border-slate-100">
+                    <div className="mt-8 pt-5 border-t border-slate-800">
                       <Link
                         href={flow.href}
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 hover:gap-2.5 transition-all"

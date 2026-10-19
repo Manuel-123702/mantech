@@ -1,19 +1,10 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
 /**
  * Professional portrait avatars for editorial content (success stories and
  * testimonials).
- *
- * These entries are illustrative, not real accounts, so there is no uploaded
- * photo to show. Rather than render name-derived initials — which surface the
- * person's first name through the image and read as a placeholder — we render
- * a deterministic, professional-looking flat portrait.
- *
- * The look is deliberately abstract: no facial features are drawn, so the
- * artwork does not purport to depict the real appearance of a named person.
- * Variety is derived from a stable hash of the id, so a given person always
- * gets the same portrait across renders and builds.
- *
- * Rendered as an inline SVG data URI (no network request, no layout shift),
- * which the CSP `img-src 'self' data: blob: https:` already permits.
  */
 
 type AvatarTone = {
@@ -46,15 +37,22 @@ function hash(input: string): number {
   return h >>> 0;
 }
 
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return 'MN';
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 /**
  * Builds the SVG for a flat "professional headshot" portrait: shoulders, neck,
- * head, and hair. No eyes or mouth are drawn — this is a stylised silhouette,
- * not an attempt at a likeness.
+ * head, and hair. Unique gradient IDs prevent collision across multiple cards.
  */
-function buildPortrait(seed: string): string {
+function buildPortrait(seed: string, name: string): string {
   const h = hash(seed);
   const tone = TONES[h % TONES.length];
-  // Vary the silhouette slightly so a grid of avatars does not look stamped.
+  const bgId = `bg_${h}`;
+  const figId = `fig_${h}`;
   const hairStyle = (h >>> 3) % 3;
   const shoulderY = 78 + ((h >>> 6) % 5);
   const headR = 15 + ((h >>> 9) % 2);
@@ -71,16 +69,16 @@ function buildPortrait(seed: string): string {
 
   const svg = [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">`,
-    `<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">`,
+    `<defs><linearGradient id="${bgId}" x1="0" y1="0" x2="1" y2="1">`,
     `<stop offset="0" stop-color="${tone.background}"/><stop offset="1" stop-color="${tone.accent}"/>`,
     `</linearGradient>`,
-    `<linearGradient id="fig" x1="0" y1="0" x2="0" y2="1">`,
+    `<linearGradient id="${figId}" x1="0" y1="0" x2="0" y2="1">`,
     `<stop offset="0" stop-color="${tone.garment}"/><stop offset="1" stop-color="${tone.background}"/>`,
     `</linearGradient></defs>`,
     // Backdrop
-    `<rect width="100" height="100" rx="22" fill="url(#bg)"/>`,
+    `<rect width="100" height="100" rx="20" fill="url(#${bgId})"/>`,
     // Shoulders / torso
-    `<path d="M12 100 q0 -${100 - shoulderY} 38 -${100 - shoulderY} 38 0 z" fill="url(#fig)"/>`,
+    `<path d="M12 100 q0 -${100 - shoulderY} 38 -${100 - shoulderY} 38 0 z" fill="url(#${figId})"/>`,
     // Collar accent
     `<path d="M38 ${100 - (100 - shoulderY)} L50 88 L62 ${100 - (100 - shoulderY)} z" fill="${tone.accent}" opacity="0.85"/>`,
     // Neck
@@ -103,25 +101,67 @@ export type PersonAvatarProps = {
   /** Accessible label; the name is appropriate here because it is shown adjacent. */
   name: string;
   className?: string;
+  /** Optional URL of a real profile photo */
+  imageUrl?: string;
 };
 
 /**
- * Renders a deterministic professional portrait. The person is not identifiable
- * from the artwork alone; `name` is used only for the alt text.
+ * Renders a professional portrait.
+ * Includes an instant initials gradient base, referrerPolicy="no-referrer",
+ * and smooth fallback so profile portraits never display as broken or empty boxes.
  */
-export function PersonAvatar({ id, name, className }: PersonAvatarProps) {
-  const src = buildPortrait(`${id}:${name}`);
+export function PersonAvatar({ id, name, className = '', imageUrl }: PersonAvatarProps) {
+  const fallbackSrc = buildPortrait(`${id}:${name}`, name);
+  const [imgSrc, setImgSrc] = useState<string>(imageUrl || fallbackSrc);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
+
+  useEffect(() => {
+    setImgSrc(imageUrl || fallbackSrc);
+    setIsLoaded(false);
+    setHasError(false);
+  }, [imageUrl, fallbackSrc]);
+
+  const initials = getInitials(name);
+  const h = hash(`${id}:${name}`);
+  const tone = TONES[h % TONES.length];
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- inline SVG data URI; next/image adds no value here and cannot optimise it
-    <img
-      src={src}
-      alt={`${name} — illustrated portrait`}
-      className={className}
-      loading="lazy"
-      decoding="async"
-      width={48}
-      height={48}
-    />
+    <div
+      className={`relative shrink-0 overflow-hidden select-none ${className}`}
+      style={{
+        backgroundColor: tone.background,
+      }}
+    >
+      {/* Background initials that always exist so avatar is NEVER empty or blank */}
+      <div
+        className="absolute inset-0 flex items-center justify-center font-bold text-white/90 text-sm tracking-wider"
+        style={{
+          background: `linear-gradient(135deg, ${tone.background}, ${tone.accent})`,
+        }}
+      >
+        <span>{initials}</span>
+      </div>
+
+      {/* Actual photo / fallback SVG portrait */}
+      <img
+        src={hasError ? fallbackSrc : imgSrc}
+        alt={`${name} — profile portrait`}
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+          isLoaded || hasError ? 'opacity-100' : 'opacity-0'
+        }`}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => {
+          setHasError(true);
+          if (imgSrc !== fallbackSrc) {
+            setImgSrc(fallbackSrc);
+          }
+        }}
+        referrerPolicy="no-referrer"
+        crossOrigin="anonymous"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
   );
 }

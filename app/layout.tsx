@@ -64,11 +64,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
         />
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased bg-slate-950 text-foreground">
         <AuthProvider>
           <LoadingScreen />
           <Navbar />
-          <main className="min-h-screen pt-24">{children}</main>
+          <main className="min-h-screen">{children}</main>
           <Footer />
           <WhatsAppFloat />
           <ScrollToTop />

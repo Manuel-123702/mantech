@@ -21,7 +21,6 @@ import { useTaxonomy } from '@/lib/use-taxonomy';
 import { WhatsAppIcon } from '@/components/shared/whatsapp-icon';
 import { APP_CONFIG } from '@/lib/config';
 import {
-  MotionSection,
   MotionItem,
   AnimatedCard,
   FloatingBadge,
@@ -108,7 +107,14 @@ export default function FieldsPage() {
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           {error && <p role="alert" className="mb-6 text-center text-sm text-red-700">{error}</p>}
           
-          <MotionSection motion="flip3D" stagger={0.06} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* CSS-safe grid: cards fade in on mount (no viewport observer), so text
+              is never left invisible when the IntersectionObserver doesn't fire. */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } } }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
             {fields.map((field) => {
               const Icon = FIELD_ICONS[field.slug] || Cpu;
               const gradient = FIELD_COLORS[field.slug] || 'from-slate-600 to-slate-700';
@@ -160,7 +166,7 @@ export default function FieldsPage() {
                 </MotionItem>
               );
             })}
-          </MotionSection>
+          </motion.div>
         </div>
       </section>
 

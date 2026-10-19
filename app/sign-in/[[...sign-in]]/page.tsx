@@ -52,7 +52,7 @@ export default function SignInPage() {
                     footerActionLink: 'text-cyan-400 hover:text-cyan-300 font-bold',
                   },
                 }}
-                fallbackRedirectUrl="/dashboard"
+                fallbackRedirectUrl="/"
               />
             </Suspense>
           ) : (
