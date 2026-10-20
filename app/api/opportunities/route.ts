@@ -118,7 +118,7 @@ export async function POST(request: Request) {
         externalPlatform: body.externalPlatform,
         instructions: body.instructions,
         contactEmail: body.contactEmail || null,
-        moderationStatus: body.saveAsDraft ? 'DRAFT' : 'PENDING_REVIEW',
+        moderationStatus: body.saveAsDraft ? 'DRAFT' : 'PUBLISHED',
       },
     });
 

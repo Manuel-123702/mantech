@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
         expiryDate: new Date(expiryDate),
         isRemote: isRemote ?? false,
         isFeatured: isFeatured ?? false,
-        moderationStatus: moderationStatus || 'PENDING_REVIEW',
+        moderationStatus: moderationStatus || 'PUBLISHED',
         organizationId,
         applicationUrl: applicationUrl || null,
       },

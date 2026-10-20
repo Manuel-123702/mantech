@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { ModerationStatus } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { requireCompanyDashboard } from '@/lib/company-dashboard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, Clock, Users, Plus } from 'lucide-react';
 
-const STATUS_CONFIG: Record<string, { variant: 'default' | 'secondary' | 'destructive' | 'outline'; label: string }> = {
+const STATUS_CONFIG: Record<ModerationStatus, { variant: 'default' | 'secondary' | 'destructive' | 'outline'; label: string }> = {
   DRAFT: { variant: 'outline', label: 'Draft' },
   PENDING_REVIEW: { variant: 'secondary', label: 'Pending Review' },
   APPROVED: { variant: 'default', label: 'Approved' },

@@ -18,6 +18,7 @@ import {
   Globe,
   Star,
   Play,
+  Plus,
   Zap,
   Lock,
   FileCheck2,
@@ -213,6 +214,9 @@ export default function HomePage() {
   const [regions, setRegions] = useState<TaxonomyRegion[]>([]);
   const [companies, setCompanies] = useState<VerifiedOrganization[]>([]);
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
+  const [featuredJobs, setFeaturedJobs] = useState<any[]>([]);
+  const [universities, setUniversities] = useState<any[]>([]);
+  const [people, setPeople] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Hero search form state
@@ -242,12 +246,18 @@ export default function HomePage() {
           taxonomyRes,
           companiesRes,
           testimonialsRes,
+          jobsRes,
+          universitiesRes,
+          peopleRes,
         ] = await Promise.all([
           fetch("/api/stats"),
           fetch("/api/internships"),
           fetch("/api/taxonomy"),
           fetch("/api/companies"),
           fetch("/api/testimonials"),
+          fetch("/api/jobs?limit=12"),
+          fetch("/api/universities?limit=12"),
+          fetch("/api/people?limit=12"),
         ]);
 
         if (statsRes.ok) {
@@ -258,7 +268,7 @@ export default function HomePage() {
         if (opportunitiesRes.ok) {
           const opportunitiesData = await opportunitiesRes.json();
           setFeaturedInternships(
-            (opportunitiesData.internships || []).slice(0, 3),
+            (opportunitiesData.internships || []).slice(0, 8),
           );
         }
 
@@ -295,6 +305,21 @@ export default function HomePage() {
           setTestimonials(
             (testData.testimonials || []).slice(0, 3) as TestimonialItem[],
           );
+        }
+
+        if (jobsRes.ok) {
+          const jobsData = await jobsRes.json();
+          setFeaturedJobs((jobsData.jobs || []).slice(0, 12));
+        }
+
+        if (universitiesRes.ok) {
+          const uniData = await universitiesRes.json();
+          setUniversities((uniData.universities || []).slice(0, 12));
+        }
+
+        if (peopleRes.ok) {
+          const peopleData = await peopleRes.json();
+          setPeople((peopleData.people || []).slice(0, 12));
         }
       } catch (e) {
         console.error("Failed loading live homepage data:", e);
@@ -917,6 +942,199 @@ export default function HomePage() {
 
 
       {/* --- THE COMPLETE INTERNSHIP LIFECYCLE (SRS Section 1, 2, 3) --- */}
+
+      {/* --- LATEST JOBS FROM THE MARKETPLACE --- */}
+      <section className="py-20 bg-slate-950 border-b border-slate-800/50">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
+                Latest Job Openings
+              </h2>
+              <p className="mt-2 text-slate-400 text-sm">
+                Freshly posted positions from verified employers across Cameroon.
+              </p>
+            </div>
+            <Link href="/jobs" className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
+              View All Jobs <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredJobs.length > 0 ? (
+              featuredJobs.map((job) => (
+                <div key={job.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 hover:border-blue-500/50 hover:bg-slate-800/90 transition-all duration-200">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-blue-900/50 flex items-center justify-center text-blue-400">
+                        <Building2 className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white truncate">{job.organization?.name || "Verified Employer"}</p>
+                        <p className="text-[10px] text-slate-500">{job.city}, Cameroon</p>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="text-[10px]">{job.type}</Badge>
+                  </div>
+                  <Link href={`/jobs/${job.slug}`}>
+                    <h3 className="text-base font-bold text-white mb-2 hover:text-blue-400 transition-colors line-clamp-1">{job.title}</h3>
+                  </Link>
+                  <p className="text-sm text-slate-400 line-clamp-2 mb-4">{job.description || "Exciting career opportunity with a verified employer in Cameroon."}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {(job.requiredSkills || []).slice(0, 3).map((skill: string) => (
+                      <span key={skill} className="px-2 py-1 rounded-md bg-slate-800 text-[10px] text-slate-300 border border-slate-700/60">{skill}</span>
+                    ))}
+                  </div>
+                  <div className="mt-auto pt-4 border-t border-slate-800/50 flex items-center justify-between text-xs">
+                    <span className="text-emerald-400 font-bold">{job.salaryMinXAF ? job.salaryMinXAF.toLocaleString() + " XAF" : "Competitive"}</span>
+                    <span className="text-slate-500">{job.workMode}</span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-3 py-16 text-center text-slate-500">
+                No jobs posted yet. Be the first to <Link href="/dashboard/company/jobs/create" className="text-blue-400 hover:underline">post a job</Link>.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* --- POST AN OPPORTUNITY (EMPLOYERS & HOSTS) --- */}
+      <section className="py-20 bg-slate-950 border-b border-slate-800/50">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-blue-900/20 via-slate-900 to-indigo-900/80 p-8 sm:p-12 text-center shadow-2xl shadow-blue-900/20 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-6 uppercase tracking-wider">
+                <Briefcase className="w-4 h-4" /> For Employers &amp; Hosts
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                Ready to post your first opportunity?
+              </h2>
+              <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+                Publish a job or internship opportunity and start attracting verified
+                talent from across Cameroon&apos;s 10 regions. Listings go through a
+                quick moderation review before appearing on the marketplace.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/dashboard/company/jobs/create">
+                  <Button size="lg" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20">
+                    <Plus className="w-5 h-5 mr-2" />
+                    Post a Job
+                  </Button>
+                </Link>
+                <Link href="/dashboard/company/opportunities/create">
+                  <Button size="lg" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/20 border border-transparent">
+                    <Briefcase className="w-5 h-5 mr-2" />
+                    Create Internship Opportunity
+                  </Button>
+                </Link>
+              </div>
+              <p className="mt-6 text-xs text-slate-400">
+                Already have an account?{' '}
+                <Link href="/dashboard/company" className="text-blue-400 hover:underline font-medium">
+                  Go to your dashboard
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- VERIFIED UNIVERSITIES & ACADEMIC PARTNERS --- */}
+      <section className="py-20 bg-[#080d1a] border-b border-slate-800/80">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
+                University Partners
+              </h2>
+              <p className="mt-2 text-slate-400 text-sm">
+                Accredited institutions hosting internships and placements across Cameroon&apos;s 10 regions.
+              </p>
+            </div>
+            <Link href="/universities" className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
+              View All Universities <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {universities.length > 0 ? (
+              universities.map((uni) => (
+                <div key={uni.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 text-center hover:border-blue-500/50 transition-all duration-200">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-900 to-indigo-900 flex items-center justify-center mx-auto mb-3 text-white font-bold text-xl shadow-lg">
+                    {uni.name?.charAt(0) || "U"}
+                  </div>
+                  <h4 className="text-sm font-bold text-white mb-1 truncate">{uni.name}</h4>
+                  <p className="text-[10px] text-slate-500 mb-4">{uni.city || uni.region?.name || "Cameroon"}</p>
+                  <Link href="/universities" className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-400 hover:text-blue-300">
+                    Explore <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-4 py-16 text-center text-slate-500">
+                No university partners listed yet.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* --- REGISTERED TALENT / INTERN COMMUNITY --- */}
+      <section className="py-20 bg-slate-950 border-b border-slate-800/50">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
+                Registered Talent Pool
+              </h2>
+              <p className="mt-2 text-slate-400 text-sm">
+                Verified interns and candidates ready for placement across Cameroon.
+              </p>
+            </div>
+            <Link href="/dashboard/intern" className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
+              View All Talent <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {people.length > 0 ? (
+              people.map((person) => (
+                <div key={person.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 hover:border-blue-500/50 transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center text-blue-400 overflow-hidden">
+                      {person.avatarUrl ? (
+                        <Image src={person.avatarUrl} alt="" width={40} height={40} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-sm font-bold">
+                          {person.fullName?.charAt(0) || "U"}
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-white truncate">{person.fullName}</p>
+                      <p className="text-[10px] text-slate-500">{person.internProfile?.qualification || "Candidate"}</p>
+                    </div>
+                  </div>
+                  {person.internProfile?.city && (
+                    <p className="text-[10px] text-slate-500 mb-3">{person.internProfile.city}, Cameroon</p>
+                  )}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {(person.internProfile?.skills || []).slice(0, 3).map((s: { skill: { name: string } }) => (
+                      <span key={s.skill.name} className="px-2 py-1 rounded-md bg-slate-800 text-[10px] text-slate-300 border border-slate-700/60">{s.skill.name}</span>
+                    ))}
+                  </div>
+                  <div className="text-xs text-slate-500">{person.internProfile?.profileCompleted ? "Profile complete" : "Building profile"}</div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-4 py-16 text-center text-slate-500">
+                No registered talent yet. Join the community <Link href="/sign-up" className="text-blue-400 hover:underline">here</Link>.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       <section className="py-24 bg-slate-900 text-white relative">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <MotionSection motion="rise" stagger={0.12}>
