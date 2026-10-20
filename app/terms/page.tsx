@@ -134,7 +134,7 @@ export default function TermsPage() {
               </span>
             </h1>
             <p className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
-              These Terms govern your use of MANTECH Nexus — Cameroon's national professional internship marketplace. Please read them carefully before creating an account.
+              These Terms govern your use of MANTECH Nexus — Cameroon&apos;s national professional internship marketplace. Please read them carefully before creating an account.
             </p>
 
             {/* Section shortcuts */}

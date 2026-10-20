@@ -103,7 +103,7 @@ export default function AccessibilityPage() {
               </span>
             </h1>
             <p className="mx-auto mt-6 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-300">
-              MANTECH Nexus is designed so that every student, recent graduate, and enterprise recruiter across Cameroon's 10 regions can use the platform — regardless of disability, device quality, internet speed, or assistive technology.
+              MANTECH Nexus is designed so that every student, recent graduate, and enterprise recruiter across Cameroon&apos;s 10 regions can use the platform — regardless of disability, device quality, internet speed, or assistive technology.
             </p>
 
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-2xl mx-auto">

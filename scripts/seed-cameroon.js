@@ -41,102 +41,13 @@ const REGIONS = [
   { code: 'REG_EAST', name: 'East', capital: 'Bertoua' },
 ];
 
-const FIELDS_CONFIG = [
-  {
-    name: 'Software & Cloud Engineering',
-    slug: 'software-cloud-engineering',
-    category: 'Technology & IT',
-    specializations: ['Full-Stack Development', 'Mobile App Development', 'Cloud Architecture & DevOps', 'Embedded Systems & IoT'],
-  },
-  {
-    name: 'Cybersecurity & Network Systems',
-    slug: 'cybersecurity-networks',
-    category: 'Technology & IT',
-    specializations: ['Network Infrastructure & Routing', 'SOC Analysis & Incident Response', 'Information Security Auditing', 'Telecom Systems'],
-  },
-  {
-    name: 'Data Science & Artificial Intelligence',
-    slug: 'data-science-ai',
-    category: 'Technology & IT',
-    specializations: ['Machine Learning Engineering', 'Business Intelligence & Analytics', 'Data Engineering & Pipelines', 'Statistical Modeling'],
-  },
-  {
-    name: 'Finance, Banking & Accounting',
-    slug: 'finance-accounting',
-    category: 'Business & Finance',
-    specializations: ['Corporate Finance & M&A', 'OHADA Accounting & Audit', 'Credit Risk & Retail Banking', 'Microfinance Operations', 'Treasury & Forex'],
-  },
-  {
-    name: 'Marketing, Growth & Communications',
-    slug: 'marketing-communications',
-    category: 'Business & Finance',
-    specializations: ['Digital Marketing & SEO', 'Brand & Product Marketing', 'Corporate Communications & PR', 'Community Management'],
-  },
-  {
-    name: 'Human Resources & Talent Management',
-    slug: 'human-resources',
-    category: 'Business & Finance',
-    specializations: ['Talent Acquisition & Recruiting', 'Payroll & Labor Law (Cameroon)', 'Training & People Development', 'HR Operations'],
-  },
-  {
-    name: 'Supply Chain, Logistics & Procurement',
-    slug: 'supply-chain-logistics',
-    category: 'Operations & Engineering',
-    specializations: ['Port Logistics & Customs Transit (CEMAC)', 'Warehousing & Inventory Control', 'Freight Forwarding & Transport', 'Strategic Procurement'],
-  },
-  {
-    name: 'Civil, Mechanical & Electrical Engineering',
-    slug: 'engineering-industrial',
-    category: 'Operations & Engineering',
-    specializations: ['Structural & Civil Works (BTP)', 'Electrical Power Systems (Grid & Solar)', 'Mechanical Maintenance & Hydraulics', 'Industrial Automation & PLC'],
-  },
-  {
-    name: 'Healthcare, Biotech & Pharmaceuticals',
-    slug: 'healthcare-biotech',
-    category: 'Health & Science',
-    specializations: ['Clinical Medicine & Nursing', 'Pharmacy & Pharmacovigilance', 'Medical Laboratory Biology', 'Public Health & Epidemiology', 'Biomedical Engineering'],
-  },
-  {
-    name: 'Corporate Law, Compliance & Governance',
-    slug: 'legal-compliance',
-    category: 'Legal & Policy',
-    specializations: ['OHADA Corporate Law', 'Data Protection & Privacy', 'Contracts & Intellectual Property', 'Regulatory Compliance'],
-  },
-  {
-    name: 'Agro-Industry, Agriculture & Environment',
-    slug: 'agriculture-environment',
-    category: 'Agriculture & Nature',
-    specializations: ['Agronomy & Crop Science', 'Agro-Industrial Food Processing', 'Forestry & Wood Technology', 'Environmental Impact Assessment', 'Livestock & Veterinary'],
-  },
-  {
-    name: 'Mining, Petroleum & Chemical Engineering',
-    slug: 'mining-petroleum-chemical',
-    category: 'Energy & Heavy Industry',
-    specializations: ['Petroleum Geosciences', 'Drilling & Well Operations', 'Refinery Process Engineering', 'Mining Geology & Extraction', 'Metallurgy'],
-  },
-  {
-    name: 'Media, Journalism & Bilingual Communication',
-    slug: 'media-journalism-communication',
-    category: 'Media & Arts',
-    specializations: ['Bilingual Translation & Interpretation', 'Broadcast Journalism', 'Public Relations & Corporate Media', 'Audiovisual Production'],
-  },
-  {
-    name: 'Education, Teaching & Academic Research',
-    slug: 'education-teaching-research',
-    category: 'Education & Academia',
-    specializations: ['Secondary School Pedagogy', 'Higher Education Lecturing', 'Educational Administration', 'Scientific Lab Research'],
-  },
-  {
-    name: 'Hospitality, Tourism & Catering Management',
-    slug: 'hospitality-tourism-catering',
-    category: 'Hospitality & Services',
-    specializations: ['Hotel Operations & Front Office', 'Culinary Arts & Food Production', 'Banquet & Event Management', 'Tourism Travel Planning'],
-  },
-];
+
 
 const norm = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
-async function main() {
+async 
+const FIELDS_CONFIG = [[{"name":"Software & Cloud Engineering","slug":"software-cloud-engineering","category":"Technology & ICT","specializations":["Frontend Development","Backend Engineering","Full-Stack Web","Mobile Application (iOS/Android)","Cloud & DevOps"]},{"name":"Cybersecurity & Network Systems","slug":"cybersecurity-networks","category":"Technology & ICT","specializations":["Network Infrastructure & Routing","SOC Analysis & Incident Response","Information Security Auditing","Telecom Systems"]},{"name":"Data Science & Artificial Intelligence","slug":"data-science-ai","category":"Technology & ICT","specializations":["Machine Learning Engineering","Business Intelligence & Analytics","Data Engineering & Pipelines","Statistical Modeling"]},{"name":"Finance, Banking & Accounting","slug":"finance-accounting","category":"Business & Finance","specializations":["Corporate Finance & M&A","OHADA Accounting & Audit","Credit Risk & Retail Banking","Microfinance Operations","Treasury & Forex"]},{"name":"Marketing, Growth & Communications","slug":"marketing-communications","category":"Business & Finance","specializations":["Digital Marketing & SEO","Brand & Product Marketing","Corporate Communications & PR","Community Management"]},{"name":"Human Resources & Talent Management","slug":"human-resources","category":"Business & Finance","specializations":["Talent Acquisition & Recruiting","Payroll & Labour Law (Cameroon)","Training & People Development","HR Operations"]},{"name":"Supply Chain, Logistics & Procurement","slug":"supply-chain-logistics","category":"Operations & Engineering","specializations":["Port Logistics & Customs Transit (CEMAC)","Warehousing & Inventory Control","Freight Forwarding & Transport","Strategic Procurement"]},{"name":"Civil, Mechanical & Electrical Engineering","slug":"engineering-industrial","category":"Operations & Engineering","specializations":["Structural & Civil Works (BTP)","Electrical Power Systems (Grid & Solar)","Mechanical Maintenance & Hydraulics","Industrial Automation & PLC"]},{"name":"Healthcare, Biotech & Pharmaceuticals","slug":"healthcare-biotech","category":"Health & Life Sciences","specializations":["Clinical Medicine & Nursing","Pharmacy & Pharmacovigilance","Medical Laboratory Biology","Public Health & Epidemiology","Biomedical Engineering"]},{"name":"Corporate Law, Compliance & Governance","slug":"legal-compliance","category":"Legal & Policy","specializations":["OHADA Corporate Law","Data Protection & Privacy","Contracts & Intellectual Property","Regulatory Compliance"]},{"name":"Agro-Industry, Agriculture & Environment","slug":"agriculture-environment","category":"Agriculture & Nature","specializations":["Agronomy & Crop Science","Agro-Industrial Food Processing","Forestry & Wood Technology","Environmental Impact Assessment","Livestock & Veterinary"]},{"name":"Mining, Petroleum & Chemical Engineering","slug":"mining-petroleum-chemical","category":"Energy & Heavy Industry","specializations":["Petroleum Geosciences","Drilling & Well Operations","Refinery Process Engineering","Mining Geology & Extraction","Chemical Process Safety"]},{"name":"Media, Journalism & Bilingual Communication","slug":"media-journalism-communication","category":"Media & Arts","specializations":["Journalism & Investigative Reporting","Public Relations & Corporate Comms","Bilingual (FR/EN/PT) Copywriting","Digital Content & Storytelling"]},{"name":"Education, Teaching & Academic Research","slug":"education-teaching-research","category":"Education & Academia","specializations":["Secondary School Pedagogy","Higher Education Lecturing","Educational Administration","Scientific Lab Research"]},{"name":"Hospitality, Tourism & Catering Management","slug":"hospitality-tourism-catering","category":"Hospitality & Services","specializations":["Hotel Operations & Front Office","Culinary Arts & Food Production","Banquet & Event Management","Tourism & Travel Planning"]},{"name":"Software Quality Assurance & Testing","slug":"qa-testing","category":"Technology & ICT","specializations":["Manual & Automated Testing","Test Automation (Selenium, Cypress)","Performance & Security Testing","SDET & CI/CD Integration"]},{"name":"Cybersecurity Governance & Compliance","slug":"cyber-compliance","category":"Legal & Policy","specializations":["Cybersecurity Law","Data Protection (GDPR & Cameroonian Law)","Tech Policy & Ethics","Digital Forensics"]},{"name":"Taxation & Audit Compliance","slug":"taxation-audit","category":"Business & Finance","specializations":["Corporate Taxation","VAT & Indirect Taxes","Forensic Audit","Tax Strategy & Advisory"]},{"name":"Logistics Analytics & Supply Chain Risk","slug":"logistics-analytics","category":"Operations & Engineering","specializations":["Logistics Analytics & Forecasting","Inventory Optimisation","Route Planning & Fleet Efficiency","Supply Chain Risk"]},{"name":"E-Tourism & Hospitality Technology","slug":"hoteltech","category":"Hospitality & Services","specializations":["Hospitality Tech Systems","Online Travel & E-Tourism","Revenue Management","Guest Experience Analytics"]},{"name":"Public Policy, Governance & Development","slug":"public-policy","category":"Legal & Policy","specializations":["Public Policy Design & Evaluation","Decentralisation & Local Governance","International Development","Security & Conflict Studies"]},{"name":"Agri-Fintech & Rural Banking","slug":"agrifintech","category":"Business & Finance","specializations":["Agricultural Finance Products","Mobile Money & Fintech","Rural Banking Operations","Value Chain Finance"]},{"name":"Telemedicine & Digital Health","slug":"telemedicine","category":"Health & Life Sciences","specializations":["Telehealth Services","Health Apps & Wearables","E-Prescribing & Digital Clinics","Health Data Privacy"]},{"name":"Climate & Carbon Markets","slug":"climate-carbon","category":"Agriculture & Nature","specializations":["Carbon Accounting & Verification","Climate Risk Mapping","Nature-Based Solutions","Blue Carbon & Mangroves"]},{"name":"Ecology & Conservation","slug":"ecology-conservation","category":"Nature & Environment","specializations":["Biodiversity Mapping","Wildlife Protection & Conservation","Marine & Coastal Ecosystems","Environmental Education"]},{"name":"Geotechnical & Structural Engineering","slug":"geotech","category":"Operations & Engineering","specializations":["Soil Mechanics & Foundation Design","Structural Analysis & Seismic Design","Materials Testing","Construction Project Management"]},{"name":"Trade Finance & Supply Chain Finance","slug":"trade-finance","category":"Business & Finance","specializations":["Export/Import Finance","Letters of Credit","Supply Chain Finance Platforms","Commodity Trade Finance"]},{"name":"Social Media & Community Management","slug":"community-mgmt","category":"Media & Arts","specializations":["Social Media Strategy","Community Moderation & Growth","Influencer Relations","Brand Safety & Ad Verification"]},{"name":"Music, Sound & Live Events","slug":"audio-visual","category":"Media & Arts","specializations":["Music Production & Sound Engineering","Live Event Management","Theatre & Stage Design","Copyright & Music Publishing"]},{"name":"Heritage, Museums & Cultural Management","slug":"heritage","category":"Nature & Environment","specializations":["Cultural Heritage Management","Museum Curation & Conservation","Archaeological Fieldwork","Traditional Crafts & Knowledge Preservation"]},{"name":"Special Education & Instructional Design","slug":"special-ed","category":"Education & Academia","specializations":["Special Needs Education","Instructional Design","Learning Technology","Educational Psychology"]},{"name":"Automation, Robotics & PLC","slug":"robotics","category":"Operations & Engineering","specializations":["Industrial Robotics Programming","Automated Production Lines","Computer-Aided Design (CAD)","Mechatronics Engineering"]},{"name":"Insurance & Risk Management","slug":"insurance-risk","category":"Business & Finance","specializations":["Life & Non-Life Insurance","Actuarial Science","Risk Management & Mitigation","Claims Handling & Investigation"]},{"name":"Remote Sensing & Geospatial Analysis","slug":"remote-sensing","category":"Operations & Engineering","specializations":["Satellite Imagery Analysis","GIS & Spatial Modelling","Drone Surveying & Mapping","Disaster Risk Mapping"]},{"name":"Aviation & Airport Operations","slug":"aviation","category":"Operations & Engineering","specializations":["Airport Operations","Aviation Safety & Security","Airline Management","Cargo Handling & Logistics"]},{"name":"Renewable Energy Project Development","slug":"energy-ppp","category":"Energy & Heavy Industry","specializations":["Solar PPA & Project Finance","Wind Farm Development","Energy Storage Systems","Independent Power Producer (IPP) Management"]},{"name":"Urban Planning & Smart Cities","slug":"smart-city","category":"Operations & Engineering","specializations":["Urban Design & Zoning","Smart City ICT","Sustainable Mobility Planning","Housing Policy & Development"]},{"name":"Data Journalism & Investigative Reporting","slug":"data-journalism","category":"Media & Arts","specializations":["Data-Driven Storytelling","Visualization & Infographics","Source Development & Verification","Investigative Methods"]},{"name":"Game Design & Interactive Media","slug":"games","category":"Media & Arts","specializations":["Game Mechanics & Systems Design","Unity/Unreal Development","Level Design & UX","Indie Publishing & Marketing"]}]];
+function main() {
   console.log('🚀 Starting MANTECH Nexus Cameroon Master Database Seed...');
 
   // 1. Seed / Upsert Regions

@@ -127,6 +127,9 @@ function PlanCard({ plan, wide = false }: { plan: PublicPackage; wide?: boolean 
           Contact us
         </Link>
       </div>
+    </article>
+  );
+}
 
 export default function PricingPage() {
   const [packages, setPackages] = useState<PublicPackage[]>([]);

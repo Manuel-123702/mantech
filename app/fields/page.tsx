@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -58,7 +58,7 @@ export default function FieldsPage() {
 
   return (
     <div className="bg-slate-50 min-h-screen overflow-hidden">
-      {/* ── HERO WITH BLUR REVEAL ── */}
+      {/* â”€â”€ HERO WITH BLUR REVEAL â”€â”€ */}
       <section className="relative py-20 lg:py-28 bg-gradient-to-br from-slate-950 via-violet-950 to-slate-900 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/grid.svg')] bg-center opacity-10" />
         <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
@@ -77,7 +77,7 @@ export default function FieldsPage() {
               Explore Internships by Discipline
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
-              MANTECH Nexus covers all professional fields across Cameroon — from software engineering and cybersecurity to finance, law, healthcare, and logistics.
+              MANTECH Nexus covers all professional fields across Cameroon â€” from software engineering and cybersecurity to finance, law, healthcare, and logistics.
             </p>
           </motion.div>
 
@@ -100,7 +100,7 @@ export default function FieldsPage() {
         </div>
       </section>
 
-      {/* ── FIELDS GRID WITH 3D PERSPECTIVE FLIP ── */}
+      {/* â”€â”€ FIELDS GRID WITH 3D PERSPECTIVE FLIP â”€â”€ */}
       <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-b border-slate-200/80 relative overflow-hidden">
         <div className="absolute top-10 right-10 w-96 h-96 bg-violet-500/10 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
@@ -134,8 +134,8 @@ export default function FieldsPage() {
                           <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-3 backdrop-blur-sm shadow-inner group-hover:scale-110 transition-transform">
                             <Icon className="w-6 h-6 text-white" />
                           </div>
-                          <h2 className="font-heading font-bold text-white text-lg leading-snug">{field.name}</h2>
-                          <p className="text-xs text-white/80 mt-1 font-medium">{field.category}</p>
+<h2 className="font-heading font-bold text-white text-lg leading-snug">{field.name}</h2>
+<p className="text-xs font-medium text-blue-200 mt-1">{field.category}</p>
                         </div>
                       </div>
 
@@ -170,7 +170,7 @@ export default function FieldsPage() {
         </div>
       </section>
 
-      {/* ── CTA WITH SCALE-IN ── */}
+      {/* â”€â”€ CTA WITH SCALE-IN â”€â”€ */}
       <section className="py-20 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-t border-slate-200/80 relative overflow-hidden">
         {/* Subtle decorative glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />

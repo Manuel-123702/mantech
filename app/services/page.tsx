@@ -127,7 +127,7 @@ export default function ServicesPage() {
               </span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
-              MANTECH Nexus provides specialized dashboards, workflows, and tools designed for the three stakeholders in Cameroon's internship ecosystem: intern candidates, host enterprises, and universities.
+              MANTECH Nexus provides specialized dashboards, workflows, and tools designed for the three stakeholders in Cameroon&apos;s internship ecosystem: intern candidates, host enterprises, and universities.
             </p>
             <div className="mt-8 grid grid-cols-3 gap-3 max-w-lg mx-auto">
               {[
@@ -259,7 +259,7 @@ export default function ServicesPage() {
           <div className="rounded-3xl border border-slate-700/80 bg-gradient-to-br from-slate-900 via-slate-850 to-emerald-950/30 p-8 sm:p-12">
             <Star className="w-10 h-10 text-emerald-400 mx-auto mb-4" />
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white">
-              Ready to Join Cameroon's Premier Internship Platform?
+              Ready to Join Cameroon&apos;s Premier Internship Platform?
             </h2>
             <p className="mt-3 text-sm text-slate-300 max-w-lg mx-auto">
               Interns join free. Enterprises get a 14-day exploration period on the Free Starter tier before any subscription decision.
