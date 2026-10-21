@@ -68,14 +68,13 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
           },
         },
         opportunity: true,
-        job: true,
         interviews: { orderBy: { scheduledAt: 'desc' } },
         placement: { include: { onboardingItems: true } },
         statusHistory: { orderBy: { createdAt: 'desc' } },
       },
     });
 
-    const listingOrgId = application?.opportunity?.organizationId ?? application?.job?.organizationId ?? null;
+    const listingOrgId = application?.opportunity?.organizationId ?? application?.opportunity?.organizationId ?? null;
     if (!application || listingOrgId !== organization.id) {
       throw new AuthError(404, 'Application not found');
     }
@@ -103,7 +102,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       },
     });
 
-    const listingOrgId = application?.opportunity?.organizationId ?? application?.job?.organizationId ?? null;
+    const listingOrgId = application?.opportunity?.organizationId ?? application?.opportunity?.organizationId ?? null;
     if (!application || listingOrgId !== organization.id) {
       throw new AuthError(404, 'Application not found');
     }
