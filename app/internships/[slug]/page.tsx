@@ -410,7 +410,7 @@ export default function InternshipDetailPage() {
   return (
     <div className="min-h-screen pb-24 bg-gradient-to-b from-slate-50/70 via-white to-slate-50/50">
       {/* Top Breadcrumb Nav */}
-      <div className="border-b border-slate-200/80 bg-white/70 backdrop-blur sticky top-16 z-20">
+      <div className="border-b border-slate-200/80 bg-white/70 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link
             href="/internships"
@@ -590,7 +590,7 @@ export default function InternshipDetailPage() {
               )}
 
               {/* Key Opportunity Highlights Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-100">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-16 border-t border-slate-100">
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
                   <div className="text-xs text-slate-500 font-medium">
                     Education Level

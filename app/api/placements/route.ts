@@ -43,9 +43,9 @@ export async function POST(request: Request) {
     const body = createSchema.parse(await request.json());
     const application = await prisma.application.findUnique({
       where: { id: body.applicationId },
-      include: { opportunity: true, job: true, internProfile: true, placement: true },
+      include: { opportunity: true, internProfile: true, placement: true },
     });
-    const listingOrgId = application?.opportunity?.organizationId ?? application?.job?.organizationId ?? null;
+    const listingOrgId = application?.opportunity?.organizationId ?? application?.opportunity?.organizationId ?? null;
     if (!application || listingOrgId !== organization.id) {
       throw new AuthError(404, 'Application not found');
     }

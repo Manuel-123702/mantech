@@ -490,54 +490,6 @@ export default function InternshipsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-slate-400 font-medium hidden sm:inline">
-                Cameroon Nationwide
-              </span>
-
-              {/* Sort control — "Best match" only works once a match profile
-                  has loaded, so it stays disabled (with a hint) for guests. */}
-              <div
-                className="flex items-center rounded-lg border border-slate-700 bg-slate-800/80 p-0.5"
-                role="group"
-                aria-label="Sort internships"
-              >
-                <button
-                  type="button"
-                  onClick={() => setSortMode("default")}
-                  aria-pressed={sortMode === "default"}
-                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-                    sortMode === "default"
-                      ? "bg-slate-100 text-slate-900"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  Default
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSortMode("match")}
-                  disabled={matchScores.size === 0}
-                  title={
-                    matchScores.size === 0
-                      ? "Sign in with an intern profile to sort by match"
-                      : "Sort by your best matches first"
-                  }
-                  aria-pressed={sortMode === "match"}
-                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-                    matchScores.size === 0
-                      ? "cursor-not-allowed text-slate-400"
-                      : sortMode === "match"
-                        ? "bg-blue-600 text-white"
-                        : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  <Sparkles className="mr-1 inline h-3 w-3" aria-hidden="true" />
-                  Best match
-                </button>
-              </div>
-
-            </div>
           </div>
 
           {loading ? (

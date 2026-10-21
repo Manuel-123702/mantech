@@ -148,9 +148,9 @@ export default function JobDetailPage() {
   const universityProfile = org?.universityProfile;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white pb-20">
+    <div className="min-h-screen bg-slate-950 text-white pb-20 pt-28">
       {/* Top Breadcrumb & Actions Bar */}
-      <div className="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-30">
+      <div className="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
           <Link
             href="/jobs"
