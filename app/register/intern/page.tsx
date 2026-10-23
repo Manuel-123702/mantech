@@ -36,19 +36,26 @@ export default function InternRegistrationPage() {
 
     // Education
     qualification: '',
+    qualificationOther: '',
     academicLevel: '',
+    academicLevelOther: '',
     institution: '',
     fieldOfStudy: '',
+    fieldOfStudyOther: '',
     specialization: '',
+    specializationOther: '',
     educationStartYear: '',
     educationEndYear: '',
     isCurrentEducation: false,
 
     // Location & Preferences
     region: '',
+    regionOther: '',
     city: '',
     preferredWorkMode: 'ONSITE',
+    preferredWorkModeOther: '',
     availability: '',
+    availabilityOther: '',
 
     // Skills
     skills: [] as string[],
@@ -98,9 +105,23 @@ export default function InternRegistrationPage() {
       case 1:
         return !!formData.fullName && !!formData.email && !!formData.phone && isValidPhone(formData.phone);
       case 2:
-        return !!formData.qualification && !!formData.academicLevel && !!formData.fieldOfStudy;
+        return (
+          !!formData.qualification &&
+          (formData.qualification !== 'other' || !!formData.qualificationOther) &&
+          !!formData.academicLevel &&
+          (formData.academicLevel !== 'other' || !!formData.academicLevelOther) &&
+          !!formData.fieldOfStudy &&
+          (formData.fieldOfStudy !== 'other' || !!formData.fieldOfStudyOther)
+        );
       case 3:
-        return !!formData.region && !!formData.city && formData.skills.length > 0;
+        return (
+          !!formData.region &&
+          (formData.region !== 'other' || !!formData.regionOther) &&
+          !!formData.city &&
+          formData.skills.length > 0 &&
+          (formData.preferredWorkMode !== 'other' || !!formData.preferredWorkModeOther) &&
+          (formData.availability !== 'other' || !!formData.availabilityOther)
+        );
       case 4:
         return cvFile !== null && photoFile !== null;
       default:
@@ -332,7 +353,12 @@ export default function InternRegistrationPage() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="qualification">Diploma/Qualification *</Label>
-                    <Select onValueChange={(value) => handleInputChange('qualification', value)}>
+                    <Select
+                      onValueChange={(value) => {
+                        handleInputChange('qualification', value);
+                        if (value !== 'other') handleInputChange('qualificationOther', '');
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select your qualification" />
                       </SelectTrigger>
@@ -341,27 +367,56 @@ export default function InternRegistrationPage() {
                         <SelectItem value="BSc">Bachelor&apos;s Degree (BSc)</SelectItem>
                         <SelectItem value="BEng">Bachelor of Engineering (BEng)</SelectItem>
                         <SelectItem value="MSc">Master&apos;s Degree (MSc)</SelectItem>
-                        <SelectItem value="MBA">MBA</SelectItem>
-                        <SelectItem value="PhD">PhD/Doctorate</SelectItem>
-                        <SelectItem value="Professional Certificate">Professional Certificate</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
+                    {formData.qualification === 'other' && (
+                      <div>
+                        <Label htmlFor="qualificationOther">Please specify your qualification</Label>
+                        <Input
+                          id="qualificationOther"
+                          value={formData.qualificationOther}
+                          onChange={(e) =>
+                            handleInputChange('qualificationOther', e.target.value)
+                          }
+                          placeholder="Enter your qualification"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div>
                     <Label htmlFor="academicLevel">Academic Level *</Label>
-                    <Select onValueChange={(value) => handleInputChange('academicLevel', value)}>
+                    <Select
+                      onValueChange={(value) => {
+                        handleInputChange('academicLevel', value);
+                        if (value !== 'other') handleInputChange('academicLevelOther', '');
+                      }}
+                    >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select academic level" />
+                        <SelectValue placeholder="Select your academic level" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Secondary">Secondary School</SelectItem>
                         <SelectItem value="Undergraduate">Undergraduate</SelectItem>
                         <SelectItem value="Postgraduate">Postgraduate</SelectItem>
                         <SelectItem value="Professional">Professional</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
+                    {formData.academicLevel === 'other' && (
+                      <div>
+                        <Label htmlFor="academicLevelOther">Please specify your academic level</Label>
+                        <Input
+                          id="academicLevelOther"
+                          value={formData.academicLevelOther}
+                          onChange={(e) =>
+                            handleInputChange('academicLevelOther', e.target.value)
+                          }
+                          placeholder="Enter your academic level"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -376,7 +431,14 @@ export default function InternRegistrationPage() {
 
                   <div>
                     <Label htmlFor="fieldOfStudy">Professional Field *</Label>
-                    <Select onValueChange={(value) => handleInputChange('fieldOfStudy', value)}>
+                    <Select
+                      onValueChange={(value) => {
+                        handleInputChange('fieldOfStudy', value);
+                        if (value !== 'other') handleInputChange('fieldOfStudyOther', '');
+                        if (value !== 'other') handleInputChange('specialization', '');
+                        if (value !== 'other') handleInputChange('specializationOther', '');
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select your field" />
                       </SelectTrigger>
@@ -386,13 +448,32 @@ export default function InternRegistrationPage() {
                             {field.name}
                           </SelectItem>
                         ))}
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
+                    {formData.fieldOfStudy === 'other' && (
+                      <div>
+                        <Label htmlFor="fieldOfStudyOther">Please specify your professional field</Label>
+                        <Input
+                          id="fieldOfStudyOther"
+                          value={formData.fieldOfStudyOther}
+                          onChange={(e) =>
+                            handleInputChange('fieldOfStudyOther', e.target.value)
+                          }
+                          placeholder="Enter your professional field"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div>
                     <Label htmlFor="specialization">Specialization</Label>
-                    <Select onValueChange={(value) => handleInputChange('specialization', value)}>
+                    <Select
+                      onValueChange={(value) => {
+                        handleInputChange('specialization', value);
+                        if (value !== 'other') handleInputChange('specializationOther', '');
+                      }}
+                    >
                       <SelectTrigger id="specialization">
                         <SelectValue placeholder="Select specialization" />
                       </SelectTrigger>
@@ -402,8 +483,30 @@ export default function InternRegistrationPage() {
                             {specialization.name}
                           </SelectItem>
                         ))}
+                        {(fields.find((field) => field.id === formData.fieldOfStudy)?.specializations?.length ?? 0) > 0 && (
+                          <SelectItem value="other">Other</SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
+                    {(formData.specialization === 'other' ||
+                      (!fields.find((field) => field.id === formData.fieldOfStudy)?.specializations?.length &&
+                        formData.fieldOfStudy)) && (
+                      <div>
+                        <Label htmlFor="specializationOther">
+                          {formData.specialization === 'other'
+                            ? 'Please specify your specialization'
+                            : 'No specializations available for this field. Please specify your specialization:'}
+                        </Label>
+                        <Input
+                          id="specializationOther"
+                          value={formData.specializationOther}
+                          onChange={(e) =>
+                            handleInputChange('specializationOther', e.target.value)
+                          }
+                          placeholder="Enter your specialization"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -461,7 +564,12 @@ export default function InternRegistrationPage() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="region">Region *</Label>
-                    <Select onValueChange={(value) => handleInputChange('region', value)}>
+                    <Select
+                      onValueChange={(value) => {
+                        handleInputChange('region', value);
+                        if (value !== 'other') handleInputChange('regionOther', '');
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select your region" />
                       </SelectTrigger>
@@ -471,8 +579,20 @@ export default function InternRegistrationPage() {
                             {region.name} ({region.capital})
                           </SelectItem>
                         ))}
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
+                    {formData.region === 'other' && (
+                      <div>
+                        <Label htmlFor="regionOther">Please specify your region</Label>
+                        <Input
+                          id="regionOther"
+                          value={formData.regionOther}
+                          onChange={(e) => handleInputChange('regionOther', e.target.value)}
+                          placeholder="Enter your region"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -487,7 +607,12 @@ export default function InternRegistrationPage() {
 
                   <div>
                     <Label htmlFor="preferredWorkMode">Preferred Work Mode</Label>
-                    <Select onValueChange={(value) => handleInputChange('preferredWorkMode', value)}>
+                    <Select
+                      onValueChange={(value) => {
+                        handleInputChange('preferredWorkMode', value);
+                        if (value !== 'other') handleInputChange('preferredWorkModeOther', '');
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select work mode" />
                       </SelectTrigger>
@@ -495,13 +620,32 @@ export default function InternRegistrationPage() {
                         <SelectItem value="ONSITE">On-site</SelectItem>
                         <SelectItem value="HYBRID">Hybrid</SelectItem>
                         <SelectItem value="REMOTE">Remote</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
+                    {formData.preferredWorkMode === 'other' && (
+                      <div>
+                        <Label htmlFor="preferredWorkModeOther">Please specify your preferred work mode</Label>
+                        <Input
+                          id="preferredWorkModeOther"
+                          value={formData.preferredWorkModeOther}
+                          onChange={(e) =>
+                            handleInputChange('preferredWorkModeOther', e.target.value)
+                          }
+                          placeholder="Enter your preferred work mode"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div>
                     <Label htmlFor="availability">Availability</Label>
-                    <Select onValueChange={(value) => handleInputChange('availability', value)}>
+                    <Select
+                      onValueChange={(value) => {
+                        handleInputChange('availability', value);
+                        if (value !== 'other') handleInputChange('availabilityOther', '');
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="When can you start?" />
                       </SelectTrigger>
@@ -511,8 +655,22 @@ export default function InternRegistrationPage() {
                         <SelectItem value="2 Months">Within 2 months</SelectItem>
                         <SelectItem value="3 Months">Within 3 months</SelectItem>
                         <SelectItem value="Flexible">Flexible</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
+                    {formData.availability === 'other' && (
+                      <div>
+                        <Label htmlFor="availabilityOther">Please specify your availability</Label>
+                        <Input
+                          id="availabilityOther"
+                          value={formData.availabilityOther}
+                          onChange={(e) =>
+                            handleInputChange('availabilityOther', e.target.value)
+                          }
+                          placeholder="Enter your availability"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div>
