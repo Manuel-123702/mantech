@@ -8,14 +8,15 @@ import {
   X,
   Menu,
   ChevronDown,
-  LogIn,
   LogOut,
   LayoutDashboard,
+  LogIn,
   GraduationCap,
   Building2,
   Compass,
   CreditCard,
   BookOpen,
+  ArrowRight,
   MapPin,
   Award,
   HelpCircle,
@@ -564,90 +565,70 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              /* Signed-Out Call-to-Actions */
               <div className="hidden lg:flex items-center gap-2">
-                {/* Quick access to role dashboards */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-10 px-3 text-xs font-bold text-orange-500 hover:text-orange-600 hover:bg-orange-50/80 rounded-xl"
-                    >
-                      <LayoutDashboard className="w-3.5 h-3.5 mr-1.5 text-orange-500" />
-                      <span>Dashboards</span>
-                      <ChevronDown className="w-3.5 h-3.5 ml-1 text-orange-500" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-72 rounded-2xl border-2 border-orange-200/90 bg-white p-2.5 shadow-2xl text-slate-900 ring-1 ring-orange-500/10"
-                  >
-                    <div className="px-3 py-2 bg-orange-50/90 rounded-xl border border-orange-200/70 mb-1.5">
-                      <p className="text-[11px] font-extrabold uppercase tracking-wider text-orange-600">
-                        Choose your workspace
-                      </p>
-                    </div>
-                    {[
-                      {
-                        href: '/dashboard/intern',
-                        label: 'Intern Dashboard',
-                        icon: GraduationCap,
-                      },
-                      {
-                        href: '/dashboard/company',
-                        label: 'Company Dashboard',
-                        icon: Building2,
-                      },
-                      {
-                        href: '/dashboard/university',
-                        label: 'University Dashboard',
-                        icon: BookOpen,
-                      },
-                      {
-                        href: '/dashboard/admin',
-                        label: 'Admin Control Center',
-                        icon: ShieldCheck,
-                      },
-                    ].map((item) => (
-                      <DropdownMenuItem
-                        key={item.href}
-                        asChild
-                        className="cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 transition-colors group"
-                      >
-                        <Link
-                          href={item.href}
-                          className="flex items-center gap-2.5 text-xs font-bold text-orange-500 group-hover:text-orange-600"
-                        >
-                          <div className="p-1.5 rounded-lg bg-orange-100 text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                            <item.icon className="h-4 w-4" />
-                          </div>
-                          <span>{item.label}</span>
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
                 <Link href="/sign-in">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-10 px-4 text-xs font-bold text-orange-500 hover:text-orange-600 hover:bg-orange-50/80 rounded-xl"
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    animate={{
+                      boxShadow: [
+                        '0 0 0 0 rgba(59, 130, 246, 0.6)',
+                        '0 0 0 14px rgba(59, 130, 246, 0)',
+                        '0 0 0 0 rgba(59, 130, 246, 0)',
+                      ],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
+                    className="relative overflow-hidden h-10 px-4 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md shadow-blue-600/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
                   >
-                    <LogIn className="w-3.5 h-3.5 mr-1.5 text-orange-500" />
-                    <span>Sign In</span>
-                  </Button>
+                    <motion.div
+                      animate={{ x: ['-120%', '120%'] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'linear',
+                      }}
+                      className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-none"
+                    />
+                    <LogIn className="w-3.5 h-3.5 mr-1.5" />
+                    <span className="relative z-10">Sign In</span>
+                    <ArrowRight className="relative z-10 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                  </motion.button>
                 </Link>
 
                 <Link href="/register/intern">
-                  <Button
-                    size="sm"
-                    className="h-10 px-4 text-xs font-bold bg-orange-500 hover:bg-orange-600 text-white rounded-xl shadow-md shadow-orange-500/20 hover:shadow-lg hover:shadow-orange-500/30 transition-all"
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    animate={{
+                      boxShadow: [
+                        '0 0 0 0 rgba(59, 130, 246, 0.6)',
+                        '0 0 0 14px rgba(59, 130, 246, 0)',
+                        '0 0 0 0 rgba(59, 130, 246, 0)',
+                      ],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
+                    className="relative overflow-hidden h-10 px-4 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md shadow-blue-600/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
                   >
-                    <Award className="w-3.5 h-3.5 mr-1.5 text-white" />
-                    <span>Register</span>
-                  </Button>
+                    <motion.div
+                      animate={{ x: ['-120%', '120%'] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'linear',
+                      }}
+                      className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-none"
+                    />
+                    <span className="relative z-10">Get Started</span>
+                    <ArrowRight className="relative z-10 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                  </motion.button>
                 </Link>
               </div>
             )}
@@ -840,63 +821,72 @@ export function Navbar() {
                     </>
                   ) : (
                     <div className="space-y-2">
-                      <Link href="/register/intern" onClick={closeMobile}>
-                        <Button className="w-full text-xs font-bold bg-orange-500 hover:bg-orange-600 text-white shadow-md shadow-orange-500/20 flex items-center justify-center gap-2">
-                          <Award className="w-4 h-4 text-white" />
-                          <span>Register</span>
-                        </Button>
-                      </Link>
+                      {/* Animated wave "Sign In" CTA */}
                       <Link href="/sign-in" onClick={closeMobile}>
-                        <Button variant="outline" className="w-full text-xs font-bold text-orange-500 hover:text-orange-600 border-orange-200 hover:bg-orange-50/80">
-                          <LogIn className="w-3.5 h-3.5 mr-1.5 text-orange-500" />
-                          Sign In
-                        </Button>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          animate={{
+                            boxShadow: [
+                              '0 0 0 0 rgba(59, 130, 246, 0.5)',
+                              '0 0 0 12px rgba(59, 130, 246, 0)',
+                              '0 0 0 0 rgba(59, 130, 246, 0)',
+                            ],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: 'linear',
+                          }}
+                          className="relative overflow-hidden w-full text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/25 flex items-center justify-center gap-2 group"
+                        >
+                          <motion.div
+                            animate={{ x: ['-120%', '120%'] }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: 'linear',
+                            }}
+                            className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-none"
+                          />
+                          <LogIn className="w-3.5 h-3.5 mr-1.5" />
+                          <span className="relative z-10">Sign In</span>
+                          <ArrowRight className="relative z-10 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                        </motion.button>
                       </Link>
-                      <div className="pt-2">
-                        <div className="px-2.5 py-1 bg-orange-50/90 rounded-lg border border-orange-200/60 mb-2">
-                          <p className="text-[10px] font-extrabold uppercase tracking-wider text-orange-600">
-                            Dashboards
-                          </p>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Link href="/dashboard/intern" onClick={closeMobile}>
-                          <Button
-                            variant="outline"
-                            className="w-full text-xs font-bold justify-start border-orange-200 text-orange-500 hover:text-orange-600 hover:bg-orange-50/80"
-                          >
-                            <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-orange-500" />
-                            Intern
-                          </Button>
-                        </Link>
-                        <Link href="/dashboard/company" onClick={closeMobile}>
-                          <Button
-                            variant="outline"
-                            className="w-full text-xs font-bold justify-start border-orange-200 text-orange-500 hover:text-orange-600 hover:bg-orange-50/80"
-                          >
-                            <Building2 className="w-3.5 h-3.5 mr-1.5 text-orange-500" />
-                            Company
-                          </Button>
-                        </Link>
-                        <Link href="/dashboard/university" onClick={closeMobile}>
-                          <Button
-                            variant="outline"
-                            className="w-full text-xs font-bold justify-start border-orange-200 text-orange-500 hover:text-orange-600 hover:bg-orange-50/80"
-                          >
-                            <BookOpen className="w-3.5 h-3.5 mr-1.5 text-orange-500" />
-                            University
-                          </Button>
-                        </Link>
-                        <Link href="/dashboard/admin" onClick={closeMobile}>
-                          <Button
-                            variant="outline"
-                            className="w-full text-xs font-bold justify-start border-orange-200 text-orange-500 hover:text-orange-600 hover:bg-orange-50/80"
-                          >
-                            <ShieldCheck className="w-3.5 h-3.5 mr-1.5 text-orange-500" />
-                            Admin
-                          </Button>
-                        </Link>
-                      </div>
+
+                      {/* Animated wave "Get Started" CTA */}
+                      <Link href="/register/intern" onClick={closeMobile}>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          animate={{
+                            boxShadow: [
+                              '0 0 0 0 rgba(59, 130, 246, 0.5)',
+                              '0 0 0 12px rgba(59, 130, 246, 0)',
+                              '0 0 0 0 rgba(59, 130, 246, 0)',
+                            ],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: 'linear',
+                          }}
+                          className="relative overflow-hidden w-full text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/25 flex items-center justify-center gap-2 group"
+                        >
+                          <motion.div
+                            animate={{ x: ['-120%', '120%'] }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: 'linear',
+                            }}
+                            className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-none"
+                          />
+                          <span className="relative z-10">Get Started</span>
+                          <ArrowRight className="relative z-10 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                        </motion.button>
+                      </Link>
                     </div>
                   )}
                 </div>

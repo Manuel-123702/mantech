@@ -30,7 +30,7 @@ export default function InternRegistrationPage() {
   // Form state
   const [formData, setFormData] = useState({
     // Personal Info
-    fullName: user?.firstName + ' ' + user?.lastName || '',
+    fullName: '',
     email: user?.emailAddresses[0]?.emailAddress || '',
     phone: '',
 

@@ -20,6 +20,7 @@ interface SectionHeaderProps {
   description?: string;
   align?: 'left' | 'center';
   className?: string;
+  variant?: 'default' | 'onDark';
 }
 
 export function SectionHeader({
@@ -28,7 +29,21 @@ export function SectionHeader({
   description,
   align = 'center',
   className,
+  variant = 'default',
 }: SectionHeaderProps) {
+  const eyebrowClasses =
+    variant === 'onDark'
+      ? 'mb-3 inline-block rounded-full bg-blue-500/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-200 border border-blue-400/30 shadow-sm'
+      : 'mb-3 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary border border-primary/15 shadow-sm';
+  const titleClasses =
+    variant === 'onDark'
+      ? 'font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl'
+      : 'font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl';
+  const descriptionClasses =
+    variant === 'onDark'
+      ? 'mt-4 text-base sm:text-lg text-slate-300 leading-relaxed'
+      : 'mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed';
+
   return (
     <div
       className={cn(
@@ -43,7 +58,7 @@ export function SectionHeader({
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, margin: '-20px' }}
           transition={{ duration: 0.5, ease: QUART_OUT }}
-          className="mb-3 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary border border-primary/15 shadow-sm"
+          className={eyebrowClasses}
         >
           {eyebrow}
         </motion.span>
@@ -53,7 +68,7 @@ export function SectionHeader({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-20px' }}
         transition={{ duration: 0.65, delay: 0.05, ease: QUART_OUT }}
-        className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
+        className={titleClasses}
       >
         {title}
       </motion.h2>
@@ -63,10 +78,7 @@ export function SectionHeader({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-20px' }}
           transition={{ duration: 0.65, delay: 0.1, ease: QUART_OUT }}
-          className={cn(
-            'mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed',
-            align === 'center' ? 'mx-auto' : '',
-          )}
+          className={descriptionClasses}
         >
           {description}
         </motion.p>

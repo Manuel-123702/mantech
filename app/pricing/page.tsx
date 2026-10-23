@@ -215,6 +215,7 @@ export default function PricingPage() {
         <div className="container-mantech relative z-10">
           <SectionHeader
             eyebrow="For organizations"
+            variant="onDark"
             title="Plans for companies and universities"
             description="Internships are free for everyone looking for one. These plans are for the organizations that post them and reach candidates."
           />

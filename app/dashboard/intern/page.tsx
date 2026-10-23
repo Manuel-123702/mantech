@@ -13,9 +13,10 @@ import {
   Sparkles,
   UserPlus,
   MessageCircle,
+  LayoutDashboard,
 } from 'lucide-react';
 
-import { requireUser } from '@/lib/authz';
+import { syncDbUser } from '@/lib/authz';
 import { prisma } from '@/lib/prisma';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -76,7 +77,95 @@ function reachedStage(statuses: string[], stage: string): number {
 }
 
 export default async function InternDashboardPage() {
-  const user = await requireUser();
+  const user = await syncDbUser();
+
+  // Public preview: unauthenticated visitors can view the dashboard page
+  // without a hard 401 wall. They see a feature overview + CTAs to sign in.
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 mb-4">
+              <LayoutDashboard className="w-8 h-8" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">Intern Dashboard</h1>
+            <p className="text-slate-600">
+              Track your internship applications, build your profile, and get
+              matched with verified opportunities in Cameroon.
+            </p>
+          </div>
+
+          <Card className="shadow-sm">
+            <CardContent className="p-8">
+              <h2 className="text-lg font-semibold text-slate-900 mb-6">
+                What you can do here
+              </h2>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-blue-50/50">
+                  <Briefcase className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <p className="text-sm font-medium text-slate-900">
+                      Browse internships & jobs
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      Discover verified opportunities from companies and
+                      universities across Cameroon.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-blue-50/50">
+                  <Award className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <p className="text-sm font-medium text-slate-900">
+                      Build your profile & passport
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      Showcase your skills, education, and availability to
+                      recruiters.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-blue-50/50">
+                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <p className="text-sm font-medium text-slate-900">
+                      Track your applications
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      Follow your journey from submitted to selected — all in
+                      one place.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-slate-200">
+                <p className="text-sm font-medium text-slate-700 mb-4">
+                  Sign in to unlock your personal dashboard and start applying.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link href="/sign-in">
+                    <Button className="flex-1">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link href="/register/intern">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      Create Account
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   const profile = await prisma.internProfile.findUnique({
     where: { userId: user.id },

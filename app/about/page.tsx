@@ -135,6 +135,7 @@ export default function AboutPage() {
         <div className="container-mantech px-4 sm:px-6 lg:px-8 text-orange-400 relative z-10">
           <SectionHeader
             eyebrow="Foundation"
+            variant="onDark"
             title="Strategic National Mandate"
             description="Bridging higher education institutions with telecom operators, software agencies, and financial institutions across Cameroon."
             className="mb-14"
@@ -221,6 +222,7 @@ export default function AboutPage() {
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <SectionHeader
             eyebrow="Three Pillars"
+            variant="onDark"
             title="Tripartite Ecosystem Collaboration"
             description="Built to coordinate the three core stakeholders of professional internship governance."
             className="mb-12"

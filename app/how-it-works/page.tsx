@@ -192,6 +192,7 @@ export default function HowItWorksPage() {
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <SectionHeader
             eyebrow="8-Stage Pathway"
+            variant="onDark"
             title="The Lifecycle from Search to Certification"
             description="Every stage is secured by role-based boundaries and permanent records in our central database."
             className="mb-16"
@@ -264,6 +265,7 @@ export default function HowItWorksPage() {
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="Targeted Workflows"
+            variant="onDark"
             title="Tailored Journeys for Every Stakeholder"
             description="Whether applying for an internship, evaluating candidates, or supervising academic compliance, MANTECH provides an optimized portal."
             className="mb-14"
