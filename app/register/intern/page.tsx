@@ -317,7 +317,6 @@ export default function InternRegistrationPage() {
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       placeholder="your.email@example.com"
-                      disabled
                       className="bg-slate-50"
                     />
                     <p className="text-xs text-slate-500 mt-1">Email from your Clerk account</p>
