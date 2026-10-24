@@ -93,7 +93,7 @@ export default async function CompanyJobsPage() {
                           <span className="font-mono text-slate-700">{job._count.applications}</span>
                         </td>
                         <td className="px-4 py-3">
-                          <Badge variant={status.variant}>{status.label}</Badge>
+                          <Badge variant={status.variant as 'default' | 'secondary' | 'destructive' | 'outline'}>{status.label}</Badge>
                         </td>
                         <td className="px-4 py-3 text-right">
                           <Link
