@@ -257,7 +257,7 @@ export default function HomePage() {
           fetch("/api/testimonials"),
           fetch("/api/jobs?limit=12"),
           fetch("/api/universities?limit=12"),
-          fetch("/api/people?limit=12"),
+          fetch("/api/people?limit=20"),
         ]);
 
         if (statsRes.ok) {
@@ -296,7 +296,7 @@ export default function HomePage() {
         if (companiesRes.ok) {
           const compData = await companiesRes.json();
           setCompanies(
-            (compData.companies || []).slice(0, 6) as VerifiedOrganization[],
+            (compData.companies || []).slice(0, 20) as VerifiedOrganization[],
           );
         }
 
@@ -1099,7 +1099,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {people.length > 0 ? (
               people.map((person) => (
-                <div key={person.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 hover:border-blue-500/50 transition-all duration-200">
+                <Link key={person.id} href={`/intern/${person.id}`} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 hover:border-blue-500/50 transition-all duration-200 block">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center text-blue-400 overflow-hidden">
                       {person.avatarUrl ? (
@@ -1124,7 +1124,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <div className="text-xs text-slate-500">{person.internProfile?.profileCompleted ? "Profile complete" : "Building profile"}</div>
-                </div>
+                </Link>
               ))
             ) : (
               <div className="col-span-4 py-16 text-center text-slate-500">
