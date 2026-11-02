@@ -25,7 +25,7 @@ const PROTECTED_PREFIXES = ['/dashboard', '/intern-passports', '/applications', 
 // Company and University are intentionally NOT here: they are open to any
 // signed-in member who passes the email two-factor gate below, so their
 // access is controlled by the OTP cookie rather than a role email list.
-const GUARDED_DASHBOARDS = ['/dashboard/intern', '/dashboard/admin'];
+const GUARDED_DASHBOARDS = ['/dashboard/admin'];
 
 /**
  * Content-Security-Policy.

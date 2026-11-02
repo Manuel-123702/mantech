@@ -1,0 +1,123 @@
+[
+  {
+    "name": "Information Technology & Software Engineering",
+    "category": "Technology & Computing",
+    "specs": [
+      "Full-Stack Web Development",
+      "Mobile Application Engineering (iOS/Android/Flutter)",
+      "Cloud Architecture & DevOps",
+      "Backend API & Microservices",
+      "Embedded Systems & IoT",
+      "QA Engineering & Automated Testing",
+      "ERP Solutions (SAP/Odoo)"
+    ]
+  },
+  {
+    "name": "Telecommunications & Network Infrastructure",
+    "category": "Technology & Computing",
+    "specs": [
+      "Fibre Optic Transmission & DWDM",
+      "Radio Access Networks (4G/5G LTE)",
+      "Network Operations Center (NOC)",
+      "Cisco & Huawei Enterprise Routing",
+      "VoIP & Unified Communications",
+      "Satellite & Microwave Transmission"
+    ]
+  },
+  {
+    "name": "Cybersecurity & Information Assurance",
+    "category": "Technology & Computing",
+    "specs": [
+      "Penetration Testing & Vulnerability Assessment",
+      "Security Operations Center (SOC) Analysis",
+      "Incident Response & Digital Forensics",
+      "Identity & Access Management (IAM)",
+      "ISO 27001 & ANTIC Compliance",
+      "Cloud Security & Zero-Trust Architecture"
+    ]
+  },
+  {
+    "name": "Data Science, Analytics & Artificial Intelligence",
+    "category": "Technology & Computing",
+    "specs": [
+      "Machine Learning & Deep Learning",
+      "Business Intelligence & Power BI/Tableau",
+      "Big Data Engineering (Spark/Kafka)",
+      "Predictive Analytics & Statistical Modeling",
+      "Natural Language Processing (NLP)",
+      "Data Governance & ETL Pipelines"
+    ]
+  },
+  {
+    "name": "Fintech, Mobile Money & Digital Banking Systems",
+    "category": "Technology & Computing",
+    "specs": [
+      "Mobile Money API Integration (MoMo/Orange Money)",
+      "Payment Gateway Engineering",
+      "Core Banking Systems (Amphora/Delta/Temenos)",
+      "Fraud Detection & Transaction Monitoring",
+      "Blockchain & Smart Contracts",
+      "Regulatory Reporting Automation"
+    ]
+  },
+  {
+    "name": "Banking & Commercial Credit",
+    "category": "Business & Finance",
+    "specs": [
+      "Corporate Credit Risk Assessment",
+      "Retail & SME Lending",
+      "Treasury Operations & FX Management",
+      "Trade Finance & Letters of Credit",
+      "Compliance & AML/CFT Monitoring",
+      "Branch Operations Management"
+    ]
+  },
+  {
+    "name": "Accounting, Audit & Corporate Taxation",
+    "category": "Business & Finance",
+    "specs": [
+      "OHADA Accounting Standards",
+      "Internal & Statutory Audit",
+      "Corporate Tax Compliance & DGI Filings",
+      "Financial Reporting & Consolidation",
+      "Management Control & Cost Accounting",
+      "Payroll Accounting & CNPS Declarations"
+    ]
+  },
+  {
+    "name": "Microfinance & Community Banking",
+    "category": "Business & Finance",
+    "specs": [
+      "EMF Category 1 & 2 Operations",
+      "Agricultural & Rural Microcredit",
+      "Micro-Savings Mobilization",
+      "Credit Recovery & Debt Restructuring",
+      "COBAC Regulatory Compliance",
+      "Group Lending Methodologies"
+    ]
+  },
+  {
+    "name": "Insurance, Risk Management & Actuarial Science",
+    "category": "Business & Finance",
+    "specs": [
+      "CIMA Code Regulatory Compliance",
+      "Life & Health Insurance Underwriting",
+      "Automobile & Casualty Claims",
+      "Reinsurance & Risk Assessment",
+      "Actuarial Valuation & Tariffing",
+      "Insurance Brokerage & Commercial Advisory"
+    ]
+  },
+  {
+    "name": "Corporate Finance, Investment & Valuation",
+    "category": "Business & Finance",
+    "specs": [
+      "Financial Modeling & Business Valuation",
+      "Mergers & Acquisitions (M&A)",
+      "Project Finance & Capital Raising",
+      "Portfolio Management (BVMAC Exchange)",
+      "Feasibility Studies & Investment Due Diligence",
+      "Working Capital Optimization"
+    ]
+  }
+]

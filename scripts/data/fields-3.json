@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Animal Science, Livestock & Veterinary Practice",
+    "category": "Agriculture & Agro-Industry",
+    "specs": [
+      "Poultry & Egg Production Management",
+      "Cattle Rearing & Dairy Farming",
+      "Pig Farming & Meat Processing",
+      "Veterinary Medicine & Vaccination Programs",
+      "Animal Nutrition & Feed Formulation",
+      "Aquaculture & Fish Farm Management"
+    ]
+  },
+  {
+    "name": "Forestry, Wood Processing & Wildlife Conservation",
+    "category": "Agriculture & Agro-Industry",
+    "specs": [
+      "Sustainable Forest Management (FSC Certification)",
+      "Timber Logging & Log Tracking",
+      "Sawmill Operations & Wood Drying",
+      "Wood Chemistry & Furniture Manufacturing",
+      "National Parks & Wildlife Protection",
+      "Carbon Sequestration & REDD+ Initiatives"
+    ]
+  },
+  {
+    "name": "General Medicine & Hospital Clinical Care",
+    "category": "Healthcare & Life Sciences",
+    "specs": [
+      "Emergency & Intensive Care Medicine",
+      "Internal Medicine & Infectious Diseases",
+      "Pediatrics & Child Health",
+      "Obstetrics & Gynecology",
+      "General & Laparoscopic Surgery",
+      "Hospital Ward & Clinical Workflow"
+    ]
+  },
+  {
+    "name": "Nursing Science & Patient Healthcare",
+    "category": "Healthcare & Life Sciences",
+    "specs": [
+      "Critical Care & ICU Nursing",
+      "Operating Theatre Nursing",
+      "Maternal & Neonatal Care",
+      "Community & Rural Healthcare Outreach",
+      "Geriatric & Palliative Nursing",
+      "Infection Prevention & Hospital Hygiene"
+    ]
+  },
+  {
+    "name": "Pharmacy & Industrial Pharmacology",
+    "category": "Healthcare & Life Sciences",
+    "specs": [
+      "Retail Pharmacy Dispensing & Counseling",
+      "Hospital Drug Supply Chain & Stock Management",
+      "Pharmaceutical Manufacturing & Galenic Formulations",
+      "Quality Control & Pharmacovigilance",
+      "Therapeutic Drug Monitoring",
+      "Traditional Pharmacopeia Integration"
+    ]
+  },
+  {
+    "name": "Medical Laboratory Technology & Clinical Diagnostics",
+    "category": "Healthcare & Life Sciences",
+    "specs": [
+      "Clinical Biochemistry & Immunoassays",
+      "Medical Hematology & Blood Transfusion",
+      "Diagnostic Microbiology & Parasitology",
+      "Molecular Biology & PCR Testing",
+      "Anatomic Pathology & Histology",
+      "Laboratory Quality Assurance (ISO 15189)"
+    ]
+  },
+  {
+    "name": "Public Health & Epidemiology",
+    "category": "Healthcare & Life Sciences",
+    "specs": [
+      "Epidemiological Surveillance (Malaria, Cholera)",
+      "Vaccine Cold Chain Management",
+      "Health Program Monitoring & Evaluation",
+      "Health Education & Community Sensitization",
+      "Maternal-Child Health Policy",
+      "Biostatistics for Medical Research"
+    ]
+  },
+  {
+    "name": "Biomedical Engineering & Medical Equipment",
+    "category": "Healthcare & Life Sciences",
+    "specs": [
+      "Radiology & Ultrasound Equipment Maintenance",
+      "Dialysis & Patient Monitor Calibration",
+      "Sterilization & Autoclave Systems",
+      "Hospital Medical Gas Systems (Oxygen Plants)",
+      "Medical Device Procurement & Safety",
+      "Clinical Software Integration (PACS/HIS)"
+    ]
+  },
+  {
+    "name": "Supply Chain, Warehousing & Inventory Control",
+    "category": "Supply Chain & Logistics",
+    "specs": [
+      "Warehouse Management Systems (WMS)",
+      "Inventory Optimization & Demand Forecasting",
+      "Cold Chain Logistics for Food & Pharma",
+      "Cross-Docking & Distribution Centers",
+      "Vendor Sourcing & Supplier Performance",
+      "Reverse Logistics & Waste Recycling"
+    ]
+  },
+  {
+    "name": "Maritime Shipping, Port Operations & Customs",
+    "category": "Supply Chain & Logistics",
+    "specs": [
+      "Port de Douala & Kribi Container Handling",
+      "Customs Clearance & Single Window (GUCE)",
+      "Freight Forwarding & Bill of Lading (Incoterms)",
+      "Vessel Husbandry & Stevedoring",
+      "Transit Transit Cargo to Chad & CAR",
+      "Dangerous Goods Transport (IMDG Code)"
+    ]
+  }
+]

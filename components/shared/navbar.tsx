@@ -53,15 +53,15 @@ interface NavMenuItem {
 const INTERNSHIP_MENU: NavMenuItem[] = [
   {
     href: '/internships',
-    label: 'All Opportunities',
-    description: 'Explore live, verified postings across Cameroon',
+    label: 'All Internships',
+    description: 'Explore live, verified student & graduate placements',
     icon: Briefcase,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/fields',
-    label: 'Browse by Field',
-    description: 'IT, Engineering, Finance, Law, Marketing & Healthcare',
+    label: '60 Professional Fields',
+    description: 'IT, Engineering, Agriculture, Finance, Law & Health',
     icon: Compass,
     color: 'text-orange-600 bg-orange-100/90',
   },
@@ -74,7 +74,7 @@ const INTERNSHIP_MENU: NavMenuItem[] = [
   },
   {
     href: '/register/intern',
-    label: 'Register & Intern Passport',
+    label: 'Register Talent Profile',
     description: 'Fill credentials to get your verified digital passport',
     icon: Award,
     badge: 'Core Feature',
@@ -258,7 +258,6 @@ export function Navbar() {
                   : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
               )}
             >
-              <Briefcase className="h-4 w-4 text-orange-500 group-hover:text-orange-600 transition-colors" />
               <span>Jobs</span>
             </Link>
 
@@ -480,11 +479,17 @@ export function Navbar() {
             {canBrowsePassports && (
               <Link
                 href="/intern-passports"
-                className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-orange-300 bg-orange-50 px-4 py-2 text-xs font-bold text-orange-600 shadow-sm transition-all hover:bg-orange-100"
+                className="cursor-pointer text-white font-bold relative text-[14px] w-[9em] h-[3em] 
+                text-center bg-gradient-to-r from-violet-500 from-10% via-sky-500 via-30% to-pink-500 to-90% 
+                bg-[length:400%] rounded-[30px] z-10 hover:animate-gradient-xy hover:bg-[length:100%] 
+                before:content-[''] before:absolute before:-top-[5px] before:-bottom-[5px] before:-left-[5px] 
+                before:-right-[5px] before:bg-gradient-to-r before:from-violet-500 before:from-10% 
+                before:via-sky-500 before:via-30% before:to-pink-500 before:bg-[length:400%] before:-z-10 
+                before:rounded-[35px] before:hover:blur-xl before:transition-all before:ease-in-out 
+                before:duration-[1s] before:hover:bg-[length:10%] active:bg-violet-700 focus:ring-violet-700"
                 title="Browse verified Passports"
               >
-                <Award className="h-3.5 w-3.5 text-orange-500" />
-                <span>Intern Directory</span>
+                <span className="">Browse Passports</span>
               </Link>
             )}
 
@@ -528,14 +533,6 @@ export function Navbar() {
                     </Link>
                   </DropdownMenuItem>
 
-                  {canBrowsePassports && (
-                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
-                      <Link href="/intern-passports" className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-orange-600">
-                        <Award className="h-4 w-4 text-orange-500" />
-                        <span>Intern Directory</span>
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
 
                   {userRole === 'INTERN' && (
                     <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">

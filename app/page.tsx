@@ -72,6 +72,8 @@ import {
   waCompanySalesLink,
   waSupportLink,
 } from "@/lib/whatsapp";
+import { DashboardShowcase } from "@/components/home/dashboard-showcase";
+import { TestimonialSubmissionModal } from "@/components/home/testimonial-submission-modal";
 import { APP_CONFIG } from "@/lib/config";
 
 interface TaxonomyField {
@@ -124,11 +126,11 @@ export interface FaqItem {
 }
 
 const FAQ_CATEGORIES = [
-  { id: "all", label: "All Questions", count: 6 },
-  { id: "interns", label: "Students & Interns", count: 3 },
-  { id: "recruiters", label: "Companies & Hosts", count: 1 },
-  { id: "universities", label: "Universities & Conventions", count: 1 },
-  { id: "trust", label: "Security & Invoicing", count: 1 },
+  { id: "all", label: "All Questions", count: 16 },
+  { id: "interns", label: "Students & Interns", count: 5 },
+  { id: "recruiters", label: "Companies & Hosts", count: 4 },
+  { id: "universities", label: "Universities & Conventions", count: 3 },
+  { id: "trust", label: "Security & Free Access", count: 4 },
 ] as const;
 
 const EXPANDED_FAQS: FaqItem[] = [
@@ -137,9 +139,9 @@ const EXPANDED_FAQS: FaqItem[] = [
     category: "interns",
     categoryName: "Candidate Access",
     badge: "100% Free Forever",
-    q: "Is MANTECH Nexus free for internship seekers?",
-    a: "Yes, absolutely! Intern registration, profile creation, Intern Passport generation, opportunity search, and applications are 100% free for all students and internship seekers across Cameroon. No subscription fees, listing fees, or application charges are ever billed to students.",
-    takeaway: "Students never pay a single Franc CFA — all costs are sponsored by accredited hiring hosts.",
+    q: "Is MANTECH Nexus free for internship and job seekers?",
+    a: "Yes, absolutely! Intern registration, profile creation, Intern Passport generation, opportunity search, and applications are 100% free for all students, graduates, and internship seekers across Cameroon. No subscription fees, listing fees, or application charges are ever billed to candidates.",
+    takeaway: "Students never pay a single Franc CFA — all features and placement tools are 100% free.",
   },
   {
     id: "faq-passport",
@@ -160,31 +162,121 @@ const EXPANDED_FAQS: FaqItem[] = [
     takeaway: "Every application status is tracked in real time from submission to interview decision.",
   },
   {
+    id: "faq-readiness",
+    category: "interns",
+    categoryName: "Profile Readiness",
+    badge: "Algorithmic Score",
+    q: "How does the profile readiness score work and how do I reach 100%?",
+    a: "The readiness score algorithm measures completeness across five core pillars: primary contact verification, validated academic degree, structured CV upload, declared target professional role, and selected skills across 60 professional domains. Completing these milestones elevates your profile to top recruiter rankings.",
+    takeaway: "Profiles above 85% readiness receive 4x more interview invitations from verified hosts.",
+  },
+  {
+    id: "faq-whatsapp-alerts",
+    category: "interns",
+    categoryName: "Real-Time Alerts",
+    badge: "WhatsApp Priority",
+    q: "How do instant WhatsApp job and internship alerts work?",
+    a: "Because WhatsApp is the primary communication network in Cameroon, MANTECH Nexus integrates direct WhatsApp alert broadcasts. Once subscribed, you receive instant mobile pings when an opportunity in your discipline or region is approved, allowing you to be among the first applicants.",
+    takeaway: "Direct mobile pings ensure you never miss time-sensitive corporate application deadlines.",
+  },
+  {
     id: "faq-recruiters",
     category: "recruiters",
     categoryName: "Recruitment Workflow",
     badge: "Vetted Host Hub",
-    q: "How do verified companies and host enterprises recruit interns?",
-    a: "Organizations submit legal credentials for platform accreditation. Once verified by MANTECH administrators, they gain immediate access to post openings, search candidates by specialized field and regional location, review authorized CVs with audit trails, coordinate structured interview panels, and issue digital offers.",
-    takeaway: "Eliminates random inbox CVs and gives companies pre-screened talent across all 10 regions.",
+    q: "How do verified companies and host enterprises recruit on MANTECH?",
+    a: "Organizations submit legal business credentials for accreditation. Once verified by our moderation team, recruiters can post openings across 60 professional fields, search candidate portfolios, inspect authorized academic credentials, coordinate interview rounds, and issue digital offers with zero spam.",
+    takeaway: "Eliminates unvetted inbox spam and delivers pre-screened, authentic Cameroonian talent.",
   },
   {
-    id: "faq-billing",
-    category: "trust",
-    categoryName: "Billing & Invoicing",
-    badge: "Manual Invoicing",
-    q: "How does payment and billing work for organizations?",
-    a: "MANTECH Nexus does not charge payment cards online. Package subscriptions, enterprise upgrades, and institutional contracts are handled transparently with human support directly on WhatsApp or Email, with official invoices in XAF (FCFA) via Cameroon bank transfers or commercial mobile money receipts.",
-    takeaway: "Zero recurring card charges. Transparent invoicing in XAF with dedicated human account managers.",
+    id: "faq-free-packages",
+    category: "recruiters",
+    categoryName: "100% Free Launch",
+    badge: "0 FCFA Access",
+    q: "Are company and university recruitment packages really 100% free right now?",
+    a: "Yes! During this open launch phase, all organizational plans (including Enterprise and Institutional access) are 0 FCFA. Companies and universities enjoy unlimited job and internship postings, unrestricted talent searches, and full team access without any payment barriers.",
+    takeaway: "Zero financial friction: start recruiting top students and graduates today at zero cost.",
+  },
+  {
+    id: "faq-jobs-equality",
+    category: "recruiters",
+    categoryName: "Jobs & Internships",
+    badge: "Full Parity",
+    q: "Can employers post full-time permanent jobs as well as internships?",
+    a: "Yes, absolutely! Jobs and internships enjoy complete parity on MANTECH Nexus. Recruiters can publish full-time positions, entry-level contracts, apprenticeships, and specialized internships with dedicated salary ranges and work mode options (onsite, hybrid, remote).",
+    takeaway: "One centralized hub for both academic student internships and graduate employment.",
+  },
+  {
+    id: "faq-candidate-privacy",
+    category: "recruiters",
+    categoryName: "Privacy & Compliance",
+    badge: "Zero-Trust Privacy",
+    q: "How does the platform safeguard candidate privacy during talent discovery?",
+    a: "Candidates' private phone numbers and personal emails are hidden by default. Recruiters review authenticated qualifications, universities, and readiness metrics, then initiate a formal Contact Request. Direct contact information is released only when the candidate accepts.",
+    takeaway: "Respects candidate confidentiality while ensuring only verified employers initiate contact.",
   },
   {
     id: "faq-universities",
     category: "universities",
     categoryName: "Academic Partnerships",
     badge: "Tripartite Oversight",
-    q: "Can universities supervise and track student internships?",
-    a: "Yes! Academic departments and university placement coordinators have a dedicated portal to supervise tripartite internship conventions, review assigned faculty supervisors, track student attendance logbooks, and authenticate institutional completion certificates.",
-    takeaway: "Seamless institutional oversight without mountains of paper letters or untracked spreadsheets.",
+    q: "Can universities supervise and track student internships digitally?",
+    a: "Yes! Academic departments and university placement coordinators have a dedicated portal to supervise tripartite internship conventions, assign faculty mentors, review student progress logbooks, and authenticate institutional completion attestations.",
+    takeaway: "Eliminates physical paperwork and provides full academic oversight across every cohort.",
+  },
+  {
+    id: "faq-dual-mode",
+    category: "universities",
+    categoryName: "University Dual-Mode",
+    badge: "Mode A & Mode B",
+    q: "What is the university dual-mode operational capability?",
+    a: "Universities operate in two distinct modes: Mode A (Placement Assistance) helps students secure external corporate internships with partner enterprises; Mode B (Direct Campus Recruiting) allows internal university faculties, research labs, and IT divisions to recruit student interns directly.",
+    takeaway: "Flexibility for higher education institutions to act as placement facilitators and internal employers.",
+  },
+  {
+    id: "faq-regions",
+    category: "universities",
+    categoryName: "National Coverage",
+    badge: "All 10 Regions",
+    q: "Are institutions across all 10 regions of Cameroon represented?",
+    a: "Yes. From state universities (UY1, UY2, Douala, Buea, Bamenda, Dschang, Ngaoundéré, Maroua, Bertoua, Ebolowa) to prestigious Grandes Écoles (ENSPY, NAHPI, IUTs, ENS) and accredited private universities (UCAC, IUC, Siantou, Saint Jérôme, PKFokam), our network covers the entire nation.",
+    takeaway: "Equal digital access to opportunities for students in every region from the Far North to the South.",
+  },
+  {
+    id: "faq-data-security",
+    category: "trust",
+    categoryName: "Platform Security",
+    badge: "ACID Security",
+    q: "How is user and organizational data protected on MANTECH Nexus?",
+    a: "The system is built on an enterprise ACID relational architecture with encrypted database storage, HTTPS/TLS 1.3 protocol enforcement, zero stored credit card numbers, and strict role-based access controls adhering to national and international data privacy best practices.",
+    takeaway: "Bank-grade data isolation ensuring candidate records and corporate postings remain confidential.",
+  },
+  {
+    id: "faq-whatsapp-primary",
+    category: "trust",
+    categoryName: "Communication Channel",
+    badge: "WhatsApp-First",
+    q: "Why does MANTECH Nexus prioritize WhatsApp over traditional email?",
+    a: "In Cameroon, mobile internet and WhatsApp have over 98% daily active usage compared to email check-in frequencies. WhatsApp communication ensures instant notification of interviews, application updates, and direct coordination with our support concierge.",
+    takeaway: "Guarantees rapid response times and eliminates lost emails or ignored spam folders.",
+  },
+  {
+    id: "faq-moderation",
+    category: "trust",
+    categoryName: "Scam Prevention",
+    badge: "100% Vetted Listings",
+    q: "How does MANTECH prevent fake job postings and recruitment scams?",
+    a: "Every single opportunity and host enterprise undergoes manual verification by MANTECH administrators before appearing on the public marketplace. We verify company tax numbers, physical premises, and official domains to ensure students are completely protected.",
+    takeaway: "Strict zero-tolerance policy against fake recruiters, application fees, or unaccredited listings.",
+  },
+  {
+    id: "faq-feedback",
+    category: "trust",
+    categoryName: "Community Voice",
+    badge: "Open Reviews",
+    q: "Can students, recruiters, and academic coordinators submit feedback and testimonials?",
+    a: "Yes! Any visitor, student, or recruiter can share their placement story directly through the community testimonial submission form on the homepage and `/testimonials` page. Approved reviews appear publicly to inspire future cohorts.",
+    takeaway: "Transparent community reviews that celebrate authentic placement outcomes across Cameroon.",
   },
 ];
 
@@ -218,6 +310,7 @@ export default function HomePage() {
   const [universities, setUniversities] = useState<any[]>([]);
   const [people, setPeople] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showTestimonialModal, setShowTestimonialModal] = useState(false);
 
   // Hero search form state
   const [heroSearchQuery, setHeroSearchQuery] = useState("");
@@ -251,13 +344,13 @@ export default function HomePage() {
           peopleRes,
         ] = await Promise.all([
           fetch("/api/stats"),
-          fetch("/api/internships"),
+          fetch("/api/internships?limit=40"),
           fetch("/api/taxonomy"),
-          fetch("/api/companies"),
+          fetch("/api/companies?limit=30"),
           fetch("/api/testimonials"),
-          fetch("/api/jobs?limit=12"),
-          fetch("/api/universities?limit=12"),
-          fetch("/api/people?limit=20"),
+          fetch("/api/jobs?limit=30"),
+          fetch("/api/universities?limit=30"),
+          fetch("/api/people?limit=30"),
         ]);
 
         if (statsRes.ok) {
@@ -268,7 +361,7 @@ export default function HomePage() {
         if (opportunitiesRes.ok) {
           const opportunitiesData = await opportunitiesRes.json();
           setFeaturedInternships(
-            (opportunitiesData.internships || []).slice(0, 8),
+            (opportunitiesData.internships || []).slice(0, 20),
           );
         }
 
@@ -303,23 +396,23 @@ export default function HomePage() {
         if (testimonialsRes.ok) {
           const testData = await testimonialsRes.json();
           setTestimonials(
-            (testData.testimonials || []).slice(0, 3) as TestimonialItem[],
+            (testData.testimonials || []).slice(0, 20) as TestimonialItem[],
           );
         }
 
         if (jobsRes.ok) {
           const jobsData = await jobsRes.json();
-          setFeaturedJobs((jobsData.jobs || []).slice(0, 12));
+          setFeaturedJobs((jobsData.jobs || []).slice(0, 20));
         }
 
         if (universitiesRes.ok) {
           const uniData = await universitiesRes.json();
-          setUniversities((uniData.universities || []).slice(0, 12));
+          setUniversities((uniData.universities || []).slice(0, 20));
         }
 
         if (peopleRes.ok) {
           const peopleData = await peopleRes.json();
-          setPeople((peopleData.people || []).slice(0, 12));
+          setPeople((peopleData.people || []).slice(0, 20));
         }
       } catch (e) {
         console.error("Failed loading live homepage data:", e);
@@ -1134,6 +1227,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* --- DASHBOARD SHOWCASE (all 4 dashboards explained visually) --- */}
+      <DashboardShowcase />
 
       <section className="py-24 bg-slate-900 text-white relative">
         <div className="container-mantech px-4 sm:px-6 lg:px-8">
@@ -1999,12 +2095,22 @@ export default function HomePage() {
                 Direct feedback from students discovered on merit, and accredited enterprise supervisors who streamlined technical recruitment through MANTECH Nexus.
               </p>
             </div>
-            <Link href="/testimonials">
-              <Button variant="outline" className="text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-white border-slate-700 shadow-sm transition-all hover:border-blue-400 gap-1.5">
-                Read All Stories
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </Link>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowTestimonialModal(true)}
+                className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold py-2.5 px-5 shadow-lg shadow-amber-600/20 transition-all"
+              >
+                <Plus className="w-4 h-4" />
+                Share Your Story
+              </button>
+              <Link href="/testimonials">
+                <Button variant="outline" className="text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-white border-slate-700 shadow-sm transition-all hover:border-blue-400 gap-1.5">
+                  Read All Stories
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
           </FadeIn>
 
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -2506,6 +2612,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Testimonial Submission Modal */}
+      <TestimonialSubmissionModal
+        isOpen={showTestimonialModal}
+        onClose={() => setShowTestimonialModal(false)}
+      />
     </div>
   );
 }

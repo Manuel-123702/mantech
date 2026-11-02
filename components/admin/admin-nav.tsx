@@ -55,8 +55,10 @@ export function AdminNav() {
             key={link.href}
             href={link.href}
             className={cn(
-              'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
-              active ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              'flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold transition-all',
+              active
+                ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30 font-bold'
+                : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
             )}
           >
             <Icon className="h-4 w-4" />

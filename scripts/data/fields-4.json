@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Fleet Management & Overland Transport",
+    "category": "Supply Chain & Logistics",
+    "specs": [
+      "GPS Fleet Tracking & Fuel Optimization",
+      "Road Freight Safety & Driver Compliance",
+      "Heavy Truck Maintenance Management",
+      "Interurban Passenger Transport Logistics",
+      "Railway Operations (Camrail)",
+      "Route Planning & Toll Management"
+    ]
+  },
+  {
+    "name": "Aviation Operations & Airport Ground Handling",
+    "category": "Supply Chain & Logistics",
+    "specs": [
+      "Passenger Check-in & Baggage Logistics",
+      "Air Cargo Ramp & Aircraft Marshalling",
+      "Aviation Safety & ICAO Regulations",
+      "Flight Dispatch & Operations Control",
+      "Airport Terminal Customer Services",
+      "Aircraft Refueling Logistics"
+    ]
+  },
+  {
+    "name": "Marketing Strategy, Brand Management & Sales",
+    "category": "Marketing & Media",
+    "specs": [
+      "B2B Commercial Account Management",
+      "Fast-Moving Consumer Goods (FMCG) Field Sales",
+      "Brand Strategy & Trade Marketing",
+      "Market Research & Consumer Insights",
+      "Retail Merchandising & Point of Sale",
+      "Customer Relationship Management (CRM)"
+    ]
+  },
+  {
+    "name": "Digital Marketing, SEO & Growth Hacking",
+    "category": "Marketing & Media",
+    "specs": [
+      "Social Media Management (Facebook/LinkedIn/TikTok)",
+      "Search Engine Optimization (SEO) & Google Ads",
+      "Email Marketing & Audience Automation",
+      "Influencer Campaigns & Content Marketing",
+      "Performance Analytics & Conversion Rate Optimization",
+      "Mobile App User Acquisition"
+    ]
+  },
+  {
+    "name": "Public Relations, Corporate Comms & Crisis Management",
+    "category": "Marketing & Media",
+    "specs": [
+      "Media Relations & Press Releases",
+      "Internal Communication & Culture",
+      "Crisis Communication & Reputation Defense",
+      "CSR & Sustainable Development Reporting",
+      "Executive Speechwriting & Thought Leadership",
+      "Event Spokesperson & Institutional Liaisons"
+    ]
+  },
+  {
+    "name": "Journalism, Mass Communication & Broadcasting",
+    "category": "Marketing & Media",
+    "specs": [
+      "Television & Radio Broadcast Production",
+      "Investigative Print & Web Journalism",
+      "Photojournalism & Field Reporting",
+      "News Editing & Fact-Checking",
+      "Podcast Production & Digital Storytelling",
+      "Bilingual News Anchoring"
+    ]
+  },
+  {
+    "name": "Graphic Design, UI/UX & Visual Arts",
+    "category": "Marketing & Media",
+    "specs": [
+      "Corporate Identity & Brand Guidelines",
+      "UI/UX Product Design (Figma)",
+      "Packaging Design & Print Production",
+      "Motion Graphics & After Effects",
+      "3D Modeling & Rendering",
+      "Typography & Editorial Layout"
+    ]
+  },
+  {
+    "name": "Film, Video Editing & Audiovisual Production",
+    "category": "Marketing & Media",
+    "specs": [
+      "Cinematography & Camera Operations",
+      "Video Post-Production (Premiere/DaVinci)",
+      "Sound Engineering & Foley",
+      "Commercial & Corporate Video Directing",
+      "Drone Aerial Videography",
+      "Color Grading & Visual Effects (VFX)"
+    ]
+  },
+  {
+    "name": "Corporate Law, Business Contracts & OHADA",
+    "category": "Legal & Public Policy",
+    "specs": [
+      "Commercial Contract Drafting & Review",
+      "Corporate Governance & Board Support",
+      "OHADA Uniform Acts Compliance",
+      "Labor Law & Employment Disputes",
+      "Intellectual Property & OAPI Trademarks",
+      "Debt Recovery & Judicial Litigation"
+    ]
+  },
+  {
+    "name": "Tax Law, Customs & International Trade Regulations",
+    "category": "Legal & Public Policy",
+    "specs": [
+      "Cameroon General Tax Code (CGI)",
+      "CEMAC Customs Code & Tariff Schedules",
+      "AfCFTA Intra-African Trade Compliance",
+      "Transfer Pricing & Cross-Border Taxation",
+      "Tax Audit Defense & Litigation",
+      "Double Taxation Treaties Advisory"
+    ]
+  }
+]

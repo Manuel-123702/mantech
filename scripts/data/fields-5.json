@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Public Administration & Decentralization",
+    "category": "Legal & Public Policy",
+    "specs": [
+      "Local Councils & Regional Assembly Management",
+      "Public Procurement (Passation des Marchés)",
+      "Public Treasury & State Budgeting",
+      "Municipal Services & Civil Registry",
+      "Decentralized Cooperation & Projects",
+      "Administrative Law & Public Ethics"
+    ]
+  },
+  {
+    "name": "Diplomacy, International Relations & NGO Management",
+    "category": "Legal & Public Policy",
+    "specs": [
+      "Humanitarian Project Lifecycle Management",
+      "Grant Proposal Writing & Donor Reporting",
+      "Bilateral & Multilateral Cooperation",
+      "Monitoring, Evaluation & Learning (MEL)",
+      "Refugee & IDP Humanitarian Coordination",
+      "Diplomatic Protocol & Consular Services"
+    ]
+  },
+  {
+    "name": "Human Resources Management & Talent Acquisition",
+    "category": "Human Resources & Organization",
+    "specs": [
+      "End-to-End Talent Recruitment",
+      "Onboarding & Career Progression Paths",
+      "Performance Appraisal & KPIs",
+      "HR Information Systems (HRIS)",
+      "Compensation & Benefits Benchmarking",
+      "Diversity, Equity & Inclusion Policies"
+    ]
+  },
+  {
+    "name": "Industrial Relations & Labor Compliance",
+    "category": "Human Resources & Organization",
+    "specs": [
+      "Trade Union Negotiations & Social Dialogue",
+      "Staff Representative Elections (Délégués du Personnel)",
+      "Disciplinary Procedures & Dismissal Compliance",
+      "Internal Company Rules (Règlement Intérieur)",
+      "Labor Inspectorate Inspections Defense",
+      "Workplace Conflict Mediation"
+    ]
+  },
+  {
+    "name": "Occupational Health, Safety & Environment (QHSE)",
+    "category": "Human Resources & Organization",
+    "specs": [
+      "Workplace Hazard Identification & Risk Assessment",
+      "ISO 45001 & ISO 14001 Implementation",
+      "Accident Investigation & Root Cause Analysis",
+      "Fire Safety & Emergency Response Plans",
+      "PPE Compliance & Ergonomics",
+      "Industrial Waste & Hazardous Chemical Management"
+    ]
+  },
+  {
+    "name": "Architecture & Sustainable Building Design",
+    "category": "Architecture & Environment",
+    "specs": [
+      "Residential & Commercial Architectural Design",
+      "Bioclimatic & Tropical Architecture",
+      "Building Permit Dossier Preparation",
+      "Interior Architecture & Space Planning",
+      "Architectural Rendering & 3D Walkthroughs",
+      "Historical Heritage Conservation"
+    ]
+  },
+  {
+    "name": "Urban Planning & Land Surveying (Cadastre)",
+    "category": "Architecture & Environment",
+    "specs": [
+      "Cadastral Demarcation & Title Registration",
+      "Urban Master Plans (PDU/POS)",
+      "GIS Cartography & Drone Mapping",
+      "Subdivision & Land Development Projects",
+      "Public Space & Transportation Urban Design",
+      "Slum Upgrading & Urban Drainage"
+    ]
+  },
+  {
+    "name": "Real Estate Property Management & Valuation",
+    "category": "Architecture & Environment",
+    "specs": [
+      "Commercial & Residential Asset Leasing",
+      "Property Valuation & Appraisal",
+      "Facilities & Utilities Management",
+      "Tenant Relationship & Rent Collection",
+      "Real Estate Investment Trusts & Syndication",
+      "Building Maintenance Coordination"
+    ]
+  },
+  {
+    "name": "Environmental Science & Climate Resilience",
+    "category": "Architecture & Environment",
+    "specs": [
+      "Environmental & Social Impact Assessment (ESIA)",
+      "Carbon Auditing & Climate Adaptation Plans",
+      "Biodiversity Conservation & Ecology",
+      "Reforestation & Mangrove Restoration",
+      "Solid Waste Recycling & Circular Economy",
+      "Environmental Compliance Monitoring"
+    ]
+  },
+  {
+    "name": "Water Engineering & Urban Sanitation",
+    "category": "Architecture & Environment",
+    "specs": [
+      "Potable Water Treatment & Pumping Stations",
+      "Urban Water Distribution Networks (Camwater)",
+      "Wastewater & Industrial Effluent Treatment",
+      "Stormwater Drainage & Flood Control",
+      "Hydraulic Modeling (Epanet/WaterCAD)",
+      "Rural Water Points & Borehole Drilling"
+    ]
+  }
+]

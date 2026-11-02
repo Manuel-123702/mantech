@@ -42,18 +42,23 @@ const FIELD_ICONS: Record<string, React.ElementType> = {
   "legal-compliance": Scale,
 };
 
-const FIELD_GRADIENTS: Record<string, string> = {
-  "software-cloud-engineering": "from-blue-600 to-cyan-600",
-  "cybersecurity-networks": "from-red-600 to-rose-600",
-  "data-science-ai": "from-violet-600 to-purple-600",
-  "finance-accounting": "from-emerald-600 to-teal-600",
-  "marketing-communications": "from-orange-500 to-amber-500",
-  "human-resources": "from-pink-600 to-rose-500",
-  "supply-chain-logistics": "from-slate-600 to-slate-700",
-  "engineering-industrial": "from-yellow-600 to-orange-600",
-  "healthcare-biotech": "from-green-600 to-emerald-600",
-  "legal-compliance": "from-indigo-600 to-blue-700",
-};
+function getCategoryGradient(category?: string) {
+  const cat = (category || '').toLowerCase();
+  if (cat.includes('tech') || cat.includes('comput')) return 'from-blue-900 via-indigo-950 to-slate-900';
+  if (cat.includes('finance') || cat.includes('bank')) return 'from-emerald-900 via-teal-950 to-slate-900';
+  if (cat.includes('engineer') || cat.includes('construct')) return 'from-amber-900 via-orange-950 to-slate-900';
+  if (cat.includes('energy') || cat.includes('mining') || cat.includes('extract')) return 'from-yellow-950 via-amber-950 to-slate-900';
+  if (cat.includes('agri') || cat.includes('food')) return 'from-green-950 via-emerald-950 to-slate-900';
+  if (cat.includes('health') || cat.includes('medic') || cat.includes('life')) return 'from-rose-950 via-red-950 to-slate-900';
+  if (cat.includes('supply') || cat.includes('logist') || cat.includes('transport')) return 'from-cyan-950 via-blue-950 to-slate-900';
+  if (cat.includes('market') || cat.includes('media') || cat.includes('comm')) return 'from-purple-950 via-fuchsia-950 to-slate-900';
+  if (cat.includes('legal') || cat.includes('law') || cat.includes('policy')) return 'from-indigo-950 via-violet-950 to-slate-900';
+  if (cat.includes('human') || cat.includes('hr')) return 'from-pink-950 via-rose-950 to-slate-900';
+  if (cat.includes('arch') || cat.includes('environ')) return 'from-teal-950 via-emerald-950 to-slate-900';
+  if (cat.includes('lang') || cat.includes('humanities')) return 'from-violet-950 via-purple-950 to-slate-900';
+  if (cat.includes('hosp') || cat.includes('tour') || cat.includes('service')) return 'from-orange-950 via-amber-950 to-slate-900';
+  return 'from-slate-900 via-indigo-950 to-slate-900';
+}
 
 export default function FieldDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -121,24 +126,22 @@ export default function FieldDetailPage() {
   }
 
   const Icon = slug ? FIELD_ICONS[slug] || Briefcase : Briefcase;
-  const gradient = slug
-    ? FIELD_GRADIENTS[slug] || "from-blue-600 to-cyan-600"
-    : "from-blue-600 to-cyan-600";
+  const gradient = getCategoryGradient(field?.category);
   const isLoading = loading || taxonomyLoading;
 
   return (
     <div className="bg-slate-50 min-h-screen">
       {/* ── HERO ── */}
       <section
-        className={`relative py-20 lg:py-28 bg-gradient-to-br ${gradient} overflow-hidden`}
+        className={`relative py-20 lg:py-28 bg-slate-950 bg-gradient-to-br ${gradient} overflow-hidden`}
       >
         <div className="absolute inset-0 bg-black/40" />
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           <Link
             href="/fields"
-            className="inline-flex items-center gap-1.5 text-white/70 hover:text-white text-sm mb-8 transition-colors"
+            className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-sm mb-8 transition-colors bg-white/10 px-3.5 py-1.5 rounded-full border border-white/20 backdrop-blur-sm"
           >
-            <ChevronLeft className="w-4 h-4" /> All Fields
+            <ChevronLeft className="w-4 h-4" /> All 60 Fields
           </Link>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

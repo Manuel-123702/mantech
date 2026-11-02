@@ -353,12 +353,12 @@ export default async function InternDetailPage({
                 This candidate is registered in the MANTECH talent pool and
                 ready for placement opportunities across Cameroon.
               </p>
-              <Button
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-blue-900/20"
-                asChild
+              <a
+                href="/sign-in"
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2"
               >
-                <Link href="/sign-in/[[...sign-in]]">Contact This Candidate</Link>
-              </Button>
+                Contact This Candidate
+              </a>
               <p className="mt-4 text-[10px] text-slate-500 text-center">
                 Sign in to view full contact details and send a message.
               </p>
@@ -368,6 +368,4 @@ export default async function InternDetailPage({
       </div>
     </div>
   );
-}
-
-import { Button } from "@/components/ui/button";
+}

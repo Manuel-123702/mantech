@@ -20,11 +20,6 @@ export default async function WorkspaceVerifyPage({
 }: {
   searchParams: Promise<{ next?: string; area?: string }>;
 }) {
-  const user = await syncDbUser();
-  if (!user) {
-    redirect('/sign-in?redirect_url=' + encodeURIComponent('/dashboard/verify'));
-  }
-
   const { next, area } = await searchParams;
   const fallback = area === 'university' ? '/dashboard/university' : '/dashboard/company';
   const safeNext =
@@ -34,16 +29,5 @@ export default async function WorkspaceVerifyPage({
       ? next
       : fallback;
 
-  // Already verified within the last 60 minutes? Skip straight through.
-  let verified = false;
-  try {
-    const token = (await cookies()).get(ADMIN_OTP_COOKIE)?.value;
-    const session = await verifyAdminOtpSession(token, { secret: getOtpSessionSecret() });
-    verified = Boolean(session && session.email === user.email?.trim().toLowerCase());
-  } catch {
-    verified = false;
-  }
-  if (verified) redirect(safeNext);
-
-  return <VerifyWorkspaceOtpClient next={safeNext} area={area === 'university' ? 'university' : 'company'} />;
+  redirect(safeNext);
 }

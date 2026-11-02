@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Civil Engineering & Structural Works (BTP)",
+    "category": "Engineering & Construction",
+    "specs": [
+      "Reinforced Concrete & Steel Structures",
+      "Roads, Highways & Bridges (Travaux Publics)",
+      "Topography & Geotechnical Investigation",
+      "BIM Modeling (AutoCAD/Revit)",
+      "Construction Site Supervision",
+      "Cost Estimation & Quantity Surveying"
+    ]
+  },
+  {
+    "name": "Electrical Power Systems & High-Voltage Transmission",
+    "category": "Engineering & Construction",
+    "specs": [
+      "HV/MV Grid Distribution & Substations",
+      "Industrial Electrical Installations",
+      "Protection Relays & Switchgear Systems",
+      "Smart Metering & Billing Systems",
+      "Power Quality Analysis",
+      "Electrical Safety & Earthing Systems"
+    ]
+  },
+  {
+    "name": "Renewable Energy & Solar Installations",
+    "category": "Engineering & Construction",
+    "specs": [
+      "Photovoltaic (PV) Solar Plant Design",
+      "Mini-Grid & Rural Electrification",
+      "Hydroelectric Micro-Turbine Systems",
+      "Biomass & Biogas Generation",
+      "Energy Storage (BESS) Systems",
+      "Energy Efficiency Auditing"
+    ]
+  },
+  {
+    "name": "Mechanical Engineering & Heavy Equipment Maintenance",
+    "category": "Engineering & Construction",
+    "specs": [
+      "Industrial Hydraulics & Pneumatics",
+      "Heavy Machinery & Earthmoving Equipment",
+      "Turbines, Boilers & Pumps",
+      "Preventive & Predictive Maintenance",
+      "Computer-Aided Mechanical Design (SolidWorks)",
+      "Welding, Fabrication & NDT Testing"
+    ]
+  },
+  {
+    "name": "Industrial Automation, Mechatronics & PLC Systems",
+    "category": "Engineering & Construction",
+    "specs": [
+      "Siemens & Schneider PLC Programming",
+      "SCADA & HMI Supervisory Control",
+      "Instrumentation & Sensor Calibration",
+      "Industrial Robotics & Servo Systems",
+      "Variable Frequency Drives (VFD)",
+      "Industrial Network Protocols (Modbus/Profibus)"
+    ]
+  },
+  {
+    "name": "Petroleum & Gas Engineering (Upstream & Downstream)",
+    "category": "Energy & Extractive Industries",
+    "specs": [
+      "Offshore Drilling & Well Operations",
+      "Reservoir Engineering & Simulation",
+      "Oil & Gas Pipeline Maintenance",
+      "Refinery Operations & Quality Control",
+      "LPG & Natural Gas Distribution",
+      "SNH & Hydrocarbon Regulatory Compliance"
+    ]
+  },
+  {
+    "name": "Mining Engineering & Mineral Extraction",
+    "category": "Energy & Extractive Industries",
+    "specs": [
+      "Open-Pit & Underground Mine Planning",
+      "Mineral Exploration & Core Sampling",
+      "Ore Processing & Beneficiation (Iron, Bauxite, Gold)",
+      "Mine Safety & Ventilation",
+      "Tailings Management & Environmental Remediation",
+      "Geographic Information Systems (GIS) for Mining"
+    ]
+  },
+  {
+    "name": "Geology, Geophysics & Hydrology",
+    "category": "Energy & Extractive Industries",
+    "specs": [
+      "Hydrogeological Surveys & Well Drilling",
+      "Geophysical Logging (Resistivity & Seismic)",
+      "Stratigraphy & Sedimentology",
+      "Soil Mechanics & Foundation Testing",
+      "Groundwater Resource Management",
+      "Geological Hazard Assessment"
+    ]
+  },
+  {
+    "name": "Agronomy, Crop Science & Plant Protection",
+    "category": "Agriculture & Agro-Industry",
+    "specs": [
+      "Cash Crop Cultivation (Cacao, Coffee, Palm, Banana)",
+      "Cereal & Tuber Production (Maize, Cassava, Rice)",
+      "Integrated Pest & Weed Management",
+      "Soil Fertility & Fertilizer Formulations",
+      "Greenhouse Farming & Drip Irrigation",
+      "Seed Multiplication & Plant Breeding"
+    ]
+  },
+  {
+    "name": "Agro-Industrial Processing & Food Technology",
+    "category": "Agriculture & Agro-Industry",
+    "specs": [
+      "Beverage & Brewery Production (Brasseries)",
+      "Palm Oil & Vegetable Oil Refining",
+      "Flour Milling & Bakery Formulations",
+      "Dairy & Livestock Processing",
+      "HACCP & ISO 22000 Food Safety Standards",
+      "Packaging & Shelf-Life Extension"
+    ]
+  }
+]

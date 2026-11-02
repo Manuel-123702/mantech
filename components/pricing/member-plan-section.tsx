@@ -130,11 +130,10 @@ export function MemberPlanSection() {
                 </ul>
 
                 {/* Answers the obvious question before it is asked. */}
-                <div className="mt-7 rounded-xl border border-dashed border-slate-800 bg-slate-900/80 p-4">
-                  <p className="text-xs leading-relaxed text-slate-400">
-                    <strong className="font-semibold text-white">Who pays?</strong>{" "}
-                    Companies and universities pay for recruiter tools and visibility.
-                    That is the only money MANTECH takes.
+                <div className="mt-7 rounded-xl border border-dashed border-emerald-500/40 bg-emerald-950/40 p-4">
+                  <p className="text-xs leading-relaxed text-emerald-200">
+                    <strong className="font-semibold text-white">100% Free Launch Phase:</strong>{" "}
+                    All candidate tools, company recruiting accounts, and university placement portals are currently 0 FCFA. No charges, no payment credentials required.
                   </p>
                 </div>
               </div>
@@ -148,19 +147,19 @@ export function MemberPlanSection() {
 
 const SUBSCRIPTION_STEPS = [
   {
-    title: "Choose your plan",
-    text: "Tell us what you need: how many vacancies you have, the roles you hire for, and how many people will use the account. You can change or stop at any time.",
+    title: "Create your organization workspace",
+    text: "Register your company or academic institution in under 2 minutes. Enter your organization details and primary contact information.",
     tone: "blue",
   },
   {
-    title: "Email us or message on WhatsApp",
-    text: "Write to us with the plan you want. We reply with the steps to pay. No card details are ever stored on this site.",
-    tone: "amber",
+    title: "100% Free Access (0 FCFA)",
+    text: "During this launch phase, all recruiter features, candidate discovery, and unlimited opportunity postings are completely free of charge.",
+    tone: "emerald",
   },
   {
-    title: "We switch it on",
-    text: "Once we confirm your payment, a member of our team activates your plan and your team can start posting the same day.",
-    tone: "emerald",
+    title: "Start Posting & Hiring Immediately",
+    text: "Publish verified internships, jobs, and fellow opportunities, or connect directly with students and candidates via WhatsApp and dashboard.",
+    tone: "amber",
   },
 ] as const;
 
@@ -250,15 +249,6 @@ export function SubscriptionProcess({
           </p>
         </div>
         <div className="flex flex-wrap gap-2.5 sm:flex-nowrap lg:shrink-0">
-          <a
-            href={APP_CONFIG.support.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 text-xs font-bold text-white shadow-md shadow-green-600/25 transition-colors hover:bg-[#128C7E]"
-          >
-            <WhatsAppIcon className="h-3.5 w-3.5" title="WhatsApp" />
-            Message on WhatsApp
-          </a>
           <a
             href={APP_CONFIG.support.whatsapp}
             target="_blank"

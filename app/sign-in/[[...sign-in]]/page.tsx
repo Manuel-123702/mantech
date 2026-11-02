@@ -53,6 +53,7 @@ export default function SignInPage() {
                   },
                 }}
                 fallbackRedirectUrl="/"
+                forceRedirectUrl="/"
               />
             </Suspense>
           ) : (

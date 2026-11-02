@@ -1,5 +1,6 @@
-﻿'use client';
+'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
@@ -15,7 +16,8 @@ import {
   Heart,
   Scale,
   Sparkles,
-  Layers,
+  Search,
+  Filter,
 } from 'lucide-react';
 import { useTaxonomy } from '@/lib/use-taxonomy';
 import { WhatsAppIcon } from '@/components/shared/whatsapp-icon';
@@ -24,41 +26,71 @@ import {
   MotionItem,
   AnimatedCard,
   FloatingBadge,
-  SectionHeader,
 } from '@/components/shared/section-animations';
 
 const FIELD_ICONS: Record<string, React.ElementType> = {
   'software-cloud-engineering': Cpu,
+  'information-technology-and-software-engineering': Cpu,
   'cybersecurity-networks': Shield,
+  'cybersecurity-and-information-assurance': Shield,
   'data-science-ai': BarChart2,
+  'data-science-analytics-and-artificial-intelligence': BarChart2,
   'finance-accounting': DollarSign,
+  'accounting-audit-and-corporate-taxation': DollarSign,
+  'banking-and-commercial-credit': DollarSign,
   'marketing-communications': Megaphone,
+  'marketing-strategy-brand-management-and-sales': Megaphone,
   'human-resources': Users,
+  'human-resources-management-and-talent-acquisition': Users,
   'supply-chain-logistics': Package,
+  'supply-chain-warehousing-and-inventory-control': Package,
   'engineering-industrial': Cog,
+  'mechanical-engineering-and-heavy-equipment-maintenance': Cog,
   'healthcare-biotech': Heart,
+  'general-medicine-and-hospital-clinical-care': Heart,
   'legal-compliance': Scale,
+  'corporate-law-business-contracts-and-ohada': Scale,
 };
 
-const FIELD_COLORS: Record<string, string> = {
-  'software-cloud-engineering': 'from-blue-600 to-cyan-600',
-  'cybersecurity-networks': 'from-red-600 to-rose-600',
-  'data-science-ai': 'from-violet-600 to-purple-600',
-  'finance-accounting': 'from-emerald-600 to-teal-600',
-  'marketing-communications': 'from-orange-500 to-amber-500',
-  'human-resources': 'from-pink-600 to-rose-500',
-  'supply-chain-logistics': 'from-slate-600 to-slate-700',
-  'engineering-industrial': 'from-yellow-600 to-orange-600',
-  'healthcare-biotech': 'from-green-600 to-emerald-600',
-  'legal-compliance': 'from-indigo-600 to-blue-700',
-};
+function getCategoryGradient(category?: string) {
+  const cat = (category || '').toLowerCase();
+  if (cat.includes('tech') || cat.includes('comput')) return 'from-blue-900 via-indigo-950 to-slate-900';
+  if (cat.includes('finance') || cat.includes('bank')) return 'from-emerald-900 via-teal-950 to-slate-900';
+  if (cat.includes('engineer') || cat.includes('construct')) return 'from-amber-900 via-orange-950 to-slate-900';
+  if (cat.includes('energy') || cat.includes('mining') || cat.includes('extract')) return 'from-yellow-950 via-amber-950 to-slate-900';
+  if (cat.includes('agri') || cat.includes('food')) return 'from-green-950 via-emerald-950 to-slate-900';
+  if (cat.includes('health') || cat.includes('medic') || cat.includes('life')) return 'from-rose-950 via-red-950 to-slate-900';
+  if (cat.includes('supply') || cat.includes('logist') || cat.includes('transport')) return 'from-cyan-950 via-blue-950 to-slate-900';
+  if (cat.includes('market') || cat.includes('media') || cat.includes('comm')) return 'from-purple-950 via-fuchsia-950 to-slate-900';
+  if (cat.includes('legal') || cat.includes('law') || cat.includes('policy')) return 'from-indigo-950 via-violet-950 to-slate-900';
+  if (cat.includes('human') || cat.includes('hr')) return 'from-pink-950 via-rose-950 to-slate-900';
+  if (cat.includes('arch') || cat.includes('environ')) return 'from-teal-950 via-emerald-950 to-slate-900';
+  if (cat.includes('lang') || cat.includes('humanities')) return 'from-violet-950 via-purple-950 to-slate-900';
+  if (cat.includes('hosp') || cat.includes('tour') || cat.includes('service')) return 'from-orange-950 via-amber-950 to-slate-900';
+  return 'from-slate-900 via-indigo-950 to-slate-900';
+}
 
 export default function FieldsPage() {
   const { fields, loading, error } = useTaxonomy();
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const categories = ['all', ...Array.from(new Set(fields.map((f) => f.category).filter(Boolean)))];
+
+  const filteredFields = fields.filter((field) => {
+    const matchesSearch =
+      search.trim() === '' ||
+      field.name.toLowerCase().includes(search.toLowerCase()) ||
+      field.category?.toLowerCase().includes(search.toLowerCase()) ||
+      field.specializations?.some((s) => s.name.toLowerCase().includes(search.toLowerCase()));
+    const matchesCategory =
+      selectedCategory === 'all' || field.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="bg-slate-50 min-h-screen overflow-hidden">
-      {/* â”€â”€ HERO WITH BLUR REVEAL â”€â”€ */}
+      {/* HERO SECTION */}
       <section className="relative py-20 lg:py-28 bg-gradient-to-br from-slate-950 via-violet-950 to-slate-900 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/grid.svg')] bg-center opacity-10" />
         <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
@@ -70,14 +102,14 @@ export default function FieldsPage() {
             <FloatingBadge className="mb-4">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-violet-300 backdrop-blur-md shadow-sm">
                 <Sparkles className="w-3.5 h-3.5" />
-                All Professional Disciplines
+                60 Professional Disciplines
               </span>
             </FloatingBadge>
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
-              Explore Internships by Discipline
+              Explore Careers & Internships by Discipline
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
-              MANTECH Nexus covers all professional fields across Cameroon â€” from software engineering and cybersecurity to finance, law, healthcare, and logistics.
+              MANTECH Nexus covers 60 professional fields across Cameroon — spanning technology, engineering, agriculture, healthcare, banking, law, logistics, media, and vocational sectors.
             </p>
           </motion.div>
 
@@ -88,7 +120,7 @@ export default function FieldsPage() {
             className="mt-8 flex flex-wrap justify-center gap-3 text-xs text-slate-300"
           >
             <span className="bg-slate-800/80 px-3.5 py-1.5 rounded-full border border-slate-700/80 backdrop-blur-sm">
-              {loading ? 'Loading' : fields.length} Professional Disciplines
+              {loading ? 'Loading...' : `${fields.length} Professional Disciplines`}
             </span>
             <span className="bg-slate-800/80 px-3.5 py-1.5 rounded-full border border-slate-700/80 backdrop-blur-sm">
               10 Cameroon Regions
@@ -97,66 +129,115 @@ export default function FieldsPage() {
               Verified Host Opportunities
             </span>
           </motion.div>
+
+          {/* Search bar & Category Filter */}
+          <div className="mt-8 max-w-xl mx-auto flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search disciplines or skills (e.g. Agronomy, Cloud, Surgery)..."
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg"
+              />
+            </div>
+            {categories.length > 2 && (
+              <div className="relative">
+                <Filter className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="pl-10 pr-6 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg appearance-none cursor-pointer"
+                >
+                  {categories.map((c) => (
+                    <option key={c} value={c} className="bg-slate-900 text-white">
+                      {c === 'all' ? 'All Sectors' : c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* â”€â”€ FIELDS GRID WITH 3D PERSPECTIVE FLIP â”€â”€ */}
-      <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-b border-slate-200/80 relative overflow-hidden">
+      {/* FIELDS GRID */}
+      <section className="py-20 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-b border-slate-200/80 relative overflow-hidden">
         <div className="absolute top-10 right-10 w-96 h-96 bg-violet-500/10 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
         <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
           {error && <p role="alert" className="mb-6 text-center text-sm text-red-700">{error}</p>}
           
-          {/* CSS-safe grid: cards fade in on mount (no viewport observer), so text
-              is never left invisible when the IntersectionObserver doesn't fire. */}
+          <div className="mb-6 flex items-center justify-between text-sm text-slate-600">
+            <span>Showing <strong className="text-slate-900">{filteredFields.length}</strong> disciplines</span>
+            {search && (
+              <button
+                onClick={() => { setSearch(''); setSelectedCategory('all'); }}
+                className="text-xs text-blue-600 hover:underline font-semibold"
+              >
+                Clear search
+              </button>
+            )}
+          </div>
+
           <motion.div
             initial="hidden"
             animate="visible"
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } } }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04, delayChildren: 0.03 } } }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {fields.map((field) => {
+            {filteredFields.map((field) => {
               const Icon = FIELD_ICONS[field.slug] || Cpu;
-              const gradient = FIELD_COLORS[field.slug] || 'from-slate-600 to-slate-700';
+              const gradient = getCategoryGradient(field.category);
 
               return (
                 <MotionItem key={field.id} motion="flip3D">
                   <AnimatedCard className="h-full">
                     <Link
                       href={`/fields/${field.slug}`}
-                      className="group block h-full bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                      className="group block h-full bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1"
                     >
-                      {/* Header */}
-                      <div className={`bg-gradient-to-br ${gradient} p-6 relative overflow-hidden`}>
+                      {/* Header - High contrast dark background with guaranteed text visibility */}
+                      <div className={`p-6 relative overflow-hidden bg-slate-950 bg-gradient-to-br ${gradient} border-b border-slate-800`}>
                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" />
                         <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-6 -mb-6" />
                         <div className="relative z-10">
-                          <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-3 backdrop-blur-sm shadow-inner group-hover:scale-110 transition-transform">
+                          <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center mb-3 backdrop-blur-sm border border-white/20 shadow-inner group-hover:scale-110 transition-transform">
                             <Icon className="w-6 h-6 text-white" />
                           </div>
-<h2 className="font-heading font-bold text-white text-lg leading-snug">{field.name}</h2>
-<p className="text-xs font-medium text-blue-200 mt-1">{field.category}</p>
+                          <h2 className="font-heading font-extrabold text-white text-lg leading-snug drop-shadow-sm">
+                            {field.name}
+                          </h2>
+                          <p className="text-xs font-semibold text-blue-200 mt-1 uppercase tracking-wider">
+                            {field.category}
+                          </p>
                         </div>
                       </div>
 
                       {/* Body */}
-                      <div className="p-6 flex-1 flex flex-col justify-between">
+                      <div className="p-6 flex-1 flex flex-col justify-between bg-white">
                         <div className="flex flex-wrap gap-1.5 mb-5">
-                          {field.specializations.slice(0, 3).map((spec) => (
-                            <span key={spec.id} className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">
+                          {field.specializations.slice(0, 4).map((spec) => (
+                            <span
+                              key={spec.id}
+                              className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 text-xs font-semibold border border-slate-200/90"
+                            >
                               {spec.name}
                             </span>
                           ))}
-                          {field.specializations.length > 3 && (
-                            <span className="px-2 py-1 rounded-md bg-slate-100 text-slate-400 text-xs">
-                              +{field.specializations.length - 3} more
+                          {field.specializations.length > 4 && (
+                            <span className="px-2 py-1 rounded-md bg-slate-50 text-slate-500 font-medium text-xs border border-dashed border-slate-200">
+                              +{field.specializations.length - 4} more
                             </span>
                           )}
                         </div>
 
                         <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                          <span className="text-xs text-slate-400 font-medium">{field.specializations.length} specializations</span>
-                          <span className="text-xs font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                          <span className="text-xs text-slate-600 font-medium">
+                            {field.specializations.length} specializations
+                          </span>
+                          <span className="text-xs font-bold text-blue-600 group-hover:text-blue-700 flex items-center gap-1 group-hover:gap-2 transition-all">
                             Browse Openings <ArrowRight className="w-3.5 h-3.5" />
                           </span>
                         </div>
@@ -170,9 +251,8 @@ export default function FieldsPage() {
         </div>
       </section>
 
-      {/* â”€â”€ CTA WITH SCALE-IN â”€â”€ */}
+      {/* CTA SECTION */}
       <section className="py-20 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-t border-slate-200/80 relative overflow-hidden">
-        {/* Subtle decorative glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-2xl mx-auto relative z-10">
@@ -192,6 +272,11 @@ export default function FieldsPage() {
               <Link href="/internships">
                 <span className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-all text-xs shadow-md shadow-blue-600/20 hover:scale-105">
                   All Internships <ArrowRight className="w-4 h-4" />
+                </span>
+              </Link>
+              <Link href="/jobs">
+                <span className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition-all text-xs shadow-md shadow-indigo-600/20 hover:scale-105">
+                  All Jobs <ArrowRight className="w-4 h-4" />
                 </span>
               </Link>
               <a

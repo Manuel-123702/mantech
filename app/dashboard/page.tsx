@@ -46,7 +46,7 @@ const WORKSPACES = [
     href: '/dashboard/company',
     title: 'Company Dashboard',
     description:
-      'Post internships, search for candidates, review CVs, arrange interviews and recruit. Open to every member after a quick email verification.',
+      'Post internships and jobs, search candidates, review CVs, arrange interviews and recruit talent across Cameroon.',
     icon: Building2,
     roles: ['intern', 'company', 'university', 'admin'],
     openToAll: true,
@@ -55,7 +55,7 @@ const WORKSPACES = [
     href: '/dashboard/university',
     title: 'University Dashboard',
     description:
-      'Help students find internships, and recruit interns to work at the institution. Open to every member after a quick email verification.',
+      'Coordinate tripartite conventions, monitor student placements, and connect departments with accredited host enterprises.',
     icon: GraduationCap,
     roles: ['intern', 'company', 'university', 'admin'],
     openToAll: true,
@@ -135,8 +135,8 @@ export default function DashboardRootPage() {
                         <Icon className="h-5 w-5 text-blue-700" aria-hidden="true" />
                       </span>
                       {permitted ? (
-                        <Badge className={isOpenToAll ? 'bg-blue-600' : 'bg-blue-600'}>
-                          {isOpenToAll ? 'Verify by email' : 'You can open this'}
+                        <Badge className="bg-blue-600">
+                          {isOpenToAll ? 'Ready for you' : 'You can open this'}
                         </Badge>
                       ) : (
                         <Badge variant="outline">Needs permission</Badge>

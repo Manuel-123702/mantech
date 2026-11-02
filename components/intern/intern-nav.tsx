@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/dashboard/intern", label: "Overview", icon: LayoutDashboard },
   { href: "/internships", label: "Browse Internships", icon: Search },
+  { href: "/jobs", label: "Browse Jobs", icon: Briefcase },
   {
     href: "/dashboard/intern/applications",
     label: "My Applications",
@@ -54,6 +55,9 @@ export function InternNav() {
     if (href === "/internships") {
       return pathname === href || pathname.startsWith("/internships/");
     }
+    if (href === "/jobs") {
+      return pathname === href || pathname.startsWith("/jobs/");
+    }
     return pathname.startsWith(href);
   };
 
@@ -67,10 +71,10 @@ export function InternNav() {
             key={link.href}
             href={link.href}
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
               active
-                ? "bg-blue-600 text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 font-bold"
+                : "text-slate-300 hover:bg-slate-800/80 hover:text-white",
             )}
           >
             <Icon className="h-4 w-4" />

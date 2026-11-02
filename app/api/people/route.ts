@@ -17,9 +17,19 @@ export async function GET(request: Request) {
           select: {
             id: true,
             qualification: true,
+            academicLevel: true,
+            institution: true,
+            targetRole: true,
+            readinessScore: true,
             city: true,
             cvUrl: true,
             profileCompleted: true,
+            fieldOfStudy: {
+              select: { name: true, slug: true },
+            },
+            passport: {
+              select: { passportNumber: true, headline: true, isVerified: true },
+            },
             skills: {
               include: { skill: { select: { name: true } } },
               take: 5,

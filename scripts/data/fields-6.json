@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Bilingual Translation & Conference Interpretation",
+    "category": "Languages & Humanities",
+    "specs": [
+      "English to French Technical Translation",
+      "French to English Legal & Financial Translation",
+      "Simultaneous Conference Interpretation",
+      "Subtitling, Dubbing & Media Localization",
+      "Terminology Management & CAT Tools (Trados)",
+      "Sworn Court & Notary Translation"
+    ]
+  },
+  {
+    "name": "Higher Education, Pedagogy & E-Learning",
+    "category": "Languages & Humanities",
+    "specs": [
+      "Instructional Design & E-Learning Modules",
+      "Learning Management Systems (Moodle/Canvas)",
+      "University Curriculum Development",
+      "Academic Assessment & Examination Systems",
+      "Technical & Vocational Education (TVET/MINFOP)",
+      "Student Academic Counseling"
+    ]
+  },
+  {
+    "name": "Clinical Psychology & Mental Health Support",
+    "category": "Languages & Humanities",
+    "specs": [
+      "Individual & Group Psychotherapy",
+      "Psychosocial Support in Conflict Zones",
+      "Workplace Stress & Burnout Management",
+      "Child & Adolescent Psychological Evaluation",
+      "Addiction & Substance Abuse Rehabilitation",
+      "Trauma-Informed Counseling"
+    ]
+  },
+  {
+    "name": "Social Work & Community Development",
+    "category": "Languages & Humanities",
+    "specs": [
+      "Child Protection & Vulnerable Persons Care",
+      "Community Sensitization & Empowerment",
+      "Gender-Based Violence (GBV) Case Management",
+      "Micro-Project Cooperative Supervision",
+      "Reintegration of Incarcerated Individuals",
+      "Social Survey Design & Fieldwork"
+    ]
+  },
+  {
+    "name": "Hospitality Management & Hotel Operations",
+    "category": "Hospitality & Services",
+    "specs": [
+      "Front Office & Concierge Management",
+      "Housekeeping & Facilities Standards",
+      "Food & Beverage (F&B) Management",
+      "Hotel Revenue Management & Pricing",
+      "Hospitality ERP (Opera/Protel)",
+      "Guest Experience & VIP Protocol"
+    ]
+  },
+  {
+    "name": "Tourism Planning, Ecotourism & Travel Services",
+    "category": "Hospitality & Services",
+    "specs": [
+      "Tour Packaging & Itinerary Design",
+      "Ecotourism in National Parks (Waza, Korup)",
+      "Amadeus & Sabre GDS Airline Ticketing",
+      "Cultural & Heritage Tourism Promotion",
+      "Travel Agency Operations & Customer Relations",
+      "Tourism Marketing for Cameroon Destination"
+    ]
+  },
+  {
+    "name": "Culinary Arts, Gastronomy & Catering Operations",
+    "category": "Hospitality & Services",
+    "specs": [
+      "Professional Kitchen Production (Hot/Cold)",
+      "Traditional Cameroonian Fine Gastronomy",
+      "Pastry, Bakery & Confectionery",
+      "Industrial & Corporate Catering Operations",
+      "Menu Engineering & Food Cost Control",
+      "Kitchen Hygiene & Food Safety Audits"
+    ]
+  },
+  {
+    "name": "Event Planning, Protocol & Conference Management",
+    "category": "Hospitality & Services",
+    "specs": [
+      "International Conferences & Summits Logistics",
+      "Corporate Gala & Product Launch Production",
+      "Official State Protocol & VIP Escorts",
+      "Audio-Visual & Stage Rigging Management",
+      "Exhibition & Trade Fair Booth Coordination",
+      "Event Risk Management & Crowd Control"
+    ]
+  },
+  {
+    "name": "Sports Management, Fitness & Physical Coaching",
+    "category": "Hospitality & Services",
+    "specs": [
+      "Football & Sports Club Administration",
+      "Athletic Conditioning & Performance Coaching",
+      "Gym & Fitness Center Operations",
+      "Sports Marketing & Sponsorship Acquisition",
+      "Youth Sports Academy Training",
+      "Sports Event Operations & Stadium Security"
+    ]
+  },
+  {
+    "name": "Fashion Design, Textile Technology & Garment Production",
+    "category": "Hospitality & Services",
+    "specs": [
+      "Haute Couture & Traditional African Wear",
+      "Pattern Making & Industrial Cutting",
+      "Textile Sourcing & Quality Assessment",
+      "Garment Factory Line Management",
+      "Fashion Merchandising & Showroom Sales",
+      "Accessory Design & Leather Crafting"
+    ]
+  }
+]

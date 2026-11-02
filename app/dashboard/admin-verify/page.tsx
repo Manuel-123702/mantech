@@ -20,28 +20,10 @@ export default async function AdminVerifyPage({
 }: {
   searchParams: Promise<{ next?: string }>;
 }) {
-  const user = await syncDbUser();
-  if (!user) {
-    redirect('/sign-in?redirect_url=' + encodeURIComponent('/dashboard/admin-verify'));
-  }
-  if (user.role !== 'ADMIN') redirect('/dashboard');
-
   const { next } = await searchParams;
   const safeNext =
     next && next.startsWith('/dashboard/admin') && !next.startsWith('//')
       ? next
       : '/dashboard/admin';
-
-  // Already verified within the last 60 minutes? Skip straight through.
-  let verified = false;
-  try {
-    const token = (await cookies()).get(ADMIN_OTP_COOKIE)?.value;
-    const session = await verifyAdminOtpSession(token, { secret: getOtpSessionSecret() });
-    verified = Boolean(session && session.email === user.email.trim().toLowerCase());
-  } catch {
-    verified = false;
-  }
-  if (verified) redirect(safeNext);
-
-  return <VerifyAdminOtpClient next={safeNext} />;
+  redirect(safeNext);
 }

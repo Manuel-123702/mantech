@@ -56,7 +56,8 @@ export default function SignUpPage() {
                     footerActionLink: 'text-cyan-400 hover:text-cyan-300 font-bold',
                   },
                 }}
-                fallbackRedirectUrl="/dashboard"
+                fallbackRedirectUrl="/"
+                forceRedirectUrl="/"
               />
             </Suspense>
           ) : (
