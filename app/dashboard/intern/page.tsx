@@ -83,61 +83,80 @@ export default async function InternDashboardPage() {
   // without a hard 401 wall. They see a feature overview + CTAs to sign in.
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="py-10 px-4 sm:px-6 lg:px-8 text-white">
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 mb-4">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-950/80 border border-blue-500/30 text-blue-400 mb-4 shadow-lg shadow-blue-900/30">
               <LayoutDashboard className="w-8 h-8" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-900 mb-2">Intern Dashboard</h1>
-            <p className="text-slate-600">
+            <h1 className="text-3xl font-extrabold text-white mb-2 font-heading">Intern Career Workspace</h1>
+            <p className="text-slate-300 text-sm">
               Track your internship applications, build your profile, and get
               matched with verified opportunities in Cameroon.
             </p>
           </div>
 
-          <Card className="shadow-sm">
-            <CardContent className="p-8">
-              <h2 className="text-lg font-semibold text-slate-900 mb-6">
-                What you can do here
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-blue-50/50">
-                  <Briefcase className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      Browse internships & jobs
-                    </p>
-                    <p className="text-xs text-slate-500">
-                      Discover verified opportunities from companies and
-                      universities across Cameroon.
-                    </p>
-                  </div>
+          <div className="rounded-3xl border border-slate-700/80 bg-slate-900/90 backdrop-blur-xl p-8 shadow-2xl">
+            <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-blue-400" />
+              What you can do here
+            </h2>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60">
+                <Briefcase className="w-5 h-5 text-blue-400 shrink-0" />
+                <div>
+                  <p className="text-sm font-bold text-white">
+                    Browse internships &amp; jobs
+                  </p>
+                  <p className="text-xs text-slate-300">
+                    Discover verified opportunities from companies and
+                    universities across Cameroon.
+                  </p>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-blue-50/50">
-                  <Award className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      Build your profile & passport
-                    </p>
-                    <p className="text-xs text-slate-500">
-                      Showcase your skills, education, and availability to
-                      recruiters.
-                    </p>
-                  </div>
+              </div>
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60">
+                <Award className="w-5 h-5 text-amber-400 shrink-0" />
+                <div>
+                  <p className="text-sm font-bold text-white">
+                    Build your profile &amp; passport
+                  </p>
+                  <p className="text-xs text-slate-300">
+                    Showcase your skills, education, and availability to
+                    recruiters.
+                  </p>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-blue-50/50">
-                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      Track your applications
-                    </p>
-                    <p className="text-xs text-slate-500">
-                      Follow your journey from submitted to selected — all in
-                      one place.
-                    </p>
-                  </div>
+              </div>
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                <div>
+                  <p className="text-sm font-bold text-white">
+                    Track your applications
+                  </p>
+                  <p className="text-xs text-slate-300">
+                    Follow your journey from submitted to selected — all in
+                    one place.
+                  </p>
                 </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-800">
+              <Link href="/sign-in" className="flex-1">
+                <Button className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold h-11 rounded-xl shadow-lg shadow-blue-600/25">
+                  Sign In to Your Workspace
+                </Button>
+              </Link>
+              <Link href="/register/intern" className="flex-1">
+                <Button variant="outline" className="w-full border-slate-700 bg-slate-800/80 text-white hover:bg-slate-700 h-11 rounded-xl">
+                  Register as Candidate
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
               </div>
 
               <div className="mt-8 pt-6 border-t border-slate-200">
@@ -371,27 +390,25 @@ export default async function InternDashboardPage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 text-white">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-heading">
           Welcome back, {profile.user.fullName.split(' ')[0]}
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Track your applications, interviews and progress on MANTECH.
+        <p className="mt-1 text-sm text-slate-300">
+          Track your applications, interviews and progress across Cameroon.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label} className="shadow-sm">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-3xl font-bold text-slate-900">{stat.value}</span>
-                <stat.icon className={`h-5 w-5 ${stat.tone}`} aria-hidden="true" />
-              </div>
-              <p className="mt-2 text-sm text-slate-600">{stat.label}</p>
-            </CardContent>
-          </Card>
+          <div key={stat.label} className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-5 shadow-xl hover:border-slate-600 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-3xl font-extrabold text-white font-heading">{stat.value}</span>
+              <stat.icon className={`h-6 w-6 ${stat.tone}`} aria-hidden="true" />
+            </div>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-400">{stat.label}</p>
+          </div>
         ))}
       </div>
 
@@ -399,301 +416,287 @@ export default async function InternDashboardPage() {
         inProgress.length > 0 ||
         todo.length > 0 ||
         unreadCount > 0) && (
-          <Card className="border-blue-200 bg-blue-50/40 shadow-sm">
-            <CardContent className="p-5">
-              <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
-                <Sparkles className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                Next actions
-              </h2>
-              <ul className="mt-3 space-y-2 text-sm">
-                {upcomingInterviews.slice(0, 2).map((interview) => (
-                  <li key={interview.id} className="flex flex-wrap items-center gap-2">
-                    <CalendarClock className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                    <span className="font-medium text-slate-900">Interview</span>
-                    <span className="text-slate-600">
-                      {interview.application?.opportunity?.title ?? 'Unknown opportunity'} ·{' '}
-                      {interview.application?.opportunity?.organization?.name ?? 'Unknown organization'}
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {new Date(interview.scheduledAt).toLocaleString()}
-                    </span>
-                  </li>
-                ))}
-                {inProgress.length > 0 && (
-                  <li className="flex flex-wrap items-center gap-2">
-                    <Award className="h-4 w-4 text-amber-600" aria-hidden="true" />
-                    <span className="font-medium text-slate-900">
-                      {inProgress.length} application{inProgress.length === 1 ? '' : 's'} in progress
-                    </span>
-                    <span className="text-slate-600">
-                      {inProgress.map((a) => statusLabel(a.status)).join(', ')}
-                    </span>
-                  </li>
-                )}
-                {todo.length > 0 && (
-                  <li className="flex flex-wrap items-center gap-2">
-                    <Circle className="h-4 w-4 text-amber-600" aria-hidden="true" />
-                    <span className="font-medium text-slate-900">Strengthen your profile</span>
-                    <span className="text-slate-600">
-                      {todo.length} item{todo.length === 1 ? '' : 's'} missing
-                    </span>
-                  </li>
-                )}
-                {unreadCount > 0 && (
-                  <li className="flex flex-wrap items-center gap-2">
-                    <Bell className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                    <span className="font-medium text-slate-900">
-                      {unreadCount} unread update{unreadCount === 1 ? '' : 's'}
-                    </span>
-                  </li>
-                )}
-              </ul>
-            </CardContent>
-          </Card>
-        )}
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-        <Card className="shadow-sm lg:col-span-2">
-          <CardContent className="p-6">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-base font-semibold text-slate-900">Profile readiness</h2>
-              <Badge
-                className={
-                  computedReadiness === 100
-                    ? 'bg-emerald-600'
-                    : 'bg-amber-100 text-amber-700'
-                }
-              >
-                {computedReadiness}% complete
-              </Badge>
-            </div>
-            <p className="mt-1 text-sm text-slate-600">
-              A complete profile gets shortlisted faster. Select an item to fix it.
-            </p>
-            <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {checklist.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    href={item.href}
-                    className="flex items-start gap-2 rounded-lg border border-slate-200 p-3 transition-colors hover:border-blue-300 hover:bg-blue-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
-                  >
-                    {item.done ? (
-                      <CheckCircle2
-                        className="h-4 w-4 shrink-0 text-emerald-600"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <Circle className="h-4 w-4 shrink-0 text-slate-300" aria-hidden="true" />
-                    )}
-                    <span className="min-w-0">
-                      <span
-                        className={`block text-sm font-medium ${item.done ? 'text-slate-500 line-through' : 'text-slate-900'
-                          }`}
-                      >
-                        {item.label}
-                      </span>
-                      <span className="block text-xs text-slate-500">{item.detail}</span>
-                    </span>
-                  </Link>
+          <div className="rounded-3xl border border-blue-500/30 bg-blue-950/40 backdrop-blur-xl p-6 shadow-xl text-white">
+            <h2 className="flex items-center gap-2 text-base font-bold text-blue-300 font-heading">
+              <Sparkles className="h-4 w-4 text-blue-400" aria-hidden="true" />
+              Next actions
+            </h2>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              {upcomingInterviews.slice(0, 2).map((interview) => (
+                <li key={interview.id} className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-slate-900/70 border border-slate-700/60">
+                  <CalendarClock className="h-4 w-4 text-blue-400" aria-hidden="true" />
+                  <span className="font-bold text-white">Interview:</span>
+                  <span className="text-slate-200">
+                    {interview.application?.opportunity?.title ?? 'Unknown opportunity'} ·{' '}
+                    {interview.application?.opportunity?.organization?.name ?? 'Unknown organization'}
+                  </span>
+                  <span className="text-xs text-blue-300 font-mono ml-auto">
+                    {new Date(interview.scheduledAt).toLocaleString()}
+                  </span>
                 </li>
               ))}
+              {inProgress.length > 0 && (
+                <li className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-slate-900/70 border border-slate-700/60">
+                  <Award className="h-4 w-4 text-amber-400" aria-hidden="true" />
+                  <span className="font-bold text-white">
+                    {inProgress.length} application{inProgress.length === 1 ? '' : 's'} in progress:
+                  </span>
+                  <span className="text-slate-300">
+                    {inProgress.map((a) => statusLabel(a.status)).join(', ')}
+                  </span>
+                </li>
+              )}
+              {todo.length > 0 && (
+                <li className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-slate-900/70 border border-slate-700/60">
+                  <Circle className="h-4 w-4 text-amber-400" aria-hidden="true" />
+                  <span className="font-bold text-white">Strengthen your profile:</span>
+                  <span className="text-slate-300">
+                    {todo.length} checklist item{todo.length === 1 ? '' : 's'} to improve readiness
+                  </span>
+                </li>
+              )}
+              {unreadCount > 0 && (
+                <li className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-slate-900/70 border border-slate-700/60">
+                  <Bell className="h-4 w-4 text-blue-400" aria-hidden="true" />
+                  <span className="font-bold text-white">
+                    {unreadCount} unread update{unreadCount === 1 ? '' : 's'}
+                  </span>
+                </li>
+              )}
             </ul>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-sm">
-          <CardContent className="p-6">
-            <h2 className="text-base font-semibold text-slate-900">Application pipeline</h2>
-            {applications.length === 0 ? (
-              <div className="mt-6 text-center">
-                <Briefcase className="mx-auto h-8 w-8 text-slate-300" aria-hidden="true" />
-                <p className="mt-3 text-sm text-slate-600">No applications yet.</p>
-                <Link href="/internships" className="mt-3 inline-block">
-                  <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700">
-                    Browse internships
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <ul className="mt-4 space-y-2">
-                {PIPELINE_STAGES.map((stage) => (
-                  <li key={stage} className="flex items-center justify-between text-sm">
-                    <span className="text-slate-600">{statusLabel(stage)}</span>
-                    <span className="font-semibold text-slate-900">
-                      {reachedStage(statuses, stage)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-      {recommended.length > 0 && (
-        <Card className="shadow-sm">
-          <CardContent className="p-6">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
-                <Sparkles className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                Recommended for you
-              </h2>
-              <Link
-                href="/internships"
-                className="text-sm font-medium text-blue-700 hover:underline"
-              >
-                Browse all internships
-              </Link>
-            </div>
-            <p className="mt-1 text-sm text-slate-600">
-              Ranked by how well each live opening matches your skills, field and location.
-            </p>
-            <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-              {recommended.map(({ opportunity, score, reasons }) => {
-                const color =
-                  score >= 70
-                    ? 'bg-emerald-100 text-emerald-700'
-                    : score >= 45
-                      ? 'bg-amber-100 text-amber-700'
-                      : 'bg-slate-100 text-slate-600';
-                return (
-                  <li key={opportunity.id}>
-                    <Link
-                      href={`/internships/${opportunity.slug}`}
-                      className="flex h-full flex-col rounded-xl border border-slate-200 p-4 transition-colors hover:border-blue-300 hover:bg-blue-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-sm font-semibold text-slate-900">
-                          {opportunity.title}
-                        </p>
-                        <span
-                          className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${color}`}
-                        >
-                          {score}%
-                        </span>
-                      </div>
-                      <p className="mt-1 text-xs text-slate-600">
-                        {opportunity.organization.name} · {opportunity.city}
-                      </p>
-                      <p className="mt-2 text-xs text-slate-500">
-                        {matchLabel(score)}
-                        {reasons.length > 0 ? ` · ${reasons.slice(0, 2).join(' · ')}` : ''}
-                      </p>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </CardContent>
-        </Card>
-      )}
-
-      <Card className="shadow-sm">
-        <CardContent className="p-0">
-          <div className="flex items-center justify-between border-b px-6 py-4">
-            <h2 className="text-base font-semibold text-slate-900">Recent applications</h2>
-            <Link
-              href="/dashboard/intern/applications"
-              className="text-sm font-medium text-blue-700 hover:underline"
-            >
-              View all
-            </Link>
           </div>
+        )}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className="rounded-3xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-6 shadow-xl lg:col-span-2 text-white">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-base font-bold text-white font-heading">Profile readiness</h2>
+            <Badge
+              className={
+                computedReadiness === 100
+                  ? 'bg-emerald-600 text-white font-bold'
+                  : 'bg-amber-500/20 text-amber-300 border-amber-500/30 font-bold'
+              }
+            >
+              {computedReadiness}% complete
+            </Badge>
+          </div>
+          <p className="mt-1 text-xs text-slate-300">
+            A complete profile gets shortlisted faster. Select an item to fix it.
+          </p>
+          <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {checklist.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={item.href}
+                  className="flex items-start gap-2.5 rounded-xl border border-slate-700/60 bg-slate-800/60 p-3 transition-colors hover:border-blue-400 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                >
+                  {item.done ? (
+                    <CheckCircle2
+                      className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <Circle className="h-4 w-4 shrink-0 text-slate-500 mt-0.5" aria-hidden="true" />
+                  )}
+                  <span className="min-w-0">
+                    <span
+                      className={`block text-xs font-semibold ${item.done ? 'text-slate-400 line-through' : 'text-white'
+                        }`}
+                    >
+                      {item.label}
+                    </span>
+                    <span className="block text-[11px] text-slate-400 mt-0.5">{item.detail}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-3xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-6 shadow-xl text-white">
+          <h2 className="text-base font-bold text-white font-heading">Application pipeline</h2>
           {applications.length === 0 ? (
-            <div className="px-6 py-12 text-center">
-              <Briefcase className="mx-auto h-8 w-8 text-slate-300" aria-hidden="true" />
-              <p className="mt-3 text-sm text-slate-600">
-                You have not applied to any internship yet.
-              </p>
-              <Link href="/internships" className="mt-3 inline-block">
-                <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700">
-                  Browse opportunities
+            <div className="mt-6 text-center">
+              <Briefcase className="mx-auto h-8 w-8 text-slate-500" aria-hidden="true" />
+              <p className="mt-3 text-xs text-slate-400">No applications yet.</p>
+              <Link href="/internships" className="mt-4 inline-block">
+                <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-500 rounded-xl text-xs">
+                  Browse internships
                 </Button>
               </Link>
             </div>
           ) : (
-            <ul className="divide-y">
-              {applications.slice(0, 5).map((application) => (
-                <li
-                  key={application.id}
-                  className="flex flex-wrap items-center justify-between gap-3 px-6 py-4"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-slate-900">
-                      {application.opportunity?.title ?? application.job?.title ?? 'Application'}
-                    </p>
-                    <p className="truncate text-sm text-slate-600">
-                      {application.opportunity?.organization.name ?? application.job?.organization.name ?? ''}
-                    </p>
-                  </div>
-                  <span
-                    className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${statusBadgeClass(application.status)}`}
-                  >
-                    {statusLabel(application.status)}
+            <ul className="mt-4 space-y-2.5">
+              {PIPELINE_STAGES.map((stage) => (
+                <li key={stage} className="flex items-center justify-between text-xs p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/40">
+                  <span className="text-slate-300 font-medium">{statusLabel(stage)}</span>
+                  <span className="font-extrabold text-white font-mono">
+                    {reachedStage(statuses, stage)}
                   </span>
                 </li>
               ))}
             </ul>
           )}
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-sm">
-        <CardContent className="flex flex-wrap items-center justify-between gap-4 p-6">
-          <div className="flex items-start gap-3">
-            <HistoryIcon className="mt-0.5 h-5 w-5 text-blue-600" aria-hidden="true" />
-            <div>
-              <h2 className="text-base font-semibold text-slate-900">Your journey</h2>
-              <p className="mt-0.5 text-sm text-slate-600">
-                {history.length} milestone{history.length === 1 ? '' : 's'} recorded from your
-                real activity on MANTECH.
-              </p>
-            </div>
-          </div>
-          <Link href="/dashboard/intern/history">
-            <Button variant="outline" size="sm">
-              View full journey
-              <ChevronRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-sm">
-        <CardContent className="flex flex-wrap items-center justify-between gap-4 p-6">
-          <div className="flex items-start gap-3">
-            <UserPlus className="mt-0.5 h-5 w-5 text-blue-600" aria-hidden="true" />
-            <div>
-              <h2 className="text-base font-semibold text-slate-900">Invite friends</h2>
-              <p className="mt-0.5 text-sm text-slate-600">
-                Your code{' '}
-                <span className="font-mono font-semibold text-slate-900">{referralStats.code}</span>
-                {' — '}
-                {referralStats.invited} joined
-                {referralStats.qualified > 0
-                  ? `, ${referralStats.qualified} completed onboarding`
-                  : ''}
-                .
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <ShareButton
-              path={`/sign-up?ref=${referralStats.code}`}
-              title="Join me on MANTECH Nexus"
-              text="Create your free account and discover verified internships in Cameroon."
-              label="Copy invite link"
-            />
-            <a
-              href={waReferralLink(referralStats.code)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+        </div>
+      </div>
+      {recommended.length > 0 && (
+        <div className="rounded-3xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-6 shadow-xl text-white">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="flex items-center gap-2 text-base font-bold text-white font-heading">
+              <Sparkles className="h-4 w-4 text-blue-400" aria-hidden="true" />
+              Recommended for you
+            </h2>
+            <Link
+              href="/internships"
+              className="text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors"
             >
-              <MessageCircle className="h-4 w-4" />
-              Share on WhatsApp
-            </a>
+              Browse all internships →
+            </Link>
           </div>
-        </CardContent>
-      </Card>
+          <p className="mt-1 text-xs text-slate-300">
+            Ranked by how well each live opening matches your skills, field and location.
+          </p>
+          <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {recommended.map(({ opportunity, score, reasons }) => {
+              const color =
+                score >= 70
+                  ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/30'
+                  : score >= 45
+                    ? 'bg-amber-950/80 text-amber-300 border border-amber-500/30'
+                    : 'bg-slate-800 text-slate-300 border border-slate-700';
+              return (
+                <li key={opportunity.id}>
+                  <Link
+                    href={`/internships/${opportunity.slug}`}
+                    className="flex h-full flex-col rounded-2xl border border-slate-700/60 bg-slate-800/60 p-4 transition-all hover:border-blue-400 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-sm font-bold text-white line-clamp-1">
+                        {opportunity.title}
+                      </p>
+                      <span
+                        className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-mono font-bold ${color}`}
+                      >
+                        {score}%
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-slate-400">
+                      {opportunity.organization.name} · {opportunity.city}
+                    </p>
+                    <p className="mt-2 text-[11px] text-slate-400">
+                      {matchLabel(score)}
+                      {reasons.length > 0 ? ` · ${reasons.slice(0, 2).join(' · ')}` : ''}
+                    </p>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      <div className="rounded-3xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl shadow-xl overflow-hidden text-white">
+        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
+          <h2 className="text-base font-bold text-white font-heading">Recent applications</h2>
+          <Link
+            href="/dashboard/intern/applications"
+            className="text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            View all →
+          </Link>
+        </div>
+        {applications.length === 0 ? (
+          <div className="px-6 py-12 text-center">
+            <Briefcase className="mx-auto h-8 w-8 text-slate-500" aria-hidden="true" />
+            <p className="mt-3 text-xs text-slate-400">
+              You have not applied to any internship yet.
+            </p>
+            <Link href="/internships" className="mt-4 inline-block">
+              <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-500 rounded-xl text-xs">
+                Browse opportunities
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <ul className="divide-y divide-slate-800">
+            {applications.slice(0, 5).map((application) => (
+              <li
+                key={application.id}
+                className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 hover:bg-slate-800/40 transition-colors"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-white">
+                    {application.opportunity?.title ?? application.job?.title ?? 'Application'}
+                  </p>
+                  <p className="truncate text-xs text-slate-400">
+                    {application.opportunity?.organization.name ?? application.job?.organization.name ?? ''}
+                  </p>
+                </div>
+                <span
+                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-bold ${statusBadgeClass(application.status)}`}
+                >
+                  {statusLabel(application.status)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="rounded-3xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-6 shadow-xl text-white flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <HistoryIcon className="mt-0.5 h-5 w-5 text-blue-400" aria-hidden="true" />
+          <div>
+            <h2 className="text-base font-bold text-white font-heading">Your journey</h2>
+            <p className="mt-0.5 text-xs text-slate-400">
+              {history.length} milestone{history.length === 1 ? '' : 's'} recorded from your
+              real activity on MANTECH.
+            </p>
+          </div>
+        </div>
+        <Link href="/dashboard/intern/history">
+          <Button variant="outline" size="sm" className="border-slate-700 bg-slate-800 text-white hover:bg-slate-700 rounded-xl text-xs">
+            View full journey
+            <ChevronRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
+          </Button>
+        </Link>
+      </div>
+
+      <div className="rounded-3xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-6 shadow-xl text-white flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <UserPlus className="mt-0.5 h-5 w-5 text-blue-400" aria-hidden="true" />
+          <div>
+            <h2 className="text-base font-bold text-white font-heading">Invite friends</h2>
+            <p className="mt-0.5 text-xs text-slate-400">
+              Your code{' '}
+              <span className="font-mono font-bold text-amber-300">{referralStats.code}</span>
+              {' — '}
+              {referralStats.invited} joined
+              {referralStats.qualified > 0
+                ? `, ${referralStats.qualified} completed onboarding`
+                : ''}
+              .
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <ShareButton
+            path={`/sign-up?ref=${referralStats.code}`}
+            title="Join me on MANTECH Nexus"
+            text="Create your free account and discover verified internships in Cameroon."
+            label="Copy invite link"
+          />
+          <a
+            href={waReferralLink(referralStats.code)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-950/60 px-3.5 py-2 text-xs font-bold text-emerald-300 transition-colors hover:bg-emerald-900/60"
+          >
+            <MessageCircle className="h-3.5 w-3.5 text-emerald-400" />
+            Share on WhatsApp
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

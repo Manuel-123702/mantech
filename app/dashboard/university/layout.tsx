@@ -8,7 +8,7 @@ export default async function UniversityDashboardLayout({ children }: { children
     return (
       <div
         className="min-h-screen relative bg-cover bg-center bg-fixed text-white"
-        style={{ backgroundImage: "url('/images/portal_tech_bg.jpg')" }}
+        style={{ backgroundImage: "url('/images/amber_tech_bg.jpg')" }}
       >
         <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[3px]" />
         <div className="relative z-10 p-6">{children}</div>
@@ -19,7 +19,7 @@ export default async function UniversityDashboardLayout({ children }: { children
   return (
     <div
       className="flex min-h-screen relative bg-cover bg-center bg-fixed text-white"
-      style={{ backgroundImage: "url('/images/portal_tech_bg.jpg')" }}
+      style={{ backgroundImage: "url('/images/amber_tech_bg.jpg')" }}
     >
       <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[3px]" />
 

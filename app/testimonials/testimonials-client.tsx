@@ -88,13 +88,13 @@ function canSend(draft: Draft): boolean {
   );
 }
 
-/** Turns initials into a coloured circle when there is no photo. */
+/** Turns initials into a dark-tinted coloured circle when there is no photo. */
 const AVATAR_TINTS = [
-  'bg-blue-100 text-blue-700',
-  'bg-emerald-100 text-emerald-700',
-  'bg-amber-100 text-amber-700',
-  'bg-violet-100 text-violet-700',
-  'bg-rose-100 text-rose-700',
+  'bg-blue-900/60 text-blue-300',
+  'bg-emerald-900/60 text-emerald-300',
+  'bg-amber-900/60 text-amber-300',
+  'bg-violet-900/60 text-violet-300',
+  'bg-rose-900/60 text-rose-300',
 ];
 
 function tintFor(seed: string): string {
@@ -109,8 +109,7 @@ function Stars({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((n) => (
         <Star
           key={n}
-          className={`h-3.5 w-3.5 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-200'
-            }`}
+          className={`h-3.5 w-3.5 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-600'}`}
           aria-hidden="true"
         />
       ))}
@@ -160,6 +159,7 @@ export function TestimonialsClient() {
       cancelled = true;
     };
   }, []);
+
   async function handlePhoto(file: File) {
     setPhotoBusy(true);
     setError('');
@@ -246,6 +246,7 @@ export function TestimonialsClient() {
     </>
   );
 }
+
 type SharePanelProps = {
   sent: boolean;
   setSent: (value: boolean) => void;
@@ -263,11 +264,11 @@ type SharePanelProps = {
   onSubmit: (event: React.FormEvent) => void;
 };
 
-const LABEL = 'mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-600';
-const OPTIONAL = 'font-normal normal-case tracking-normal text-slate-400';
+const LABEL = 'mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-300';
+const OPTIONAL = 'font-normal normal-case tracking-normal text-slate-500';
 const FIELD =
-  'mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200';
-const BAD_FIELD = 'border-red-400 focus:border-red-500 focus:ring-red-200';
+  'mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2.5 text-sm text-white placeholder-slate-500 shadow-sm transition-colors focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/20';
+const BAD_FIELD = 'border-red-500 focus:border-red-500 focus:ring-red-500/20';
 
 /** The red outline shown on whichever box needs fixing. */
 function fieldClass(field: string, badField: string): string {
@@ -312,7 +313,7 @@ function ChooseOrType({
   return (
     <div>
       <label htmlFor={id} className={LABEL}>
-        {label} <span className="text-red-500">*</span>
+        {label} <span className="text-red-400">*</span>
       </label>
       <Select
         value={wantsToType ? OTHER_OPTION : value}
@@ -329,17 +330,19 @@ function ChooseOrType({
       >
         <SelectTrigger
           id={id}
-          className={`h-11 ${bad ? 'border-red-400 focus:ring-red-200' : ''}`}
+          className={`h-11 bg-slate-800/60 border-slate-700 text-white focus:border-amber-400 focus:ring-amber-400/20 ${bad ? 'border-red-500 focus:ring-red-500/20' : ''}`}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-slate-900 border-slate-700 text-white">
           {options.map((option) => (
-            <SelectItem key={option} value={option}>
+            <SelectItem key={option} value={option} className="focus:bg-slate-800 focus:text-white">
               {option}
             </SelectItem>
           ))}
-          <SelectItem value={OTHER_OPTION}>{OTHER_OPTION} — I&apos;ll type it</SelectItem>
+          <SelectItem value={OTHER_OPTION} className="focus:bg-slate-800 focus:text-white">
+            {OTHER_OPTION} — I&apos;ll type it
+          </SelectItem>
         </SelectContent>
       </Select>
 
@@ -364,7 +367,7 @@ function ChooseOrType({
               setTyped('');
               onChange('');
             }}
-            className="mt-1 text-[11px] font-medium text-slate-500 underline underline-offset-2 hover:text-blue-700"
+            className="mt-1 text-[11px] font-medium text-slate-500 underline underline-offset-2 hover:text-amber-400"
           >
             Choose from the list instead
           </button>
@@ -396,28 +399,32 @@ function SharePanel(props: SharePanelProps) {
 
   return (
     <section id="share" className="scroll-mt-24">
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-3xl border border-slate-700/60 bg-slate-900/80 shadow-2xl shadow-black/40 backdrop-blur-xl">
         <div className="grid lg:grid-cols-[1fr_1.15fr]">
           {/* Left: why we ask */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-slate-900 p-8 text-white sm:p-10">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800/80 to-indigo-950/60 p-8 text-white sm:p-10 border-r border-slate-700/40">
+            {/* Decorative blobs */}
             <div
               aria-hidden="true"
-              className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/10"
+              className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-amber-500/10 blur-2xl"
             />
             <div
               aria-hidden="true"
-              className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-white/5"
+              className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-indigo-500/10 blur-2xl"
             />
             <div className="relative">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300 backdrop-blur">
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                 Open to everyone
               </span>
 
-              <h2 className="mt-5 text-2xl font-extrabold text-orange-500 leading-tight sm:text-3xl">
-                Tell us what you think
+              <h2 className="mt-5 text-2xl font-extrabold leading-tight sm:text-3xl">
+                <span className="text-white">Tell us</span>{' '}
+                <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                  what you think
+                </span>
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-blue-50/90">
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">
                 Found an internship through MANTECH? Hired someone from here? Just had an
                 experience worth sharing? We want to hear it.
               </p>
@@ -431,28 +438,33 @@ function SharePanel(props: SharePanelProps) {
                 ].map((point) => (
                   <li key={point} className="flex items-start gap-2.5">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400"
                       aria-hidden="true"
                     />
-                    <span className="text-blue-50/95">{point}</span>
+                    <span className="text-slate-300">{point}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
+
           {/* Right: the form */}
           <div className="p-8 sm:p-10">
             {sent ? (
               <div className="flex h-full flex-col items-center justify-center py-10 text-center">
-                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-                  <CheckCircle2 className="h-8 w-8 text-emerald-600" aria-hidden="true" />
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-900/50 border border-emerald-500/30">
+                  <CheckCircle2 className="h-8 w-8 text-emerald-400" aria-hidden="true" />
                 </span>
-                <h3 className="mt-5 text-xl font-bold text-slate-900">Thank you</h3>
-                <p className="mt-2 max-w-sm text-sm text-slate-600">
+                <h3 className="mt-5 text-xl font-bold text-white">Thank you</h3>
+                <p className="mt-2 max-w-sm text-sm text-slate-400">
                   Your experience has been sent to us. We read every message, and it will
                   appear on this page once we have checked it.
                 </p>
-                <Button variant="outline" className="mt-6" onClick={() => setSent(false)}>
+                <Button
+                  variant="outline"
+                  className="mt-6 border-slate-600 bg-slate-800/60 text-slate-200 hover:bg-slate-700/60 hover:text-white"
+                  onClick={() => setSent(false)}
+                >
                   Send another
                 </Button>
               </div>
@@ -460,14 +472,15 @@ function SharePanel(props: SharePanelProps) {
               <form onSubmit={onSubmit} className="space-y-5" noValidate>
                 {/* ── About you ────────────────────────────────────── */}
                 <fieldset className="space-y-4">
-                  <legend className="text-xs font-bold uppercase tracking-widest text-blue-700">
+                  <legend className="text-xs font-bold uppercase tracking-widest text-amber-400">
                     About you
                   </legend>
 
+                  {/* Name + Email side by side */}
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label htmlFor="t-name" className={LABEL}>
-                        Full name <span className="text-red-500">*</span>
+                        Full name <span className="text-red-400">*</span>
                       </label>
                       <Input
                         id="t-name"
@@ -481,7 +494,7 @@ function SharePanel(props: SharePanelProps) {
 
                     <div>
                       <label htmlFor="t-email" className={LABEL}>
-                        Email address <span className="text-red-500">*</span>
+                        Email address <span className="text-red-400">*</span>
                       </label>
                       <Input
                         id="t-email"
@@ -492,11 +505,14 @@ function SharePanel(props: SharePanelProps) {
                         placeholder="you@example.com"
                         className={fieldClass('email', badField)}
                       />
-                      <p className="mt-1 text-[11px] text-slate-400">
+                      <p className="mt-1 text-[11px] text-slate-500">
                         Only used to reply to you. Never published.
                       </p>
                     </div>
+                  </div>
 
+                  {/* Role + Company side by side */}
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <ChooseOrType
                       id="role"
                       label="You are a…"
@@ -512,7 +528,7 @@ function SharePanel(props: SharePanelProps) {
                         ever list, so this one is typed. */}
                     <div>
                       <label htmlFor="t-company" className={LABEL}>
-                        Company or school <span className="text-red-500">*</span>
+                        Company or school <span className="text-red-400">*</span>
                       </label>
                       <Input
                         id="t-company"
@@ -523,35 +539,34 @@ function SharePanel(props: SharePanelProps) {
                         className={fieldClass('company', badField)}
                       />
                     </div>
+                  </div>
 
-                    {/* A fixed list: there are exactly ten regions, and a
-                        visitor should not have to spell them out. */}
-                    <div className="sm:col-span-2">
-                      <label htmlFor="t-region" className={LABEL}>
-                        Region <span className="text-red-500">*</span>
-                      </label>
-                      <Select value={draft.region} onValueChange={(v) => setField('region', v)}>
-                        <SelectTrigger
-                          id="t-region"
-                          className={`h-11 ${badField === 'region' ? 'border-red-400 focus:ring-red-200' : ''}`}
-                        >
-                          <SelectValue placeholder="Where are you based?" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {TESTIMONIAL_REGIONS.map((region) => (
-                            <SelectItem key={region} value={region}>
-                              {region}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  {/* Region full-width */}
+                  <div>
+                    <label htmlFor="t-region" className={LABEL}>
+                      Region <span className="text-red-400">*</span>
+                    </label>
+                    <Select value={draft.region} onValueChange={(v) => setField('region', v)}>
+                      <SelectTrigger
+                        id="t-region"
+                        className={`h-11 bg-slate-800/60 border-slate-700 text-white focus:border-amber-400 focus:ring-amber-400/20 ${badField === 'region' ? 'border-red-500 focus:ring-red-500/20' : ''}`}
+                      >
+                        <SelectValue placeholder="Where are you based?" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-900 border-slate-700 text-white">
+                        {TESTIMONIAL_REGIONS.map((region) => (
+                          <SelectItem key={region} value={region} className="focus:bg-slate-800 focus:text-white">
+                            {region}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </fieldset>
 
                 {/* ── Your experience ────────────────────────────────── */}
-                <fieldset className="space-y-4 border-t border-slate-100 pt-5">
-                  <legend className="text-xs font-bold uppercase tracking-widest text-blue-700">
+                <fieldset className="space-y-4 border-t border-slate-700/50 pt-5">
+                  <legend className="text-xs font-bold uppercase tracking-widest text-amber-400">
                     Your experience
                   </legend>
 
@@ -566,9 +581,10 @@ function SharePanel(props: SharePanelProps) {
                     bad={badField === 'focus'}
                   />
 
+                  {/* Star rating selector */}
                   <div>
                     <span className={LABEL}>
-                      Overall rating <span className="text-red-500">*</span>
+                      Overall rating <span className="text-red-400">*</span>
                     </span>
                     <div className="mt-1.5 flex gap-1">
                       {[1, 2, 3, 4, 5].map((n) => (
@@ -578,20 +594,23 @@ function SharePanel(props: SharePanelProps) {
                           onClick={() => setRating(n)}
                           aria-label={`${n} star${n === 1 ? '' : 's'}`}
                           aria-pressed={rating === n}
-                          className="rounded p-0.5 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                          className="rounded p-0.5 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                         >
                           <Star
-                            className={`h-7 w-7 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'
-                              }`}
+                            className={`h-7 w-7 transition-colors ${
+                              n <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-600'
+                            }`}
                             aria-hidden="true"
                           />
                         </button>
                       ))}
                     </div>
                   </div>
+
+                  {/* Short quote - full width */}
                   <div>
                     <label htmlFor="t-message" className={LABEL}>
-                      Short quote <span className="text-red-500">*</span>
+                      Short quote <span className="text-red-400">*</span>
                     </label>
                     <Textarea
                       id="t-message"
@@ -602,14 +621,15 @@ function SharePanel(props: SharePanelProps) {
                       placeholder="The one or two sentences we would show on your card."
                       className={fieldClass('message', badField)}
                     />
-                    <p className="mt-1 text-right text-[11px] text-slate-400">
+                    <p className="mt-1 text-right text-[11px] text-slate-500">
                       {draft.message.length}/{TESTIMONIAL_LIMITS.message}
                     </p>
                   </div>
 
+                  {/* Full story - full width */}
                   <div>
                     <label htmlFor="t-details" className={LABEL}>
-                      Tell us the full story <span className="text-red-500">*</span>
+                      Tell us the full story <span className="text-red-400">*</span>
                     </label>
                     <Textarea
                       id="t-details"
@@ -620,14 +640,15 @@ function SharePanel(props: SharePanelProps) {
                       placeholder="What changed for you? How did it work out? Anything we should fix?"
                       className={fieldClass('details', badField)}
                     />
-                    <p className="mt-1 text-right text-[11px] text-slate-400">
+                    <p className="mt-1 text-right text-[11px] text-slate-500">
                       {draft.details.length}/{TESTIMONIAL_LIMITS.details}
                     </p>
                   </div>
                 </fieldset>
+
                 {/* ── The one optional field ─────────────────────────── */}
-                <fieldset className="space-y-4 border-t border-slate-100 pt-5">
-                  <legend className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                <fieldset className="space-y-4 border-t border-slate-700/50 pt-5">
+                  <legend className="text-xs font-bold uppercase tracking-widest text-slate-500">
                     Optional
                   </legend>
 
@@ -635,7 +656,7 @@ function SharePanel(props: SharePanelProps) {
                     <span className={LABEL}>
                       Photo <span className={OPTIONAL}>(optional)</span>
                     </span>
-                    <p className="-mt-0.5 mb-1.5 text-[11px] text-slate-400">
+                    <p className="-mt-0.5 mb-2 text-[11px] text-slate-500">
                       A photo helps people recognise you, but it is never required.
                     </p>
                   </div>
@@ -657,7 +678,7 @@ function SharePanel(props: SharePanelProps) {
                       type="button"
                       onClick={() => pickerRef.current?.click()}
                       disabled={photoBusy}
-                      className="flex items-center gap-2 rounded-xl border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:border-blue-400 hover:bg-blue-50/50 hover:text-blue-700 disabled:opacity-60"
+                      className="flex items-center gap-2 rounded-xl border border-dashed border-slate-600 bg-slate-800/40 px-4 py-2.5 text-sm font-medium text-slate-400 transition-colors hover:border-amber-500/50 hover:bg-slate-800/70 hover:text-amber-300 disabled:opacity-60"
                     >
                       {photoBusy ? (
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -667,7 +688,7 @@ function SharePanel(props: SharePanelProps) {
                       {photoBusy ? 'Adding photo…' : 'Choose a photo'}
                     </button>
                     {photoUrl && (
-                      <span className="flex items-center gap-2 text-xs text-emerald-700">
+                      <span className="flex items-center gap-2 text-xs text-emerald-400">
                         <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                         Photo added
                       </span>
@@ -678,34 +699,34 @@ function SharePanel(props: SharePanelProps) {
                 {error && (
                   <p
                     role="alert"
-                    className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+                    className="rounded-lg border border-red-500/30 bg-red-900/30 p-3 text-sm text-red-300"
                   >
                     {error}
                   </p>
                 )}
 
-                <Button
+                <button
                   type="submit"
                   disabled={sending}
-                  className="h-12 w-full bg-blue-600 font-semibold text-white hover:bg-blue-700"
+                  className="h-12 w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-bold text-white shadow-lg shadow-amber-900/30 transition-all hover:from-amber-400 hover:to-orange-400 hover:shadow-amber-900/50 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {sending ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                       Sending…
                     </>
                   ) : (
                     <>
-                      <MessageSquareQuote className="mr-2 h-4 w-4" aria-hidden="true" />
-                      Send my experience
+                      <MessageSquareQuote className="h-4 w-4" aria-hidden="true" />
+                      Send Story
                     </>
                   )}
-                </Button>
+                </button>
 
                 {/* The button stays clickable, so a half-filled form explains
                     itself instead of leaving the visitor guessing. */}
                 {!canSend(draft) && !sending && (
-                  <p className="text-center text-[11px] text-slate-400">
+                  <p className="text-center text-[11px] text-slate-500">
                     Please complete every field above. Only the photo is optional.
                   </p>
                 )}
@@ -719,8 +740,6 @@ function SharePanel(props: SharePanelProps) {
 }
 
 
-
-
 /**
  * The submitted experiences. Everything on this page comes from real messages
  * that people sent us — there is no sample content.
@@ -730,13 +749,16 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
     <section className="mt-16">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-extrabold text-orange-500">What people have said</h2>
-          <p className="mt-1 text-sm text-orange-300">
+          <h2 className="text-2xl font-extrabold text-white">
+            What people have{' '}
+            <span className="text-orange-500">said</span>
+          </h2>
+          <p className="mt-1 text-sm text-slate-400">
             Real messages from interns, universities and organizations using MANTECH.
           </p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">
-          <Users className="h-3.5 w-3.5" aria-hidden="true" />
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-700/60 bg-slate-800/60 px-3 py-1.5 text-xs font-semibold text-slate-300 backdrop-blur">
+          <Users className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
           {items.length} shared {items.length === 1 ? 'experience' : 'experiences'}
         </span>
       </div>
@@ -746,15 +768,15 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
           {[0, 1, 2].map((n) => (
             <div
               key={n}
-              className="h-52 animate-pulse rounded-2xl border border-slate-200 bg-white"
+              className="h-52 animate-pulse rounded-2xl border border-slate-700/60 bg-slate-800/50"
             />
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
-          <Quote className="mx-auto h-9 w-9 text-slate-300" aria-hidden="true" />
-          <h3 className="mt-4 font-semibold text-slate-900">No experiences shared yet</h3>
-          <p className="mx-auto mt-1 max-w-sm text-sm text-slate-600">
+        <div className="mt-8 rounded-2xl border border-dashed border-slate-700/60 bg-slate-900/60 px-6 py-14 text-center backdrop-blur">
+          <Quote className="mx-auto h-9 w-9 text-slate-600" aria-hidden="true" />
+          <h3 className="mt-4 font-semibold text-white">No experiences shared yet</h3>
+          <p className="mx-auto mt-1 max-w-sm text-sm text-slate-400">
             Be the first to share yours using the form above. It takes a moment, and you do
             not need an account.
           </p>
@@ -767,53 +789,57 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
           {items.map((item) => (
             <MotionItem key={item.id} className="min-w-0">
               <figure
-                className={`group relative flex h-full min-w-0 flex-col rounded-2xl border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg ${item.pending
-                  ? 'border-amber-200 bg-amber-50/40 hover:border-amber-300'
-                  : 'border-slate-200 hover:border-blue-200'
-                  }`}
+                className={`group relative flex h-full min-w-0 flex-col rounded-2xl border backdrop-blur-xl p-6 shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl ${
+                  item.pending
+                    ? 'border-amber-500/30 bg-amber-900/10 hover:border-amber-500/50'
+                    : 'border-slate-700/60 bg-slate-900/80 hover:border-slate-600/60'
+                }`}
               >
                 <Quote
-                  className={`absolute right-5 top-5 h-8 w-8 transition-colors ${item.pending ? 'text-amber-100' : 'text-blue-50 group-hover:text-blue-100'
-                    }`}
+                  className={`absolute right-5 top-5 h-8 w-8 transition-colors ${
+                    item.pending ? 'text-amber-500/20' : 'text-slate-700/60 group-hover:text-slate-600/60'
+                  }`}
                   aria-hidden="true"
                 />
 
                 {item.pending ? (
-                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-900/30 px-2.5 py-1 text-[11px] font-semibold text-amber-300">
                     Waiting for review
                   </span>
                 ) : (
                   <Stars rating={item.rating} />
                 )}
 
-                <blockquote className="mt-4 flex-1 break-words whitespace-pre-wrap text-sm font-medium leading-relaxed text-slate-800">
+                <blockquote className="mt-4 flex-1 break-words whitespace-pre-wrap text-sm font-medium leading-relaxed text-slate-200">
                   {item.message}
                 </blockquote>
 
                 {/* The longer answer, folded away until the reader wants it. */}
                 <details className="group/story mt-3">
-                  <summary className="cursor-pointer list-none text-xs font-semibold text-blue-700 hover:text-blue-800">
+                  <summary className="cursor-pointer list-none text-xs font-semibold text-amber-400 hover:text-amber-300">
                     Read the full story
                   </summary>
-                  <p className="mt-2 break-words whitespace-pre-wrap text-sm leading-relaxed text-slate-600">{item.details}</p>
+                  <p className="mt-2 break-words whitespace-pre-wrap text-sm leading-relaxed text-slate-400">
+                    {item.details}
+                  </p>
                 </details>
 
                 <div className="mt-4 flex flex-wrap gap-1.5">
-                  <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700">
+                  <span className="rounded-full border border-indigo-500/30 bg-indigo-900/30 px-2.5 py-0.5 text-[11px] font-semibold text-indigo-300">
                     {item.focus}
                   </span>
-                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-600">
+                  <span className="rounded-full border border-slate-700/50 bg-slate-800/50 px-2.5 py-0.5 text-[11px] font-medium text-slate-400">
                     {item.region}
                   </span>
                 </div>
 
-                <figcaption className="mt-4 flex items-center gap-3 border-t border-slate-100 pt-4">
+                <figcaption className="mt-4 flex items-center gap-3 border-t border-slate-700/40 pt-4">
                   {item.photoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={item.photoUrl}
                       alt=""
-                      className="h-10 w-10 shrink-0 rounded-full object-cover"
+                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-slate-700/60"
                     />
                   ) : (
                     <span
@@ -824,8 +850,8 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
                     </span>
                   )}
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-900">{item.name}</p>
-                    <p className="truncate text-xs text-slate-500">
+                    <p className="truncate text-sm font-semibold text-white">{item.name}</p>
+                    <p className="truncate text-xs text-slate-400">
                       {item.role} · {item.company}
                     </p>
                   </div>

@@ -89,11 +89,15 @@ export default function FieldsPage() {
   });
 
   return (
-    <div className="bg-slate-50 min-h-screen overflow-hidden">
+    <div
+      className="min-h-screen relative bg-cover bg-center bg-fixed text-white overflow-hidden"
+      style={{ backgroundImage: "url('/images/hero_tech_bg.jpg')" }}
+    >
+      <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-[3px]" />
+
       {/* HERO SECTION */}
-      <section className="relative py-20 lg:py-28 bg-gradient-to-br from-slate-950 via-violet-950 to-slate-900 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/grid.svg')] bg-center opacity-10" />
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
+      <section className="relative z-10 py-20 lg:py-24 border-b border-slate-800/80">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, filter: 'blur(10px)', y: 25 }}
             animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
@@ -106,7 +110,7 @@ export default function FieldsPage() {
               </span>
             </FloatingBadge>
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
-              Explore Careers & Internships by Discipline
+              Explore Careers &amp; Internships by Discipline
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
               MANTECH Nexus covers 60 professional fields across Cameroon — spanning technology, engineering, agriculture, healthcare, banking, law, logistics, media, and vocational sectors.
@@ -119,13 +123,13 @@ export default function FieldsPage() {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="mt-8 flex flex-wrap justify-center gap-3 text-xs text-slate-300"
           >
-            <span className="bg-slate-800/80 px-3.5 py-1.5 rounded-full border border-slate-700/80 backdrop-blur-sm">
+            <span className="bg-slate-900/80 px-3.5 py-1.5 rounded-full border border-slate-700/80 backdrop-blur-sm">
               {loading ? 'Loading...' : `${fields.length} Professional Disciplines`}
             </span>
-            <span className="bg-slate-800/80 px-3.5 py-1.5 rounded-full border border-slate-700/80 backdrop-blur-sm">
+            <span className="bg-slate-900/80 px-3.5 py-1.5 rounded-full border border-slate-700/80 backdrop-blur-sm">
               10 Cameroon Regions
             </span>
-            <span className="bg-slate-800/80 px-3.5 py-1.5 rounded-full border border-slate-700/80 backdrop-blur-sm">
+            <span className="bg-slate-900/80 px-3.5 py-1.5 rounded-full border border-slate-700/80 backdrop-blur-sm">
               Verified Host Opportunities
             </span>
           </motion.div>
@@ -139,7 +143,7 @@ export default function FieldsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search disciplines or skills (e.g. Agronomy, Cloud, Surgery)..."
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xl"
               />
             </div>
             {categories.length > 2 && (
@@ -148,7 +152,7 @@ export default function FieldsPage() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="pl-10 pr-6 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg appearance-none cursor-pointer"
+                  className="pl-10 pr-6 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xl appearance-none cursor-pointer"
                 >
                   {categories.map((c) => (
                     <option key={c} value={c} className="bg-slate-900 text-white">
@@ -163,18 +167,16 @@ export default function FieldsPage() {
       </section>
 
       {/* FIELDS GRID */}
-      <section className="py-20 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-b border-slate-200/80 relative overflow-hidden">
-        <div className="absolute top-10 right-10 w-96 h-96 bg-violet-500/10 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
-          {error && <p role="alert" className="mb-6 text-center text-sm text-red-700">{error}</p>}
+      <section className="relative z-10 py-16 sm:py-20">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8">
+          {error && <p role="alert" className="mb-6 text-center text-sm text-red-400">{error}</p>}
           
-          <div className="mb-6 flex items-center justify-between text-sm text-slate-600">
-            <span>Showing <strong className="text-slate-900">{filteredFields.length}</strong> disciplines</span>
+          <div className="mb-8 flex items-center justify-between text-xs text-slate-400">
+            <span>Showing <strong className="text-white">{filteredFields.length}</strong> disciplines</span>
             {search && (
               <button
                 onClick={() => { setSearch(''); setSelectedCategory('all'); }}
-                className="text-xs text-blue-600 hover:underline font-semibold"
+                className="text-xs text-blue-400 hover:underline font-semibold"
               >
                 Clear search
               </button>
@@ -196,9 +198,9 @@ export default function FieldsPage() {
                   <AnimatedCard className="h-full">
                     <Link
                       href={`/fields/${field.slug}`}
-                      className="group block h-full bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1"
+                      className="group block h-full rounded-3xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl shadow-xl hover:shadow-2xl hover:border-blue-400 hover:bg-slate-800/90 transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1.5"
                     >
-                      {/* Header - High contrast dark background with guaranteed text visibility */}
+                      {/* Header */}
                       <div className={`p-6 relative overflow-hidden bg-slate-950 bg-gradient-to-br ${gradient} border-b border-slate-800`}>
                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" />
                         <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-6 -mb-6" />
@@ -216,28 +218,28 @@ export default function FieldsPage() {
                       </div>
 
                       {/* Body */}
-                      <div className="p-6 flex-1 flex flex-col justify-between bg-white">
+                      <div className="p-6 flex-1 flex flex-col justify-between">
                         <div className="flex flex-wrap gap-1.5 mb-5">
                           {field.specializations.slice(0, 4).map((spec) => (
                             <span
                               key={spec.id}
-                              className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 text-xs font-semibold border border-slate-200/90"
+                              className="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700/60"
                             >
                               {spec.name}
                             </span>
                           ))}
                           {field.specializations.length > 4 && (
-                            <span className="px-2 py-1 rounded-md bg-slate-50 text-slate-500 font-medium text-xs border border-dashed border-slate-200">
+                            <span className="px-2 py-1 rounded-md bg-slate-800/60 text-slate-400 font-medium text-xs border border-dashed border-slate-700">
                               +{field.specializations.length - 4} more
                             </span>
                           )}
                         </div>
 
-                        <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                          <span className="text-xs text-slate-600 font-medium">
-                            {field.specializations.length} specializations
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+                          <span className="text-xs text-slate-400 font-medium">
+                            {field.specializations.length} tracks
                           </span>
-                          <span className="text-xs font-bold text-blue-600 group-hover:text-blue-700 flex items-center gap-1 group-hover:gap-2 transition-all">
+                          <span className="text-xs font-bold text-blue-400 group-hover:text-blue-300 flex items-center gap-1 group-hover:gap-2 transition-all">
                             Browse Openings <ArrowRight className="w-3.5 h-3.5" />
                           </span>
                         </div>
@@ -252,7 +254,46 @@ export default function FieldsPage() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="py-20 bg-gradient-to-b from-slate-50 via-white to-blue-50/25 border-t border-slate-200/80 relative overflow-hidden">
+      <section className="relative z-10 py-16 border-t border-slate-800/80 bg-slate-950/60">
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-2xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white mb-3">
+              Don&apos;t see your specific discipline?
+            </h2>
+            <p className="text-slate-300 mb-8 text-sm leading-relaxed">
+              MANTECH Nexus is continuously expanding. Contact our advisory team directly on WhatsApp to request custom academic placement tracks or browse all open opportunities.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/internships">
+                <span className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-xl transition-all text-xs shadow-md shadow-blue-600/20 hover:scale-105">
+                  All Internships <ArrowRight className="w-4 h-4" />
+                </span>
+              </Link>
+              <Link href="/jobs">
+                <span className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-3 rounded-xl transition-all text-xs shadow-md shadow-indigo-600/20 hover:scale-105">
+                  All Jobs <ArrowRight className="w-4 h-4" />
+                </span>
+              </Link>
+              <a
+                href={APP_CONFIG.contacts.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 border border-slate-700 hover:border-emerald-500/50 bg-slate-800/80 text-white hover:text-emerald-300 font-bold px-6 py-3 rounded-xl transition-all text-xs hover:scale-105 shadow-sm"
+              >
+                <WhatsAppIcon className="h-4 w-4 text-[#25D366]" title="WhatsApp" />
+                Contact on WhatsApp
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-2xl mx-auto relative z-10">

@@ -143,11 +143,11 @@ export default async function InternDetailPage({
           >
             <Users className="w-4 h-4 text-emerald-400 group-hover:text-emerald-300" />
             <span className="text-xs font-medium text-white group-hover:text-slate-300">
-              {person.internProfile?.cvUrl ? "View CV" : "No CV"}
+              {person.internProfile?.cvUrl ? "Company CV Access" : "No CV"}
             </span>
           </a>
           <Link
-            href="/sign-in/[[...sign-in]]"
+            href="/sign-in"
             className="flex items-center gap-2 p-4 rounded-2xl bg-blue-600/10 border border-blue-500/30 hover:bg-blue-600/20 transition-colors"
           >
             <LinkIcon className="w-4 h-4 text-blue-400" />
@@ -353,12 +353,12 @@ export default async function InternDetailPage({
                 This candidate is registered in the MANTECH talent pool and
                 ready for placement opportunities across Cameroon.
               </p>
-              <a
+              <Link
                 href="/sign-in"
                 className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2"
               >
                 Contact This Candidate
-              </a>
+              </Link>
               <p className="mt-4 text-[10px] text-slate-500 text-center">
                 Sign in to view full contact details and send a message.
               </p>

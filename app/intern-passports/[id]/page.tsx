@@ -16,6 +16,7 @@ import {
   CheckCircle,
   Phone,
   MessageCircle,
+  ArrowLeft,
 } from "lucide-react";
 import { CvDownloadButton } from "@/components/cv-download-button";
 import { ShareButton } from "@/components/shared/share-button";
@@ -127,19 +128,28 @@ export default async function InternPassportDetailPage({
     });
     if (!usage.allowedIds.has(internProfile.id)) {
       return (
-        <div className="container-mantech px-4 py-16">
-          <Card className="mx-auto max-w-xl border-amber-200 bg-amber-50">
-            <CardHeader>
-              <CardTitle className="text-amber-950">Monthly candidate-view limit reached</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-sm text-amber-900">
-              <p>Your package allows {packageLimits.monthlyCandidateViews} candidate views per month.</p>
-              <Link href="/dashboard/company/billing">
-                <Button variant="outline">Review packages</Button>
+        <main
+          className="min-h-screen bg-cover bg-center bg-fixed relative"
+          style={{ backgroundImage: "url('/images/hero_tech_bg.jpg')" }}
+        >
+          <div className="absolute inset-0 bg-slate-950/88" aria-hidden />
+          <div className="relative z-10 container-mantech px-4 py-16 flex items-center justify-center min-h-screen">
+            <div className="mx-auto max-w-xl rounded-2xl border border-amber-600/40 bg-slate-900/80 backdrop-blur-xl p-8 text-center">
+              <CardTitle className="text-amber-300 text-xl font-bold">Monthly candidate-view limit reached</CardTitle>
+              <p className="mt-4 text-sm text-slate-300">
+                Your package allows {packageLimits.monthlyCandidateViews} candidate views per month.
+              </p>
+              <Link href="/dashboard/company/billing" className="mt-4 inline-block">
+                <Button
+                  variant="outline"
+                  className="border-slate-600 text-slate-300 bg-slate-800/60 hover:bg-slate-700 hover:text-white"
+                >
+                  Review packages
+                </Button>
               </Link>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </div>
+        </main>
       );
     }
   }
@@ -227,189 +237,207 @@ export default async function InternPassportDetailPage({
   const internProfileId = internProfile.id;
 
   return (
-    <div className="container-mantech px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <Link href="/intern-passports" className="inline-block mb-4">
-            <Button variant="ghost">← Back to Intern Passports</Button>
-          </Link>
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-4">
-              {profileUser.avatarUrl ? (
-                <Image
-                  src={profileUser.avatarUrl}
-                  alt={profileUser.fullName}
-                  width={80}
-                  height={80}
-                  className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
-                />
-              ) : (
-                <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-2xl border-4 border-white shadow-lg">
-                  {profileUser.fullName.charAt(0)}
-                </div>
-              )}
-              <div>
-                <h1 className="text-3xl font-bold text-slate-900">
-                  {profileUser.fullName}
-                </h1>
-                <p className="text-slate-600 mt-1">
-                  {passport?.headline || "Internship Seeker"}
-                </p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Badge
-                    variant="secondary"
-                    className="bg-blue-100 text-blue-700"
-                  >
-                    {fieldOfStudy?.name || "Not specified"}
-                  </Badge>
-                  <Badge
-                    variant="secondary"
-                    className="bg-green-100 text-green-700"
-                  >
-                    Readiness: {internProfile.readinessScore}%
-                  </Badge>
-                  {internProfile.profileCompleted && (
+    <main
+      className="min-h-screen bg-cover bg-center bg-fixed relative"
+      style={{ backgroundImage: "url('/images/hero_tech_bg.jpg')" }}
+    >
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-slate-950/88" aria-hidden />
+
+      {/* Content */}
+      <div className="relative z-10 container-mantech px-4 py-10">
+        <div className="max-w-4xl mx-auto">
+
+          {/* Back button */}
+          <div className="mb-6">
+            <Link href="/intern-passports" className="inline-block">
+              <Button
+                variant="outline"
+                className="border-slate-600/60 text-slate-300 bg-slate-800/60 hover:bg-slate-700/80 hover:text-white backdrop-blur-sm gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Intern Passports
+              </Button>
+            </Link>
+          </div>
+
+          {/* Hero identity card */}
+          <div className="mb-8 rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+              <div className="flex items-center gap-5">
+                {profileUser.avatarUrl ? (
+                  <Image
+                    src={profileUser.avatarUrl}
+                    alt={profileUser.fullName}
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 rounded-full object-cover border-4 border-slate-700/60 shadow-lg"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-2xl border-4 border-slate-700/60 shadow-lg">
+                    {profileUser.fullName.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <h1 className="text-3xl font-bold text-white">
+                    {profileUser.fullName}
+                  </h1>
+                  <p className="text-slate-300 mt-1">
+                    {passport?.headline || "Internship Seeker"}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 mt-3">
                     <Badge
                       variant="secondary"
-                      className="bg-emerald-100 text-emerald-700 flex items-center gap-1"
+                      className="bg-blue-900/50 text-blue-300 border border-blue-700/40"
                     >
-                      <CheckCircle className="w-3 h-3" />
-                      Profile Complete
+                      {fieldOfStudy?.name || "Not specified"}
                     </Badge>
-                  )}
+                    <Badge
+                      variant="secondary"
+                      className="bg-emerald-900/50 text-emerald-300 border border-emerald-700/40"
+                    >
+                      Readiness: {internProfile.readinessScore}%
+                    </Badge>
+                    {internProfile.profileCompleted && (
+                      <Badge
+                        variant="secondary"
+                        className="bg-emerald-900/50 text-emerald-300 border border-emerald-700/40 flex items-center gap-1"
+                      >
+                        <CheckCircle className="w-3 h-3" />
+                        Profile Complete
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-blue-600">
-                {passport?.passportNumber || "N/A"}
-              </div>
-              <div className="text-sm text-slate-500">Passport Number</div>
-              <ShareButton
-                path={`/intern-passports/${id}`}
-                title={`${profileUser.fullName} — Intern Passport on MANTECH Nexus`}
-                text={`Meet ${profileUser.fullName} (${fieldOfStudy?.name || "intern"}) — view their verified Intern Passport on MANTECH Nexus.`}
-                label="Share passport"
-                className="mt-3"
-              />
-              <a
-                href={waSharePassportLink({
-                  name: profileUser.fullName,
-                  headline: passport?.headline,
-                  fieldName: fieldOfStudy?.name,
-                  profileId: id,
-                })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-800"
-              >
-                <MessageCircle className="h-4 w-4" /> Share on WhatsApp
-              </a>
-              {/* Trust & safety: report someone else's passport (never your own). */}
-              {internProfile.userId !== user.id && (
-                <div className="mt-2 flex justify-end">
-                  <ReportButton targetType="PASSPORT" targetId={internProfile.id} />
+
+              <div className="text-right shrink-0">
+                <div className="text-2xl font-bold text-emerald-400">
+                  {passport?.passportNumber || "N/A"}
                 </div>
-              )}
+                <div className="text-sm text-slate-400">Passport Number</div>
+                <ShareButton
+                  path={`/intern-passports/${id}`}
+                  title={`${profileUser.fullName} — Intern Passport on MANTECH Nexus`}
+                  text={`Meet ${profileUser.fullName} (${fieldOfStudy?.name || "intern"}) — view their verified Intern Passport on MANTECH Nexus.`}
+                  label="Share passport"
+                  className="mt-3"
+                />
+                <a
+                  href={waSharePassportLink({
+                    name: profileUser.fullName,
+                    headline: passport?.headline,
+                    fieldName: fieldOfStudy?.name,
+                    profileId: id,
+                  })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 hover:text-emerald-300"
+                >
+                  <MessageCircle className="h-4 w-4" /> Share on WhatsApp
+                </a>
+                {/* Trust & safety: report someone else's passport (never your own). */}
+                {internProfile.userId !== user.id && (
+                  <div className="mt-2 flex justify-end">
+                    <ReportButton targetType="PASSPORT" targetId={internProfile.id} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {passport?.summary && (
-          <Card className="mb-6">
-            <CardContent className="pt-6">
-              <p className="text-slate-700">{passport.summary}</p>
-            </CardContent>
-          </Card>
-        )}
+          {/* Summary */}
+          {passport?.summary && (
+            <div className="mb-6 rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6">
+              <p className="text-slate-300">{passport.summary}</p>
+            </div>
+          )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-3 text-sm">
-                <GraduationCap className="w-4 h-4 text-slate-500" />
-                <span className="text-slate-600">
-                  Contact the intern through MANTECH to request a conversation.
-                </span>
-              </div>
-              {internProfile.isPhonePublic && isVerified && (
+          {/* Info cards grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Contact Information */}
+            <div className="rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6">
+              <h2 className="text-lg font-semibold text-white mb-4">Contact Information</h2>
+              <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm">
-                  <Phone className="w-4 h-4 text-slate-500" />
-                  <span className="text-slate-600">
-                    Phone: {internProfile.phone}
+                  <GraduationCap className="w-4 h-4 text-slate-500" />
+                  <span className="text-slate-300">
+                    Contact the intern through MANTECH to request a conversation.
                   </span>
                 </div>
-              )}
-              <div className="flex items-center gap-3 text-sm">
-                <MapPin className="w-4 h-4 text-slate-500" />
-                <span className="text-slate-600">
-                  Location: {region?.name || "Not specified"},{" "}
-                  {internProfile.city || "Not specified"}
-                </span>
+                {internProfile.isPhonePublic && isVerified && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <Phone className="w-4 h-4 text-slate-500" />
+                    <span className="text-slate-300">
+                      Phone: {internProfile.phone}
+                    </span>
+                  </div>
+                )}
+                <div className="flex items-center gap-3 text-sm">
+                  <MapPin className="w-4 h-4 text-slate-500" />
+                  <span className="text-slate-300">
+                    Location: {region?.name || "Not specified"},{" "}
+                    {internProfile.city || "Not specified"}
+                  </span>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Qualification</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-3 text-sm">
-                <Award className="w-4 h-4 text-slate-500" />
-                <span className="text-slate-600">
-                  Diploma: {internProfile.qualification || "Not specified"}
-                </span>
+            {/* Qualification */}
+            <div className="rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6">
+              <h2 className="text-lg font-semibold text-white mb-4">Qualification</h2>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Award className="w-4 h-4 text-slate-500" />
+                  <span className="text-slate-300">
+                    Diploma: {internProfile.qualification || "Not specified"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <GraduationCap className="w-4 h-4 text-slate-500" />
+                  <span className="text-slate-300">
+                    Academic Level:{" "}
+                    {internProfile.academicLevel || "Not specified"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Calendar className="w-4 h-4 text-slate-500" />
+                  <span className="text-slate-300">
+                    Availability: {internProfile.availability || "Not specified"}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-sm">
-                <GraduationCap className="w-4 h-4 text-slate-500" />
-                <span className="text-slate-600">
-                  Academic Level:{" "}
-                  {internProfile.academicLevel || "Not specified"}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <Calendar className="w-4 h-4 text-slate-500" />
-                <span className="text-slate-600">
-                  Availability: {internProfile.availability || "Not specified"}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </div>
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg">Skills</CardTitle>
-          </CardHeader>
-          <CardContent>
+          {/* Skills */}
+          <div className="mb-6 rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6">
+            <h2 className="text-lg font-semibold text-white mb-4">Skills</h2>
             <div className="flex flex-wrap gap-2">
               {skills.map((skillRelation) => (
-                <Badge key={skillRelation.skillId} variant="secondary">
+                <Badge
+                  key={skillRelation.skillId}
+                  variant="secondary"
+                  className="bg-emerald-900/50 text-emerald-300 border border-emerald-700/40 text-[11px]"
+                >
                   {skillRelation.skill.name}
                   {skillRelation.proficiency &&
                     ` (${skillRelation.proficiency})`}
                 </Badge>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg">Education</CardTitle>
-          </CardHeader>
-          <CardContent>
+          {/* Education */}
+          <div className="mb-6 rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6">
+            <h2 className="text-lg font-semibold text-white mb-4">Education</h2>
             <div className="space-y-4">
               {educations.map((edu) => (
-                <div key={edu.id} className="border-l-2 border-blue-200 pl-4">
-                  <h4 className="font-semibold text-slate-900">
+                <div key={edu.id} className="border-l-2 border-emerald-700/50 pl-4">
+                  <h4 className="font-semibold text-white">
                     {edu.qualification}
                   </h4>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-slate-300">
                     {edu.field} at {edu.institution}
                   </p>
                   <p className="text-xs text-slate-500">
@@ -418,28 +446,25 @@ export default async function InternPassportDetailPage({
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        <Card className="mb-6 border-blue-200">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Download className="w-5 h-5" />
+          {/* CV Access */}
+          <div className="mb-6 rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6">
+            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <Download className="w-5 h-5 text-slate-400" />
               CV Access
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
             {!isVerified ? (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <p className="text-sm text-yellow-800">
-                  <strong>Recruiters only:</strong> this passport is open to
+              <div className="rounded-xl border border-amber-600/40 bg-amber-950/30 p-4">
+                <p className="text-sm text-amber-300">
+                  <strong className="text-amber-200">Recruiters only:</strong> this passport is open to
                   all signed-in members, but CV downloads are limited to
                   verified recruiters. Recruiters: contact MANTECH on WhatsApp
                   to complete your organization verification.
                 </p>
               </div>
             ) : cvFiles.length === 0 ? (
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-slate-400">
                 No CV uploaded by this intern.
               </p>
             ) : (
@@ -447,13 +472,13 @@ export default async function InternPassportDetailPage({
                 {cvFiles.map((cv) => (
                   <div
                     key={cv.id}
-                    className="flex items-center justify-between p-3 bg-slate-50 rounded-lg"
+                    className="flex items-center justify-between p-3 rounded-xl border border-slate-700/50 bg-slate-800/50"
                   >
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-white">
                         {cv.fileName}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         {(cv.fileSize / 1024).toFixed(2)} KB • Uploaded{" "}
                         {new Date(cv.uploadedAt).toLocaleDateString()}
                       </p>
@@ -470,27 +495,24 @@ export default async function InternPassportDetailPage({
                 </p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
 
-        {passport && passport.achievements.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Passport Achievements</CardTitle>
-            </CardHeader>
-            <CardContent>
+          {/* Achievements */}
+          {passport && passport.achievements.length > 0 && (
+            <div className="rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6">
+              <h2 className="text-lg font-semibold text-white mb-4">Passport Achievements</h2>
               <div className="space-y-3">
                 {passport.achievements.map((achievement) => (
                   <div
                     key={achievement.id}
-                    className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg"
+                    className="flex items-start gap-3 p-4 rounded-xl border border-emerald-800/30 bg-emerald-950/30"
                   >
-                    <Award className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <Award className="w-5 h-5 text-emerald-400 mt-0.5 shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-slate-900">
+                      <h4 className="font-semibold text-white">
                         {achievement.title}
                       </h4>
-                      <p className="text-sm text-slate-600">
+                      <p className="text-sm text-slate-300">
                         {achievement.description}
                       </p>
                       <p className="text-xs text-slate-500 mt-1">
@@ -501,10 +523,11 @@ export default async function InternPassportDetailPage({
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          )}
+
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

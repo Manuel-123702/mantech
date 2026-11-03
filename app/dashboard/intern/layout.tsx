@@ -71,7 +71,7 @@ export default async function InternDashboardLayout({
   return (
     <div
       className="min-h-screen relative bg-cover bg-center bg-fixed text-white"
-      style={{ backgroundImage: "url('/images/hero_tech_bg.jpg')" }}
+      style={{ backgroundImage: "url('/images/violet_tech_bg.jpg')" }}
     >
       {/* Dark overlay with backdrop blur for maximum text readability */}
       <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[3px]" />

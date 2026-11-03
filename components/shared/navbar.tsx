@@ -50,6 +50,30 @@ interface NavMenuItem {
   color?: string;
 }
 
+const JOB_MENU: NavMenuItem[] = [
+  {
+    href: '/jobs',
+    label: 'All Cameroon Jobs',
+    description: 'Explore live graduate, tech & executive vacancies',
+    icon: Briefcase,
+    color: 'text-orange-600 bg-orange-100/90',
+  },
+  {
+    href: '/fields',
+    label: '60 Professional Disciplines',
+    description: 'Target software, telecom, finance & engineering roles',
+    icon: Compass,
+    color: 'text-orange-600 bg-orange-100/90',
+  },
+  {
+    href: '/locations',
+    label: 'Jobs by Region & City',
+    description: 'Douala, Yaoundé, Buea and all 10 national territories',
+    icon: MapPin,
+    color: 'text-orange-600 bg-orange-100/90',
+  },
+];
+
 const INTERNSHIP_MENU: NavMenuItem[] = [
   {
     href: '/internships',
@@ -248,18 +272,62 @@ export function Navbar() {
 
           {/* Desktop Navigation Links */}
           <div className="hidden items-center gap-x-1 lg:flex">
-            {/* 0. Direct Link: Jobs (No hardcoded badge) */}
-            <Link
-              href="/jobs"
-              className={cn(
-                'group inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-bold transition-all duration-150',
-                pathname.startsWith('/jobs')
-                  ? 'text-orange-600 bg-orange-100/90 shadow-sm'
-                  : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
-              )}
+            {/* 0. Jobs Dropdown */}
+            <DropdownMenu
+              open={activeDropdown === 'jobs'}
+              onOpenChange={(open) =>
+                open ? openNavMenu('jobs') : setActiveDropdown(null)
+              }
             >
-              <span>Jobs</span>
-            </Link>
+              <DropdownMenuTrigger asChild>
+                <button
+                  onMouseEnter={() => openNavMenu('jobs')}
+                  onMouseLeave={scheduleNavClose}
+                  className={cn(
+                    'group inline-flex items-center gap-1 rounded-xl px-3.5 py-2 text-sm font-bold transition-all duration-150',
+                    pathname.startsWith('/jobs')
+                      ? 'text-orange-600 bg-orange-100/90 shadow-sm'
+                      : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
+                  )}
+                >
+                  <span>Jobs</span>
+                  <ChevronDown className="h-3.5 w-3.5 text-orange-500 group-hover:text-orange-600 group-hover:rotate-180 transition-transform duration-200" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                sideOffset={10}
+                onMouseEnter={() => openNavMenu('jobs')}
+                onMouseLeave={scheduleNavClose}
+                className="w-80 rounded-2xl border-2 border-orange-200/90 bg-white p-2.5 shadow-2xl animate-in fade-in-50 zoom-in-95 duration-150 text-slate-900 ring-1 ring-orange-500/10"
+              >
+                <div className="px-3 py-2 bg-orange-50/90 rounded-xl border border-orange-200/70 mb-1.5">
+                  <p className="text-[11px] font-extrabold uppercase tracking-wider text-orange-600">
+                    Explore Cameroon Careers
+                  </p>
+                </div>
+                {JOB_MENU.map((item) => (
+                  <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
+                    <Link
+                      href={item.href}
+                      className="flex items-start gap-3 rounded-xl p-2.5 hover:bg-orange-50/80 transition-colors group cursor-pointer"
+                    >
+                      <div className={cn('p-2 rounded-xl shrink-0 mt-0.5', item.color)}>
+                        <item.icon className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="text-xs font-bold text-orange-500 group-hover:text-orange-600 transition-colors">
+                          {item.label}
+                        </span>
+                        <p className="text-[11px] text-slate-700 font-medium line-clamp-1 mt-0.5">
+                          {item.description}
+                        </p>
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* 1. Internships Dropdown */}
             <DropdownMenu
@@ -474,93 +542,96 @@ export function Navbar() {
           </div>
 
           {/* Right-Side Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
             {/* Registration directory — signed-in recruiters only */}
             {canBrowsePassports && (
               <Link
                 href="/intern-passports"
-                className="cursor-pointer text-white font-bold relative text-[14px] w-[9em] h-[3em] 
-                text-center bg-gradient-to-r from-violet-500 from-10% via-sky-500 via-30% to-pink-500 to-90% 
-                bg-[length:400%] rounded-[30px] z-10 hover:animate-gradient-xy hover:bg-[length:100%] 
-                before:content-[''] before:absolute before:-top-[5px] before:-bottom-[5px] before:-left-[5px] 
-                before:-right-[5px] before:bg-gradient-to-r before:from-violet-500 before:from-10% 
-                before:via-sky-500 before:via-30% before:to-pink-500 before:bg-[length:400%] before:-z-10 
-                before:rounded-[35px] before:hover:blur-xl before:transition-all before:ease-in-out 
-                before:duration-[1s] before:hover:bg-[length:10%] active:bg-violet-700 focus:ring-violet-700"
+                className="cursor-pointer text-orange-500 font-extrabold relative text-xs px-3 py-1.5 inline-flex items-center justify-center text-center bg-gradient-to-r from-violet-500 from-10% via-sky-500 via-30% to-pink-500 to-90% bg-[length:400%] rounded-full z-10 hover:animate-gradient-xy hover:bg-[length:100%] before:content-[''] before:absolute before:-top-[2px] before:-bottom-[2px] before:-left-[2px] before:-right-[2px] before:bg-gradient-to-r before:from-violet-500 before:from-10% before:via-sky-500 before:via-30% before:to-pink-500 before:bg-[length:400%] before:-z-10 before:rounded-full before:hover:blur-md before:transition-all before:ease-in-out before:duration-1000 before:hover:bg-[length:10%] active:bg-violet-700"
                 title="Browse verified Passports"
               >
-                <span className="">Browse Passports</span>
+                <span className="text-orange-500 font-extrabold">Browse Passports</span>
               </Link>
             )}
 
             {user ? (
-              /* Signed-In User Profile Menu */
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className="flex items-center gap-2.5 rounded-2xl p-1.5 pr-3 bg-orange-50/80 hover:bg-orange-100/90 border border-orange-200 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
-                    aria-label="User Account Menu"
+              /* Signed-In User Profile Menu & Get Started button */
+              <div className="flex items-center gap-2">
+                <Link href="/register/intern" className="hidden sm:inline-flex">
+                  <Button
+                    size="sm"
+                    className="h-8 px-3 text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-md shadow-blue-600/25 transition-all"
                   >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 text-xs font-extrabold text-white shadow-sm">
-                      {initials}
-                    </span>
-                    <span className="hidden flex-col items-start text-left leading-tight md:flex">
-                      <span className="text-xs font-bold text-orange-600 truncate max-w-[120px]">
-                        {displayName}
+                    Get Started
+                  </Button>
+                </Link>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="flex items-center gap-2 rounded-2xl p-1 pr-2.5 bg-orange-50/80 hover:bg-orange-100/90 border border-orange-200 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                      aria-label="User Account Menu"
+                    >
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 text-xs font-extrabold text-white shadow-sm">
+                        {initials}
                       </span>
-                      <span className="text-[10px] font-semibold text-slate-700">
-                        {roleLabel}
+                      <span className="hidden flex-col items-start text-left leading-tight md:flex">
+                        <span className="text-xs font-bold text-orange-600 truncate max-w-[110px]">
+                          {displayName}
+                        </span>
+                        <span className="text-[10px] font-semibold text-slate-700">
+                          {roleLabel}
+                        </span>
                       </span>
-                    </span>
-                    <ChevronDown className="h-3.5 w-3.5 text-orange-500" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  sideOffset={8}
-                  className="w-64 rounded-2xl border-2 border-orange-200/90 bg-white p-2 shadow-2xl text-slate-900 ring-1 ring-orange-500/10"
-                >
-                  <div className="px-3 py-2.5 bg-orange-50/90 rounded-xl border border-orange-200/70 mb-1.5">
-                    <p className="text-xs font-bold text-orange-600">{displayName}</p>
-                    <p className="text-[11px] font-semibold text-slate-700 mt-0.5">{roleLabel}</p>
-                  </div>
-                  <DropdownMenuSeparator className="bg-orange-100" />
+                      <ChevronDown className="h-3.5 w-3.5 text-orange-500" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    sideOffset={8}
+                    className="w-64 rounded-2xl border-2 border-orange-200/90 bg-white p-2 shadow-2xl text-slate-900 ring-1 ring-orange-500/10"
+                  >
+                    <div className="px-3 py-2 bg-orange-50/90 rounded-xl border border-orange-200/70 mb-1.5">
+                      <p className="text-xs font-bold text-orange-600">{displayName}</p>
+                      <p className="text-[11px] font-semibold text-slate-700 mt-0.5">{roleLabel}</p>
+                    </div>
+                    <DropdownMenuSeparator className="bg-orange-100" />
 
-                  <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
-                    <Link href={dashboardLink} className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-orange-600">
-                      <LayoutDashboard className="h-4 w-4 text-orange-500" />
-                      <span>{roleLabel} Dashboard</span>
-                    </Link>
-                  </DropdownMenuItem>
-
-
-                  {userRole === 'INTERN' && (
-                    <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
-                      <Link href="/dashboard/intern/passport" className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-orange-600">
-                        <Award className="h-4 w-4 text-amber-600" />
-                        <span>My Passport</span>
+                    <DropdownMenuItem asChild className="group cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
+                      <Link href={dashboardLink} className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-blue-400 group-hover:text-blue-400 transition-colors">
+                        <LayoutDashboard className="h-4 w-4 text-orange-500 group-hover:text-blue-400 transition-colors" />
+                        <span>{roleLabel} Dashboard</span>
                       </Link>
                     </DropdownMenuItem>
-                  )}
 
-                  <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
-                    <Link href="/settings" className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-orange-600">
-                      <ShieldCheck className="h-4 w-4 text-slate-600" />
-                      <span>Security & Privacy</span>
-                    </Link>
-                  </DropdownMenuItem>
+                    {userRole === 'INTERN' && (
+                      <DropdownMenuItem asChild className="group cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
+                        <Link href="/dashboard/intern/passport" className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-blue-400 group-hover:text-blue-400 transition-colors">
+                          <Award className="h-4 w-4 text-amber-600 group-hover:text-blue-400 transition-colors" />
+                          <span>My Passport</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
 
-                  <DropdownMenuSeparator className="bg-orange-100" />
+                    <DropdownMenuItem asChild className="group cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
+                      <Link href="/settings" className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-blue-400 group-hover:text-blue-400 transition-colors">
+                        <ShieldCheck className="h-4 w-4 text-slate-600 group-hover:text-blue-400 transition-colors" />
+                        <span>Security & Privacy</span>
+                      </Link>
+                    </DropdownMenuItem>
 
-                  <DropdownMenuItem
-                    onSelect={() => void signOut()}
-                    className="cursor-pointer rounded-xl p-2.5 text-xs font-bold text-red-600 hover:bg-red-50 focus:bg-red-50 flex items-center gap-2.5"
-                  >
-                    <LogOut className="h-4 w-4 text-red-500" />
-                    <span>Sign Out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <DropdownMenuSeparator className="bg-orange-100" />
+
+                    <DropdownMenuItem
+                      onSelect={() => void signOut()}
+                      className="cursor-pointer rounded-xl p-2.5 text-xs font-bold text-red-600 hover:text-red-600 hover:bg-red-50 focus:bg-red-50 flex items-center gap-2.5 transition-colors"
+                    >
+                      <LogOut className="h-4 w-4 text-red-600" />
+                      <span>Sign Out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
               <div className="hidden lg:flex items-center gap-2">
                 <Link href="/sign-in">

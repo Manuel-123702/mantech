@@ -490,22 +490,25 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="grid gap-4 md:grid-cols-2">
             {FAQS.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <div
                   key={idx}
-                  className="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden transition-colors hover:border-slate-700"
+                  className="relative rounded-2xl border border-slate-700/60 bg-slate-900/70 overflow-hidden backdrop-blur-lg transition-all duration-300 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
                 >
+                  {/* Decorative left accent bar — amber gradient */}
+                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600" />
+
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full p-5 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-white hover:text-cyan-300 transition-colors"
+                    className="w-full pl-6 pr-5 py-5 text-left flex items-center justify-between gap-4 transition-colors"
                   >
-                    <span>{faq.q}</span>
+                    <span className="font-semibold text-sm sm:text-base text-white">{faq.q}</span>
                     <ChevronDown
-                      className={`w-4 h-4 shrink-0 text-cyan-400 transition-transform duration-200 ${
+                      className={`w-4 h-4 shrink-0 text-amber-400 transition-transform duration-200 ${
                         isOpen ? 'rotate-180' : ''
                       }`}
                     />
@@ -516,7 +519,7 @@ export default function ContactPage() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3"
+                        className="pl-6 pr-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3"
                       >
                         {faq.a}
                       </motion.div>

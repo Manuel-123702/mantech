@@ -40,6 +40,27 @@ const CATEGORIES = [
   { id: 'regional', label: 'Cameroon Coverage', icon: MapPin },
 ];
 
+/** Per-category color tokens used for left border accent, top glow, chip badge */
+const CATEGORY_COLORS: Record<
+  string,
+  {
+    border: string;       // Tailwind border-l color
+    glow: string;         // top border glow color (CSS hex / rgba)
+    chip: string;         // badge bg + text classes
+    icon: string;         // icon color class
+    openBg: string;       // open-state card bg
+    openBorder: string;   // open-state card border
+  }
+> = {
+  about:        { border: 'border-l-amber-500',   glow: '#f59e0b', chip: 'bg-amber-500/15 text-amber-300 border-amber-500/30',   icon: 'text-amber-400',   openBg: 'bg-amber-950/20',   openBorder: 'border-amber-500/40' },
+  interns:      { border: 'border-l-emerald-500', glow: '#10b981', chip: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30', icon: 'text-emerald-400', openBg: 'bg-emerald-950/20', openBorder: 'border-emerald-500/40' },
+  employers:    { border: 'border-l-blue-500',    glow: '#3b82f6', chip: 'bg-blue-500/15 text-blue-300 border-blue-500/30',       icon: 'text-blue-400',    openBg: 'bg-blue-950/20',    openBorder: 'border-blue-500/40' },
+  universities: { border: 'border-l-purple-500',  glow: '#a855f7', chip: 'bg-purple-500/15 text-purple-300 border-purple-500/30', icon: 'text-purple-400',  openBg: 'bg-purple-950/20',  openBorder: 'border-purple-500/40' },
+  security:     { border: 'border-l-red-500',     glow: '#ef4444', chip: 'bg-red-500/15 text-red-300 border-red-500/30',          icon: 'text-red-400',     openBg: 'bg-red-950/20',     openBorder: 'border-red-500/40' },
+  billing:      { border: 'border-l-green-500',   glow: '#22c55e', chip: 'bg-green-500/15 text-green-300 border-green-500/30',    icon: 'text-green-400',   openBg: 'bg-green-950/20',   openBorder: 'border-green-500/40' },
+  regional:     { border: 'border-l-orange-500',  glow: '#f97316', chip: 'bg-orange-500/15 text-orange-300 border-orange-500/30', icon: 'text-orange-400',  openBg: 'bg-orange-950/20',  openBorder: 'border-orange-500/40' },
+};
+
 const FAQS: FAQ[] = [
   // About MANTECH
   { category: 'about', q: 'What exactly is MANTECH Nexus?', a: 'MANTECH Nexus is Cameroon\'s national professional internship marketplace. It\'s a full digital pipeline connecting student and graduate interns with accredited enterprise hosts (telecom operators, banks, fintechs, engineering firms) and higher education institutions across all 10 administrative regions of Cameroon. It replaces the old process of scattered emails, WhatsApp chats, and paper tripartite conventions with a structured, verified, ACID-compliant data platform.' },
@@ -197,7 +218,7 @@ export default function FAQPage() {
               </div>
             </aside>
 
-            {/* FAQ Accordion Column */}
+            {/* FAQ Grid Column */}
             <div className="lg:col-span-9">
               <div className="mb-4 flex items-center justify-between text-xs text-slate-400">
                 <span>
@@ -221,41 +242,82 @@ export default function FAQPage() {
                   <p className="text-xs text-slate-400 mt-1">Try searching with broader keywords.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="grid gap-4 md:grid-cols-2">
                   {filtered.map((faq, idx) => {
                     const isOpen = openItem === idx;
                     const catData = CATEGORIES.find((c) => c.id === faq.category);
+                    const colors = CATEGORY_COLORS[faq.category] ?? CATEGORY_COLORS['about'];
+
                     return (
                       <motion.div
                         key={idx}
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: (idx % 8) * 0.03 }}
+                        className="group"
                       >
+                        {/* Card */}
                         <div
-                          className={`rounded-2xl border overflow-hidden transition-colors ${
-                            isOpen
-                              ? 'border-amber-500/40 bg-amber-950/20'
+                          className={`
+                            relative rounded-2xl border overflow-hidden transition-all duration-200 h-full flex flex-col
+                            border-l-4 ${colors.border}
+                            ${isOpen
+                              ? `${colors.openBg} ${colors.openBorder} border`
                               : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
-                          }`}
+                            }
+                          `}
+                          style={{
+                            /* Thin colored top border that glows on hover / open */
+                            boxShadow: isOpen
+                              ? `0 0 0 1px ${colors.glow}33, 0 -1px 0 0 ${colors.glow}88 inset`
+                              : undefined,
+                          }}
                         >
+                          {/* Top glow line — visible on group-hover via pseudo via inline style trick */}
+                          <span
+                            className="pointer-events-none absolute inset-x-0 top-0 h-[2px] rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            style={{ background: `linear-gradient(90deg, transparent, ${colors.glow}cc, transparent)` }}
+                          />
+
+                          {/* Card Header (button) */}
                           <button
                             type="button"
                             onClick={() => setOpenItem(isOpen ? null : idx)}
-                            className="w-full text-left flex items-start justify-between gap-4 p-5"
+                            className="w-full text-left flex flex-col gap-2 p-5 flex-1"
                           >
-                            <div className="flex items-start gap-3">
+                            {/* Top row: category chip + chevron */}
+                            <div className="flex items-center justify-between gap-2">
                               {catData && (
-                                <catData.icon className={`w-4 h-4 shrink-0 mt-0.5 ${isOpen ? 'text-amber-400' : 'text-slate-400'}`} />
+                                <span
+                                  className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-semibold tracking-wide ${colors.chip}`}
+                                >
+                                  <catData.icon className="w-3 h-3" />
+                                  {catData.label}
+                                </span>
                               )}
-                              <span className={`font-semibold text-sm sm:text-base leading-snug transition-colors ${isOpen ? 'text-amber-200' : 'text-white'}`}>
+                              <ChevronDown
+                                className={`w-4 h-4 shrink-0 ml-auto transition-transform duration-200 ${colors.icon} ${isOpen ? 'rotate-180' : ''}`}
+                              />
+                            </div>
+
+                            {/* Question text */}
+                            <div className="flex items-start gap-2.5 mt-1">
+                              {catData && (
+                                <catData.icon
+                                  className={`w-4 h-4 shrink-0 mt-0.5 ${isOpen ? colors.icon : 'text-slate-400'}`}
+                                />
+                              )}
+                              <span
+                                className={`font-semibold text-sm sm:text-[0.9rem] leading-snug transition-colors ${
+                                  isOpen ? 'text-white' : 'text-slate-100'
+                                }`}
+                              >
                                 {faq.q}
                               </span>
                             </div>
-                            <ChevronDown
-                              className={`w-4 h-4 shrink-0 text-amber-400 mt-0.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                            />
                           </button>
+
+                          {/* Answer panel */}
                           <AnimatePresence>
                             {isOpen && (
                               <motion.div

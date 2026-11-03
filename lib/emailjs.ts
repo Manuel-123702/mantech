@@ -42,24 +42,28 @@ export function sendEmail(params: EmailParams): Promise<boolean> {
     if (delay) await new Promise(resolve => setTimeout(resolve, delay));
     nextSendAt = Date.now() + 1100;
     try {
+      const payload: Record<string, unknown> = {
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        template_params: params,
+      };
+      if (privateKey) {
+        payload.accessToken = privateKey;
+      }
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service_id: serviceId,
-          template_id: templateId,
-          user_id: publicKey,
-          template_params: params,
-        }),
+        body: JSON.stringify(payload),
       });
       resolveResult(response.ok);
       if (!response.ok) {
         const detail = await response.text().catch(() => '');
-        console.error('EmailJS rejected a notification email.', response.status, detail.slice(0, 500));
+        console.warn('EmailJS notification skipped or rejected (non-fatal):', response.status, detail.slice(0, 200));
       }
     } catch (error) {
       resolveResult(false);
-      console.error('EmailJS notification delivery failed.', error);
+      console.warn('EmailJS notification delivery failed (non-fatal):', error instanceof Error ? error.message : error);
     }
   }).catch(error => {
     resolveResult(false);

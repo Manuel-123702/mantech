@@ -694,7 +694,7 @@ export default function HomePage() {
                     WhatsApp Job Alerts
                   </Button>
                 </a>
-                <Link href="/sign-in">
+                <Link href="/dashboard">
                   <Button
                     variant="outline"
                     className="h-11 px-6 border-slate-600 text-slate-200 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-slate-400 font-medium text-xs"
