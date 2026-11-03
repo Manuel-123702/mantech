@@ -144,6 +144,7 @@ export function PersonAvatar({ id, name, className = '', imageUrl }: PersonAvata
       </div>
 
       {/* Actual photo / fallback SVG portrait */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={hasError ? fallbackSrc : imgSrc}
         alt={`${name} — profile portrait`}

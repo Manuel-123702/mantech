@@ -1,15 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-// Keep production builds isolated from an active `next dev` process.
-// `next build` sets NODE_ENV=production before this file is evaluated, while
-// `next dev` uses development. Pointing each at its own distDir stops a
-// production build from leaving stale chunk manifests in the directory the
-// dev server is actively writing to (which caused "Cannot find module
-// './<chunk>.js'" MODULE_NOT_FOUND errors at runtime).
-const isProductionBuild = process.env.NODE_ENV === 'production';
-
 const nextConfig = {
-  distDir: isProductionBuild ? '.next-prod' : '.next',
   experimental: {
     cpus: 1,
   },

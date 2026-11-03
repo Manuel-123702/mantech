@@ -462,7 +462,7 @@ export default async function InternPassportsPage(props: PageProps) {
               {keyword && (
                 <>
                   {" "}
-                  matching "<span className="font-semibold text-emerald-300">{keyword}</span>"
+                  matching &ldquo;<span className="font-semibold text-emerald-300">{keyword}</span>&rdquo;
                 </>
               )}
             </p>
