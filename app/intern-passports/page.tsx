@@ -78,7 +78,7 @@ export default async function InternPassportsPage(props: PageProps) {
     return (
       <main
         className="min-h-screen bg-cover bg-center bg-fixed relative"
-        style={{ backgroundImage: "url('/images/hero_tech_bg.jpg')" }}
+        style={{ backgroundImage: "url('/images/passports_dash_bg.svg')" }}
       >
         <div className="absolute inset-0 bg-slate-950/88" aria-hidden />
         <div className="relative z-10 container-mantech px-4 py-20 flex items-center justify-center min-h-screen">
@@ -221,7 +221,7 @@ export default async function InternPassportsPage(props: PageProps) {
   return (
     <main
       className="min-h-screen bg-cover bg-center bg-fixed relative"
-      style={{ backgroundImage: "url('/images/hero_tech_bg.jpg')" }}
+      style={{ backgroundImage: "url('/images/passports_dash_bg.svg')" }}
     >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-slate-950/88" aria-hidden />

@@ -287,18 +287,19 @@ export function DashboardShowcase() {
                 </ul>
               </div>
 
-              {/* Target Users & CTA */}
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <Link href={current.href} className="flex-1">
+              {/* CTA Button */}
+              <div className="pt-2">
+                <Link href={current.href}>
                   <Button className={`w-full bg-gradient-to-r ${current.themeColor} hover:opacity-95 text-white font-bold text-sm shadow-xl shadow-blue-600/20 h-11 rounded-xl gap-2`}>
                     <span>{current.ctaText}</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
-                <div className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-[11px] text-slate-400 text-center sm:text-left">
-                  <span className="font-semibold text-slate-300">Audience: </span>
-                  {current.whoUses}
-                </div>
+              </div>
+              {/* Audience note — separated below the button */}
+              <div className="mt-3 flex items-start gap-2 px-3 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800/60 text-[11px] text-slate-500">
+                <span className="shrink-0 font-bold text-slate-400 uppercase tracking-wide">For:</span>
+                <span className="leading-relaxed">{current.whoUses}</span>
               </div>
             </div>
 

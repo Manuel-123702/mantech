@@ -18,6 +18,7 @@ import { regionNameOf } from '@/lib/catalog-shape';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { OrgLogo } from '@/components/shared/org-logo';
 import {
   MotionSection,
   MotionItem,
@@ -143,9 +144,14 @@ export default function UniversitiesPage() {
                     <AnimatedCard className="h-full rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-md p-7 shadow-lg hover:shadow-2xl hover:border-emerald-500/40 transition-all flex flex-col justify-between group">
                       <div>
                         <div className="flex items-start gap-4">
-                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 group-hover:scale-105 transition-transform">
-                            <School className="h-7 w-7" />
-                          </div>
+                          <OrgLogo
+                            name={uni.name}
+                            logoUrl={uni.logoUrl}
+                            website={uni.website}
+                            type="UNIVERSITY"
+                            size="lg"
+                            className="group-hover:scale-105 transition-transform"
+                          />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
                               <h3 className="font-heading text-lg font-bold text-white truncate">{uni.name}</h3>

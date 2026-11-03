@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { OrgLogo } from '@/components/shared/org-logo';
 import {
   MotionSection,
   MotionItem,
@@ -189,9 +190,13 @@ export default function CompaniesPage() {
                     <AnimatedCard className="h-full rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md p-7 shadow-xl hover:shadow-2xl hover:border-blue-400 hover:bg-slate-800/90 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group text-white">
                       <div>
                         <div className="flex items-start gap-4">
-                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-950/80 text-blue-400 border border-blue-500/30 group-hover:scale-105 transition-transform">
-                            <Building2 className="h-7 w-7" />
-                          </div>
+                          <OrgLogo
+                            name={company.name}
+                            logoUrl={company.logoUrl}
+                            website={company.website}
+                            size="lg"
+                            className="group-hover:scale-105 transition-transform"
+                          />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
                               <h3 className="font-heading text-lg font-bold text-white truncate">{company.name}</h3>

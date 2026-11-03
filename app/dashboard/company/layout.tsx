@@ -8,7 +8,7 @@ export default async function CompanyDashboardLayout({ children }: { children: R
   return (
     <div
       className="min-h-screen relative bg-cover bg-center bg-fixed text-white"
-      style={{ backgroundImage: "url('/images/company_tech_bg.jpg')" }}
+      style={{ backgroundImage: "url('/images/company_dash_bg.svg')" }}
     >
       {/* Dark overlay with backdrop blur */}
       <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[3px]" />

@@ -157,34 +157,6 @@ export default async function InternDashboardPage() {
       </div>
     );
   }
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-slate-200">
-                <p className="text-sm font-medium text-slate-700 mb-4">
-                  Sign in to unlock your personal dashboard and start applying.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link href="/sign-in">
-                    <Button className="flex-1">
-                      Sign In
-                    </Button>
-                  </Link>
-                  <Link href="/register/intern">
-                    <Button
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      Create Account
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
   const profile = await prisma.internProfile.findUnique({
     where: { userId: user.id },

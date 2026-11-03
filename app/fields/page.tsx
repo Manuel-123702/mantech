@@ -91,7 +91,7 @@ export default function FieldsPage() {
   return (
     <div
       className="min-h-screen relative bg-cover bg-center bg-fixed text-white overflow-hidden"
-      style={{ backgroundImage: "url('/images/hero_tech_bg.jpg')" }}
+      style={{ backgroundImage: "url('/images/fields_dash_bg.svg')" }}
     >
       <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-[3px]" />
 
@@ -284,47 +284,6 @@ export default function FieldsPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border border-slate-700 hover:border-emerald-500/50 bg-slate-800/80 text-white hover:text-emerald-300 font-bold px-6 py-3 rounded-xl transition-all text-xs hover:scale-105 shadow-sm"
-              >
-                <WhatsAppIcon className="h-4 w-4 text-[#25D366]" title="WhatsApp" />
-                Contact on WhatsApp
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    </div>
-  );
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
-
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 text-center max-w-2xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-slate-900 mb-3">
-              Don&apos;t see your specific field?
-            </h2>
-            <p className="text-slate-600 mb-8 text-sm leading-relaxed">
-              MANTECH Nexus is continuously expanding. Contact our team on WhatsApp to request specialized tracks or browse all open opportunities.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/internships">
-                <span className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-all text-xs shadow-md shadow-blue-600/20 hover:scale-105">
-                  All Internships <ArrowRight className="w-4 h-4" />
-                </span>
-              </Link>
-              <Link href="/jobs">
-                <span className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition-all text-xs shadow-md shadow-indigo-600/20 hover:scale-105">
-                  All Jobs <ArrowRight className="w-4 h-4" />
-                </span>
-              </Link>
-              <a
-                href={APP_CONFIG.contacts.whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border border-slate-300 hover:border-emerald-400 bg-white text-slate-700 hover:text-emerald-600 font-semibold px-6 py-3 rounded-xl transition-all text-xs hover:scale-105 shadow-sm"
               >
                 <WhatsAppIcon className="h-4 w-4 text-[#25D366]" title="WhatsApp" />
                 Contact on WhatsApp

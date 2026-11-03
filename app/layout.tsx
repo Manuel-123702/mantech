@@ -1,6 +1,5 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Sora } from 'next/font/google';
 import { AuthProvider } from '@/lib/clerk';
 import { Navbar } from '@/components/shared/navbar';
 import { Footer } from '@/components/shared/footer';
@@ -10,8 +9,8 @@ import { ScrollToTop } from '@/components/shared/scroll-to-top';
 import { Toaster } from '@/components/ui/sonner';
 import { SITE_URL, organizationJsonLd } from '@/lib/seo';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const sora = Sora({ subsets: ['latin'], variable: '--font-sora' });
+const inter = { variable: 'font-sans' };
+const sora = { variable: 'font-heading' };
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

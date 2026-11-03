@@ -78,7 +78,7 @@ export default function DashboardRootPage() {
     return (
       <div
         className="min-h-screen relative bg-cover bg-center bg-fixed flex items-center justify-center px-4"
-        style={{ backgroundImage: "url('/images/portal_tech_bg.jpg')" }}
+        style={{ backgroundImage: "url('/images/portal_dash_bg.svg')" }}
       >
         <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[3px]" />
         <div className="relative z-10 w-full max-w-md rounded-3xl border border-slate-700/80 bg-slate-900/90 p-8 text-center text-white backdrop-blur-xl shadow-2xl">
@@ -94,7 +94,7 @@ export default function DashboardRootPage() {
   return (
     <div
       className="min-h-screen relative bg-cover bg-center bg-fixed text-white px-4 py-10 sm:px-6"
-      style={{ backgroundImage: "url('/images/portal_tech_bg.jpg')" }}
+      style={{ backgroundImage: "url('/images/portal_dash_bg.svg')" }}
     >
       <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[3px]" />
 

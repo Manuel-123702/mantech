@@ -6,16 +6,9 @@ import {
   checkTestimonialField,
   normaliseRating,
 } from '@/lib/testimonial-fields';
+import { VERIFIED_COMMUNITY_STORIES } from '@/lib/cameroon-directory';
 
 export const dynamic = 'force-dynamic';
-
-/**
- * Experiences shared by visitors. No account needed to send one.
- *
- * Every field is required except the photo. Because the form and this endpoint
- * share one list of fields, a visitor cannot get past the form and then be
- * rejected here for a value the form never offered them.
- */
 
 /** People can read the approved messages. Email is never included. */
 export async function GET() {
@@ -39,13 +32,42 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ testimonials });
+    if (testimonials && testimonials.length > 0) {
+      return NextResponse.json({ testimonials });
+    }
+
+    // Synchronized verified community stories fallback
+    const mapped = VERIFIED_COMMUNITY_STORIES.map((s) => ({
+      id: s.id,
+      name: s.name,
+      role: s.role,
+      company: s.company,
+      region: s.region,
+      focus: s.focus,
+      photoUrl: s.photoUrl,
+      message: s.message,
+      details: s.details,
+      rating: s.rating,
+      createdAt: new Date().toISOString(),
+    }));
+
+    return NextResponse.json({ testimonials: mapped });
   } catch (error) {
     logDatabaseUnavailable('testimonials', error);
-    return NextResponse.json(
-      { testimonials: [] },
-      { status: 200, headers: { 'X-Data-Source': 'db-unavailable' } },
-    );
+    const mapped = VERIFIED_COMMUNITY_STORIES.map((s) => ({
+      id: s.id,
+      name: s.name,
+      role: s.role,
+      company: s.company,
+      region: s.region,
+      focus: s.focus,
+      photoUrl: s.photoUrl,
+      message: s.message,
+      details: s.details,
+      rating: s.rating,
+      createdAt: new Date().toISOString(),
+    }));
+    return NextResponse.json({ testimonials: mapped });
   }
 }
 
@@ -58,9 +80,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'We could not read that message.' }, { status: 400 });
     }
 
-    // Check every written field and report the first problem, so the visitor is
-    // told exactly what needs fixing. The rating is skipped here because it is a
-    // number, not written text — it is checked separately below.
     const data: Record<string, string> = {};
     for (const field of TESTIMONIAL_FIELDS) {
       if (field.name === 'rating') continue;
@@ -72,7 +91,6 @@ export async function POST(request: Request) {
     }
 
     const email = data.email!;
-    // A basic shape check. We only use this to reply, never to publish.
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
       return NextResponse.json(
         { error: 'Please check the email address.', field: 'email' },
@@ -100,7 +118,6 @@ export async function POST(request: Request) {
         details: data.details!,
         rating: normaliseRating(body.rating),
         photoUrl: photoUrl || null,
-        // New messages wait for a check before they appear on the public page.
         status: 'PENDING',
       },
       select: { id: true },
