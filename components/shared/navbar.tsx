@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   Briefcase,
   Star,
+  Smartphone,
 } from 'lucide-react';
 import { Logo } from '@/components/shared/logo';
 import { Button } from '@/components/ui/button';
@@ -838,6 +839,19 @@ export function Navbar() {
                         <MessageCircle className="h-4 w-4" />
                       </div>
                       <span>Contact Us</span>
+                    </Link>
+                    <Link
+                      href="/install"
+                      onClick={closeMobile}
+                      className="flex items-center gap-3 p-2.5 rounded-xl bg-cyan-50/90 hover:bg-cyan-100/90 text-xs font-bold text-cyan-700 transition-colors"
+                    >
+                      <div className="p-1.5 rounded-lg bg-cyan-500 text-white shadow-sm">
+                        <Smartphone className="h-4 w-4" />
+                      </div>
+                      <span className="flex-1">Download Mobile App</span>
+                      <span className="rounded-full bg-cyan-200/80 px-2 py-0.5 text-[10px] font-extrabold text-cyan-900">
+                        PWA
+                      </span>
                     </Link>
                   </div>
                 </div>

@@ -22,6 +22,7 @@ const footerLinks = {
       { href: "/how-it-works", label: "How It Works" },
       { href: "/services", label: "Services" },
       { href: "/pricing", label: "Pricing" },
+      { href: "/install", label: "Download Mobile App" },
     ],
   },
   Discover: {
