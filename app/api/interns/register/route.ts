@@ -82,25 +82,48 @@ const registrationSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const user = await syncDbUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    }
-    if (user.role !== 'INTERN') {
-      return NextResponse.json({ error: 'Only intern accounts can register an Intern Passport.' }, { status: 403 });
-    }
-
     const body = await request.json();
     const validatedData = registrationSchema.parse(body);
 
+    const authUser = await syncDbUser();
+    let effectiveUserId: string;
+
+    if (authUser) {
+      effectiveUserId = authUser.id;
+      if (authUser.role !== 'INTERN') {
+        await prisma.user.update({
+          where: { id: authUser.id },
+          data: { role: 'INTERN' },
+        });
+      }
+    } else {
+      // Allow seamless registration with or without prior sign-in
+      const guestClerkId = `guest_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+      const guestUser = await prisma.user.upsert({
+        where: { email: validatedData.email },
+        update: { role: 'INTERN', fullName: validatedData.fullName },
+        create: {
+          email: validatedData.email,
+          fullName: validatedData.fullName,
+          clerkId: guestClerkId,
+          role: 'INTERN',
+        },
+      });
+      effectiveUserId = guestUser.id;
+    }
+
     // Check if user already has an intern profile
-    const existingUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      include: { internProfile: true },
+    const existingProfile = await prisma.internProfile.findUnique({
+      where: { userId: effectiveUserId },
+      include: { passport: true },
     });
 
-    if (existingUser?.internProfile) {
-      return NextResponse.json({ error: 'Profile already exists' }, { status: 400 });
+    if (existingProfile?.passport) {
+      return NextResponse.json({
+        message: 'Intern Passport already registered and active!',
+        passport: existingProfile.passport,
+        passportNumber: existingProfile.passport.passportNumber,
+      }, { status: 200 });
     }
 
     // Get or create field
@@ -116,7 +139,7 @@ export async function POST(request: Request) {
     // Create intern profile
     const internProfile = await prisma.internProfile.create({
       data: {
-        userId: user.id,
+        userId: effectiveUserId,
         phone: validatedData.phone,
         isPhonePublic: validatedData.isPhonePublic || false,
         qualification: validatedData.qualification,
@@ -216,10 +239,10 @@ export async function POST(request: Request) {
       });
     }
 
-    // Update user role if not set
+    // Update user role and avatar
     await prisma.user.update({
-      where: { id: user.id },
-      data: { fullName: user.fullName, avatarUrl: validatedData.photoUrl || user.avatarUrl },
+      where: { id: effectiveUserId },
+      data: { fullName: validatedData.fullName, avatarUrl: validatedData.photoUrl || undefined },
     });
 
     // Create CV file metadata
@@ -236,7 +259,7 @@ export async function POST(request: Request) {
     });
 
     await notifyUser({
-      userId: user.id,
+      userId: effectiveUserId,
       title: 'Your Intern Passport is ready',
       message: 'Your profile is now available for verified organizations to discover. You can update your details and privacy settings at any time.',
       category: 'account',

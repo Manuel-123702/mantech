@@ -146,14 +146,7 @@ export default async function InternDetailPage({
               {person.internProfile?.cvUrl ? "Company CV Access" : "No CV"}
             </span>
           </a>
-          <Link
-            href="/sign-in"
-            className="flex items-center gap-2 p-4 rounded-2xl bg-blue-600/10 border border-blue-500/30 hover:bg-blue-600/20 transition-colors"
-          >
-            <LinkIcon className="w-4 h-4 text-blue-400" />
-            <span className="text-xs font-medium text-blue-300">Connect</span>
-          </Link>
-        </div>
+          </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Profile Info */}

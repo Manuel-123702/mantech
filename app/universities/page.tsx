@@ -197,9 +197,9 @@ export default function UniversitiesPage() {
                           <span className="text-xs text-slate-400">Institutional Partner</span>
                         )}
 
-                        <Link href="/services">
-                          <Button size="sm" variant="ghost" className="text-xs text-slate-400 hover:text-emerald-400 hover:bg-emerald-900/30">
-                            <span>University Services</span>
+                        <Link href={`/universities/${uni.slug || uni.id}`}>
+                          <Button size="sm" variant="ghost" className="text-xs text-emerald-400 hover:text-white hover:bg-emerald-900/40">
+                            <span>View Programs</span>
                             <ArrowRight className="w-3.5 h-3.5 ml-1" />
                           </Button>
                         </Link>

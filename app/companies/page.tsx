@@ -199,7 +199,9 @@ export default function CompaniesPage() {
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                              <h3 className="font-heading text-lg font-bold text-white truncate">{company.name}</h3>
+                              <Link href={`/companies/${company.slug || company.id}`} className="hover:underline">
+                                <h3 className="font-heading text-lg font-bold text-white truncate">{company.name}</h3>
+                              </Link>
                               <BadgeCheck className="h-5 w-5 shrink-0 text-blue-400" />
                             </div>
                             {industryNameOf(shape) && (
@@ -229,27 +231,43 @@ export default function CompaniesPage() {
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
-                        {company.website ? (
-                          <a
-                            href={company.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
-                          >
-                            <Globe className="w-3.5 h-3.5" />
-                            <span>Website</span>
-                          </a>
-                        ) : (
-                          <span className="text-xs text-slate-500">Verified Partner</span>
-                        )}
+                      <div className="mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          {company.website ? (
+                            <a
+                              href={company.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
+                            >
+                              <Globe className="w-3.5 h-3.5" />
+                              <span>Website</span>
+                            </a>
+                          ) : (
+                            <span className="text-xs text-slate-500">Verified Partner</span>
+                          )}
+                        </div>
 
-                        <Link href={`/mantech-internship?company=${encodeURIComponent(company.name)}`}>
-                          <Button size="sm" variant="ghost" className="text-xs text-slate-300 hover:text-white hover:bg-slate-800">
-                            <span>View Openings</span>
-                            <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                          </Button>
-                        </Link>
+                        <div className="flex items-center gap-2">
+                          <Link href={`/jobs?company=${encodeURIComponent(company.name)}`}>
+                            <Button size="sm" variant="outline" className="h-8 px-2.5 text-[11px] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-slate-600">
+                              <Briefcase className="w-3 h-3 mr-1 text-cyan-400" />
+                              <span>Jobs</span>
+                            </Button>
+                          </Link>
+                          <Link href={`/internships?company=${encodeURIComponent(company.name)}`}>
+                            <Button size="sm" variant="outline" className="h-8 px-2.5 text-[11px] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-slate-600">
+                              <Building2 className="w-3 h-3 mr-1 text-emerald-400" />
+                              <span>Internships</span>
+                            </Button>
+                          </Link>
+                          <Link href={`/companies/${company.slug || company.id}`}>
+                            <Button size="sm" className="h-8 px-2.5 text-[11px] bg-blue-600 hover:bg-blue-500 text-white">
+                              <span>Profile</span>
+                              <ArrowRight className="w-3 h-3 ml-1" />
+                            </Button>
+                          </Link>
+                        </div>
                       </div>
                     </AnimatedCard>
                   </MotionItem>

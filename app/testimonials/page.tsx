@@ -17,18 +17,14 @@ export const metadata: Metadata = {
 export default function TestimonialsPage() {
   return (
     <>
-      {/* ── Hero — dark image-backed ──────────────────────────────────────── */}
-      <section
-        className="relative overflow-hidden border-b border-slate-800/60 py-20 text-white sm:py-28"
-        style={{
-          backgroundImage: "url('/images/about_tech_bg.jpg')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-        }}
-      >
-        {/* Primary dark overlay — maintains WCAG AA contrast */}
-        <div className="absolute inset-0 bg-slate-950/82" />
+      {/* ── Hero — dark image-backed with reduced opacity ────────────────── */}
+      <section className="relative overflow-hidden border-b border-slate-800/60 py-20 text-white sm:py-28 bg-slate-950">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-fixed opacity-20 pointer-events-none"
+          style={{ backgroundImage: "url('/images/about_tech_bg.jpg')" }}
+        />
+        {/* Primary dark overlay */}
+        <div className="absolute inset-0 bg-slate-950/85" />
 
         {/* Ambient glow blobs */}
         <div

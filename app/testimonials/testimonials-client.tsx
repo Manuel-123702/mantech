@@ -147,10 +147,26 @@ export function TestimonialsClient() {
     fetch('/api/testimonials', { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (!cancelled && data?.testimonials) setItems(data.testimonials);
+        if (!cancelled && data?.testimonials) {
+          try {
+            const cached = JSON.parse(localStorage.getItem('mantech_saved_testimonials') || '[]');
+            const existingIds = new Set(data.testimonials.map((t: Testimonial) => t.id));
+            const newLocal = cached.filter((c: Testimonial) => !existingIds.has(c.id));
+            setItems([...newLocal, ...data.testimonials]);
+          } catch {
+            setItems(data.testimonials);
+          }
+        }
       })
       .catch(() => {
-        if (!cancelled) setItems([]);
+        if (!cancelled) {
+          try {
+            const cached = JSON.parse(localStorage.getItem('mantech_saved_testimonials') || '[]');
+            setItems(cached);
+          } catch {
+            setItems([]);
+          }
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -195,26 +211,29 @@ export function TestimonialsClient() {
         throw new Error(data.error || 'We could not send that. Please try again.');
       }
       setSent(true);
-      // Show the person their own experience straight away, marked as waiting
-      // for review. Otherwise they press Send, see a thank-you, and no sign
-      // their message actually arrived anywhere.
-      setItems((current) => [
-        {
-          id: data.id,
-          name: draft.name.trim(),
-          role: draft.role.trim(),
-          company: draft.company.trim(),
-          region: draft.region,
-          focus: draft.focus.trim(),
-          message: draft.message.trim(),
-          details: draft.details.trim(),
-          rating,
-          photoUrl: photoUrl ?? null,
-          createdAt: new Date().toISOString(),
-          pending: true,
-        },
-        ...current,
-      ]);
+      const newItem: Testimonial = {
+        id: data.id || `local-${Date.now()}`,
+        name: draft.name.trim(),
+        role: draft.role.trim(),
+        company: draft.company.trim(),
+        region: draft.region,
+        focus: draft.focus.trim(),
+        message: draft.message.trim(),
+        details: draft.details.trim(),
+        rating,
+        photoUrl: photoUrl ?? null,
+        createdAt: new Date().toISOString(),
+        pending: false,
+      };
+
+      try {
+        const cached = JSON.parse(localStorage.getItem('mantech_saved_testimonials') || '[]');
+        localStorage.setItem('mantech_saved_testimonials', JSON.stringify([newItem, ...cached]));
+      } catch {
+        // ignore localStorage errors
+      }
+
+      setItems((current) => [newItem, ...current]);
       setDraft(EMPTY_DRAFT);
       setPhotoUrl(null);
       setRating(5);
@@ -335,13 +354,13 @@ function ChooseOrType({
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent className="bg-slate-900 border-slate-700 text-white">
-          {options.map((option) => (
+          {options.filter((o) => o !== OTHER_OPTION && o !== 'Other').map((option) => (
             <SelectItem key={option} value={option} className="focus:bg-slate-800 focus:text-white">
               {option}
             </SelectItem>
           ))}
           <SelectItem value={OTHER_OPTION} className="focus:bg-slate-800 focus:text-white">
-            {OTHER_OPTION} — I&apos;ll type it
+            Other (Type custom answer)
           </SelectItem>
         </SelectContent>
       </Select>

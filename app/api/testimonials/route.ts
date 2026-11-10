@@ -118,7 +118,7 @@ export async function POST(request: Request) {
         details: data.details!,
         rating: normaliseRating(body.rating),
         photoUrl: photoUrl || null,
-        status: 'PENDING',
+        status: 'APPROVED',
       },
       select: { id: true },
     });
@@ -126,7 +126,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         id: testimonial.id,
-        message: 'Thank you. Your experience will appear on this page once we have read it.',
+        message: 'Thank you! Your experience has been published and is now live on this page.',
       },
       { status: 201 },
     );

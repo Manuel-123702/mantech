@@ -87,17 +87,11 @@ export function OrgLogo({
   const [imageError, setImageError] = useState(false);
   const brand = getBrandInfo(name);
 
-  // Determine effective logo URL
+  // Determine effective logo URL — strictly forbid third-party avatar scrapers (e.g. unavatar.io)
+  // that can inadvertently return human face photos or personal profiles.
   let effectiveUrl = logoUrl;
-  if (!effectiveUrl && brand?.domain) {
-    effectiveUrl = `https://unavatar.io/${brand.domain}?fallback=https://logo.clearbit.com/${brand.domain}`;
-  } else if (!effectiveUrl && website) {
-    try {
-      const host = new URL(website.startsWith('http') ? website : `https://${website}`).hostname;
-      effectiveUrl = `https://unavatar.io/${host}?fallback=https://logo.clearbit.com/${host}`;
-    } catch {
-      // ignore invalid URLs
-    }
+  if (effectiveUrl && (effectiveUrl.includes('unavatar.io') || effectiveUrl.includes('dicebear'))) {
+    effectiveUrl = null;
   }
 
   const sizeCls = SIZE_CLASSES[size] || SIZE_CLASSES.md;

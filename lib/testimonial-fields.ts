@@ -35,6 +35,7 @@ export const TESTIMONIAL_ROLES = [
   'Senior Engineer',
   'Operations Manager',
   'Faculty Dean',
+  'Other',
 ] as const;
 
 /** What people actually came here to do. */
@@ -47,6 +48,7 @@ export const TESTIMONIAL_FOCUSES = [
   'Verification',
   'Candidate Quality',
   'WhatsApp Support',
+  'Other',
 ] as const;
 
 /** The ten regions of Cameroon. */
@@ -58,12 +60,13 @@ export const TESTIMONIAL_REGIONS = [
   'Littoral',
   'North',
   'North-West',
+  'South',
   'South-West',
   'West',
 ] as const;
 
 /** Shown as the free-text escape hatch on any "choose or type" field. */
-export const OTHER_OPTION = 'Something else';
+export const OTHER_OPTION = 'Other';
 
 /** Longest answers we accept, so one person cannot fill the page. */
 export const TESTIMONIAL_LIMITS = {

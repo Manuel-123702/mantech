@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { logDatabaseUnavailable } from '@/lib/db-health';
 import { notifyMatchingAlerts } from '@/lib/alert-delivery';
+import { syncDbUser } from '@/lib/authz';
 
 const WORK_MODE_STRINGS = ['ONSITE', 'HYBRID', 'REMOTE'];
 const APP_METHOD_STRINGS = ['MANTECH', 'COMPANY_WEBSITE', 'EXTERNAL'];
@@ -81,7 +82,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -93,9 +93,36 @@ export async function POST(request: NextRequest) {
       applicationUrl,
     } = body;
 
-    if (!title || !organizationId || !city || !expiryDate) {
-      return NextResponse.json({ error: 'Missing required fields: title, organizationId, city, expiryDate' }, { status: 400 });
+    // Automatically resolve organizationId if not explicitly provided
+    let effectiveOrgId = organizationId;
+    if (!effectiveOrgId) {
+      try {
+        const user = await syncDbUser();
+        if (user) {
+          const membership = await prisma.organizationMember.findFirst({
+            where: { userId: user.id },
+            select: { organizationId: true },
+          });
+          if (membership) effectiveOrgId = membership.organizationId;
+        }
+      } catch (e) {
+        // continue to fallback
+      }
     }
+    if (!effectiveOrgId) {
+      const defaultOrg = await prisma.organization.findFirst({
+        where: { type: 'COMPANY' },
+        select: { id: true },
+      });
+      effectiveOrgId = defaultOrg?.id;
+    }
+
+    if (!title) {
+      return NextResponse.json({ error: 'Job title is required.' }, { status: 400 });
+    }
+
+    const effectiveCity = city || location || 'Douala';
+    const effectiveExpiry = expiryDate ? new Date(expiryDate) : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
 
     const job = await prisma.job.create({
       data: {
@@ -103,24 +130,24 @@ export async function POST(request: NextRequest) {
         slug: slug || undefined,
         description,
         department,
-        fieldId,
-        specializationId,
-        requiredSkills: requiredSkills?.split(',').map((s: string) => s.trim()).filter(Boolean) || [],
-        preferredSkills: preferredSkills?.split(',').map((s: string) => s.trim()).filter(Boolean) || [],
+        fieldId: fieldId || null,
+        specializationId: specializationId || null,
+        requiredSkills: Array.isArray(requiredSkills) ? requiredSkills : (typeof requiredSkills === 'string' ? requiredSkills.split(',').map((s: string) => s.trim()).filter(Boolean) : []),
+        preferredSkills: Array.isArray(preferredSkills) ? preferredSkills : (typeof preferredSkills === 'string' ? preferredSkills.split(',').map((s: string) => s.trim()).filter(Boolean) : []),
         educationLevel,
-        regionId,
-        city,
+        regionId: regionId || null,
+        city: effectiveCity,
         location,
         workMode: workMode || 'ONSITE',
         salaryMinXAF: salaryMinXAF || null,
         salaryMaxXAF: salaryMaxXAF || null,
-        type: type || 'FULL_TIME' as any,
-        postingDate: postingDate || new Date(),
-        expiryDate: new Date(expiryDate),
+        type: (type || 'FULL_TIME') as any,
+        postingDate: postingDate ? new Date(postingDate) : new Date(),
+        expiryDate: effectiveExpiry,
         isRemote: isRemote ?? false,
         isFeatured: isFeatured ?? false,
         moderationStatus: moderationStatus || 'PUBLISHED',
-        organizationId,
+        organizationId: effectiveOrgId!,
         applicationUrl: applicationUrl || null,
       },
       include: {
@@ -131,8 +158,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Job created already PUBLISHED (e.g. seed/admin fast-path) → same
-    // instant fan-out as a moderation publish. Never throws.
     if (job.moderationStatus === 'PUBLISHED') {
       await notifyMatchingAlerts({
         id: job.id,

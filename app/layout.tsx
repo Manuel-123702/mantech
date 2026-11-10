@@ -67,7 +67,7 @@ export default function RootLayout({
         <AuthProvider>
           <LoadingScreen />
           <Navbar />
-          <main className="min-h-screen pt-20">{children}</main>
+          <main className="min-h-screen pt-16">{children}</main>
           <Footer />
           <WhatsAppFloat />
           <ScrollToTop />

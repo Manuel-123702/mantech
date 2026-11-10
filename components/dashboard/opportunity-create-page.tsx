@@ -6,39 +6,61 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Sparkles, GraduationCap, Plus, X } from 'lucide-react';
 import Link from 'next/link';
 import { useTaxonomy } from '@/lib/use-taxonomy';
+import { APP_CONFIG } from '@/lib/config';
 
 export default function OpportunityCreatePage({ backHref }: { backHref: string }) {
   const router = useRouter();
-  const { fields, regions, error: taxonomyError } = useTaxonomy();
+  const { fields: dbFields, regions: dbRegions, error: taxonomyError } = useTaxonomy();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Fallback merged taxonomy
+  const availableFields = dbFields.length > 0 ? dbFields : APP_CONFIG.professionalFields.map(f => ({
+    id: f.id,
+    name: f.name,
+    slug: f.slug,
+    category: f.category,
+    specializations: f.specializations.map((s, idx) => ({ id: `${f.id}_s${idx}`, name: s, slug: s.toLowerCase().replace(/\s+/g, '-') })),
+  }));
+
+  const availableRegions = dbRegions.length > 0 ? dbRegions : APP_CONFIG.cameroonRegions.map(r => ({
+    id: r.id,
+    name: r.name,
+    code: r.name.substring(0, 2).toUpperCase(),
+    capital: r.capital,
+    locations: r.cities.map((c, idx) => ({ id: `${r.id}_c${idx}`, city: c })),
+  }));
+
+  // Default deadline: 45 days from today
+  const defaultDeadline = new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     department: '',
     fieldId: '',
+    fieldOther: '',
     specializationId: '',
+    specializationOther: '',
     requiredSkills: [] as string[],
     preferredSkills: [] as string[],
-    educationLevel: '',
+    skillInput: '',
+    educationLevel: 'Undergraduate / Student',
     regionId: '',
-    city: '',
+    city: 'Douala',
     location: '',
-    workMode: 'ONSITE',
+    workMode: 'HYBRID',
     durationMonths: 3,
     startDate: '',
     endDate: '',
-    deadline: '',
+    deadline: defaultDeadline,
     isPaid: false,
     allowanceXAF: 0,
-    positions: 1,
+    positions: 2,
     applicationMethod: 'MANTECH',
     applicationUrl: '',
     externalPlatform: '',
@@ -46,452 +68,483 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
     contactEmail: '',
   });
 
+  const selectedFieldObj = availableFields.find(
+    (f) => f.id === formData.fieldId || f.name === formData.fieldId
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
+      if (!formData.title.trim()) {
+        throw new Error('Please enter an opportunity title');
+      }
+
+      if (!formData.regionId && availableRegions.length > 0) {
+        formData.regionId = availableRegions[0].id;
+      }
+
+      const payload = {
+        ...formData,
+        fieldId: formData.fieldId === 'other' ? undefined : (formData.fieldId || undefined),
+        specializationId: formData.specializationId === 'other' ? undefined : (formData.specializationId || undefined),
+        durationMonths: Number(formData.durationMonths) || 3,
+        positions: Number(formData.positions) || 1,
+        allowanceXAF: formData.isPaid ? Number(formData.allowanceXAF) || 0 : 0,
+        city: formData.city.trim() || 'Douala',
+        deadline: formData.deadline || defaultDeadline,
+        startDate: formData.startDate || undefined,
+        endDate: formData.endDate || undefined,
+      };
+
       const response = await fetch('/api/opportunities', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create opportunity');
+        throw new Error(errorData.error || 'Failed to create internship opportunity');
       }
 
       router.push(backHref);
     } catch (err: any) {
-      setError(err.message || 'Failed to create opportunity');
+      setError(err.message || 'Failed to create internship opportunity');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSkillAdd = (skill: string, type: 'required' | 'preferred') => {
-    if (skill && !formData[type === 'required' ? 'requiredSkills' : 'preferredSkills'].includes(skill)) {
-      setFormData(prev => ({
+  const handleSkillAdd = (skill: string) => {
+    const trimmed = skill.trim();
+    if (trimmed && !formData.requiredSkills.includes(trimmed)) {
+      setFormData((prev) => ({
         ...prev,
-        [type === 'required' ? 'requiredSkills' : 'preferredSkills']: 
-          [...prev[type === 'required' ? 'requiredSkills' : 'preferredSkills'], skill]
+        requiredSkills: [...prev.requiredSkills, trimmed],
+        skillInput: '',
       }));
     }
   };
 
-  const handleSkillRemove = (skill: string, type: 'required' | 'preferred') => {
-    setFormData(prev => ({
+  const handleSkillRemove = (skill: string) => {
+    setFormData((prev) => ({
       ...prev,
-      [type === 'required' ? 'requiredSkills' : 'preferredSkills']: 
-        prev[type === 'required' ? 'requiredSkills' : 'preferredSkills'].filter(s => s !== skill)
+      requiredSkills: prev.requiredSkills.filter((s) => s !== skill),
     }));
   };
 
   return (
-    <div className="container-mantech px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href={backHref}>
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Opportunities
-            </Button>
-          </Link>
-          <h1 className="text-3xl font-bold text-slate-900">Create Internship Opportunity</h1>
-          <p className="text-slate-600 mt-2">
-            Post a new internship opportunity to attract qualified candidates
-          </p>
+    <div className="container-mantech px-4 py-8 text-white max-w-4xl mx-auto">
+      {/* Header with High-Contrast Text */}
+      <div className="mb-8">
+        <Link href={backHref}>
+          <Button
+            variant="ghost"
+            className="mb-4 text-slate-300 hover:text-white hover:bg-slate-800/80 border border-slate-700/60 font-semibold text-xs"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Opportunities
+          </Button>
+        </Link>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 mb-2">
+          <GraduationCap className="w-3.5 h-3.5" /> Academic &amp; Professional Internship
         </div>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
+          Create Internship Opportunity
+        </h1>
+        <p className="text-slate-300 text-sm mt-1.5 leading-relaxed">
+          Post a verified internship placement to recruit students and graduates across Cameroon.
+        </p>
+      </div>
 
-        {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
-            {error}
+      {error && (
+        <div className="rounded-2xl border border-red-500/40 bg-red-950/60 p-4 text-xs font-medium text-red-200 mb-6 backdrop-blur-md">
+          {error}
+        </div>
+      )}
+
+      {/* Form Card in Dark Glassmorphism */}
+      <div className="rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Title */}
+          <div>
+            <Label htmlFor="title" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+              Internship Title <span className="text-red-400">*</span>
+            </Label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="e.g. Frontend Web Development Intern, Financial Audit Trainee"
+              required
+              className="h-11 bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-sm"
+            />
           </div>
-        )}
 
-        <Card>
-          <CardContent className="pt-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {taxonomyError && <p role="alert" className="text-sm text-red-700">{taxonomyError}</p>}
-              {/* Basic Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Basic Information</h3>
-                
-                <div>
-                  <Label htmlFor="title">Opportunity Title *</Label>
+          {/* Description */}
+          <div>
+            <Label htmlFor="description" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+              Description &amp; Learning Objectives <span className="text-red-400">*</span>
+            </Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Describe the internship scope, key tasks, learning outcomes, mentor guidance, and requirements..."
+              rows={5}
+              required
+              className="bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-sm leading-relaxed"
+            />
+          </div>
+
+          {/* Department & Duration */}
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <Label htmlFor="department" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Department
+              </Label>
+              <Input
+                id="department"
+                value={formData.department}
+                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                placeholder="e.g. IT, Accounting, HR"
+                className="h-11 bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-xs"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="durationMonths" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Duration (Months) <span className="text-red-400">*</span>
+              </Label>
+              <select
+                id="durationMonths"
+                value={formData.durationMonths}
+                onChange={(e) => setFormData({ ...formData, durationMonths: Number(e.target.value) })}
+                className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
+              >
+                <option value={1}>1 Month (Trial / Immersion)</option>
+                <option value={2}>2 Months (Summer / Vacation)</option>
+                <option value={3}>3 Months (Academic Standard)</option>
+                <option value={6}>6 Months (End-of-Studies / PFE)</option>
+                <option value={12}>12 Months (Professional Apprenticeship)</option>
+              </select>
+            </div>
+
+            <div>
+              <Label htmlFor="positions" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Open Positions
+              </Label>
+              <Input
+                id="positions"
+                type="number"
+                min={1}
+                max={50}
+                value={formData.positions}
+                onChange={(e) => setFormData({ ...formData, positions: Number(e.target.value) })}
+                className="h-11 bg-slate-800/80 border-slate-700 text-white text-xs focus:border-emerald-400"
+              />
+            </div>
+          </div>
+
+          {/* Connected Professional Field & Specialization */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="fieldId" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Professional Field <span className="text-red-400">*</span>
+              </Label>
+              <select
+                id="fieldId"
+                value={formData.fieldId}
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    fieldId: e.target.value,
+                    specializationId: '',
+                    fieldOther: e.target.value === 'other' ? formData.fieldOther : '',
+                  });
+                }}
+                className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
+              >
+                <option value="">Select professional field</option>
+                {availableFields.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.name}
+                  </option>
+                ))}
+                <option value="other">Other (Specify below)</option>
+              </select>
+
+              {formData.fieldId === 'other' && (
+                <div className="mt-2">
                   <Input
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="e.g. Full-Stack Software Engineer Intern"
+                    id="fieldOther"
+                    value={formData.fieldOther}
+                    onChange={(e) => setFormData({ ...formData, fieldOther: e.target.value })}
+                    placeholder="Enter custom professional field"
+                    className="h-10 bg-slate-800 border-slate-700 text-white text-xs"
                   />
                 </div>
+              )}
+            </div>
 
-                <div>
-                  <Label htmlFor="department">Department</Label>
+            <div>
+              <Label htmlFor="specializationId" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Specialization
+              </Label>
+              <select
+                id="specializationId"
+                value={formData.specializationId}
+                onChange={(e) => setFormData({ ...formData, specializationId: e.target.value })}
+                className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
+              >
+                <option value="">Select specialization</option>
+                {selectedFieldObj?.specializations?.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+                <option value="other">Other (Specify below)</option>
+              </select>
+
+              {formData.specializationId === 'other' && (
+                <div className="mt-2">
                   <Input
-                    id="department"
-                    value={formData.department}
-                    onChange={(e) => setFormData(prev => ({ ...prev, department: e.target.value }))}
-                    placeholder="e.g. Engineering, Marketing, Finance"
+                    id="specializationOther"
+                    value={formData.specializationOther}
+                    onChange={(e) => setFormData({ ...formData, specializationOther: e.target.value })}
+                    placeholder="Enter custom specialization"
+                    className="h-10 bg-slate-800 border-slate-700 text-white text-xs"
                   />
                 </div>
+              )}
+            </div>
+          </div>
 
-                <div>
-                  <Label htmlFor="description">Description *</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Describe the internship role, responsibilities, and what the intern will learn..."
-                    rows={6}
-                  />
-                </div>
-              </div>
+          {/* Region & City */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="regionId" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Region <span className="text-red-400">*</span>
+              </Label>
+              <select
+                id="regionId"
+                value={formData.regionId}
+                onChange={(e) => setFormData({ ...formData, regionId: e.target.value })}
+                className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
+              >
+                <option value="">Select region</option>
+                {availableRegions.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name} ({r.capital})
+                  </option>
+                ))}
+              </select>
+            </div>
 
-              {/* Field & Specialization */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Field & Specialization</h3>
-                
-                <div>
-                  <Label htmlFor="fieldId">Professional Field *</Label>
-                  <Select onValueChange={(value) => setFormData(prev => ({ ...prev, fieldId: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select professional field" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {fields.map((field) => (
-                        <SelectItem key={field.id} value={field.id}>
-                          {field.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+            <div>
+              <Label htmlFor="city" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                City / Town <span className="text-red-400">*</span>
+              </Label>
+              <Input
+                id="city"
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                placeholder="e.g. Douala, Yaoundé, Buea, Bamenda"
+                required
+                className="h-11 bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-xs"
+              />
+            </div>
+          </div>
 
-                <div>
-                  <Label htmlFor="specialization">Specialization</Label>
-                  <Select
-                    value={formData.specializationId}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, specializationId: value }))}
-                    disabled={!formData.fieldId}
+          {/* Work Mode, Deadline & Allowance */}
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <Label htmlFor="workMode" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Work Mode
+              </Label>
+              <select
+                id="workMode"
+                value={formData.workMode}
+                onChange={(e) => setFormData({ ...formData, workMode: e.target.value as any })}
+                className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
+              >
+                <option value="ONSITE">On-Site (At Office)</option>
+                <option value="HYBRID">Hybrid (Flexible)</option>
+                <option value="REMOTE">Fully Remote</option>
+              </select>
+            </div>
+
+            <div>
+              <Label htmlFor="deadline" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Application Deadline <span className="text-red-400">*</span>
+              </Label>
+              <Input
+                id="deadline"
+                type="date"
+                value={formData.deadline}
+                onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                required
+                className="h-11 bg-slate-800/80 border-slate-700 text-white text-xs focus:border-emerald-400"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="allowanceXAF" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+                Monthly Allowance (XAF)
+              </Label>
+              <Input
+                id="allowanceXAF"
+                type="number"
+                value={formData.allowanceXAF || ''}
+                onChange={(e) => setFormData({ ...formData, allowanceXAF: Number(e.target.value) || 0, isPaid: Number(e.target.value) > 0 })}
+                placeholder="e.g. 50000 (0 if unpaid)"
+                className="h-11 bg-slate-800/80 border-slate-700 text-white text-xs focus:border-emerald-400"
+              />
+            </div>
+          </div>
+
+          {/* Required Skills */}
+          <div>
+            <Label className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
+              Required Skills
+            </Label>
+            <div className="flex gap-2">
+              <Input
+                value={formData.skillInput}
+                onChange={(e) => setFormData({ ...formData, skillInput: e.target.value })}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSkillAdd(formData.skillInput);
+                  }
+                }}
+                placeholder="Type a skill and press Enter or click Add (e.g. Python, Excel, Teamwork)"
+                className="h-11 bg-slate-800/80 border-slate-700 text-white text-xs placeholder-slate-500 focus:border-emerald-400"
+              />
+              <Button
+                type="button"
+                onClick={() => handleSkillAdd(formData.skillInput)}
+                className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Add
+              </Button>
+            </div>
+
+            {formData.requiredSkills.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {formData.requiredSkills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-950/80 border border-emerald-500/40 text-emerald-200"
                   >
-                    <SelectTrigger id="specializationId">
-                      <SelectValue placeholder="Select specialization" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {fields.find((field) => field.id === formData.fieldId)?.specializations.map((specialization) => (
-                        <SelectItem key={specialization.id} value={specialization.id}>
-                          {specialization.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                    {skill}
+                    <button
+                      type="button"
+                      onClick={() => handleSkillRemove(skill)}
+                      className="text-slate-400 hover:text-red-400 text-xs ml-0.5"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Application Method */}
+          <div className="pt-2 border-t border-slate-800 space-y-3">
+            <Label className="text-xs font-semibold text-slate-200 uppercase tracking-wide block">
+              Application Method
+            </Label>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div
+                onClick={() => setFormData({ ...formData, applicationMethod: 'MANTECH', applicationUrl: '' })}
+                className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  formData.applicationMethod === 'MANTECH'
+                    ? 'border-emerald-500 bg-emerald-950/40 text-white'
+                    : 'border-slate-800 bg-slate-800/40 text-slate-300 hover:border-slate-700'
+                }`}
+              >
+                <div className="text-xs font-bold">Apply on MANTECH</div>
+                <div className="text-[11px] text-slate-400 mt-1 leading-snug">Direct Intern Passport submission with CV</div>
               </div>
 
-              {/* Skills */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Skills</h3>
-                
-                <div>
-                  <Label>Required Skills *</Label>
-                  <p className="text-xs text-slate-500 mb-2">Press Enter to add a skill</p>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {formData.requiredSkills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
-                      >
-                        {skill}
-                        <button
-                          type="button"
-                          onClick={() => handleSkillRemove(skill, 'required')}
-                          className="hover:text-blue-900"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                  <Input
-                    placeholder="Type a required skill and press Enter"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleSkillAdd(e.currentTarget.value, 'required');
-                        e.currentTarget.value = '';
-                      }
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <Label>Preferred Skills</Label>
-                  <p className="text-xs text-slate-500 mb-2">Press Enter to add a skill</p>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {formData.preferredSkills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm"
-                      >
-                        {skill}
-                        <button
-                          type="button"
-                          onClick={() => handleSkillRemove(skill, 'preferred')}
-                          className="hover:text-emerald-900"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                  <Input
-                    placeholder="Type a preferred skill and press Enter"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleSkillAdd(e.currentTarget.value, 'preferred');
-                        e.currentTarget.value = '';
-                      }
-                    }}
-                  />
-                </div>
+              <div
+                onClick={() => setFormData({ ...formData, applicationMethod: 'COMPANY_WEBSITE' })}
+                className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  formData.applicationMethod === 'COMPANY_WEBSITE'
+                    ? 'border-emerald-500 bg-emerald-950/40 text-white'
+                    : 'border-slate-800 bg-slate-800/40 text-slate-300 hover:border-slate-700'
+                }`}
+              >
+                <div className="text-xs font-bold">Company Website</div>
+                <div className="text-[11px] text-slate-400 mt-1 leading-snug">Redirect to your institutional portal</div>
               </div>
 
-              {/* Location & Work Mode */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Location & Work Mode</h3>
-                
-                <div>
-                  <Label htmlFor="regionId">Region *</Label>
-                  <Select onValueChange={(value) => setFormData(prev => ({ ...prev, regionId: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select region" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {regions.map((region) => (
-                        <SelectItem key={region.id} value={region.id}>
-                          {region.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="city">City/Town *</Label>
-                  <Input
-                    id="city"
-                    value={formData.city}
-                    onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
-                    placeholder="e.g. Douala, Yaoundé, Buea"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="location">Specific Location</Label>
-                  <Input
-                    id="location"
-                    value={formData.location}
-                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                    placeholder="e.g. Akwa, Bonanjo, Bali"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="workMode">Work Mode *</Label>
-                  <Select onValueChange={(value) => setFormData(prev => ({ ...prev, workMode: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select work mode" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ONSITE">On-site</SelectItem>
-                      <SelectItem value="HYBRID">Hybrid</SelectItem>
-                      <SelectItem value="REMOTE">Remote</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div
+                onClick={() => setFormData({ ...formData, applicationMethod: 'EXTERNAL' })}
+                className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  formData.applicationMethod === 'EXTERNAL'
+                    ? 'border-emerald-500 bg-emerald-950/40 text-white'
+                    : 'border-slate-800 bg-slate-800/40 text-slate-300 hover:border-slate-700'
+                }`}
+              >
+                <div className="text-xs font-bold">External Platform</div>
+                <div className="text-[11px] text-slate-400 mt-1 leading-snug">University hub, LinkedIn or partner portal</div>
               </div>
+            </div>
 
-              {/* Duration & Dates */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Duration & Dates</h3>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="durationMonths">Duration (Months) *</Label>
-                    <Input
-                      id="durationMonths"
-                      type="number"
-                      value={formData.durationMonths}
-                      onChange={(e) => setFormData(prev => ({ ...prev, durationMonths: Number(e.target.value) }))}
-                      min="1"
-                      max="24"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="positions">Number of Positions *</Label>
-                    <Input
-                      id="positions"
-                      type="number"
-                      value={formData.positions}
-                      onChange={(e) => setFormData(prev => ({ ...prev, positions: Number(e.target.value) }))}
-                      min="1"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="startDate">Start Date</Label>
-                    <Input
-                      id="startDate"
-                      type="date"
-                      value={formData.startDate}
-                      onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="endDate">End Date</Label>
-                    <Input
-                      id="endDate"
-                      type="date"
-                      value={formData.endDate}
-                      onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="deadline">Application Deadline *</Label>
-                  <Input
-                    id="deadline"
-                    type="date"
-                    value={formData.deadline}
-                    onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
-                  />
-                </div>
+            {formData.applicationMethod !== 'MANTECH' && (
+              <div className="mt-3">
+                <Label htmlFor="applicationUrl" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1">
+                  Application Link / URL <span className="text-red-400">*</span>
+                </Label>
+                <Input
+                  id="applicationUrl"
+                  type="url"
+                  value={formData.applicationUrl}
+                  onChange={(e) => setFormData({ ...formData, applicationUrl: e.target.value })}
+                  placeholder="https://company.cm/internships/apply"
+                  required={formData.applicationMethod !== 'MANTECH'}
+                  className="h-11 bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-xs"
+                />
               </div>
+            )}
+          </div>
 
-              {/* Compensation */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Compensation</h3>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="isPaid"
-                    checked={formData.isPaid}
-                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isPaid: checked as boolean }))}
-                  />
-                  <Label htmlFor="isPaid" className="text-sm">
-                    This is a paid internship
-                  </Label>
-                </div>
-
-                {formData.isPaid && (
-                  <div>
-                    <Label htmlFor="allowanceXAF">Monthly Allowance (XAF) *</Label>
-                    <Input
-                      id="allowanceXAF"
-                      type="number"
-                      value={formData.allowanceXAF}
-                      onChange={(e) => setFormData(prev => ({ ...prev, allowanceXAF: Number(e.target.value) }))}
-                      placeholder="e.g. 75000"
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Application Method */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Application Method</h3>
-                
-                <div>
-                  <Label htmlFor="applicationMethod">Application Method *</Label>
-                  <Select onValueChange={(value) => setFormData(prev => ({ ...prev, applicationMethod: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select application method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="MANTECH">Apply on MANTECH</SelectItem>
-                      <SelectItem value="COMPANY_WEBSITE">Apply on Company Website</SelectItem>
-                      <SelectItem value="EXTERNAL">Apply Externally</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {(formData.applicationMethod === 'COMPANY_WEBSITE' || formData.applicationMethod === 'EXTERNAL') && (
-                  <div>
-                    <Label htmlFor="applicationUrl">Application URL *</Label>
-                    <Input
-                      id="applicationUrl"
-                      value={formData.applicationUrl}
-                      onChange={(e) => setFormData(prev => ({ ...prev, applicationUrl: e.target.value }))}
-                      placeholder="https://..."
-                    />
-                  </div>
-                )}
-
-                {formData.applicationMethod === 'EXTERNAL' && (
-                  <div>
-                    <Label htmlFor="externalPlatform">Platform Name</Label>
-                    <Input
-                      id="externalPlatform"
-                      value={formData.externalPlatform}
-                      onChange={(e) => setFormData(prev => ({ ...prev, externalPlatform: e.target.value }))}
-                      placeholder="e.g. LinkedIn, University Portal"
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <Label htmlFor="instructions">Application Instructions</Label>
-                  <Textarea
-                    id="instructions"
-                    value={formData.instructions}
-                    onChange={(e) => setFormData(prev => ({ ...prev, instructions: e.target.value }))}
-                    placeholder="Any specific instructions for applicants..."
-                    rows={3}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="contactEmail">Contact Email</Label>
-                  <Input
-                    id="contactEmail"
-                    type="email"
-                    value={formData.contactEmail}
-                    onChange={(e) => setFormData(prev => ({ ...prev, contactEmail: e.target.value }))}
-                    placeholder="recruitment@company.cm"
-                  />
-                </div>
-              </div>
-
-              {/* Submit */}
-              <div className="flex justify-end gap-4 pt-6 border-t">
-                <Link href={backHref}>
-                  <Button variant="outline" type="button">
-                    Cancel
-                  </Button>
-                </Link>
-                <Button type="submit" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating...
-                    </>
-                  ) : (
-                    'Create Opportunity'
-                  )}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+          {/* Action Buttons */}
+          <div className="flex items-center justify-end gap-3 pt-6 border-t border-slate-800">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push(backHref)}
+              disabled={loading}
+              className="border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs px-6 shadow-lg shadow-emerald-900/40"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Publishing Internship...
+                </>
+              ) : (
+                'Publish Internship (0 FCFA)'
+              )}
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -550,7 +550,7 @@ export function Navbar() {
                 className="cursor-pointer text-orange-500 font-extrabold relative text-xs px-3 py-1.5 inline-flex items-center justify-center text-center bg-gradient-to-r from-violet-500 from-10% via-sky-500 via-30% to-pink-500 to-90% bg-[length:400%] rounded-full z-10 hover:animate-gradient-xy hover:bg-[length:100%] before:content-[''] before:absolute before:-top-[2px] before:-bottom-[2px] before:-left-[2px] before:-right-[2px] before:bg-gradient-to-r before:from-violet-500 before:from-10% before:via-sky-500 before:via-30% before:to-pink-500 before:bg-[length:400%] before:-z-10 before:rounded-full before:hover:blur-md before:transition-all before:ease-in-out before:duration-1000 before:hover:bg-[length:10%] active:bg-violet-700"
                 title="Browse verified Passports"
               >
-                <span className="text-orange-500 font-extrabold">Browse Passports</span>
+                <span className="text-white font-extrabold">Browse Passports</span>
               </Link>
             )}
 

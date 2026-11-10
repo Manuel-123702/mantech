@@ -1203,7 +1203,7 @@ export default function HomePage() {
                     ) : (
                       <span className="text-slate-500">Verified</span>
                     )}
-                    <Link href={`/universities`} className="inline-flex items-center gap-0.5 font-bold text-blue-400 hover:text-blue-300">
+                    <Link href={`/universities/${uni.slug || uni.id}`} className="inline-flex items-center gap-0.5 font-bold text-blue-400 hover:text-blue-300">
                       Explore <ArrowRight className="w-2.5 h-2.5" />
                     </Link>
                   </div>
@@ -2366,166 +2366,158 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Main FAQ Content Architecture: Question Explorer + Knowledge Concierge */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto items-start">
-            {/* Left Column: Filtered Questions List (7 cols) */}
-            <div className="lg:col-span-7 space-y-4">
-              {(() => {
-                const filtered = EXPANDED_FAQS.filter((faq) => {
-                  const matchesCategory =
-                    faqCategory === "all" || faq.category === faqCategory;
-                  const matchesSearch =
-                    !faqSearch.trim() ||
-                    faq.q.toLowerCase().includes(faqSearch.toLowerCase()) ||
-                    faq.a.toLowerCase().includes(faqSearch.toLowerCase()) ||
-                    faq.categoryName.toLowerCase().includes(faqSearch.toLowerCase());
-                  return matchesCategory && matchesSearch;
-                });
+          {/* Main FAQ Content Architecture: 2-Column Responsive Question Grid */}
+          <div className="max-w-6xl mx-auto space-y-10">
+            {(() => {
+              const filtered = EXPANDED_FAQS.filter((faq) => {
+                const matchesCategory =
+                  faqCategory === "all" || faq.category === faqCategory;
+                const matchesSearch =
+                  !faqSearch.trim() ||
+                  faq.q.toLowerCase().includes(faqSearch.toLowerCase()) ||
+                  faq.a.toLowerCase().includes(faqSearch.toLowerCase()) ||
+                  faq.categoryName.toLowerCase().includes(faqSearch.toLowerCase());
+                return matchesCategory && matchesSearch;
+              });
 
-                if (filtered.length === 0) {
-                  return (
-                    <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-8 text-center space-y-3">
-                      <HelpCircle className="w-8 h-8 text-slate-500 mx-auto" />
-                      <p className="text-sm font-semibold text-slate-300">
-                        No questions matched your search.
-                      </p>
-                      <p className="text-xs text-slate-400">
-                        Try a different keyword or reset the category filter.
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setFaqCategory("all");
-                          setFaqSearch("");
-                        }}
-                        className="text-xs border-white/20 text-slate-300 hover:text-white mt-2"
-                      >
-                        Reset filters
-                      </Button>
-                    </div>
-                  );
-                }
-
+              if (filtered.length === 0) {
                 return (
-                  <Accordion type="single" collapsible className="space-y-3.5">
-                    {filtered.map((faq, idx) => (
-                      <AccordionItem
-                        key={faq.id}
-                        value={faq.id}
-                        className="rounded-2xl border border-white/10 bg-slate-900/70 backdrop-blur-md overflow-hidden transition-all duration-200 hover:border-blue-500/30 hover:bg-slate-900/90 shadow-sm"
-                      >
-                        <AccordionTrigger className="px-5 py-4 sm:px-6 sm:py-5 text-left font-semibold text-sm sm:text-base text-white hover:no-underline hover:text-cyan-300 transition-colors [&>svg]:text-cyan-400 [&>svg]:shrink-0">
-                          <div className="flex items-start gap-3.5 pr-2">
-                            <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-500/20 text-cyan-400 text-xs font-bold mt-0.5 border border-blue-500/30">
-                              0{idx + 1}
-                            </span>
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white/5 text-blue-300 border border-white/10">
-                                  {faq.categoryName}
-                                </span>
-                                <span className="text-[10px] font-medium text-emerald-400">
-                                  {faq.badge}
-                                </span>
-                              </div>
-                              <span className="block leading-snug">{faq.q}</span>
-                            </div>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-5 pb-5 sm:px-6 sm:pb-6 pl-[3.75rem] space-y-4">
-                          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                            {faq.a}
-                          </p>
-                          {/* Imaginative Key Takeaway Card */}
-                          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 flex items-start gap-2.5">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                            <div className="text-xs text-emerald-200 leading-relaxed font-medium">
-                              <span className="font-bold text-emerald-300">Key Takeaway: </span>
-                              {faq.takeaway}
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
+                  <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-8 text-center space-y-3">
+                    <HelpCircle className="w-8 h-8 text-slate-500 mx-auto" />
+                    <p className="text-sm font-semibold text-slate-300">
+                      No questions matched your search.
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      Try a different keyword or reset the category filter.
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setFaqCategory("all");
+                        setFaqSearch("");
+                      }}
+                      className="text-xs border-white/20 text-slate-300 hover:text-white mt-2"
+                    >
+                      Reset filters
+                    </Button>
+                  </div>
                 );
-              })()}
-            </div>
+              }
 
-            {/* Right Column: Knowledge Concierge & Quick Assistance (5 cols) */}
-            <div className="lg:col-span-5 space-y-4">
-              {/* WhatsApp Live Desk Card */}
-              <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900/80 to-slate-900/90 p-6 space-y-4 backdrop-blur-md shadow-xl">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
-                    </span>
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                      Live Support Desk
-                    </span>
-                  </div>
-                  <span className="text-[11px] font-medium text-slate-400">Avg. reply &lt; 15 mins</span>
-                </div>
+              const col1 = filtered.filter((_, i) => i % 2 === 0);
+              const col2 = filtered.filter((_, i) => i % 2 !== 0);
 
-                <div>
-                  <h3 className="text-base font-bold text-white font-heading">
-                    Still have questions or specific needs?
-                  </h3>
-                  <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                    Our student admissions and corporate partnerships desk is available directly on WhatsApp to guide you through registration, passport validation, or employer subscriptions.
-                  </p>
-                </div>
-
-                <div className="pt-1 flex flex-col sm:flex-row gap-2.5">
-                  <a
-                    href={waSupportLink()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-4 shadow-lg shadow-emerald-900/40 transition-colors"
-                  >
-                    <WhatsAppIcon className="w-4 h-4" />
-                    Chat on WhatsApp
-                  </a>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-semibold py-3 px-4 transition-colors border border-white/10"
-                  >
-                    Contact Form
-                  </Link>
-                </div>
-              </div>
-
-              {/* Zero-Fee Candidate Guarantee Card */}
-              <div className="rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-950/40 via-slate-900/80 to-slate-900/90 p-6 space-y-3 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-cyan-300">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white">The Candidate Guarantee</h4>
-                    <p className="text-[11px] text-cyan-300 font-medium">100% Free for Students Across Cameroon</p>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Students and internship seekers will never be charged fees to browse, apply, or build verified Intern Passports. We charge host enterprises and institutional partners, never talent.
-                </p>
-              </div>
-
-              {/* Full FAQ Directory Link Card */}
-              <div className="rounded-2xl border border-white/10 bg-slate-900/50 p-5 flex items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">Comprehensive Knowledge Base</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">Explore 25+ detailed policy & workflow answers</p>
-                </div>
-                <Link
-                  href="/faq"
-                  className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+              const renderFaqItem = (faq: typeof filtered[0], originalIdx: number) => (
+                <AccordionItem
+                  key={faq.id}
+                  value={faq.id}
+                  className="rounded-2xl border border-white/10 bg-slate-900/70 backdrop-blur-md overflow-hidden transition-all duration-200 hover:border-blue-500/30 hover:bg-slate-900/90 shadow-sm"
                 >
-                  View All
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <AccordionTrigger className="px-5 py-4 sm:px-6 sm:py-5 text-left font-semibold text-sm text-white hover:no-underline hover:text-cyan-300 transition-colors [&>svg]:text-cyan-400 [&>svg]:shrink-0">
+                    <div className="flex items-start gap-3.5 pr-2">
+                      <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-500/20 text-cyan-400 text-xs font-bold mt-0.5 border border-blue-500/30">
+                        {originalIdx + 1 < 10 ? `0${originalIdx + 1}` : originalIdx + 1}
+                      </span>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white/5 text-blue-300 border border-white/10">
+                            {faq.categoryName}
+                          </span>
+                          <span className="text-[10px] font-medium text-emerald-400">
+                            {faq.badge}
+                          </span>
+                        </div>
+                        <span className="block leading-snug">{faq.q}</span>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-5 sm:px-6 sm:pb-6 pl-[3.75rem] space-y-4">
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      {faq.a}
+                    </p>
+                    <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <div className="text-xs text-emerald-200 leading-relaxed font-medium">
+                        <span className="font-bold text-emerald-300">Key Takeaway: </span>
+                        {faq.takeaway}
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Accordion type="single" collapsible className="space-y-4">
+                    {col1.map((faq, i) => renderFaqItem(faq, i * 2))}
+                  </Accordion>
+                  <Accordion type="single" collapsible className="space-y-4">
+                    {col2.map((faq, i) => renderFaqItem(faq, i * 2 + 1))}
+                  </Accordion>
+                </div>
+              );
+            })()}
+
+            {/* Quick Assistance 3-Column Strip */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4">
+              {/* WhatsApp Card */}
+              <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900/80 to-slate-900/90 p-5 space-y-3 backdrop-blur-md shadow-xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Live WhatsApp Desk
+                  </span>
+                  <span className="text-[10px] text-slate-400">&lt; 15 min reply</span>
+                </div>
+                <h4 className="text-sm font-bold text-white">Have a specific question?</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Chat directly with our admissions and enterprise team for fast answers.
+                </p>
+                <a
+                  href={waSupportLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 px-3 transition-colors shadow-md"
+                >
+                  <WhatsAppIcon className="w-3.5 h-3.5" />
+                  Chat on WhatsApp
+                </a>
+              </div>
+
+              {/* 100% Free Launch Card */}
+              <div className="rounded-2xl border border-blue-500/30 bg-gradient-to-br from-blue-950/40 via-slate-900/80 to-slate-900/90 p-5 space-y-3 backdrop-blur-md shadow-xl">
+                <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Free Launch Access
+                </span>
+                <h4 className="text-sm font-bold text-white">Zero Fees Across Cameroon</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  All candidate registrations, job postings, and university dashboards are 100% free with 0 FCFA fees.
+                </p>
+                <Link
+                  href="/register/intern"
+                  className="inline-flex items-center justify-center gap-1.5 w-full rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2.5 px-3 transition-colors shadow-md"
+                >
+                  Register Free Passport <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+
+              {/* Convention Assistance Card */}
+              <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/40 via-slate-900/80 to-slate-900/90 p-5 space-y-3 backdrop-blur-md shadow-xl">
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  MINESUP Convention
+                </span>
+                <h4 className="text-sm font-bold text-white">Tripartite Agreements</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Digital supervision connects students, academic mentors, and verified employers in real time.
+                </p>
+                <Link
+                  href="/services/universities"
+                  className="inline-flex items-center justify-center gap-1.5 w-full rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-bold py-2.5 px-3 transition-colors"
+                >
+                  University Details <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
             </div>
