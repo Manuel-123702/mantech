@@ -1,3 +1,7 @@
+import { Trans } from '@lingui/react/macro';
+import { msg } from '@lingui/core/macro';
+import type { MessageDescriptor } from '@lingui/core';
+import { getServerT } from '@/i18n/server';
 import { prisma } from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,11 +22,13 @@ import {
 
 export async function AnalyticsView({
   organizationId,
-  subtitle = 'Opportunity views, candidate pipeline, recruitment and placement insights.',
+  subtitle,
 }: {
   organizationId: string;
-  subtitle?: string;
+  subtitle?: MessageDescriptor;
 }) {
+  const t = getServerT();
+  const subtitleText = t(subtitle ?? msg({ message: 'Opportunity views, candidate pipeline, recruitment and placement insights.', comment: 'Introductory summary above the organization analytics dashboard' }));
   const now = new Date();
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -191,13 +197,13 @@ export async function AnalyticsView({
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Analytics</h2>
-          <p className="text-sm text-slate-500">{subtitle}</p>
+          <h2 className="text-2xl font-bold text-slate-900"><Trans comment="analytics-view h2 visible text">Analytics</Trans></h2>
+          <p className="text-sm text-slate-500">{subtitleText}</p>
         </div>
         <Badge variant="secondary" className="inline-flex items-center gap-1">
           <BarChart3 className="h-3.5 w-3.5" />
-          Live data
-        </Badge>
+          <Trans comment="analytics-view Badge visible text">Live data
+        </Trans></Badge>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -220,18 +226,19 @@ export async function AnalyticsView({
 
         <Card>
           <CardContent className="pt-6">
-            <p className="text-sm text-slate-500">View-to-apply rate</p>
-            <p className="mt-1 text-3xl font-bold text-slate-900">{viewToApply}%</p>
+            <p className="text-sm text-slate-500"><Trans comment="analytics-view p visible text">View-to-apply rate</Trans></p>
+            <p className="mt-1 text-3xl font-bold text-slate-900">{viewToApply}{/* eslint-disable-next-line i18next/no-literal-string -- numeric value is data, not translation copy */}
+{"%"}</p>
             <p className="mt-1 text-xs text-slate-500">
-              Applications per 100 opportunity views
-            </p>
+              <Trans comment="analytics-view p visible text">Applications per 100 opportunity views
+            </Trans></p>
           </CardContent>
         </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Recruitment pipeline</CardTitle>
+          <CardTitle className="text-lg"><Trans comment="analytics-view CardTitle visible text">Recruitment pipeline</Trans></CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
@@ -254,8 +261,8 @@ export async function AnalyticsView({
                       ) : (
                         <TrendingDown className="h-3 w-3" />
                       )}
-                      {conversion}% to next
-                    </p>
+                      {conversion}<Trans comment="analytics-view p visible text">% to next
+                    </Trans></p>
                   )}
                 </div>
               );
@@ -265,8 +272,8 @@ export async function AnalyticsView({
           {totalApplications > 0 && (
             <div className="mt-6 rounded-xl bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-wider text-slate-500 mb-3">
-                Status distribution
-              </p>
+                <Trans comment="analytics-view p visible text">Status distribution
+              </Trans></p>
               <div className="h-3 w-full rounded-full bg-slate-200 overflow-hidden flex">
                 {(['SUBMITTED', 'UNDER_REVIEW', 'SHORTLISTED', 'INTERVIEW', 'SELECTED', 'PLACEMENT_PENDING', 'PLACED', 'INTERNSHIP_ACTIVE', 'COMPLETED', 'REJECTED', 'WITHDRAWN'] as const).map(
                   (s) => {
@@ -289,7 +296,7 @@ export async function AnalyticsView({
                     return (
                       <div
                         key={s}
-                        title={`${s}: ${count} (${pct.toFixed(1)}%)`}
+                        title={t({ message: '{status}: {count} ({percent}%)', values: { status: s, count, percent: pct.toFixed(1) }, comment: 'Tooltip showing the percentage of applications in a status category' })}
                         className={`${colors[s] || 'bg-slate-400'} h-full transition-all`}
                         style={{ width: `${pct}%` }}
                       />
@@ -305,13 +312,13 @@ export async function AnalyticsView({
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Top opportunities</CardTitle>
+            <CardTitle className="text-lg"><Trans comment="analytics-view CardTitle visible text">Top opportunities</Trans></CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {topOpportunities.length === 0 ? (
               <p className="py-8 text-center text-sm text-slate-500">
-                Post an opportunity to start collecting analytics.
-              </p>
+                <Trans comment="analytics-view p visible text">Post an opportunity to start collecting analytics.
+              </Trans></p>
             ) : (
               topOpportunities.map((o, idx) => (
                 <div key={idx} className="rounded-xl border p-3">
@@ -324,12 +331,14 @@ export async function AnalyticsView({
                         </Badge>
                       </div>
                       <p className="mt-0.5 text-xs text-slate-500 truncate">
-                        {o.field || '—'} · {o.location || '—'}
+                        {o.field || '—'} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"· "}{o.location || '—'}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-slate-900">{o.applications} apps</p>
-                      <p className="text-xs text-slate-500">{o.views} views · {o.ratio}%</p>
+                      <p className="text-sm font-semibold text-slate-900">{o.applications} <Trans comment="analytics-view p visible text">apps</Trans></p>
+                      <p className="text-xs text-slate-500">{o.views} <Trans comment="analytics-view p visible text">views · </Trans>{o.ratio}{/* eslint-disable-next-line i18next/no-literal-string -- numeric value is data, not translation copy */}
+{"%"}</p>
                     </div>
                   </div>
                 </div>
@@ -343,14 +352,14 @@ export async function AnalyticsView({
             <CardHeader>
               <CardTitle className="text-base inline-flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-slate-500" />
-                Applications by location
-              </CardTitle>
+                <Trans comment="analytics-view CardTitle visible text">Applications by location
+              </Trans></CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {topLocations.length === 0 ? (
                 <p className="py-6 text-center text-sm text-slate-500">
-                  No location data yet.
-                </p>
+                  <Trans comment="analytics-view p visible text">No location data yet.
+                </Trans></p>
               ) : (
                 topLocations.map((loc) => {
                   const max = topLocations[0].count || 1;
@@ -378,14 +387,14 @@ export async function AnalyticsView({
             <CardHeader>
               <CardTitle className="text-base inline-flex items-center gap-2">
                 <Briefcase className="h-4 w-4 text-slate-500" />
-                Applications by field
-              </CardTitle>
+                <Trans comment="analytics-view CardTitle visible text">Applications by field
+              </Trans></CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {topFields.length === 0 ? (
                 <p className="py-6 text-center text-sm text-slate-500">
-                  No field data yet.
-                </p>
+                  <Trans comment="analytics-view p visible text">No field data yet.
+                </Trans></p>
               ) : (
                 topFields.map((f) => {
                   const max = topFields[0].count || 1;

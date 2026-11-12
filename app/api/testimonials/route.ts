@@ -7,11 +7,23 @@ import {
   normaliseRating,
 } from '@/lib/testimonial-fields';
 import { VERIFIED_COMMUNITY_STORIES } from '@/lib/cameroon-directory';
+import { getI18nInstance } from '@/app/appRouterI18n';
+import { resolveLocale } from '@/i18n/locales';
 
 export const dynamic = 'force-dynamic';
 
 /** People can read the approved messages. Email is never included. */
-export async function GET() {
+export async function GET(request: Request) {
+  const locale = resolveLocale(request.headers.get('x-mantech-locale'));
+  const i18n = getI18nInstance(locale);
+  const mapFallback = () => VERIFIED_COMMUNITY_STORIES.map((story) => ({
+    ...story,
+    role: i18n._(story.role),
+    focus: i18n._(story.focus),
+    message: i18n._(story.message),
+    details: i18n._(story.details),
+    createdAt: new Date().toISOString(),
+  }));
   try {
     const testimonials = await prisma.testimonial.findMany({
       where: { status: 'APPROVED' },
@@ -37,37 +49,10 @@ export async function GET() {
     }
 
     // Synchronized verified community stories fallback
-    const mapped = VERIFIED_COMMUNITY_STORIES.map((s) => ({
-      id: s.id,
-      name: s.name,
-      role: s.role,
-      company: s.company,
-      region: s.region,
-      focus: s.focus,
-      photoUrl: s.photoUrl,
-      message: s.message,
-      details: s.details,
-      rating: s.rating,
-      createdAt: new Date().toISOString(),
-    }));
-
-    return NextResponse.json({ testimonials: mapped });
+    return NextResponse.json({ testimonials: mapFallback() });
   } catch (error) {
     logDatabaseUnavailable('testimonials', error);
-    const mapped = VERIFIED_COMMUNITY_STORIES.map((s) => ({
-      id: s.id,
-      name: s.name,
-      role: s.role,
-      company: s.company,
-      region: s.region,
-      focus: s.focus,
-      photoUrl: s.photoUrl,
-      message: s.message,
-      details: s.details,
-      rating: s.rating,
-      createdAt: new Date().toISOString(),
-    }));
-    return NextResponse.json({ testimonials: mapped });
+    return NextResponse.json({ testimonials: mapFallback() });
   }
 }
 

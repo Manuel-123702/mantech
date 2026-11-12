@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/react/macro';
 import {
   History,
   FileText,
@@ -72,20 +73,20 @@ export function InternHistoryTimeline({ entries }: { entries: HistoryEntry[] }) 
       <CardContent className="p-0">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-5">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">My journey</h2>
+            <h2 className="text-lg font-semibold text-slate-900"><Trans comment="intern-history-timeline h2 visible text">My journey</Trans></h2>
             <p className="mt-0.5 text-sm text-slate-500">
-              Everything you have done on MANTECH, built from your real activity.
-            </p>
+              <Trans comment="intern-history-timeline p visible text">Everything you have done on MANTECH, built from your real activity.
+            </Trans></p>
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
             <span className="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-700">
-              {summary.applications} application{summary.applications === 1 ? '' : 's'}
+              {summary.applications} <Trans comment="intern-history-timeline span visible text">application</Trans>{summary.applications === 1 ? '' : 's'}
             </span>
             <span className="rounded-full bg-blue-50 px-3 py-1 font-medium text-blue-700">
-              {summary.interviews} interview{summary.interviews === 1 ? '' : 's'}
+              {summary.interviews} <Trans comment="intern-history-timeline span visible text">interview</Trans>{summary.interviews === 1 ? '' : 's'}
             </span>
             <span className="rounded-full bg-emerald-50 px-3 py-1 font-medium text-emerald-700">
-              {summary.placements} placement{summary.placements === 1 ? '' : 's'}
+              {summary.placements} <Trans comment="intern-history-timeline span visible text">placement</Trans>{summary.placements === 1 ? '' : 's'}
             </span>
           </div>
         </div>
@@ -93,11 +94,11 @@ export function InternHistoryTimeline({ entries }: { entries: HistoryEntry[] }) 
         {entries.length === 0 ? (
           <div className="flex flex-col items-center px-6 py-16 text-center">
             <History className="mb-3 h-9 w-9 text-slate-300" />
-            <h3 className="font-semibold text-slate-900">No activity yet</h3>
+            <h3 className="font-semibold text-slate-900"><Trans comment="intern-history-timeline h3 visible text">No activity yet</Trans></h3>
             <p className="mt-1 max-w-sm text-sm text-slate-500">
-              Your applications, interviews and placements will appear here as your
+              <Trans comment="intern-history-timeline p visible text">Your applications, interviews and placements will appear here as your
               journey grows.
-            </p>
+            </Trans></p>
           </div>
         ) : (
           <ol className="relative px-6 py-6">

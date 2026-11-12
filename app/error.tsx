@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from '@/components/shared/locale-link';
+import { Trans } from '@lingui/react/macro';
+import { ph } from '@lingui/core/macro';
 import { AlertTriangle, RefreshCw, Home, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -52,19 +54,19 @@ export default function Error({
 
         {error.digest && (
           <p className="mt-3 font-mono text-[11px] text-muted-foreground/70">
-            Reference: {error.digest}
+            <Trans comment="Reference label and request identifier shown on the error screen">Reference: {ph({ digest: error.digest })}</Trans>
           </p>
         )}
 
         <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Button onClick={reset} className="bg-gradient-mantech">
             <RefreshCw className="mr-2 h-4 w-4" />
-            Try again
+            <Trans comment="Button that retries the failed page request">Try again</Trans>
           </Button>
           <Button variant="outline" asChild>
             <Link href="/">
               <Home className="mr-2 h-4 w-4" />
-              Back to home
+              <Trans comment="Navigation link from the error screen to the home page">Back to home</Trans>
             </Link>
           </Button>
         </div>

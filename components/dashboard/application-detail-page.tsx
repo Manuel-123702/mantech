@@ -1,8 +1,11 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation.hooks';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -133,6 +136,7 @@ const STATUSES = [
 ];
 
 export default function ApplicationDetailPage({ basePath }: { basePath: string }) {
+  const { t } = useLingui();
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -343,8 +347,8 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
         <Link href={`${basePath}/applications`}>
           <Button variant="ghost">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            All applications
-          </Button>
+            <Trans comment="application-detail-page Button visible text">All applications
+          </Trans></Button>
         </Link>
       </div>
 
@@ -369,7 +373,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                   <StatusBadge status={app.status} />
                 </div>
                 <p className="text-slate-500">
-                  Applied for <Link href={`/internships/${app.opportunity.slug}`} className="text-blue-600 hover:underline font-medium">{app.opportunity.title}</Link>
+                  <Trans comment="application-detail-page p visible text">Applied for </Trans><Link href={`/internships/${app.opportunity.slug}`} className="text-blue-600 hover:underline font-medium">{app.opportunity.title}</Link>
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2 text-sm text-slate-500">
                   <span className="inline-flex items-center gap-1">
@@ -390,7 +394,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                   )}
                   <span className="inline-flex items-center gap-1">
                     <Clock className="h-3.5 w-3.5" />
-                    Applied {new Date(app.createdAt).toLocaleString()}
+                    <Trans comment="application-detail-page span visible text">Applied </Trans>{new Date(app.createdAt).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -399,33 +403,33 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
             <div className="w-full sm:w-auto flex flex-wrap gap-2 justify-end">
               {app.status === 'SUBMITTED' && (
                 <Button onClick={() => updateStatus('UNDER_REVIEW')} disabled={saving}>
-                  Start review
-                </Button>
+                  <Trans comment="application-detail-page Button visible text">Start review
+                </Trans></Button>
               )}
               {(app.status === 'SUBMITTED' || app.status === 'UNDER_REVIEW') && (
                 <Button variant="outline" onClick={() => updateStatus('SHORTLISTED')} disabled={saving}>
                   <Star className="mr-2 h-4 w-4" />
-                  Shortlist
-                </Button>
+                  <Trans comment="application-detail-page Button visible text">Shortlist
+                </Trans></Button>
               )}
               {(app.status === 'SHORTLISTED' || app.status === 'UNDER_REVIEW') && (
                 <Dialog open={interviewOpen} onOpenChange={setInterviewOpen}>
                   <DialogTrigger asChild>
                     <Button>
                       <Calendar className="mr-2 h-4 w-4" />
-                      Schedule interview
-                    </Button>
+                      <Trans comment="application-detail-page Button visible text">Schedule interview
+                    </Trans></Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-xl">
                     <DialogHeader>
-                      <DialogTitle>Schedule interview</DialogTitle>
+                      <DialogTitle><Trans comment="application-detail-page DialogTitle visible text">Schedule interview</Trans></DialogTitle>
                       <DialogDescription>
-                        The candidate will be notified automatically.
-                      </DialogDescription>
+                        <Trans comment="application-detail-page DialogDescription visible text">The candidate will be notified automatically.
+                      </Trans></DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="sm:col-span-2">
-                        <Label>Date & time *</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">Date & time *</Trans></Label>
                         <Input
                           type="datetime-local"
                           value={interviewForm.scheduledAt}
@@ -433,7 +437,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                         />
                       </div>
                       <div>
-                        <Label>Duration (minutes)</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">Duration (minutes)</Trans></Label>
                         <Input
                           type="number"
                           min={15}
@@ -443,7 +447,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                         />
                       </div>
                       <div>
-                        <Label>Type</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">Type</Trans></Label>
                         <Select
                           value={interviewForm.type}
                           onValueChange={(v: any) => setInterviewForm({ ...interviewForm, type: v })}
@@ -452,17 +456,17 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="online">Online / video</SelectItem>
-                            <SelectItem value="onsite">On-site</SelectItem>
-                            <SelectItem value="phone">Phone</SelectItem>
+                            <SelectItem value="online"><Trans comment="application-detail-page SelectItem visible text">Online / video</Trans></SelectItem>
+                            <SelectItem value="onsite"><Trans comment="application-detail-page SelectItem visible text">On-site</Trans></SelectItem>
+                            <SelectItem value="phone"><Trans comment="application-detail-page SelectItem visible text">Phone</Trans></SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       {interviewForm.type === 'online' && (
                         <div className="sm:col-span-2">
-                          <Label>Meeting link</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Meeting link</Trans></Label>
                           <Input
-                            placeholder="https://meet.google.com/..."
+                            placeholder={t({ message: "https://meet.google.com/...", comment: "application-detail-page component placeholder attribute" })}
                             value={interviewForm.meetingLink}
                             onChange={(e) => setInterviewForm({ ...interviewForm, meetingLink: e.target.value })}
                           />
@@ -470,24 +474,24 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                       )}
                       {interviewForm.type === 'onsite' && (
                         <div className="sm:col-span-2">
-                          <Label>Location address</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Location address</Trans></Label>
                           <Input
-                            placeholder="Office address"
+                            placeholder={t({ message: "Office address", comment: "application-detail-page component placeholder attribute" })}
                             value={interviewForm.locationAddress}
                             onChange={(e) => setInterviewForm({ ...interviewForm, locationAddress: e.target.value })}
                           />
                         </div>
                       )}
                       <div className="sm:col-span-2">
-                        <Label>Interviewer</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">Interviewer</Trans></Label>
                         <Input
-                          placeholder="Name of interviewer"
+                          placeholder={t({ message: "Name of interviewer", comment: "application-detail-page component placeholder attribute" })}
                           value={interviewForm.interviewerName}
                           onChange={(e) => setInterviewForm({ ...interviewForm, interviewerName: e.target.value })}
                         />
                       </div>
                       <div className="sm:col-span-2">
-                        <Label>Instructions for candidate</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">Instructions for candidate</Trans></Label>
                         <Textarea
                           rows={3}
                           value={interviewForm.instructions}
@@ -497,12 +501,12 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                     </div>
                     <DialogFooter className="flex-col gap-2 sm:flex-row">
                       <Button variant="ghost" onClick={() => setInterviewOpen(false)}>
-                        Cancel
-                      </Button>
+                        <Trans comment="application-detail-page Button visible text">Cancel
+                      </Trans></Button>
                       <Button onClick={scheduleInterview} disabled={saving || !interviewForm.scheduledAt}>
                         {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Calendar className="mr-2 h-4 w-4" />}
-                        Schedule
-                      </Button>
+                        <Trans comment="application-detail-page Button visible text">Schedule
+                      </Trans></Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -510,35 +514,35 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
               {(app.status === 'INTERVIEW' || app.status === 'SHORTLISTED') && (
                 <Button variant="outline" onClick={() => updateStatus('SELECTED')} disabled={saving}>
                   <UserCheck className="mr-2 h-4 w-4" />
-                  Mark as selected
-                </Button>
+                  <Trans comment="application-detail-page Button visible text">Mark as selected
+                </Trans></Button>
               )}
               {(app.status === 'SELECTED' || app.status === 'PLACEMENT_PENDING') && (
                 <Dialog open={placementOpen} onOpenChange={setPlacementOpen}>
                   <DialogTrigger asChild>
                     <Button>
                       <FileCheck className="mr-2 h-4 w-4" />
-                      Create placement
-                    </Button>
+                      <Trans comment="application-detail-page Button visible text">Create placement
+                    </Trans></Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-xl">
                     <DialogHeader>
-                      <DialogTitle>Create internship placement</DialogTitle>
+                      <DialogTitle><Trans comment="application-detail-page DialogTitle visible text">Create internship placement</Trans></DialogTitle>
                       <DialogDescription>
-                        Confirm start, end, and objectives. The intern will be notified.
-                      </DialogDescription>
+                        <Trans comment="application-detail-page DialogDescription visible text">Confirm start, end, and objectives. The intern will be notified.
+                      </Trans></DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="sm:col-span-2">
-                        <Label>Department</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">Department</Trans></Label>
                         <Input
-                          placeholder={app.opportunity.department || 'e.g. Engineering'}
+                          placeholder={app.opportunity.department || t({ message: "e.g. Engineering", comment: "application-detail-page component placeholder attribute" })}
                           value={placementForm.department}
                           onChange={(e) => setPlacementForm({ ...placementForm, department: e.target.value })}
                         />
                       </div>
                       <div>
-                        <Label>Start date *</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">Start date *</Trans></Label>
                         <Input
                           type="date"
                           value={placementForm.startDate}
@@ -546,7 +550,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                         />
                       </div>
                       <div>
-                        <Label>End date *</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">End date *</Trans></Label>
                         <Input
                           type="date"
                           value={placementForm.endDate}
@@ -554,26 +558,26 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                         />
                       </div>
                       <div className="sm:col-span-2">
-                        <Label>Objectives</Label>
+                        <Label><Trans comment="application-detail-page Label visible text">Objectives</Trans></Label>
                         <Textarea
                           rows={4}
                           value={placementForm.objectives}
                           onChange={(e) => setPlacementForm({ ...placementForm, objectives: e.target.value })}
-                          placeholder="Learning goals, projects, or deliverables…"
+                          placeholder={t({ message: "Learning goals, projects, or deliverables…", comment: "application-detail-page component placeholder attribute" })}
                         />
                       </div>
                     </div>
                     <DialogFooter className="flex-col gap-2 sm:flex-row">
                       <Button variant="ghost" onClick={() => setPlacementOpen(false)}>
-                        Cancel
-                      </Button>
+                        <Trans comment="application-detail-page Button visible text">Cancel
+                      </Trans></Button>
                       <Button
                         onClick={createPlacement}
                         disabled={saving || !placementForm.startDate || !placementForm.endDate}
                       >
                         {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileCheck className="mr-2 h-4 w-4" />}
-                        Create placement
-                      </Button>
+                        <Trans comment="application-detail-page Button visible text">Create placement
+                      </Trans></Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -583,33 +587,33 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                 <DialogTrigger asChild>
                   <Button variant="destructive" className="ml-auto sm:ml-0">
                     <XCircle className="mr-2 h-4 w-4" />
-                    Reject
-                  </Button>
+                    <Trans comment="application-detail-page Button visible text">Reject
+                  </Trans></Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Reject application</DialogTitle>
+                    <DialogTitle><Trans comment="application-detail-page DialogTitle visible text">Reject application</Trans></DialogTitle>
                     <DialogDescription>
-                      You can optionally share a reason.
-                    </DialogDescription>
+                      <Trans comment="application-detail-page DialogDescription visible text">You can optionally share a reason.
+                    </Trans></DialogDescription>
                   </DialogHeader>
                   <div className="space-y-3">
-                    <Label>Reason (optional)</Label>
+                    <Label><Trans comment="application-detail-page Label visible text">Reason (optional)</Trans></Label>
                     <Textarea
                       rows={4}
                       value={rejectReason}
                       onChange={(e) => setRejectReason(e.target.value)}
-                      placeholder="Brief reason for rejection…"
+                      placeholder={t({ message: "Brief reason for rejection…", comment: "application-detail-page component placeholder attribute" })}
                     />
                   </div>
                   <DialogFooter className="flex-col gap-2 sm:flex-row">
                     <Button variant="ghost" onClick={() => setRejectOpen(false)}>
-                      Cancel
-                    </Button>
+                      <Trans comment="application-detail-page Button visible text">Cancel
+                    </Trans></Button>
                     <Button variant="destructive" onClick={rejectApplication} disabled={saving}>
                       {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <XCircle className="mr-2 h-4 w-4" />}
-                      Confirm reject
-                    </Button>
+                      <Trans comment="application-detail-page Button visible text">Confirm reject
+                    </Trans></Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -622,17 +626,17 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
         <div className="space-y-6 lg:col-span-2">
           <Tabs defaultValue="profile">
             <TabsList>
-              <TabsTrigger value="profile">Candidate</TabsTrigger>
-              <TabsTrigger value="application">Application</TabsTrigger>
-              <TabsTrigger value="interviews">Interviews</TabsTrigger>
-              <TabsTrigger value="placement">Placement</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
+              <TabsTrigger value="profile"><Trans comment="application-detail-page TabsTrigger visible text">Candidate</Trans></TabsTrigger>
+              <TabsTrigger value="application"><Trans comment="application-detail-page TabsTrigger visible text">Application</Trans></TabsTrigger>
+              <TabsTrigger value="interviews"><Trans comment="application-detail-page TabsTrigger visible text">Interviews</Trans></TabsTrigger>
+              <TabsTrigger value="placement"><Trans comment="application-detail-page TabsTrigger visible text">Placement</Trans></TabsTrigger>
+              <TabsTrigger value="history"><Trans comment="application-detail-page TabsTrigger visible text">History</Trans></TabsTrigger>
             </TabsList>
 
             <TabsContent value="profile" className="space-y-4 pt-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Profile</CardTitle>
+                  <CardTitle><Trans comment="application-detail-page CardTitle visible text">Profile</Trans></CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm">
                   {app.internProfile.passport?.summary && (
@@ -642,41 +646,41 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                   )}
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Qualification</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Qualification</Trans></p>
                       <p className="font-medium text-slate-900">{app.internProfile.qualification || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Academic level</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Academic level</Trans></p>
                       <p className="font-medium text-slate-900">{app.internProfile.academicLevel || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Institution</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Institution</Trans></p>
                       <p className="font-medium text-slate-900">{app.internProfile.institution || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Specialization</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Specialization</Trans></p>
                       <p className="font-medium text-slate-900">{app.internProfile.specialization?.name || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Location</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Location</Trans></p>
                       <p className="font-medium text-slate-900 inline-flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5 text-slate-500" />
                         {app.internProfile.city || app.internProfile.region?.name || '—'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Work mode</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Work mode</Trans></p>
                       <p className="font-medium text-slate-900 inline-flex items-center gap-1">
                         <Briefcase className="h-3.5 w-3.5 text-slate-500" />
                         {app.internProfile.preferredWorkMode || '—'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Availability</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Availability</Trans></p>
                       <p className="font-medium text-slate-900">{app.internProfile.availability || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Readiness</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Readiness</Trans></p>
                       <p className="font-medium text-slate-900">{app.internProfile.readinessScore ?? app.readinessScore ?? '—'}</p>
                     </div>
                   </div>
@@ -690,14 +694,14 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                         if (response.ok && data.signedUrl) window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
                         else setError(data.error || 'CV access could not be authorized.');
                       }}>
-                        <FileText className="mr-2 h-4 w-4" />Open authorized CV
-                      </Button>
+                        <FileText className="mr-2 h-4 w-4" /><Trans comment="application-detail-page Button visible text">Open authorized CV
+                      </Trans></Button>
                     </div>
                   )}
 
                   {app.internProfile.skills && app.internProfile.skills.length > 0 && (
                     <div>
-                      <p className="text-xs uppercase text-slate-500 mb-2">Skills</p>
+                      <p className="text-xs uppercase text-slate-500 mb-2"><Trans comment="application-detail-page p visible text">Skills</Trans></p>
                       <div className="flex flex-wrap gap-1.5">
                         {app.internProfile.skills.map((s) => (
                           <Badge key={s.skill.name} variant="secondary">
@@ -710,15 +714,17 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
 
                   {app.internProfile.educations && app.internProfile.educations.length > 0 && (
                     <div>
-                      <p className="text-xs uppercase text-slate-500 mb-2">Education</p>
+                      <p className="text-xs uppercase text-slate-500 mb-2"><Trans comment="application-detail-page p visible text">Education</Trans></p>
                       <div className="space-y-2">
                         {app.internProfile.educations.map((e, i) => (
                           <div key={i} className="rounded-lg border p-3">
                             <p className="font-medium text-slate-900">
-                              {e.qualification} · {e.field}
+                              {e.qualification} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"· "}{e.field}
                             </p>
                             <p className="text-sm text-slate-500">
-                              {e.institution} · {e.startYear}
+                              {e.institution} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"· "}{e.startYear}
                               {e.endYear ? ` – ${e.endYear}` : e.isCurrent ? ' – Present' : ''}
                             </p>
                           </div>
@@ -733,46 +739,46 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
             <TabsContent value="application" className="space-y-4 pt-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Cover letter</CardTitle>
+                  <CardTitle><Trans comment="application-detail-page CardTitle visible text">Cover letter</Trans></CardTitle>
                 </CardHeader>
                 <CardContent>
                   {app.coverLetter ? (
                     <div className="whitespace-pre-wrap text-sm text-slate-700">{app.coverLetter}</div>
                   ) : (
-                    <p className="text-slate-500 text-sm">Candidate did not include a cover letter.</p>
+                    <p className="text-slate-500 text-sm"><Trans comment="application-detail-page p visible text">Candidate did not include a cover letter.</Trans></p>
                   )}
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Opportunity summary</CardTitle>
+                  <CardTitle><Trans comment="application-detail-page CardTitle visible text">Opportunity summary</Trans></CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm text-slate-600">
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Role</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Role</Trans></p>
                       <p className="font-medium text-slate-900">{app.opportunity.title}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Department</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Department</Trans></p>
                       <p className="font-medium text-slate-900">{app.opportunity.department || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Location</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Location</Trans></p>
                       <p className="font-medium text-slate-900">{app.opportunity.city || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Work mode</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Work mode</Trans></p>
                       <p className="font-medium text-slate-900">{app.opportunity.workMode || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Duration</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Duration</Trans></p>
                       <p className="font-medium text-slate-900">
                         {app.opportunity.durationMonths ? `${app.opportunity.durationMonths} months` : '—'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Deadline</p>
+                      <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Deadline</Trans></p>
                       <p className="font-medium text-slate-900">
                         {app.opportunity.deadline ? new Date(app.opportunity.deadline).toLocaleDateString() : '—'}
                       </p>
@@ -785,24 +791,24 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
             <TabsContent value="interviews" className="space-y-4 pt-4">
               <Card>
                 <CardHeader className="flex-row items-center justify-between">
-                  <CardTitle>Interviews</CardTitle>
+                  <CardTitle><Trans comment="application-detail-page CardTitle visible text">Interviews</Trans></CardTitle>
                   <Dialog open={interviewOpen} onOpenChange={setInterviewOpen}>
                     <DialogTrigger asChild>
                       <Button size="sm">
                         <Calendar className="mr-2 h-4 w-4" />
-                        New interview
-                      </Button>
+                        <Trans comment="application-detail-page Button visible text">New interview
+                      </Trans></Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-xl">
                       <DialogHeader>
-                        <DialogTitle>Schedule interview</DialogTitle>
+                        <DialogTitle><Trans comment="application-detail-page DialogTitle visible text">Schedule interview</Trans></DialogTitle>
                         <DialogDescription>
-                          The candidate will be notified automatically.
-                        </DialogDescription>
+                          <Trans comment="application-detail-page DialogDescription visible text">The candidate will be notified automatically.
+                        </Trans></DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div className="sm:col-span-2">
-                          <Label>Date & time *</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Date & time *</Trans></Label>
                           <Input
                             type="datetime-local"
                             value={interviewForm.scheduledAt}
@@ -810,7 +816,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                           />
                         </div>
                         <div>
-                          <Label>Duration (minutes)</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Duration (minutes)</Trans></Label>
                           <Input
                             type="number"
                             min={15}
@@ -820,7 +826,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                           />
                         </div>
                         <div>
-                          <Label>Type</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Type</Trans></Label>
                           <Select
                             value={interviewForm.type}
                             onValueChange={(v: any) => setInterviewForm({ ...interviewForm, type: v })}
@@ -829,17 +835,17 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="online">Online / video</SelectItem>
-                              <SelectItem value="onsite">On-site</SelectItem>
-                              <SelectItem value="phone">Phone</SelectItem>
+                              <SelectItem value="online"><Trans comment="application-detail-page SelectItem visible text">Online / video</Trans></SelectItem>
+                              <SelectItem value="onsite"><Trans comment="application-detail-page SelectItem visible text">On-site</Trans></SelectItem>
+                              <SelectItem value="phone"><Trans comment="application-detail-page SelectItem visible text">Phone</Trans></SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                         {interviewForm.type === 'online' && (
                           <div className="sm:col-span-2">
-                            <Label>Meeting link</Label>
+                            <Label><Trans comment="application-detail-page Label visible text">Meeting link</Trans></Label>
                             <Input
-                              placeholder="https://meet.google.com/..."
+                              placeholder={t({ message: "https://meet.google.com/...", comment: "application-detail-page component placeholder attribute" })}
                               value={interviewForm.meetingLink}
                               onChange={(e) => setInterviewForm({ ...interviewForm, meetingLink: e.target.value })}
                             />
@@ -847,24 +853,24 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                         )}
                         {interviewForm.type === 'onsite' && (
                           <div className="sm:col-span-2">
-                            <Label>Location address</Label>
+                            <Label><Trans comment="application-detail-page Label visible text">Location address</Trans></Label>
                             <Input
-                              placeholder="Office address"
+                              placeholder={t({ message: "Office address", comment: "application-detail-page component placeholder attribute" })}
                               value={interviewForm.locationAddress}
                               onChange={(e) => setInterviewForm({ ...interviewForm, locationAddress: e.target.value })}
                             />
                           </div>
                         )}
                         <div className="sm:col-span-2">
-                          <Label>Interviewer</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Interviewer</Trans></Label>
                           <Input
-                            placeholder="Name of interviewer"
+                            placeholder={t({ message: "Name of interviewer", comment: "application-detail-page component placeholder attribute" })}
                             value={interviewForm.interviewerName}
                             onChange={(e) => setInterviewForm({ ...interviewForm, interviewerName: e.target.value })}
                           />
                         </div>
                         <div className="sm:col-span-2">
-                          <Label>Instructions</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Instructions</Trans></Label>
                           <Textarea
                             rows={3}
                             value={interviewForm.instructions}
@@ -874,19 +880,19 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                       </div>
                       <DialogFooter className="flex-col gap-2 sm:flex-row">
                         <Button variant="ghost" onClick={() => setInterviewOpen(false)}>
-                          Cancel
-                        </Button>
+                          <Trans comment="application-detail-page Button visible text">Cancel
+                        </Trans></Button>
                         <Button onClick={scheduleInterview} disabled={saving || !interviewForm.scheduledAt}>
                           {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Calendar className="mr-2 h-4 w-4" />}
-                          Schedule
-                        </Button>
+                          <Trans comment="application-detail-page Button visible text">Schedule
+                        </Trans></Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
                 </CardHeader>
                 <CardContent>
                   {!app.interviews || app.interviews.length === 0 ? (
-                    <p className="py-8 text-center text-slate-500">No interviews yet.</p>
+                    <p className="py-8 text-center text-slate-500"><Trans comment="application-detail-page p visible text">No interviews yet.</Trans></p>
                   ) : (
                     <div className="space-y-3">
                       {app.interviews.map((iv) => (
@@ -898,8 +904,9 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                                 {new Date(iv.scheduledAt).toLocaleString()}
                               </p>
                               <p className="text-sm text-slate-500">
-                                {iv.type} · {iv.durationMinutes || 45} min
-                                {iv.interviewerName ? ` · ${iv.interviewerName}` : ''}
+                                {iv.type} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"· "}{iv.durationMinutes || 45} <Trans comment="application-detail-page p visible text">min
+                                </Trans>{iv.interviewerName ? ` · ${iv.interviewerName}` : ''}
                               </p>
                             </div>
                             <Badge variant={iv.status === 'cancelled' ? 'destructive' : iv.status === 'completed' ? 'default' : 'secondary'}>
@@ -921,7 +928,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                           )}
                           {iv.feedbackNotes && (
                             <div className="mt-3 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-                              <p className="font-semibold text-slate-900 mb-1">Feedback</p>
+                              <p className="font-semibold text-slate-900 mb-1"><Trans comment="application-detail-page p visible text">Feedback</Trans></p>
                               {iv.feedbackNotes}
                             </div>
                           )}
@@ -936,7 +943,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
             <TabsContent value="placement" className="space-y-4 pt-4">
               <Card>
                 <CardHeader className="flex-row items-center justify-between">
-                  <CardTitle>Placement & onboarding</CardTitle>
+                  <CardTitle><Trans comment="application-detail-page CardTitle visible text">Placement & onboarding</Trans></CardTitle>
                   <Dialog open={placementOpen} onOpenChange={setPlacementOpen}>
                     <DialogTrigger asChild>
                       <Button size="sm" disabled={app.status !== 'SELECTED' && app.status !== 'PLACEMENT_PENDING' && !!app.placement}>
@@ -946,22 +953,22 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                     </DialogTrigger>
                     <DialogContent className="max-w-xl">
                       <DialogHeader>
-                        <DialogTitle>Create internship placement</DialogTitle>
+                        <DialogTitle><Trans comment="application-detail-page DialogTitle visible text">Create internship placement</Trans></DialogTitle>
                         <DialogDescription>
-                          Confirm start, end, and objectives. The intern will be notified.
-                        </DialogDescription>
+                          <Trans comment="application-detail-page DialogDescription visible text">Confirm start, end, and objectives. The intern will be notified.
+                        </Trans></DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div className="sm:col-span-2">
-                          <Label>Department</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Department</Trans></Label>
                           <Input
-                            placeholder={app.opportunity.department || 'e.g. Engineering'}
+                            placeholder={app.opportunity.department || t({ message: "e.g. Engineering", comment: "application-detail-page component placeholder attribute" })}
                             value={placementForm.department}
                             onChange={(e) => setPlacementForm({ ...placementForm, department: e.target.value })}
                           />
                         </div>
                         <div>
-                          <Label>Start date *</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Start date *</Trans></Label>
                           <Input
                             type="date"
                             value={placementForm.startDate}
@@ -969,7 +976,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                           />
                         </div>
                         <div>
-                          <Label>End date *</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">End date *</Trans></Label>
                           <Input
                             type="date"
                             value={placementForm.endDate}
@@ -977,26 +984,26 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                           />
                         </div>
                         <div className="sm:col-span-2">
-                          <Label>Objectives</Label>
+                          <Label><Trans comment="application-detail-page Label visible text">Objectives</Trans></Label>
                           <Textarea
                             rows={4}
                             value={placementForm.objectives}
                             onChange={(e) => setPlacementForm({ ...placementForm, objectives: e.target.value })}
-                            placeholder="Learning goals, projects, or deliverables…"
+                            placeholder={t({ message: "Learning goals, projects, or deliverables…", comment: "application-detail-page component placeholder attribute" })}
                           />
                         </div>
                       </div>
                       <DialogFooter className="flex-col gap-2 sm:flex-row">
                         <Button variant="ghost" onClick={() => setPlacementOpen(false)}>
-                          Cancel
-                        </Button>
+                          <Trans comment="application-detail-page Button visible text">Cancel
+                        </Trans></Button>
                         <Button
                           onClick={createPlacement}
                           disabled={saving || !placementForm.startDate || !placementForm.endDate}
                         >
                           {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileCheck className="mr-2 h-4 w-4" />}
-                          Create placement
-                        </Button>
+                          <Trans comment="application-detail-page Button visible text">Create placement
+                        </Trans></Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
@@ -1004,27 +1011,27 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                 <CardContent>
                   {!app.placement ? (
                     <p className="py-8 text-center text-slate-500">
-                      No placement created yet. Select the intern first, then create a placement.
-                    </p>
+                      <Trans comment="application-detail-page p visible text">No placement created yet. Select the intern first, then create a placement.
+                    </Trans></p>
                   ) : (
                     <div className="space-y-4">
                       <div className="grid gap-3 sm:grid-cols-2 text-sm">
                         <div>
-                          <p className="text-xs uppercase text-slate-500">Status</p>
+                          <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Status</Trans></p>
                           <StatusBadge status={app.placement.status} />
                         </div>
                         <div>
-                          <p className="text-xs uppercase text-slate-500">Department</p>
+                          <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Department</Trans></p>
                           <p className="font-medium text-slate-900">{app.placement.department || '—'}</p>
                         </div>
                         <div>
-                          <p className="text-xs uppercase text-slate-500">Start</p>
+                          <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">Start</Trans></p>
                           <p className="font-medium text-slate-900">
                             {new Date(app.placement.startDate).toLocaleDateString()}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs uppercase text-slate-500">End</p>
+                          <p className="text-xs uppercase text-slate-500"><Trans comment="application-detail-page p visible text">End</Trans></p>
                           <p className="font-medium text-slate-900">
                             {new Date(app.placement.endDate).toLocaleDateString()}
                           </p>
@@ -1032,13 +1039,13 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                       </div>
                       {app.placement.objectives && (
                         <div className="rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-                          <p className="font-semibold text-slate-900 mb-1">Objectives</p>
+                          <p className="font-semibold text-slate-900 mb-1"><Trans comment="application-detail-page p visible text">Objectives</Trans></p>
                           {app.placement.objectives}
                         </div>
                       )}
                       {app.placement.onboardingItems && app.placement.onboardingItems.length > 0 && (
                         <div>
-                          <p className="text-xs uppercase text-slate-500 mb-2">Onboarding checklist</p>
+                          <p className="text-xs uppercase text-slate-500 mb-2"><Trans comment="application-detail-page p visible text">Onboarding checklist</Trans></p>
                           <div className="space-y-2">
                             {app.placement.onboardingItems.map((item) => (
                               <div
@@ -1073,11 +1080,11 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
             <TabsContent value="history" className="space-y-4 pt-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Status history</CardTitle>
+                  <CardTitle><Trans comment="application-detail-page CardTitle visible text">Status history</Trans></CardTitle>
                 </CardHeader>
                 <CardContent>
                   {!app.statusHistory || app.statusHistory.length === 0 ? (
-                    <p className="py-8 text-center text-slate-500">No activity recorded.</p>
+                    <p className="py-8 text-center text-slate-500"><Trans comment="application-detail-page p visible text">No activity recorded.</Trans></p>
                   ) : (
                     <ol className="space-y-4 border-l border-slate-200 pl-4">
                       {app.statusHistory.map((h, i) => (
@@ -1104,11 +1111,11 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Quick actions</CardTitle>
+              <CardTitle><Trans comment="application-detail-page CardTitle visible text">Quick actions</Trans></CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <Label className="mb-2 block">Status</Label>
+                <Label className="mb-2 block"><Trans comment="application-detail-page Label visible text">Status</Trans></Label>
                 <Select
                   value={app.status}
                   onValueChange={(v) => updateStatus(v)}
@@ -1128,7 +1135,7 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
               </div>
 
               <div>
-                <Label className="mb-2 block">Candidate rating</Label>
+                <Label className="mb-2 block"><Trans comment="application-detail-page Label visible text">Candidate rating</Trans></Label>
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <button
@@ -1153,26 +1160,26 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
               <div>
                 <Label className="mb-2 block">
                   <MessageSquare className="mr-1 inline h-3.5 w-3.5" />
-                  Internal notes
-                </Label>
+                  <Trans comment="application-detail-page Label visible text">Internal notes
+                </Trans></Label>
                 <Textarea
                   rows={6}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Private recruiter notes about this candidate…"
+                  placeholder={t({ message: "Private recruiter notes about this candidate…", comment: "application-detail-page component placeholder attribute" })}
                 />
               </div>
 
               <Button className="w-full" onClick={saveMetadata} disabled={saving}>
                 {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
-                Save notes & rating
-              </Button>
+                <Trans comment="application-detail-page Button visible text">Save notes & rating
+              </Trans></Button>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Contact</CardTitle>
+              <CardTitle><Trans comment="application-detail-page CardTitle visible text">Contact</Trans></CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               {waCandidateLink(app.internProfile.phone) ? (
@@ -1182,24 +1189,24 @@ export default function ApplicationDetailPage({ basePath }: { basePath: string }
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <WhatsAppIcon className="mr-2 h-4 w-4" title="WhatsApp" />
-                    WhatsApp candidate
-                  </a>
+                    <WhatsAppIcon className="mr-2 h-4 w-4" title={t({ message: "WhatsApp", comment: "application-detail-page component title attribute" })} />
+                    <Trans comment="application-detail-page a visible text">WhatsApp candidate
+                  </Trans></a>
                 </Button>
               ) : null}
               {app.internProfile.phone && (
                 <Button variant="outline" asChild className="w-full justify-start">
                   <a href={`tel:${app.internProfile.phone}`}>
                     <Phone className="mr-2 h-4 w-4" />
-                    Call {app.internProfile.phone}
+                    <Trans comment="application-detail-page a visible text">Call </Trans>{app.internProfile.phone}
                   </a>
                 </Button>
               )}
               <Button variant="outline" asChild className="w-full justify-start">
                 <Link href={`/intern-passports/${app.internProfile.id}`} target="_blank">
                   <FileText className="mr-2 h-4 w-4" />
-                  View Intern Passport
-                </Link>
+                  <Trans comment="application-detail-page Link visible text">View Intern Passport
+                </Trans></Link>
               </Button>
             </CardContent>
           </Card>

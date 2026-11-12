@@ -1,4 +1,6 @@
 "use client";
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,6 +25,7 @@ export function TestimonialSubmissionModal({
   onClose,
   onSuccess,
 }: TestimonialModalProps) {
+  const { t } = useLingui();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -109,23 +112,23 @@ export function TestimonialSubmissionModal({
           <div className="mb-6">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-500/30 text-xs font-bold text-blue-300 mb-2">
               <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-              <span>Community Voice</span>
+              <span><Trans comment="testimonial-submission-modal span visible text">Community Voice</Trans></span>
             </div>
             <h3 className="text-2xl font-bold font-heading text-white">
-              Share Your Experience with MANTECH Nexus
-            </h3>
+              <Trans comment="testimonial-submission-modal h3 visible text">Share Your Experience with MANTECH Nexus
+            </Trans></h3>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-              Your feedback inspires future candidates, university students, and recruiting companies across Cameroon.
-            </p>
+              <Trans comment="testimonial-submission-modal p visible text">Your feedback inspires future candidates, university students, and recruiting companies across Cameroon.
+            </Trans></p>
           </div>
 
           {success ? (
             <div className="p-8 text-center space-y-4 rounded-2xl bg-emerald-950/60 border border-emerald-500/30">
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
-              <h4 className="text-lg font-bold text-white">Experience Submitted!</h4>
+              <h4 className="text-lg font-bold text-white"><Trans comment="testimonial-submission-modal h4 visible text">Experience Submitted!</Trans></h4>
               <p className="text-xs sm:text-sm text-emerald-200">
-                Thank you for contributing! Your feedback has been received and will appear on the website once approved by our moderation team.
-              </p>
+                <Trans comment="testimonial-submission-modal p visible text">Thank you for contributing! Your feedback has been received and will appear on the website once approved by our moderation team.
+              </Trans></p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -139,27 +142,27 @@ export function TestimonialSubmissionModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Your Full Name *
-                  </label>
+                    <Trans comment="testimonial-submission-modal label visible text">Your Full Name *
+                  </Trans></label>
                   <Input
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Boris Tientcheu"
+                    placeholder={t({ message: "e.g. Boris Tientcheu", comment: "testimonial-submission-modal component placeholder attribute" })}
                     className="bg-slate-950/80 border-slate-800 text-white placeholder:text-slate-500"
                   />
                 </div>
 
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Email Address * (never published)
-                  </label>
+                    <Trans comment="testimonial-submission-modal label visible text">Email Address * (never published)
+                  </Trans></label>
                   <Input
                     required
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="e.g. boris@gmail.com"
+                    placeholder={t({ message: "e.g. boris@gmail.com", comment: "testimonial-submission-modal component placeholder attribute" })}
                     className="bg-slate-950/80 border-slate-800 text-white placeholder:text-slate-500"
                   />
                 </div>
@@ -168,8 +171,8 @@ export function TestimonialSubmissionModal({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Your Role *
-                  </label>
+                    <Trans comment="testimonial-submission-modal label visible text">Your Role *
+                  </Trans></label>
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
@@ -185,21 +188,21 @@ export function TestimonialSubmissionModal({
 
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Company or University *
-                  </label>
+                    <Trans comment="testimonial-submission-modal label visible text">Company or University *
+                  </Trans></label>
                   <Input
                     required
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    placeholder="e.g. UY1 / MTN / Orange"
+                    placeholder={t({ message: "e.g. UY1 / MTN / Orange", comment: "testimonial-submission-modal component placeholder attribute" })}
                     className="bg-slate-950/80 border-slate-800 text-white placeholder:text-slate-500"
                   />
                 </div>
 
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Region *
-                  </label>
+                    <Trans comment="testimonial-submission-modal label visible text">Region *
+                  </Trans></label>
                   <select
                     value={formData.region}
                     onChange={(e) => setFormData({ ...formData, region: e.target.value })}
@@ -217,8 +220,8 @@ export function TestimonialSubmissionModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    What did you use MANTECH for? *
-                  </label>
+                    <Trans comment="testimonial-submission-modal label visible text">What did you use MANTECH for? *
+                  </Trans></label>
                   <select
                     value={formData.focus}
                     onChange={(e) => setFormData({ ...formData, focus: e.target.value })}
@@ -234,8 +237,8 @@ export function TestimonialSubmissionModal({
 
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Rating *
-                  </label>
+                    <Trans comment="testimonial-submission-modal label visible text">Rating *
+                  </Trans></label>
                   <div className="flex items-center gap-2 h-10 px-3 rounded-md bg-slate-950/80 border border-slate-800">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -254,36 +257,36 @@ export function TestimonialSubmissionModal({
                       </button>
                     ))}
                     <span className="text-xs text-slate-400 ml-2 font-mono">
-                      {formData.rating} of 5 Stars
-                    </span>
+                      {formData.rating} <Trans comment="testimonial-submission-modal span visible text">of 5 Stars
+                    </Trans></span>
                   </div>
                 </div>
               </div>
 
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1">
-                  Short Quote / Headline * (max 200 chars)
-                </label>
+                  <Trans comment="testimonial-submission-modal label visible text">Short Quote / Headline * (max 200 chars)
+                </Trans></label>
                 <Input
                   required
                   maxLength={200}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="e.g. Connected our engineering cohort to 15 top host companies in 2 weeks."
+                  placeholder={t({ message: "e.g. Connected our engineering cohort to 15 top host companies in 2 weeks.", comment: "testimonial-submission-modal component placeholder attribute" })}
                   className="bg-slate-950/80 border-slate-800 text-white placeholder:text-slate-500"
                 />
               </div>
 
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1">
-                  Tell us the full story *
-                </label>
+                  <Trans comment="testimonial-submission-modal label visible text">Tell us the full story *
+                </Trans></label>
                 <Textarea
                   required
                   rows={3}
                   value={formData.details}
                   onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                  placeholder="Describe how MANTECH Nexus helped you find an internship, recruit talent, or manage university placements..."
+                  placeholder={t({ message: "Describe how MANTECH Nexus helped you find an internship, recruit talent, or manage university placements...", comment: "testimonial-submission-modal component placeholder attribute" })}
                   className="bg-slate-950/80 border-slate-800 text-white placeholder:text-slate-500"
                 />
               </div>
@@ -295,8 +298,8 @@ export function TestimonialSubmissionModal({
                   onClick={onClose}
                   className="border-slate-700 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700"
                 >
-                  Cancel
-                </Button>
+                  <Trans comment="testimonial-submission-modal Button visible text">Cancel
+                </Trans></Button>
                 <Button
                   type="submit"
                   disabled={loading}

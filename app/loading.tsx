@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { Logo } from '@/components/shared/logo';
 import { APP_CONFIG } from '@/lib/config';
 
@@ -12,6 +13,7 @@ import { APP_CONFIG } from '@/lib/config';
  * - Non-blocking: renders UI immediately regardless of video load state
  */
 export default function Loading() {
+  const { t } = useLingui();
   const [videoError, setVideoError] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -22,7 +24,7 @@ export default function Loading() {
 
   return (
     <div
-      aria-label="Loading MANTECH Nexus"
+      aria-label={t({ message: 'Loading MANTECH Nexus', comment: 'Accessible name of the full-screen app loading indicator' })}
       role="status"
       aria-live="polite"
       className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-slate-950 text-white"
@@ -131,7 +133,7 @@ export default function Loading() {
               }}
             />
           </div>
-          <span className="text-xs font-medium text-slate-300/80">Loading…</span>
+          <span className="text-xs font-medium text-slate-300/80"><Trans comment="Loading state shown while a route is being prepared">Loading…</Trans></span>
         </div>
       </div>
 

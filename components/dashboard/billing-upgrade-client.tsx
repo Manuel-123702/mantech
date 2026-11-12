@@ -1,4 +1,6 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -32,6 +34,7 @@ export default function BillingUpgradeClient({
   buttonChildren: React.ReactNode;
   disabled?: boolean;
 }) {
+  const { t } = useLingui();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [notes, setNotes] = useState('');
@@ -73,30 +76,30 @@ export default function BillingUpgradeClient({
             <DialogHeader>
               <DialogTitle className="inline-flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                Request created
-              </DialogTitle>
+                <Trans comment="billing-upgrade page DialogTitle visible text">Request created
+              </Trans></DialogTitle>
               <DialogDescription>
-                Finish the activation by sending a quick message to MANTECH billing on WhatsApp.
-              </DialogDescription>
+                <Trans comment="billing-upgrade page DialogDescription visible text">Finish the activation by sending a quick message to MANTECH billing on WhatsApp.
+              </Trans></DialogDescription>
             </DialogHeader>
             <div className="space-y-4 rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-sm text-emerald-900">
               <Badge variant="secondary" className="bg-white">
-                Upgrade: {packageName}
+                <Trans comment="billing-upgrade page Badge visible text">Upgrade: </Trans>{packageName}
               </Badge>
               <p>
-                MANTECH will manually review your request and activate your plan after receiving
+                <Trans comment="billing-upgrade page p visible text">MANTECH will manually review your request and activate your plan after receiving
                 your payment confirmation.
-              </p>
+              </Trans></p>
             </div>
             <DialogFooter className="flex-col gap-2 sm:flex-row">
               <Button variant="ghost" onClick={() => { setOpen(false); setDone(null); setNotes(''); }}>
-                Close
-              </Button>
+                <Trans comment="billing-upgrade page Button visible text">Close
+              </Trans></Button>
               <Button asChild>
                 <a href={done.url} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="mr-2 h-4 w-4" />
-                  Open WhatsApp to finish
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <Trans comment="billing-upgrade page a visible text">Open WhatsApp to finish
+                  </Trans><ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </Button>
             </DialogFooter>
@@ -104,37 +107,37 @@ export default function BillingUpgradeClient({
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle>Upgrade to {packageName}</DialogTitle>
+              <DialogTitle><Trans comment="billing-upgrade page DialogTitle visible text">Upgrade to </Trans>{packageName}</DialogTitle>
               <DialogDescription>
-                Submit your upgrade request. MANTECH will contact you via WhatsApp to confirm
+                <Trans comment="billing-upgrade page DialogDescription visible text">Submit your upgrade request. MANTECH will contact you via WhatsApp to confirm
                 activation and payment details.
-              </DialogDescription>
+              </Trans></DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label>Notes for billing team (optional)</Label>
+                <Label><Trans comment="billing-upgrade page Label visible text">Notes for billing team (optional)</Trans></Label>
                 <Textarea
                   rows={4}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Additional information, preferred activation date, PO reference, etc."
+                  placeholder={t({ message: "Additional information, preferred activation date, PO reference, etc.", comment: "billing-upgrade page component placeholder attribute" })}
                 />
               </div>
             </div>
             <DialogFooter className="flex-col gap-2 sm:flex-row">
               <Button variant="ghost" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
+                <Trans comment="billing-upgrade page Button visible text">Cancel
+              </Trans></Button>
               <Button onClick={requestUpgrade} disabled={loading}>
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Requesting…
-                  </>
+                    <Trans comment="billing-upgrade page component visible text">Requesting…
+                  </Trans></>
                 ) : (
                   <>
-                    Submit upgrade request
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <Trans comment="billing-upgrade page component visible text">Submit upgrade request
+                    </Trans><ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}
               </Button>

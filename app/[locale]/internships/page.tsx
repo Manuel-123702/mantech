@@ -1,0 +1,680 @@
+"use client";
+import { Trans, useLingui } from '@lingui/react/macro';
+
+
+import { useEffect, useMemo, useState } from "react";
+import { LocaleLink as Link } from '@/components/shared/locale-link';
+import { motion } from "framer-motion";
+import {
+  Search,
+  MapPin,
+  Briefcase,
+  Clock,
+  Building2,
+  Loader2,
+  Inbox,
+  ArrowRight,
+  Sparkles,
+  Banknote,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
+import type { InternshipOpportunity } from "@/lib/types";
+import { useTaxonomy } from "@/lib/use-taxonomy";
+import { useAuth } from "@/lib/auth-context";
+import { calculateMatch, matchLabel, type MatchProfile } from "@/lib/matching";
+import { fieldNameOf, regionNameOf } from "@/lib/catalog-shape";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Globe, Send } from "lucide-react";
+import {
+  MotionSection,
+  MotionItem,
+  AnimatedCard,
+} from "@/components/shared/section-animations";
+
+export default function InternshipsPage() {
+  const { t } = useLingui();
+  const { isSignedIn, isLoaded: authLoaded } = useAuth();
+  const [internships, setInternships] = useState<InternshipOpportunity[]>([]);
+  const [matchProfile, setMatchProfile] = useState<MatchProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [region, setRegion] = useState("all");
+  const [field, setField] = useState("all");
+  const [workMode, setWorkMode] = useState("all");
+
+  // ── SRS §10 advanced filters ─────────────────────────────────────────────
+  const [specialization, setSpecialization] = useState("all");
+  const [industry, setIndustry] = useState("all");
+  const [city, setCity] = useState("all");
+  const [skill, setSkill] = useState("all");
+  const [applicationMethod, setApplicationMethod] = useState("all");
+  const [paid, setPaid] = useState("all");
+  const [maxDuration, setMaxDuration] = useState("all");
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  // "default" keeps the order the API returned (newest first). "match"
+  // re-ranks the cards by the signed-in intern's match score, highest first.
+  const [sortMode, setSortMode] = useState<"default" | "match">("default");
+  // Load the signed-in intern's match profile so each card can show a
+  // live "match %" badge. Guests / anyone without a profile get null
+  // (badges are simply hidden) — never an error.
+  useEffect(() => {
+    if (!authLoaded) return;
+    if (!isSignedIn) {
+      setMatchProfile(null);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/me/match-profile", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled) setMatchProfile((data?.matchProfile ?? null) as MatchProfile | null);
+      })
+      .catch(() => {
+        if (!cancelled) setMatchProfile(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [authLoaded, isSignedIn]);
+
+  // Pre-compute a match score per opportunity so the card render stays cheap.
+  const matchScores = useMemo(() => {
+    const map = new Map<string, number>();
+    if (!matchProfile) return map;
+    for (const opp of internships) {
+      try {
+        const { score } = calculateMatch(matchProfile, {
+          requiredSkills: (opp.requiredSkills || opp.required_skills || opp.skills || []) as string[],
+          preferredSkills: (opp.preferredSkills || opp.preferred_skills || []) as string[],
+          fieldSlug: (opp as any).fieldSlug ?? null,
+          fieldName: (opp.field as string) ?? null,
+          city: opp.city ?? null,
+          regionName: (regionNameOf(opp as unknown as Record<string, unknown>) as string) ?? null,
+          workMode: (opp.workMode || opp.work_mode || null) as string | null,
+          isPaid: opp.isPaid ?? opp.is_paid ?? null,
+        });
+        if (typeof score === 'number' && !Number.isNaN(score)) map.set(opp.id, score);
+      } catch {
+        // A single malformed record must never crash the whole listings page.
+      }
+    }
+    return map;
+  }, [matchProfile, internships]);
+
+  // Re-rank the list when the user picks "Best match". Cards with no score
+  // (guests, or a profile that could not be loaded) keep the default order —
+  // the toggle is disabled in that case so the two never disagree.
+  const sortedInternships = useMemo(() => {
+    if (sortMode === "match" && matchScores.size > 0) {
+      // Re-rank by the signed-in intern's match score (best → worst).
+      return [...internships].sort(
+        (a, b) =>
+          (matchScores.get(b.id) ?? -1) - (matchScores.get(a.id) ?? -1),
+      );
+    }
+    // "Default": deterministic newest-first order (a real sort, not a
+    // passthrough of the backend array).
+    return [...internships].sort(
+      (a, b) =>
+        new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime(),
+    );
+  }, [internships, matchScores, sortMode]);
+
+  // If the match profile goes away (sign-out) while "Best match" is selected,
+  // fall back to the default order so the toggle never shows a stale state.
+  useEffect(() => {
+    if (sortMode === "match" && matchScores.size === 0) setSortMode("default");
+  }, [sortMode, matchScores]);
+
+
+
+  const { fields, regions, industries, skills, loading: taxonomyLoading, error: taxonomyError } = useTaxonomy();
+
+  useEffect(() => {
+    async function fetchInternships() {
+      try {
+        setLoading(true);
+        const params = new URLSearchParams();
+        if (search) params.set("search", search);
+        if (region !== "all") params.set("region", region);
+        if (field !== "all") params.set("field", field);
+        if (workMode !== "all") params.set("workMode", workMode);
+        if (specialization !== "all") params.set("specialization", specialization);
+        if (industry !== "all") params.set("industry", industry);
+        if (city !== "all") params.set("city", city);
+        if (skill !== "all") params.set("skill", skill);
+        if (applicationMethod !== "all") params.set("applicationMethod", applicationMethod);
+        if (paid !== "all") params.set("paid", paid);
+        if (maxDuration !== "all") params.set("maxDuration", maxDuration);
+
+        const res = await fetch(`/api/internships?${params.toString()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setInternships(data.internships || []);
+        }
+      } catch (err) {
+        console.error("Failed fetching internships:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    const debounce = setTimeout(fetchInternships, 200);
+    return () => clearTimeout(debounce);
+  }, [
+    search,
+    region,
+    field,
+    workMode,
+    specialization,
+    industry,
+    city,
+    skill,
+    applicationMethod,
+    paid,
+    maxDuration,
+  ]);
+
+  // Specializations cascade from the selected field (SRS §10).
+  const specializationOptions = useMemo(
+    () => fields.find((f) => f.name === field)?.specializations ?? [],
+    [fields, field],
+  );
+
+  // Cities cascade from the selected region (SRS §10 / §24).
+  const cityOptions = useMemo(() => {
+    const match = regions.find((r) => r.name === region);
+    return match?.locations ?? [];
+  }, [regions, region]);
+
+  // Changing field invalidates its specializations; changing region
+  // invalidates its cities.
+  useEffect(() => {
+    setSpecialization("all");
+  }, [field]);
+  useEffect(() => {
+    setCity("all");
+  }, [region]);
+
+  const activeFilterCount = [
+    field,
+    region,
+    workMode,
+    specialization,
+    industry,
+    city,
+    skill,
+    applicationMethod,
+    paid,
+    maxDuration,
+  ].filter((value) => value !== "all").length;
+
+  const resetFilters = () => {
+    setSearch("");
+    setField("all");
+    setRegion("all");
+    setWorkMode("all");
+    setSpecialization("all");
+    setIndustry("all");
+    setCity("all");
+    setSkill("all");
+    setApplicationMethod("all");
+    setPaid("all");
+    setMaxDuration("all");
+  };
+
+  const selectClass =
+    "h-11 px-3.5 rounded-md bg-slate-800/90 border border-slate-700 text-white text-sm w-full";
+
+  return (
+    <div className="overflow-hidden">
+      {/* ───── HERO SECTION WITH BACKGROUND IMAGE ───── */}
+      <section
+        className="relative py-20 lg:py-28 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/portal_tech_bg.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/85 to-slate-900/80 backdrop-blur-[1px]" />
+
+        <div className="container-mantech relative z-10 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-300 backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5" />
+              <Trans comment="page span visible text">National Cameroon Professional Internship Marketplace
+            </Trans></span>
+            <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
+              <Trans comment="page h1 visible text">Verified Professional Internships in Cameroon
+            </Trans></h1>
+            <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
+              <Trans comment="page p visible text">Discover opportunities across Software, Networks, Data & AI,
+              Finance, Accounting, Marketing, Human Resources, Engineering, and
+              Law across all 10 regions.
+            </Trans></p>
+
+            {/* Filter controls */}
+            <div className="mt-8 bg-slate-900/90 p-4 rounded-2xl border border-slate-700/80 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+                <Input
+                  type="text"
+                  placeholder={t({ message: "Search by role, skills, keywords, or company...", comment: "page component placeholder attribute" })}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-10 bg-slate-800/90 border-slate-700 text-white placeholder:text-slate-400 h-11"
+                />
+              </div>
+
+              <select
+                value={field}
+                onChange={(e) => setField(e.target.value)}
+                className="h-11 px-3.5 rounded-md bg-slate-800/90 border border-slate-700 text-white text-sm"
+              >
+                <option value="all"><Trans comment="page option visible text">All Professional Fields</Trans></option>
+                {fields.map((f) => (
+                  <option key={f.id} value={f.name}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+                className="h-11 px-3.5 rounded-md bg-slate-800/90 border border-slate-700 text-white text-sm"
+              >
+                <option value="all"><Trans comment="page option visible text">All Regions</Trans></option>
+                {regions.map((r) => (
+                  <option key={r.id} value={r.name}>
+                    {r.name} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"("}{r.capital}{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{")"}</option>
+                ))}
+              </select>
+
+              <select
+                value={workMode}
+                onChange={(e) => setWorkMode(e.target.value)}
+                className="h-11 px-3.5 rounded-md bg-slate-800/90 border border-slate-700 text-white text-sm"
+              >
+                <option value="all"><Trans comment="page option visible text">All Modes</Trans></option>
+                <option value="onsite"><Trans comment="page option visible text">On-Site</Trans></option>
+                <option value="hybrid"><Trans comment="page option visible text">Hybrid</Trans></option>
+                <option value="remote"><Trans comment="page option visible text">Remote</Trans></option>
+              </select>
+            </div>
+
+            {/* ── SRS §10 advanced filters ────────────────────────────── */}
+            <div className="mt-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => setShowAdvanced((open) => !open)}
+                  aria-expanded={showAdvanced}
+                  aria-controls="advanced-filters"
+                  className="inline-flex h-11 items-center gap-2 rounded-md border border-slate-700 bg-slate-800/90 px-4 text-sm font-semibold text-white transition-colors hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                >
+                  <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
+                  <Trans comment="page button visible text">Advanced Filters
+                  </Trans>{activeFilterCount > 0 && (
+                    <span className="ml-1 rounded-full bg-blue-600 px-2 py-0.5 text-[11px] font-bold text-white">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                </button>
+
+                {activeFilterCount > 0 && (
+                  <button
+                    onClick={resetFilters}
+                    className="inline-flex h-11 items-center gap-2 rounded-md px-4 text-sm font-semibold text-slate-300 underline-offset-4 transition-colors hover:text-white hover:underline"
+                  >
+                    <X className="h-4 w-4" aria-hidden="true" />
+                    <Trans comment="page button visible text">Clear </Trans>{activeFilterCount} <Trans comment="page button visible text">filter
+                    </Trans>{activeFilterCount === 1 ? "" : "s"}
+                  </button>
+                )}
+              </div>
+
+              {showAdvanced && (
+                <div
+                  id="advanced-filters"
+                  className="mt-3 grid grid-cols-1 gap-3 rounded-2xl border border-slate-700/80 bg-slate-900/90 p-4 backdrop-blur-xl sm:grid-cols-2 lg:grid-cols-3"
+                >
+                  <label className="block">
+                    <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      <Trans comment="page span visible text">Specialization
+                    </Trans></span>
+                    <select
+                      value={specialization}
+                      onChange={(e) => setSpecialization(e.target.value)}
+                      disabled={field === "all"}
+                      className={`${selectClass} disabled:opacity-50`}
+                    >
+                      <option value="all">
+                        {field === "all" ? "Pick a field first" : "All Specializations"}
+                      </option>
+                      {specializationOptions.map((spec) => (
+                        <option key={spec.id} value={spec.name}>
+                          {spec.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      <Trans comment="page span visible text">Industry
+                    </Trans></span>
+                    <select
+                      value={industry}
+                      onChange={(e) => setIndustry(e.target.value)}
+                      className={selectClass}
+                    >
+                      <option value="all"><Trans comment="page option visible text">All Industries</Trans></option>
+                      {industries.map((item) => (
+                        <option key={item.id} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      <Trans comment="page span visible text">City / Town
+                    </Trans></span>
+                    <select
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      disabled={region === "all"}
+                      className={`${selectClass} disabled:opacity-50`}
+                    >
+                      <option value="all">
+                        {region === "all" ? "Pick a region first" : "All Cities"}
+                      </option>
+                      {cityOptions.map((location) => (
+                        <option key={location.id} value={location.city}>
+                          {location.city}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      <Trans comment="page span visible text">Skill
+                    </Trans></span>
+                    <select
+                      value={skill}
+                      onChange={(e) => setSkill(e.target.value)}
+                      className={selectClass}
+                    >
+                      <option value="all"><Trans comment="page option visible text">All Skills</Trans></option>
+                      {skills.map((item) => (
+                        <option key={item.id} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      <Trans comment="page span visible text">Application Method
+                    </Trans></span>
+                    <select
+                      value={applicationMethod}
+                      onChange={(e) => setApplicationMethod(e.target.value)}
+                      className={selectClass}
+                    >
+                      <option value="all"><Trans comment="page option visible text">Any Method</Trans></option>
+                      <option value="MANTECH"><Trans comment="page option visible text">Apply on MANTECH</Trans></option>
+                      <option value="COMPANY_WEBSITE"><Trans comment="page option visible text">Company Website</Trans></option>
+                      <option value="EXTERNAL"><Trans comment="page option visible text">External Portal</Trans></option>
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      <Trans comment="page span visible text">Compensation
+                    </Trans></span>
+                    <select
+                      value={paid}
+                      onChange={(e) => setPaid(e.target.value)}
+                      className={selectClass}
+                    >
+                      <option value="all"><Trans comment="page option visible text">Paid &amp; Unpaid</Trans></option>
+                      <option value="true"><Trans comment="page option visible text">Paid / Stipend</Trans></option>
+                      <option value="false"><Trans comment="page option visible text">Unpaid / Academic</Trans></option>
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      <Trans comment="page span visible text">Max Duration
+                    </Trans></span>
+                    <select
+                      value={maxDuration}
+                      onChange={(e) => setMaxDuration(e.target.value)}
+                      className={selectClass}
+                    >
+                      <option value="all"><Trans comment="page option visible text">Any Duration</Trans></option>
+                      <option value="3"><Trans comment="page option visible text">3 months or less</Trans></option>
+                      <option value="6"><Trans comment="page option visible text">Up to 6 months</Trans></option>
+                      <option value="12"><Trans comment="page option visible text">Up to 12 months</Trans></option>
+                      <option value="24"><Trans comment="page option visible text">Up to 24 months</Trans></option>
+                    </select>
+                  </label>
+                </div>
+              )}
+            </div>
+          </motion.div>
+          {taxonomyError && <p role="alert" className="mt-3 text-sm text-red-200">{taxonomyError}</p>}
+          {taxonomyLoading && <p className="mt-3 text-sm text-slate-300"><Trans comment="page p visible text">Loading filters…</Trans></p>}
+        </div>
+      </section>
+
+      {/* ───── INTERNSHIP CARDS GRID ───── */}
+      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #070d1b 0%, #0a1220 50%, #070e18 100%)' }}>
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.05] mix-blend-luminosity" style={{ backgroundImage: "url('/images/company_tech_bg.jpg')" }} />
+        <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/8 blur-[110px] rounded-full pointer-events-none" />
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative z-10">
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700/60">
+            <div>
+              <h2 className="text-xl font-bold text-white font-heading">
+                <Trans comment="page h2 visible text">Available Positions
+              </Trans></h2>
+              <p className="text-xs text-slate-400 mt-0.5">
+                <Trans comment="page p visible text">Showing </Trans>{internships.length} <Trans comment="page p visible text">live verified openings
+              </Trans></p>
+            </div>
+
+          </div>
+
+          {loading ? (
+            <div className="flex justify-center py-24">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+            </div>
+          ) : internships.length === 0 ? (
+            <div className="py-20 text-center bg-slate-900/80 rounded-3xl border border-slate-700/60 p-8 shadow-lg">
+              <Inbox className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-white">
+                <Trans comment="page h3 visible text">No matching internships found
+              </Trans></h3>
+              <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                <Trans comment="page p visible text">Try broadening your search keywords, selecting &apos;All
+                Professional Fields&apos;, or resetting regional filters.
+              </Trans></p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={resetFilters}
+                className="mt-4 text-xs border-slate-600 text-slate-300 hover:bg-slate-700"
+              >
+                <Trans comment="page Button visible text">Reset All Filters
+              </Trans></Button>
+            </div>
+          ) : (
+            <MotionSection motion="pop" stagger={0.05} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedInternships.map((opp) => {
+                const skills = (opp.requiredSkills ||
+                  opp.required_skills ||
+                  opp.skills ||
+                  []) as string[];
+                return (
+                  <MotionItem key={opp.id} motion="pop">
+                    <AnimatedCard className="h-full">
+                      <div className="flex h-full flex-col justify-between rounded-3xl border border-slate-700/60 bg-slate-900/85 backdrop-blur-md p-6 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all group">
+                        <div>
+                          <div className="flex items-center justify-between gap-2 mb-3">
+                            <Badge
+                              variant="secondary"
+                              className="text-[10px] font-semibold uppercase"
+                            >
+                          {fieldNameOf(opp as unknown as Record<string, unknown>) ||
+                            "Professional Field"}
+                        </Badge>
+                        {(() => {
+                          const score = matchScores.get(opp.id);
+                          if (score == null || !matchProfile) return null;
+                          const label = matchLabel(score);
+                          const color =
+                            score >= 70
+                              ? "bg-emerald-100 text-emerald-700 border-emerald-200"
+                              : score >= 45
+                                ? "bg-amber-100 text-amber-700 border-amber-200"
+                                : "bg-slate-100 text-slate-600 border-slate-200";
+                          return (
+                            <span
+                              title={`${score}% ${label}`}
+                              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${color}`}
+                            >
+                              {score}{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"% "}{label}
+                            </span>
+                          );
+                        })()}
+                        <span className="text-xs font-bold text-emerald-600 font-mono">
+                          {opp.allowanceXAF || opp.allowance_xaf
+                            ? `${(opp.allowanceXAF || opp.allowance_xaf || 0).toLocaleString()} FCFA / mo`
+                            : opp.isPaid || opp.is_paid
+                              ? "Stipend"
+                              : "Accredited"}
+                        </span>
+                      </div>
+                      <div className="mb-3 flex flex-wrap gap-1.5">
+                        {(() => {
+                          const m = String(
+                            opp.applicationMethod ||
+                              opp.application_method ||
+                              "MANTECH",
+                          ).toUpperCase();
+                          if (m === "MANTECH")
+                            return (
+                              <Badge
+                                variant="outline"
+                                className="border-blue-200 bg-blue-50 text-[9px] text-blue-700"
+                              >
+                                <Send className="w-3 h-3 mr-1" /> <Trans comment="page Badge visible text">MANTECH Apply
+                              </Trans></Badge>
+                            );
+                          if (m === "COMPANY_WEBSITE")
+                            return (
+                              <Badge
+                                variant="outline"
+                                className="border-slate-200 bg-slate-50 text-[9px] text-slate-700"
+                              >
+                                <Globe className="w-3 h-3 mr-1" /> <Trans comment="page Badge visible text">Company
+                                Website
+                              </Trans></Badge>
+                            );
+                          return (
+                            <Badge
+                              variant="outline"
+                              className="border-amber-200 bg-amber-50 text-[9px] text-amber-800"
+                            >
+                              <Globe className="w-3 h-3 mr-1" /> <Trans comment="page Badge visible text">External
+                              Platform
+                            </Trans></Badge>
+                          );
+                        })()}
+                        {opp.isFeatured ? (
+                          <Badge
+                            variant="secondary"
+                            className="bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-900 text-[9px] border border-amber-200"
+                          >
+                            <Sparkles className="w-3 h-3 mr-1" /> <Trans comment="page Badge visible text">Featured
+                          </Trans></Badge>
+                        ) : null}
+                      </div>
+
+                      <h3 className="font-heading text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
+                        {opp.title}
+                      </h3>
+
+                      <div className="flex items-center gap-2 text-xs text-slate-400 mt-1 font-medium">
+                        <MapPin className="w-3.5 h-3.5 text-slate-500" />
+                        <span>
+                          {opp.city}{/* eslint-disable-next-line i18next/no-literal-string -- numeric value is data, not translation copy */}
+{","}{" "}
+                          {regionNameOf(opp as unknown as Record<string, unknown>) ||
+                            "Cameroon"}
+                        </span>
+                        <span>{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"•"}</span>
+                        <span className="uppercase font-semibold text-slate-300">
+                          {String(opp.workMode || opp.work_mode || "ONSITE")}
+                        </span>
+                      </div>
+
+                      <p className="mt-3 text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                        {opp.description ||
+                          opp.summary ||
+                          "Professional internship position with verified mentor supervision."}
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {skills.slice(0, 3).map((skill: string, i: number) => (
+                          <span
+                            key={i}
+                            className="px-2 py-0.5 rounded-lg bg-slate-700/60 text-[10px] text-slate-300 font-medium"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-slate-700/50 flex items-center justify-between">
+                      <span className="text-xs text-slate-500 font-mono">
+                        {opp.durationMonths || opp.duration_months || 3} <Trans comment="page span visible text">Months
+                        Duration
+                      </Trans></span>
+
+                      <Link href={`/internships/${opp.slug}`}>
+                        <Button
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                        >
+                          <span><Trans comment="page span visible text">Apply</Trans></span>
+                          <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                        </Button>
+                      </Link>
+                        </div>
+                      </div>
+                    </AnimatedCard>
+                  </MotionItem>
+                );
+              })}
+            </MotionSection>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,4 +1,5 @@
 import { MessageSquareReply } from 'lucide-react';
+import { useLingui } from '@lingui/react/macro';
 import type { ResponseRateStats } from '@/lib/response-rate';
 
 /**
@@ -18,6 +19,7 @@ export function ResponseRateBadge({
   stats: ResponseRateStats | null;
   surface?: 'dark' | 'light';
 }) {
+  const { t } = useLingui();
   if (!stats || !stats.publishable || !stats.label) return null;
 
   const positive = stats.ratePercent >= 50;
@@ -32,7 +34,7 @@ export function ResponseRateBadge({
 
   return (
     <span
-      title={`${stats.responded} of ${stats.received} applicants heard back`}
+      title={t({ message: '{responded} of {received} applicants heard back', values: { responded: stats.responded, received: stats.received }, comment: 'Tooltip describing the organization’s applicant response rate' })}
       className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold ${tone}`}
     >
       <MessageSquareReply className="w-3.5 h-3.5" /> {stats.label}

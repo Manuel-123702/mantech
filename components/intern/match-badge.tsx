@@ -1,4 +1,6 @@
 'use client';
+import { Trans } from '@lingui/react/macro';
+
 
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -21,11 +23,11 @@ export function MatchBadge({ score, missing }: { score: number; missing?: string
         onMouseLeave={() => setShow(false)}
         onClick={() => setShow((v) => !v)}
       >
-        {score}% match
-      </Badge>
+        {score}<Trans comment="match-badge Badge visible text">% match
+      </Trans></Badge>
       {show && missing && missing.length > 0 && (
         <span className="absolute z-20 mt-1 left-0 w-48 rounded-lg border bg-white p-2 text-[11px] text-slate-600 shadow-lg">
-          Missing: {missing.join(', ')}
+          <Trans comment="match-badge span visible text">Missing: </Trans>{missing.join(', ')}
         </span>
       )}
     </span>

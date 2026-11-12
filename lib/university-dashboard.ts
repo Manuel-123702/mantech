@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { redirect } from '@/i18n/redirect';
 import { prisma } from '@/lib/prisma';
 import { syncDbUser } from '@/lib/authz';
 

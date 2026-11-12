@@ -1,0 +1,33 @@
+# Added by Globalize when this repository was internationalized.
+# Re-runs catalog extraction and fails if the committed catalogs are stale —
+# the mechanical backstop for a user-facing string that was added unwrapped.
+name: Globalize catalog drift
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  catalog-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm ci || npm install
+      - name: Extract catalogs
+        run: npx lingui extract --overwrite --clean
+      - name: Check for catalog drift
+        run: |
+          git add --intent-to-add -- ':(glob)**/locales/**/*.po' ':(glob)**/*.po' 2>/dev/null || true
+          if ! git diff --quiet -- ':(glob)**/locales/**/*.po' ':(glob)**/*.po'; then
+            echo "::error::Message catalogs are out of date. Run \`npx lingui extract --overwrite --clean\` and commit the result."
+            git diff -- ':(glob)**/locales/**/*.po' ':(glob)**/*.po'
+            exit 1
+          fi
+          echo "Catalogs are up to date."

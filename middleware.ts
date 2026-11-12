@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { rateLimit, clientKey, rateLimitHeaders, RATE_LIMITS } from '@/lib/rate-limit';
 import { resolveRoles, dashboardsForRoles, type PlatformRole } from '@/lib/roles';
+import { locales, sourceLocale } from '@/i18n/locales';
+import { stripLocalePrefix } from '@/i18n/navigation';
 
 /**
  * MANTECH Nexus Security & Authorization Middleware
@@ -104,24 +106,62 @@ function readEmailFromClaims(claims: Record<string, unknown>): string | undefine
   return undefined;
 }
 
-export default clerkMiddleware(async (auth, request: NextRequest) => {
-  const { pathname } = request.nextUrl;
-  const isDev = process.env.NODE_ENV !== 'production';
-  const response = NextResponse.next();
+function detectLocale(acceptLanguage: string | null, cookieLocale: string | undefined): string {
+  if (cookieLocale) return resolveLocale(cookieLocale);
+  const preferences = (acceptLanguage ?? '')
+    .split(',')
+    .map((part) => {
+      const [tag, quality = 'q=1'] = part.trim().split(';');
+      return { tag, quality: Number(quality.replace(/^q=/, '')) || 0 };
+    })
+    .sort((left, right) => right.quality - left.quality);
+  for (const preference of preferences) {
+    const requested = preference.tag.toLowerCase();
+    const exact = locales.find((locale) => locale.toLowerCase() === requested);
+    if (exact) return exact;
+    const base = requested.split('-')[0];
+    const languageMatch = locales.find((locale) => locale.split('-')[0].toLowerCase() === base);
+    if (languageMatch) return languageMatch;
+  }
+  return sourceLocale;
+}
 
+function withSecurityHeaders(response: NextResponse, isDev: boolean): NextResponse {
   response.headers.set('Content-Security-Policy', buildCsp(isDev));
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('X-XSS-Protection', '1; mode=block');
-  response.headers.set(
-    'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()');
+  response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  return response;
+}
+
+export default clerkMiddleware(async (auth, request: NextRequest) => {
+  const { pathname } = request.nextUrl;
+  const isDev = process.env.NODE_ENV !== 'production';
+  const { locale: pathLocale } = stripLocalePrefix(pathname);
+  const locale = pathLocale ?? detectLocale(
+    request.headers.get('accept-language'),
+    request.cookies.get('NEXT_LOCALE')?.value,
   );
-  response.headers.set(
-    'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains; preload'
-  );
+  const routePath = stripLocalePrefix(pathname).pathname;
+  const isAssetOrApi = routePath.startsWith('/api/') || routePath === '/api' ||
+    routePath.startsWith('/_next/') || routePath.startsWith('/_vercel/') || /\/[^/]+\.[^/]+$/.test(routePath);
+
+  if (!pathLocale && !isAssetOrApi) {
+    const destination = request.nextUrl.clone();
+    destination.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
+    const redirect = withSecurityHeaders(NextResponse.redirect(destination), isDev);
+    redirect.cookies.set('NEXT_LOCALE', locale, { path: '/', sameSite: 'lax' });
+    return redirect;
+  }
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-mantech-locale', locale);
+  requestHeaders.set('x-mantech-url', `${pathname}${request.nextUrl.search}`);
+  const response = withSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }), isDev);
+  response.cookies.set('NEXT_LOCALE', locale, { path: '/', sameSite: 'lax' });
 
   // â”€â”€ Rate limiting (API traffic only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // Public page rendering is left alone so that a slow crawler or a burst of
@@ -165,14 +205,19 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
   }
 
   // Check if route requires authentication
-  const isProtectedRoute = PROTECTED_PREFIXES.some(prefix => pathname.startsWith(prefix));
+  const isProtectedRoute = PROTECTED_PREFIXES.some(prefix => routePath.startsWith(prefix));
 
   if (isProtectedRoute) {
     const session = await auth();
     if (!session?.userId) {
-      const signInUrl = new URL('/sign-in', request.url);
-      signInUrl.searchParams.set('redirect_url', pathname);
-      return NextResponse.redirect(signInUrl);
+      const signInUrl = new URL(`/${locale}/sign-in`, request.url);
+      request.nextUrl.searchParams.forEach((value, key) => {
+        if (key !== 'redirect_url') signInUrl.searchParams.append(key, value);
+      });
+      signInUrl.searchParams.set('redirect_url', `${pathname}${request.nextUrl.search}`);
+      const redirect = withSecurityHeaders(NextResponse.redirect(signInUrl), isDev);
+      redirect.cookies.set('NEXT_LOCALE', locale, { path: '/', sameSite: 'lax' });
+      return redirect;
     }
 
     // Role-based access control
@@ -200,19 +245,20 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
       const allowed = dashboardsForRoles(roles);
 
       const guarded = GUARDED_DASHBOARDS.some(
-        (route) => pathname === route || pathname.startsWith(`${route}/`),
+        (route) => routePath === route || routePath.startsWith(`${route}/`),
       );
 
       if (guarded && roleKnown) {
         const permitted = allowed.some(
-          (route) => pathname === route || pathname.startsWith(`${route}/`),
+          (route) => routePath === route || routePath.startsWith(`${route}/`),
         );
         if (!permitted) {
           // Not allowed here. Send them to a dashboard they can actually use,
           // so they never land on a page that looks broken.
-          const home = new URL(allowed[0] ?? '/', request.url);
+          const home = new URL(`/${locale}${allowed[0] ?? ''}`, request.url);
+          request.nextUrl.searchParams.forEach((value, key) => home.searchParams.append(key, value));
           home.searchParams.set('denied', '1');
-          return NextResponse.redirect(home);
+          return withSecurityHeaders(NextResponse.redirect(home), isDev);
         }
       }
     } catch {
@@ -235,4 +281,3 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
-

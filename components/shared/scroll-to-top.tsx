@@ -1,4 +1,6 @@
 'use client';
+import { useLingui } from '@lingui/react/macro';
+
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
@@ -22,6 +24,7 @@ function ScrollMouseIcon() {
 }
 
 export function ScrollToTop() {
+  const { t } = useLingui();
   const [visible, setVisible] = useState(false);
   const reduceMotion = useReducedMotion();
 
@@ -42,7 +45,7 @@ export function ScrollToTop() {
         <motion.button
           type="button"
           onClick={scrollTop}
-          aria-label="Scroll back to top"
+          aria-label={t({ message: "Scroll back to top", comment: "scroll-to-top component aria-label attribute" })}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}

@@ -1,8 +1,11 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation.hooks';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -68,6 +71,7 @@ const emptyForm: FormState = {
 };
 
 export default function OpportunityEditPage({ backHref }: { backHref: string }) {
+  const { t } = useLingui();
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const { fields, regions, error: taxonomyError } = useTaxonomy();
@@ -168,13 +172,13 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
           <Link href={backHref}>
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Opportunities
-            </Button>
+              <Trans comment="opportunity-edit-page Button visible text">Back to Opportunities
+            </Trans></Button>
           </Link>
-          <h1 className="text-3xl font-bold text-slate-900">Edit Internship Opportunity</h1>
+          <h1 className="text-3xl font-bold text-slate-900"><Trans comment="opportunity-edit-page h1 visible text">Edit Internship Opportunity</Trans></h1>
           <p className="text-slate-600 mt-2">
-            Update details, requirements, or timeline for this posting.
-          </p>
+            <Trans comment="opportunity-edit-page p visible text">Update details, requirements, or timeline for this posting.
+          </Trans></p>
         </div>
 
         {error && (
@@ -188,10 +192,10 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
             <form onSubmit={handleSubmit} className="space-y-6">
               {taxonomyError && <p role="alert" className="text-sm text-red-700">{taxonomyError}</p>}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Basic Information</h3>
+                <h3 className="text-lg font-semibold"><Trans comment="opportunity-edit-page h3 visible text">Basic Information</Trans></h3>
 
                 <div>
-                  <Label htmlFor="title">Opportunity Title *</Label>
+                  <Label htmlFor="title"><Trans comment="opportunity-edit-page Label visible text">Opportunity Title *</Trans></Label>
                   <Input
                     id="title"
                     value={form.title}
@@ -201,7 +205,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label htmlFor="department">Department</Label>
+                  <Label htmlFor="department"><Trans comment="opportunity-edit-page Label visible text">Department</Trans></Label>
                   <Input
                     id="department"
                     value={form.department}
@@ -210,7 +214,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label htmlFor="description">Description *</Label>
+                  <Label htmlFor="description"><Trans comment="opportunity-edit-page Label visible text">Description *</Trans></Label>
                   <Textarea
                     id="description"
                     value={form.description}
@@ -222,16 +226,16 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Field & Specialization</h3>
+                <h3 className="text-lg font-semibold"><Trans comment="opportunity-edit-page h3 visible text">Field & Specialization</Trans></h3>
 
                 <div>
-                  <Label htmlFor="fieldId">Professional Field</Label>
+                  <Label htmlFor="fieldId"><Trans comment="opportunity-edit-page Label visible text">Professional Field</Trans></Label>
                   <Select
                     value={form.fieldId}
                     onValueChange={(value) => setForm({ ...form, fieldId: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select professional field" />
+                      <SelectValue placeholder={t({ message: "Select professional field", comment: "opportunity-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
                       {fields.map((field) => (
@@ -244,14 +248,14 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label htmlFor="specializationId">Specialization</Label>
+                  <Label htmlFor="specializationId"><Trans comment="opportunity-edit-page Label visible text">Specialization</Trans></Label>
                   <Select
                     value={form.specializationId}
                     onValueChange={(value) => setForm({ ...form, specializationId: value })}
                     disabled={!form.fieldId}
                   >
                     <SelectTrigger id="specializationId">
-                      <SelectValue placeholder="Select specialization" />
+                      <SelectValue placeholder={t({ message: "Select specialization", comment: "opportunity-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
                       {fields.find((field) => field.id === form.fieldId)?.specializations.map((specialization) => (
@@ -265,11 +269,11 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Skills</h3>
+                <h3 className="text-lg font-semibold"><Trans comment="opportunity-edit-page h3 visible text">Skills</Trans></h3>
 
                 <div>
-                  <Label>Required Skills</Label>
-                  <p className="text-xs text-slate-500 mb-2">Press Enter to add a skill</p>
+                  <Label><Trans comment="opportunity-edit-page Label visible text">Required Skills</Trans></Label>
+                  <p className="text-xs text-slate-500 mb-2"><Trans comment="opportunity-edit-page p visible text">Press Enter to add a skill</Trans></p>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {form.requiredSkills.map((skill) => (
                       <span
@@ -282,13 +286,13 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                           onClick={() => handleSkillRemove(skill, 'requiredSkills')}
                           className="hover:text-blue-900"
                         >
-                          ×
-                        </button>
+                          {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"×"}</button>
                       </span>
                     ))}
                   </div>
                   <Input
-                    placeholder="Type a required skill and press Enter"
+                    placeholder={t({ message: "Type a required skill and press Enter", comment: "opportunity-edit-page component placeholder attribute" })}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -300,8 +304,8 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label>Preferred Skills</Label>
-                  <p className="text-xs text-slate-500 mb-2">Press Enter to add a skill</p>
+                  <Label><Trans comment="opportunity-edit-page Label visible text">Preferred Skills</Trans></Label>
+                  <p className="text-xs text-slate-500 mb-2"><Trans comment="opportunity-edit-page p visible text">Press Enter to add a skill</Trans></p>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {form.preferredSkills.map((skill) => (
                       <span
@@ -314,13 +318,13 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                           onClick={() => handleSkillRemove(skill, 'preferredSkills')}
                           className="hover:text-emerald-900"
                         >
-                          ×
-                        </button>
+                          {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"×"}</button>
                       </span>
                     ))}
                   </div>
                   <Input
-                    placeholder="Type a preferred skill and press Enter"
+                    placeholder={t({ message: "Type a preferred skill and press Enter", comment: "opportunity-edit-page component placeholder attribute" })}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -333,16 +337,16 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Location & Work Mode</h3>
+                <h3 className="text-lg font-semibold"><Trans comment="opportunity-edit-page h3 visible text">Location & Work Mode</Trans></h3>
 
                 <div>
-                  <Label htmlFor="regionId">Region</Label>
+                  <Label htmlFor="regionId"><Trans comment="opportunity-edit-page Label visible text">Region</Trans></Label>
                   <Select
                     value={form.regionId}
                     onValueChange={(value) => setForm({ ...form, regionId: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select region" />
+                      <SelectValue placeholder={t({ message: "Select region", comment: "opportunity-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
                       {regions.map((region) => (
@@ -355,7 +359,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label htmlFor="city">City/Town *</Label>
+                  <Label htmlFor="city"><Trans comment="opportunity-edit-page Label visible text">City/Town *</Trans></Label>
                   <Input
                     id="city"
                     value={form.city}
@@ -365,7 +369,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label htmlFor="location">Specific Location</Label>
+                  <Label htmlFor="location"><Trans comment="opportunity-edit-page Label visible text">Specific Location</Trans></Label>
                   <Input
                     id="location"
                     value={form.location}
@@ -374,29 +378,29 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label htmlFor="workMode">Work Mode *</Label>
+                  <Label htmlFor="workMode"><Trans comment="opportunity-edit-page Label visible text">Work Mode *</Trans></Label>
                   <Select
                     value={form.workMode}
                     onValueChange={(value) => setForm({ ...form, workMode: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select work mode" />
+                      <SelectValue placeholder={t({ message: "Select work mode", comment: "opportunity-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ONSITE">On-site</SelectItem>
-                      <SelectItem value="HYBRID">Hybrid</SelectItem>
-                      <SelectItem value="REMOTE">Remote</SelectItem>
+                      <SelectItem value="ONSITE"><Trans comment="opportunity-edit-page SelectItem visible text">On-site</Trans></SelectItem>
+                      <SelectItem value="HYBRID"><Trans comment="opportunity-edit-page SelectItem visible text">Hybrid</Trans></SelectItem>
+                      <SelectItem value="REMOTE"><Trans comment="opportunity-edit-page SelectItem visible text">Remote</Trans></SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Duration & Dates</h3>
+                <h3 className="text-lg font-semibold"><Trans comment="opportunity-edit-page h3 visible text">Duration & Dates</Trans></h3>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="durationMonths">Duration (Months) *</Label>
+                    <Label htmlFor="durationMonths"><Trans comment="opportunity-edit-page Label visible text">Duration (Months) *</Trans></Label>
                     <Input
                       id="durationMonths"
                       type="number"
@@ -408,7 +412,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                     />
                   </div>
                   <div>
-                    <Label htmlFor="positions">Number of Positions *</Label>
+                    <Label htmlFor="positions"><Trans comment="opportunity-edit-page Label visible text">Number of Positions *</Trans></Label>
                     <Input
                       id="positions"
                       type="number"
@@ -422,7 +426,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="startDate">Start Date</Label>
+                    <Label htmlFor="startDate"><Trans comment="opportunity-edit-page Label visible text">Start Date</Trans></Label>
                     <Input
                       id="startDate"
                       type="date"
@@ -431,7 +435,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                     />
                   </div>
                   <div>
-                    <Label htmlFor="endDate">End Date</Label>
+                    <Label htmlFor="endDate"><Trans comment="opportunity-edit-page Label visible text">End Date</Trans></Label>
                     <Input
                       id="endDate"
                       type="date"
@@ -442,7 +446,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label htmlFor="deadline">Application Deadline *</Label>
+                  <Label htmlFor="deadline"><Trans comment="opportunity-edit-page Label visible text">Application Deadline *</Trans></Label>
                   <Input
                     id="deadline"
                     type="date"
@@ -454,7 +458,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Compensation</h3>
+                <h3 className="text-lg font-semibold"><Trans comment="opportunity-edit-page h3 visible text">Compensation</Trans></h3>
 
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -463,13 +467,13 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                     onCheckedChange={(checked) => setForm({ ...form, isPaid: checked as boolean })}
                   />
                   <Label htmlFor="isPaid" className="text-sm">
-                    This is a paid internship
-                  </Label>
+                    <Trans comment="opportunity-edit-page Label visible text">This is a paid internship
+                  </Trans></Label>
                 </div>
 
                 {form.isPaid && (
                   <div>
-                    <Label htmlFor="allowanceXAF">Monthly Allowance (XAF)</Label>
+                    <Label htmlFor="allowanceXAF"><Trans comment="opportunity-edit-page Label visible text">Monthly Allowance (XAF)</Trans></Label>
                     <Input
                       id="allowanceXAF"
                       type="number"
@@ -481,40 +485,40 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Application Method</h3>
+                <h3 className="text-lg font-semibold"><Trans comment="opportunity-edit-page h3 visible text">Application Method</Trans></h3>
 
                 <div>
-                  <Label htmlFor="applicationMethod">Application Method *</Label>
+                  <Label htmlFor="applicationMethod"><Trans comment="opportunity-edit-page Label visible text">Application Method *</Trans></Label>
                   <Select
                     value={form.applicationMethod}
                     onValueChange={(value) => setForm({ ...form, applicationMethod: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select application method" />
+                      <SelectValue placeholder={t({ message: "Select application method", comment: "opportunity-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="MANTECH">Apply on MANTECH</SelectItem>
-                      <SelectItem value="COMPANY_WEBSITE">Apply on Company Website</SelectItem>
-                      <SelectItem value="EXTERNAL">Apply Externally</SelectItem>
+                      <SelectItem value="MANTECH"><Trans comment="opportunity-edit-page SelectItem visible text">Apply on MANTECH</Trans></SelectItem>
+                      <SelectItem value="COMPANY_WEBSITE"><Trans comment="opportunity-edit-page SelectItem visible text">Apply on Company Website</Trans></SelectItem>
+                      <SelectItem value="EXTERNAL"><Trans comment="opportunity-edit-page SelectItem visible text">Apply Externally</Trans></SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {(form.applicationMethod === 'COMPANY_WEBSITE' || form.applicationMethod === 'EXTERNAL') && (
                   <div>
-                    <Label htmlFor="applicationUrl">Application URL</Label>
+                    <Label htmlFor="applicationUrl"><Trans comment="opportunity-edit-page Label visible text">Application URL</Trans></Label>
                     <Input
                       id="applicationUrl"
                       value={form.applicationUrl}
                       onChange={(e) => setForm({ ...form, applicationUrl: e.target.value })}
-                      placeholder="https://..."
+                      placeholder={t({ message: "https://...", comment: "opportunity-edit-page component placeholder attribute" })}
                     />
                   </div>
                 )}
 
                 {form.applicationMethod === 'EXTERNAL' && (
                   <div>
-                    <Label htmlFor="externalPlatform">Platform Name</Label>
+                    <Label htmlFor="externalPlatform"><Trans comment="opportunity-edit-page Label visible text">Platform Name</Trans></Label>
                     <Input
                       id="externalPlatform"
                       value={form.externalPlatform}
@@ -524,7 +528,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 )}
 
                 <div>
-                  <Label htmlFor="instructions">Application Instructions</Label>
+                  <Label htmlFor="instructions"><Trans comment="opportunity-edit-page Label visible text">Application Instructions</Trans></Label>
                   <Textarea
                     id="instructions"
                     value={form.instructions}
@@ -534,7 +538,7 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
                 </div>
 
                 <div>
-                  <Label htmlFor="contactEmail">Contact Email</Label>
+                  <Label htmlFor="contactEmail"><Trans comment="opportunity-edit-page Label visible text">Contact Email</Trans></Label>
                   <Input
                     id="contactEmail"
                     type="email"
@@ -547,20 +551,20 @@ export default function OpportunityEditPage({ backHref }: { backHref: string }) 
               <div className="flex justify-end gap-4 pt-6 border-t">
                 <Link href={backHref}>
                   <Button variant="outline" type="button">
-                    Cancel
-                  </Button>
+                    <Trans comment="opportunity-edit-page Button visible text">Cancel
+                  </Trans></Button>
                 </Link>
                 <Button type="submit" disabled={saving}>
                   {saving ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Saving…
-                    </>
+                      <Trans comment="opportunity-edit-page component visible text">Saving…
+                    </Trans></>
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      Save changes
-                    </>
+                      <Trans comment="opportunity-edit-page component visible text">Save changes
+                    </Trans></>
                   )}
                 </Button>
               </div>

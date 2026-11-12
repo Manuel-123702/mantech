@@ -1,4 +1,6 @@
 'use client';
+import { Trans } from '@lingui/react/macro';
+
 
 import * as React from 'react';
 import useEmblaCarousel, {
@@ -217,7 +219,7 @@ const CarouselPrevious = React.forwardRef<
       {...props}
     >
       <ArrowLeft className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only"><Trans comment="carousel span visible text">Previous slide</Trans></span>
     </Button>
   );
 });
@@ -246,7 +248,7 @@ const CarouselNext = React.forwardRef<
       {...props}
     >
       <ArrowRight className="h-4 w-4" />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only"><Trans comment="carousel span visible text">Next slide</Trans></span>
     </Button>
   );
 });

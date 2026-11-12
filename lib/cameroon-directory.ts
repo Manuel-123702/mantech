@@ -3,6 +3,8 @@
  * covering all 10 administrative regions of Cameroon with authentic logos,
  * official websites, and detailed institutional profiles.
  */
+import { msg } from '@lingui/core/macro';
+
 
 export interface DirectoryCompany {
   id: string;
@@ -35,10 +37,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── Littoral ──
   {
     id: "comp-mtn",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "MTN Cameroon",
     slug: "mtn-cameroon",
     industry: "Technology & Telecom",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.mtn.cm",
     logoUrl: "",
@@ -47,10 +52,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-orange",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Orange Cameroun",
     slug: "orange-cameroun",
     industry: "Technology & Telecom",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.orange.cm",
     logoUrl: "",
@@ -59,10 +67,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-sabc",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Boissons du Cameroun (SABC)",
     slug: "boissons-du-cameroun",
     industry: "Agro-Industry & Manufacturing",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://lesboissonsducameroun.com",
     logoUrl: "",
@@ -71,10 +82,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-eneo",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Eneo Cameroon",
     slug: "eneo-cameroon",
     industry: "Energy & Utilities",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.eneocameroon.cm",
     logoUrl: "",
@@ -83,10 +97,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-uba",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "UBA Cameroon",
     slug: "uba-cameroon",
     industry: "Banking & Finance",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.ubagroup.com/countries/cm",
     logoUrl: "",
@@ -95,10 +112,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-bicec",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "BICEC",
     slug: "bicec",
     industry: "Banking & Finance",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.bicec.com",
     logoUrl: "",
@@ -107,10 +127,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-sg",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Société Générale Cameroun",
     slug: "societe-generale-cameroun",
     industry: "Banking & Finance",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://societegenerale.cm",
     logoUrl: "",
@@ -119,10 +142,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-tradex",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Tradex S.A.",
     slug: "tradex-cameroon",
     industry: "Oil & Gas Distribution",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.tradexsa.com",
     logoUrl: "",
@@ -131,10 +157,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-dangote",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Dangote Cement Cameroon",
     slug: "dangote-cement-cameroon",
     industry: "Construction & Industrial",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.dangote.com",
     logoUrl: "",
@@ -143,10 +172,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-chococam",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Chococam Tiger Brands",
     slug: "chococam-cameroon",
     industry: "Consumer Goods & FMCG",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.chococam.com",
     logoUrl: "",
@@ -157,10 +189,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── Centre ──
   {
     id: "comp-camtel",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Camtel",
     slug: "camtel-cameroon",
     industry: "Telecom & Cloud Infrastructure",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://camtel.cm",
     logoUrl: "",
@@ -169,10 +204,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-afriland",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Afriland First Bank",
     slug: "afriland-first-bank",
     industry: "Banking & Investment",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.afrilandfirstbank.com",
     logoUrl: "",
@@ -181,10 +219,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-campost",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Campost",
     slug: "campost-cameroon",
     industry: "Postal & Financial Services",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.campost.cm",
     logoUrl: "",
@@ -193,10 +234,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-camair",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Camair-Co",
     slug: "camair-co",
     industry: "Aviation & Logistics",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.camair-co.cm",
     logoUrl: "",
@@ -205,10 +249,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-crtv",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "CRTV",
     slug: "crtv-cameroon",
     industry: "Media & Broadcasting",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.crtv.cm",
     logoUrl: "",
@@ -219,10 +266,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── South-West ──
   {
     id: "comp-sonara",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "SONARA",
     slug: "sonara-cameroon",
     industry: "Oil Refining & Energy",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Limbe",
     website: "https://www.sonara-cm.com",
     logoUrl: "",
@@ -231,10 +281,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-cdc",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Cameroon Development Corporation (CDC)",
     slug: "cdc-cameroon",
     industry: "Agriculture & Agro-allied",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bota-Limbe",
     website: "https://www.cdc-cameroon.com",
     logoUrl: "",
@@ -245,10 +298,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── South ──
   {
     id: "comp-pak",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Port Autonome de Kribi (PAK)",
     slug: "port-autonome-de-kribi",
     industry: "Maritime & Port Logistics",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Kribi",
     website: "https://www.pak.cm",
     logoUrl: "",
@@ -257,10 +313,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-heveca",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Hevecam S.A.",
     slug: "hevecam-cameroon",
     industry: "Rubber & Agro-Forestry",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Niété",
     website: "https://www.hevecam.cm",
     logoUrl: "",
@@ -271,10 +330,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── West ──
   {
     id: "comp-cca",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "CCA-Bank",
     slug: "cca-bank",
     industry: "Banking & Microfinance",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bafoussam",
     website: "https://www.cca-bank.com",
     logoUrl: "",
@@ -283,10 +345,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-socapalm-west",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "UCCAO",
     slug: "uccao-cameroon",
     industry: "Agro-Cooperative & Coffee",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bafoussam",
     website: "https://www.uccao.com",
     logoUrl: "",
@@ -297,10 +362,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── North-West ──
   {
     id: "comp-nwca",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "NWCA Ltd",
     slug: "nwca-bamenda",
     industry: "Agricultural Commodities",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "North-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bamenda",
     website: "https://www.nwcacoffee.com",
     logoUrl: "",
@@ -311,10 +379,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── North ──
   {
     id: "comp-sodecoton",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "SODECOTON",
     slug: "sodecoton-cameroon",
     industry: "Cotton & Industrial Agro",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "North",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Garoua",
     website: "https://www.sodecoton.cm",
     logoUrl: "",
@@ -325,10 +396,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── Far-North ──
   {
     id: "comp-seme",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "SEMRY",
     slug: "semry-yagoua",
     industry: "Rice Cultivation & Irrigation",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Far-North",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yagoua",
     website: "https://www.semry.cm",
     logoUrl: "",
@@ -339,10 +413,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── Adamawa ──
   {
     id: "comp-adamaoua-lait",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Société des Huileries et Savonneries (SHS)",
     slug: "shs-ngaoundere",
     industry: "Manufacturing & Agro-processing",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Adamawa",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Ngaoundéré",
     website: "https://www.shs-cameroon.com",
     logoUrl: "",
@@ -353,10 +430,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── East ──
   {
     id: "comp-pallisco",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Pallisco Timber",
     slug: "pallisco-cameroon",
     industry: "Forestry & Sustainable Wood",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "East",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Mindourou / Bertoua",
     website: "https://www.pallisco-cameroun.com",
     logoUrl: "",
@@ -367,10 +447,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   // ── Tech & Innovation Champions ──
   {
     id: "comp-maviance",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Maviance (Smobilpay)",
     slug: "maviance-cameroon",
     industry: "Fintech & Payments",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.maviance.com",
     logoUrl: "",
@@ -379,10 +462,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-activa",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Activa Assurances",
     slug: "activa-assurances",
     industry: "Insurance & Risk",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.group-activa.com",
     logoUrl: "",
@@ -391,10 +477,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-guinness",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "Guinness Cameroun (Castel)",
     slug: "guinness-cameroun",
     industry: "Beverages & Brewing",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.diageo.com",
     logoUrl: "",
@@ -403,10 +492,13 @@ export const TOP_30_COMPANIES: DirectoryCompany[] = [
   },
   {
     id: "comp-total",
+    // eslint-disable-next-line i18next/no-literal-string -- company identity is a registered brand name
     name: "TotalEnergies Marketing Cameroun",
     slug: "totalenergies-cameroon",
     industry: "Energy & Solar",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://totalenergies.cm",
     logoUrl: "",
@@ -419,10 +511,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── Centre ──
   {
     id: "uni-uy1",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université de Yaoundé I",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "UY1",
     slug: "universite-yaounde-i",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.uy1.uninet.cm",
     logoUrl: "",
@@ -432,10 +528,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-uy2",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université de Yaoundé II (Soa)",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "UY2",
     slug: "universite-yaounde-ii-soa",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Soa",
     website: "https://www.universite-yde2.org",
     logoUrl: "",
@@ -445,10 +545,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-enspy",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "École Nationale Supérieure Polytechnique de Yaoundé",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "ENSPY",
     slug: "enspy-polytechnique-yaounde",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://polytechnique.cm",
     logoUrl: "",
@@ -458,10 +562,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-ict",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "The ICT University",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "ICTU",
     slug: "the-ict-university",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://ictuniversity.org",
     logoUrl: "",
@@ -471,10 +579,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-ucac",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université Catholique d'Afrique Centrale",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "UCAC",
     slug: "universite-catholique-afrique-centrale",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.ucac-icam.com",
     logoUrl: "",
@@ -484,10 +596,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-siantou",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Institut Supérieur Siantou",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "IUS",
     slug: "institut-superieur-siantou",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://siantou.net",
     logoUrl: "",
@@ -499,10 +615,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── Littoral ──
   {
     id: "uni-douala",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université de Douala",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "Univ Douala",
     slug: "universite-de-douala",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.univ-douala.cm",
     logoUrl: "",
@@ -512,10 +632,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-iuc",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Institut Universitaire de la Côte",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "IUC",
     slug: "institut-universitaire-de-la-cote",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://iuc-univ.net",
     logoUrl: "",
@@ -525,10 +649,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-saintjerome",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Institut Universitaire Saint Jérôme de Douala",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "St Jérôme",
     slug: "institut-universitaire-saint-jerome-douala",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://www.univ-saintjerome.cm",
     logoUrl: "",
@@ -540,10 +668,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── South-West ──
   {
     id: "uni-buea",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "University of Buea",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "UB",
     slug: "university-of-buea",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Buea",
     website: "https://www.ubuea.cm",
     logoUrl: "",
@@ -553,10 +685,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-biaka",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Biaka University Institute of Buea",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "BUIB",
     slug: "biaka-university-institute",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Buea",
     website: "https://biaka.com",
     logoUrl: "",
@@ -568,10 +704,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── West ──
   {
     id: "uni-dschang",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université de Dschang",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "UDS",
     slug: "universite-de-dschang",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Dschang",
     website: "https://www.univ-dschang.org",
     logoUrl: "",
@@ -581,10 +721,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-pkfokam",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "PKFokam Institute of Excellence",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "PKF",
     slug: "pkfokam-institute-of-excellence",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://pkfinstitute.org",
     logoUrl: "",
@@ -594,10 +738,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-udm",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université des Montagnes",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "UdM",
     slug: "universite-des-montagnes-bangangte",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bangangté",
     website: "https://udm.aed-cm.org",
     logoUrl: "",
@@ -607,10 +755,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-iut-bandjoun",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "IUT Fotso Victor de Bandjoun",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "IUT-FV",
     slug: "iut-fotso-victor-bandjoun",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bandjoun",
     website: "https://iut-fv.org",
     logoUrl: "",
@@ -622,10 +774,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── North-West ──
   {
     id: "uni-bamenda",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "The University of Bamenda",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "UBa",
     slug: "the-university-of-bamenda",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "North-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bambili",
     website: "https://www.uniba.cm",
     logoUrl: "",
@@ -635,10 +791,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-catuc",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Catholic University of Cameroon (CATUC)",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "CATUC",
     slug: "catuc-bamenda",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "North-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bamenda",
     website: "https://catuc.org",
     logoUrl: "",
@@ -650,10 +810,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── North ──
   {
     id: "uni-garoua",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université de Garoua",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "Univ Garoua",
     slug: "universite-de-garoua",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "North",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Garoua",
     website: "https://www.univ-garoua.cm",
     logoUrl: "",
@@ -665,10 +829,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── Far-North ──
   {
     id: "uni-maroua",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université de Maroua",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "Univ Maroua",
     slug: "universite-de-maroua",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Far-North",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Maroua",
     website: "https://www.univ-maroua.cm",
     logoUrl: "",
@@ -680,10 +848,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── Adamawa ──
   {
     id: "uni-ndere",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université de Ngaoundéré",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "Univ Ngaoundéré",
     slug: "universite-de-ngaoundere",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Adamawa",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Ngaoundéré",
     website: "https://www.univ-ndere.cm",
     logoUrl: "",
@@ -695,10 +867,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── East ──
   {
     id: "uni-bertoua",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université de Bertoua",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "Univ Bertoua",
     slug: "universite-de-bertoua",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "East",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bertoua",
     website: "https://www.univ-bertoua.cm",
     logoUrl: "",
@@ -710,10 +886,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── South ──
   {
     id: "uni-ebolowa",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Université d'Ebolowa",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "Univ Ebolowa",
     slug: "universite-debolowa",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Ebolowa",
     website: "https://www.univ-ebolowa.cm",
     logoUrl: "",
@@ -725,10 +905,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   // ── Specialized Institutions Across Cameroon ──
   {
     id: "uni-enstp",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "École Nationale Supérieure des Travaux Publics",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "ENSTP",
     slug: "enstp-yaounde",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.enstp.cm",
     logoUrl: "",
@@ -738,10 +922,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-supptic",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "SUP'PTIC Yaoundé",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "SUP'PTIC",
     slug: "supptic-yaounde",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://supptic.cm",
     logoUrl: "",
@@ -751,10 +939,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-iric",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Institut des Relations Internationales du Cameroun",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "IRIC",
     slug: "iric-yaounde",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.iricuy2.net",
     logoUrl: "",
@@ -764,10 +956,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-essec",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "ESSEC Douala",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "ESSEC",
     slug: "essec-douala",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://essec-douala.cm",
     logoUrl: "",
@@ -777,10 +973,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-nahpi",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "National Higher Polytechnic Institute Bamenda",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "NAHPI",
     slug: "nahpi-bamenda",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "North-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Bambili",
     website: "https://nahpi.cm",
     logoUrl: "",
@@ -790,10 +990,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-fomic",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "FOMIC Polytechnic Buea",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "FOMIC",
     slug: "fomic-polytechnic-buea",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South-West",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Buea",
     website: "https://fomicgroup.cm",
     logoUrl: "",
@@ -803,10 +1007,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-iugg",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "Institut Universitaire des Grandes Guinées",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "IUGG",
     slug: "iugg-douala",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Douala",
     website: "https://univ-iugg.com",
     logoUrl: "",
@@ -816,10 +1024,14 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
   },
   {
     id: "uni-enam",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     name: "École Nationale d'Administration et de Magistrature",
+    // eslint-disable-next-line i18next/no-literal-string -- institution name is a proper name
     shortName: "ENAM",
     slug: "enam-cameroun",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     city: "Yaoundé",
     website: "https://www.enam.cm",
     logoUrl: "",
@@ -833,75 +1045,92 @@ export const TOP_30_UNIVERSITIES: DirectoryUniversity[] = [
 export const VERIFIED_COMMUNITY_STORIES = [
   {
     id: "story-1",
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial author name is a personal name
     name: "Delphine Ateba",
-    role: "Cloud Engineering Intern",
+    role: msg({ message: "Cloud Engineering Intern", comment: "Professional role shown with a source testimonial" }),
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial organization is a registered brand name
     company: "MTN Cameroon",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
     rating: 5,
     photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80",
-    message: "MANTECH replaced two months of lost physical applications with a direct, verified interview call at MTN Cameroon.",
-    details: "As a final-year software engineering student at ENSPY, getting corporate responses was nearly impossible. Through my MANTECH Intern Passport, MTN recruiters verified my technical credentials within 48 hours and scheduled my tripartite convention on-platform.",
-    focus: "Applications Pipeline",
+    message: msg({ message: "MANTECH replaced two months of lost physical applications with a direct, verified interview call at MTN Cameroon.", comment: "Source testimonial quote shown on the homepage" }),
+    details: msg({ message: "As a final-year software engineering student at ENSPY, getting corporate responses was nearly impossible. Through my MANTECH Intern Passport, MTN recruiters verified my technical credentials within 48 hours and scheduled my tripartite convention on-platform.", comment: "Additional context for a source testimonial on the homepage" }),
+    focus: msg({ message: "Applications Pipeline", comment: "Topic badge on a source testimonial" }),
   },
   {
     id: "story-2",
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial author name is a personal name
     name: "Dr. Emmanuel Nfor",
-    role: "Placement Directorate",
+    role: msg({ message: "Placement Directorate", comment: "Professional role shown with a source testimonial" }),
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial organization is a registered brand name
     company: "University of Buea",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South-West",
     rating: 5,
     photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-    message: "The University Dual-Mode portal enables our academic office to monitor 350+ tripartite internship conventions in real-time.",
-    details: "Previously, tracking students placed across Douala, Yaoundé, and Kribi took hundreds of paper letters. MANTECH gives our department supervisors immediate visibility over internship host assignments, evaluation milestones, and MINESUP compliance.",
-    focus: "University Dual-Mode",
+    message: msg({ message: "The University Dual-Mode portal enables our academic office to monitor 350+ tripartite internship conventions in real-time.", comment: "Source testimonial quote shown on the homepage" }),
+    details: msg({ message: "Previously, tracking students placed across Douala, Yaoundé, and Kribi took hundreds of paper letters. MANTECH gives our department supervisors immediate visibility over internship host assignments, evaluation milestones, and MINESUP compliance.", comment: "Additional context for a source testimonial on the homepage" }),
+    focus: msg({ message: "University Dual-Mode", comment: "Topic badge on a source testimonial" }),
   },
   {
     id: "story-3",
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial author name is a personal name
     name: "Serge Mbida",
-    role: "Head of Talent Acquisition",
+    role: msg({ message: "Head of Talent Acquisition", comment: "Professional role shown with a source testimonial" }),
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial organization is a registered brand name
     company: "UBA Cameroon",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Littoral",
     rating: 5,
     photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80",
-    message: "Zero spam CVs. Every applicant we screened on MANTECH came with certified academic readiness and skill verifications.",
-    details: "In banking and finance, screening hundreds of unverified email attachments wastes dozens of recruitment hours every semester. MANTECH's structured filtering allowed us to shortlist 15 outstanding fintech interns across 4 regions in under a week.",
-    focus: "Candidate Quality",
+    message: msg({ message: "Zero spam CVs. Every applicant we screened on MANTECH came with certified academic readiness and skill verifications.", comment: "Source testimonial quote shown on the homepage" }),
+    details: msg({ message: "In banking and finance, screening hundreds of unverified email attachments wastes dozens of recruitment hours every semester. MANTECH's structured filtering allowed us to shortlist 15 outstanding fintech interns across 4 regions in under a week.", comment: "Additional context for a source testimonial on the homepage" }),
+    focus: msg({ message: "Candidate Quality", comment: "Topic badge on a source testimonial" }),
   },
   {
     id: "story-4",
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial author name is a personal name
     name: "Clarisse Fosso",
-    role: "Cybersecurity Analyst",
+    role: msg({ message: "Cybersecurity Analyst", comment: "Professional role shown with a source testimonial" }),
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial organization is a registered brand name
     company: "Camtel",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "Centre",
     rating: 5,
     photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-    message: "The cryptographically signed Intern Passport proved my cybersecurity project certifications without third-party fees.",
-    details: "Camtel's digital infrastructure team discovered my verified passport profile. Having my GitHub projects, readiness score, and UY1 credentials in one tamper-proof link made all the difference in securing my end-of-study internship.",
-    focus: "Passport & Privacy",
+    message: msg({ message: "The cryptographically signed Intern Passport proved my cybersecurity project certifications without third-party fees.", comment: "Source testimonial quote shown on the homepage" }),
+    details: msg({ message: "Camtel's digital infrastructure team discovered my verified passport profile. Having my GitHub projects, readiness score, and UY1 credentials in one tamper-proof link made all the difference in securing my end-of-study internship.", comment: "Additional context for a source testimonial on the homepage" }),
+    focus: msg({ message: "Passport & Privacy", comment: "Topic badge on a source testimonial" }),
   },
   {
     id: "story-5",
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial author name is a personal name
     name: "Alhadji Mohamadou",
-    role: "Industrial Logistics Intern",
+    role: msg({ message: "Industrial Logistics Intern", comment: "Professional role shown with a source testimonial" }),
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial organization is a registered brand name
     company: "SODECOTON",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "North",
     rating: 5,
     photoUrl: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&q=80",
-    message: "MANTECH connects northern students in Garoua and Maroua to national corporate opportunities on equal terms.",
-    details: "Students in the northern regions frequently felt excluded from major corporate opportunities concentrated in Douala. MANTECH enabled me to land an industrial maintenance internship right in Garoua with complete institutional endorsement.",
-    focus: "National Coverage",
+    message: msg({ message: "MANTECH connects northern students in Garoua and Maroua to national corporate opportunities on equal terms.", comment: "Source testimonial quote shown on the homepage" }),
+    details: msg({ message: "Students in the northern regions frequently felt excluded from major corporate opportunities concentrated in Douala. MANTECH enabled me to land an industrial maintenance internship right in Garoua with complete institutional endorsement.", comment: "Additional context for a source testimonial on the homepage" }),
+    focus: msg({ message: "National Coverage", comment: "Topic badge on a source testimonial" }),
   },
   {
     id: "story-6",
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial author name is a personal name
     name: "Jeanne Mballa",
-    role: "HR Operations Lead",
+    role: msg({ message: "HR Operations Lead", comment: "Professional role shown with a source testimonial" }),
+    // eslint-disable-next-line i18next/no-literal-string -- testimonial organization is a registered brand name
     company: "Port Autonome de Kribi (PAK)",
+    // eslint-disable-next-line i18next/no-literal-string -- geographic name is directory data, not translatable copy
     region: "South",
     rating: 5,
     photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80",
-    message: "Managing tripartite student agreements through MANTECH has streamlined our maritime logistics trainee cohort.",
-    details: "We coordinate dozens of internships each quarter across maritime operations, civil maintenance, and port customs. The MANTECH platform's zero-card billing and dedicated talent concierge simplified our corporate onboarding completely.",
-    focus: "Placement Coordination",
+    message: msg({ message: "Managing tripartite student agreements through MANTECH has streamlined our maritime logistics trainee cohort.", comment: "Source testimonial quote shown on the homepage" }),
+    details: msg({ message: "We coordinate dozens of internships each quarter across maritime operations, civil maintenance, and port customs. The MANTECH platform's zero-card billing and dedicated talent concierge simplified our corporate onboarding completely.", comment: "Additional context for a source testimonial on the homepage" }),
+    focus: msg({ message: "Placement Coordination", comment: "Topic badge on a source testimonial" }),
   },
 ];
-

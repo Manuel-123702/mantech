@@ -1,4 +1,7 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { msg } from '@lingui/core/macro';
+
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,25 +14,26 @@ import { waSupportLink, waAlertSubscribeLink, waReferralLink } from '@/lib/whats
  * Support, Job alerts, Invite friend.
  */
 export function WhatsAppFloat() {
+  const { t } = useLingui();
   const [open, setOpen] = useState(false);
 
   const actions = [
     {
       icon: LifeBuoy,
-      label: 'Chat with support',
-      desc: 'Fast reply 8am–6pm',
+      label: msg({ message: 'Chat with support', comment: 'WhatsApp menu action that opens customer support' }),
+      desc: msg({ message: 'Fast reply 8am–6pm', comment: 'Short response-time note under customer support action' }),
       href: waSupportLink(),
     },
     {
       icon: Bell,
-      label: 'WhatsApp job alerts',
-      desc: 'Internships matching you',
+      label: msg({ message: 'WhatsApp job alerts', comment: 'WhatsApp menu action for internship alert subscriptions' }),
+      desc: msg({ message: 'Internships matching you', comment: 'Description under the job alerts action' }),
       href: waAlertSubscribeLink({}),
     },
     {
       icon: Share2,
-      label: 'Invite a friend',
-      desc: 'Share via WhatsApp',
+      label: msg({ message: 'Invite a friend', comment: 'WhatsApp menu action for inviting another user' }),
+      desc: msg({ message: 'Share via WhatsApp', comment: 'Description under the invite action' }),
       href: waReferralLink('invite'),
     },
   ];
@@ -46,16 +50,16 @@ export function WhatsAppFloat() {
           >
             <div className="bg-[#075E54] px-4 py-3 text-white">
               <p className="text-sm font-bold">
-                WhatsApp Concierge 👋
-              </p>
+                <Trans comment="whatsapp-float p visible text">WhatsApp Concierge 👋
+              </Trans></p>
               <p className="text-xs text-white/80">
-                The fastest way to reach us
-              </p>
+                <Trans comment="whatsapp-float p visible text">The fastest way to reach us
+              </Trans></p>
             </div>
             <div className="p-2">
               {actions.map((a) => (
                 <a
-                  key={a.label}
+                  key={a.href}
                   href={a.href}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -65,8 +69,8 @@ export function WhatsAppFloat() {
                     <a.icon className="h-4 w-4" />
                   </span>
                   <span>
-                    <span className="block text-sm font-semibold text-slate-900">{a.label}</span>
-                    <span className="block text-xs text-slate-500">{a.desc}</span>
+                     <span className="block text-sm font-semibold text-slate-900">{t(a.label)}</span>
+                     <span className="block text-xs text-slate-500">{t(a.desc)}</span>
                   </span>
                 </a>
               ))}
@@ -80,7 +84,9 @@ export function WhatsAppFloat() {
           onClick={() => setOpen((v) => !v)}
           className="relative flex h-14 w-14 items-center justify-center rounded-full z-10"
           style={{ backgroundColor: '#25D366', boxShadow: '0 10px 25px -5px rgba(37, 211, 102, 0.4)' }}
-          aria-label={open ? 'Close WhatsApp menu' : 'Contact us on WhatsApp'}
+          aria-label={open
+            ? t({ message: 'Close WhatsApp menu', comment: 'Accessible label for closing the floating WhatsApp panel' })
+            : t({ message: 'Contact us on WhatsApp', comment: 'Accessible label for opening the floating WhatsApp panel' })}
         >
           {open ? (
             <X className="h-6 w-6 text-white" />
@@ -104,8 +110,8 @@ export function WhatsAppFloat() {
             className="hidden items-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-lg border border-slate-200 hover:border-green-300 sm:inline-flex"
           >
             <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />
-            Questions? WhatsApp us
-          </button>
+            <Trans comment="whatsapp-float button visible text">Questions? WhatsApp us
+          </Trans></button>
         )}
       </div>
     </div>

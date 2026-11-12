@@ -1,4 +1,6 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,6 +13,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function PWAInstallPrompt() {
+  const { t } = useLingui();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
@@ -108,7 +111,7 @@ export function PWAInstallPrompt() {
           <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-slate-900 shadow-md">
             <Image
               src="/icons/icon-192.png"
-              alt="MANTECH Nexus Icon"
+              alt={t({ message: "MANTECH Nexus Icon", comment: "pwa-install-prompt component alt attribute" })}
               width={48}
               height={48}
               className="h-10 w-10 object-contain"
@@ -118,35 +121,35 @@ export function PWAInstallPrompt() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
-                Official Mobile App
-              </span>
+                <Trans comment="pwa-install-prompt span visible text">Official Mobile App
+              </Trans></span>
               <button
                 onClick={handleDismiss}
                 className="rounded-full p-1 text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
-                aria-label="Close install banner"
+                aria-label={t({ message: "Close install banner", comment: "pwa-install-prompt component aria-label attribute" })}
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <h4 className="text-sm font-bold text-white truncate">Install MANTECH Nexus</h4>
+            <h4 className="text-sm font-bold text-white truncate"><Trans comment="pwa-install-prompt h4 visible text">Install MANTECH Nexus</Trans></h4>
             <p className="text-xs text-slate-300 mt-0.5 line-clamp-2">
-              Faster access to internships, instant WhatsApp alerts & works offline.
-            </p>
+              <Trans comment="pwa-install-prompt p visible text">Faster access to internships, instant WhatsApp alerts & works offline.
+            </Trans></p>
           </div>
         </div>
 
         {showIOSGuide ? (
           <div className="mt-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-2.5 text-xs text-amber-200">
             <p className="font-semibold flex items-center gap-1.5 mb-1 text-amber-100">
-              <Smartphone className="h-3.5 w-3.5" /> To install on iPhone:
-            </p>
+              <Smartphone className="h-3.5 w-3.5" /> <Trans comment="pwa-install-prompt p visible text">To install on iPhone:
+            </Trans></p>
             <ol className="list-decimal list-inside space-y-1 text-slate-300">
               <li>
-                Tap the <Share className="inline h-3.5 w-3.5 text-cyan-400" /> Share button in Safari
-              </li>
+                <Trans comment="pwa-install-prompt li visible text">Tap the </Trans><Share className="inline h-3.5 w-3.5 text-cyan-400" /> <Trans comment="pwa-install-prompt li visible text">Share button in Safari
+              </Trans></li>
               <li>
-                Scroll down and tap <PlusSquare className="inline h-3.5 w-3.5 text-emerald-400" />{' '}
-                <strong>Add to Home Screen</strong>
+                <Trans comment="pwa-install-prompt li visible text">Scroll down and tap </Trans><PlusSquare className="inline h-3.5 w-3.5 text-emerald-400" />{' '}
+                <strong><Trans comment="pwa-install-prompt strong visible text">Add to Home Screen</Trans></strong>
               </li>
             </ol>
           </div>
@@ -157,14 +160,14 @@ export function PWAInstallPrompt() {
               className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-cyan-500/20 hover:opacity-95 transition-opacity"
             >
               <Download className="h-3.5 w-3.5" />
-              Install App
-            </button>
+              <Trans comment="pwa-install-prompt button visible text">Install App
+            </Trans></button>
             <button
               onClick={handleDismiss}
               className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2 text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
             >
-              Later
-            </button>
+              <Trans comment="pwa-install-prompt button visible text">Later
+            </Trans></button>
           </div>
         )}
       </motion.div>

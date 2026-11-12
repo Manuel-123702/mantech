@@ -1,18 +1,21 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation.hooks';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, Loader2, Sparkles, GraduationCap, Plus, X } from 'lucide-react';
-import Link from 'next/link';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { useTaxonomy } from '@/lib/use-taxonomy';
 import { APP_CONFIG } from '@/lib/config';
 
 export default function OpportunityCreatePage({ backHref }: { backHref: string }) {
+  const { t } = useLingui();
   const router = useRouter();
   const { fields: dbFields, regions: dbRegions, error: taxonomyError } = useTaxonomy();
   const [loading, setLoading] = useState(false);
@@ -147,18 +150,18 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
             className="mb-4 text-slate-300 hover:text-white hover:bg-slate-800/80 border border-slate-700/60 font-semibold text-xs"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Opportunities
-          </Button>
+            <Trans comment="opportunity-create-page Button visible text">Back to Opportunities
+          </Trans></Button>
         </Link>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 mb-2">
-          <GraduationCap className="w-3.5 h-3.5" /> Academic &amp; Professional Internship
-        </div>
+          <GraduationCap className="w-3.5 h-3.5" /> <Trans comment="opportunity-create-page div visible text">Academic &amp; Professional Internship
+        </Trans></div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
-          Create Internship Opportunity
-        </h1>
+          <Trans comment="opportunity-create-page h1 visible text">Create Internship Opportunity
+        </Trans></h1>
         <p className="text-slate-300 text-sm mt-1.5 leading-relaxed">
-          Post a verified internship placement to recruit students and graduates across Cameroon.
-        </p>
+          <Trans comment="opportunity-create-page p visible text">Post a verified internship placement to recruit students and graduates across Cameroon.
+        </Trans></p>
       </div>
 
       {error && (
@@ -175,13 +178,14 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
           {/* Title */}
           <div>
             <Label htmlFor="title" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-              Internship Title <span className="text-red-400">*</span>
+              <Trans comment="opportunity-create-page Label visible text">Internship Title </Trans><span className="text-red-400">{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"*"}</span>
             </Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="e.g. Frontend Web Development Intern, Financial Audit Trainee"
+              placeholder={t({ message: "e.g. Frontend Web Development Intern, Financial Audit Trainee", comment: "opportunity-create-page component placeholder attribute" })}
               required
               className="h-11 bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-sm"
             />
@@ -190,13 +194,14 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
           {/* Description */}
           <div>
             <Label htmlFor="description" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-              Description &amp; Learning Objectives <span className="text-red-400">*</span>
+              <Trans comment="opportunity-create-page Label visible text">Description &amp; Learning Objectives </Trans><span className="text-red-400">{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"*"}</span>
             </Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Describe the internship scope, key tasks, learning outcomes, mentor guidance, and requirements..."
+              placeholder={t({ message: "Describe the internship scope, key tasks, learning outcomes, mentor guidance, and requirements...", comment: "opportunity-create-page component placeholder attribute" })}
               rows={5}
               required
               className="bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-sm leading-relaxed"
@@ -207,20 +212,21 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
               <Label htmlFor="department" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Department
-              </Label>
+                <Trans comment="opportunity-create-page Label visible text">Department
+              </Trans></Label>
               <Input
                 id="department"
                 value={formData.department}
                 onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                placeholder="e.g. IT, Accounting, HR"
+                placeholder={t({ message: "e.g. IT, Accounting, HR", comment: "opportunity-create-page component placeholder attribute" })}
                 className="h-11 bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-xs"
               />
             </div>
 
             <div>
               <Label htmlFor="durationMonths" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Duration (Months) <span className="text-red-400">*</span>
+                <Trans comment="opportunity-create-page Label visible text">Duration (Months) </Trans><span className="text-red-400">{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"*"}</span>
               </Label>
               <select
                 id="durationMonths"
@@ -228,18 +234,18 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                 onChange={(e) => setFormData({ ...formData, durationMonths: Number(e.target.value) })}
                 className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
               >
-                <option value={1}>1 Month (Trial / Immersion)</option>
-                <option value={2}>2 Months (Summer / Vacation)</option>
-                <option value={3}>3 Months (Academic Standard)</option>
-                <option value={6}>6 Months (End-of-Studies / PFE)</option>
-                <option value={12}>12 Months (Professional Apprenticeship)</option>
+                <option value={1}><Trans comment="opportunity-create-page option visible text">1 Month (Trial / Immersion)</Trans></option>
+                <option value={2}><Trans comment="opportunity-create-page option visible text">2 Months (Summer / Vacation)</Trans></option>
+                <option value={3}><Trans comment="opportunity-create-page option visible text">3 Months (Academic Standard)</Trans></option>
+                <option value={6}><Trans comment="opportunity-create-page option visible text">6 Months (End-of-Studies / PFE)</Trans></option>
+                <option value={12}><Trans comment="opportunity-create-page option visible text">12 Months (Professional Apprenticeship)</Trans></option>
               </select>
             </div>
 
             <div>
               <Label htmlFor="positions" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Open Positions
-              </Label>
+                <Trans comment="opportunity-create-page Label visible text">Open Positions
+              </Trans></Label>
               <Input
                 id="positions"
                 type="number"
@@ -256,7 +262,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="fieldId" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Professional Field <span className="text-red-400">*</span>
+                <Trans comment="opportunity-create-page Label visible text">Professional Field </Trans><span className="text-red-400">{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"*"}</span>
               </Label>
               <select
                 id="fieldId"
@@ -271,13 +278,13 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                 }}
                 className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
               >
-                <option value="">Select professional field</option>
+                <option value=""><Trans comment="opportunity-create-page option visible text">Select professional field</Trans></option>
                 {availableFields.map((f) => (
                   <option key={f.id} value={f.id}>
                     {f.name}
                   </option>
                 ))}
-                <option value="other">Other (Specify below)</option>
+                <option value="other"><Trans comment="opportunity-create-page option visible text">Other (Specify below)</Trans></option>
               </select>
 
               {formData.fieldId === 'other' && (
@@ -286,7 +293,7 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                     id="fieldOther"
                     value={formData.fieldOther}
                     onChange={(e) => setFormData({ ...formData, fieldOther: e.target.value })}
-                    placeholder="Enter custom professional field"
+                    placeholder={t({ message: "Enter custom professional field", comment: "opportunity-create-page component placeholder attribute" })}
                     className="h-10 bg-slate-800 border-slate-700 text-white text-xs"
                   />
                 </div>
@@ -295,21 +302,21 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
 
             <div>
               <Label htmlFor="specializationId" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Specialization
-              </Label>
+                <Trans comment="opportunity-create-page Label visible text">Specialization
+              </Trans></Label>
               <select
                 id="specializationId"
                 value={formData.specializationId}
                 onChange={(e) => setFormData({ ...formData, specializationId: e.target.value })}
                 className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
               >
-                <option value="">Select specialization</option>
+                <option value=""><Trans comment="opportunity-create-page option visible text">Select specialization</Trans></option>
                 {selectedFieldObj?.specializations?.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
                   </option>
                 ))}
-                <option value="other">Other (Specify below)</option>
+                <option value="other"><Trans comment="opportunity-create-page option visible text">Other (Specify below)</Trans></option>
               </select>
 
               {formData.specializationId === 'other' && (
@@ -318,7 +325,7 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                     id="specializationOther"
                     value={formData.specializationOther}
                     onChange={(e) => setFormData({ ...formData, specializationOther: e.target.value })}
-                    placeholder="Enter custom specialization"
+                    placeholder={t({ message: "Enter custom specialization", comment: "opportunity-create-page component placeholder attribute" })}
                     className="h-10 bg-slate-800 border-slate-700 text-white text-xs"
                   />
                 </div>
@@ -330,7 +337,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="regionId" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Region <span className="text-red-400">*</span>
+                <Trans comment="opportunity-create-page Label visible text">Region </Trans><span className="text-red-400">{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"*"}</span>
               </Label>
               <select
                 id="regionId"
@@ -338,24 +346,26 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                 onChange={(e) => setFormData({ ...formData, regionId: e.target.value })}
                 className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
               >
-                <option value="">Select region</option>
+                <option value=""><Trans comment="opportunity-create-page option visible text">Select region</Trans></option>
                 {availableRegions.map((r) => (
                   <option key={r.id} value={r.id}>
-                    {r.name} ({r.capital})
-                  </option>
+                    {r.name} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"("}{r.capital}{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{")"}</option>
                 ))}
               </select>
             </div>
 
             <div>
               <Label htmlFor="city" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                City / Town <span className="text-red-400">*</span>
+                <Trans comment="opportunity-create-page Label visible text">City / Town </Trans><span className="text-red-400">{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"*"}</span>
               </Label>
               <Input
                 id="city"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                placeholder="e.g. Douala, Yaoundé, Buea, Bamenda"
+                placeholder={t({ message: "e.g. Douala, Yaoundé, Buea, Bamenda", comment: "opportunity-create-page component placeholder attribute" })}
                 required
                 className="h-11 bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-xs"
               />
@@ -366,23 +376,24 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
               <Label htmlFor="workMode" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Work Mode
-              </Label>
+                <Trans comment="opportunity-create-page Label visible text">Work Mode
+              </Trans></Label>
               <select
                 id="workMode"
                 value={formData.workMode}
                 onChange={(e) => setFormData({ ...formData, workMode: e.target.value as any })}
                 className="w-full h-11 rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 text-xs text-white focus:outline-none focus:border-emerald-400"
               >
-                <option value="ONSITE">On-Site (At Office)</option>
-                <option value="HYBRID">Hybrid (Flexible)</option>
-                <option value="REMOTE">Fully Remote</option>
+                <option value="ONSITE"><Trans comment="opportunity-create-page option visible text">On-Site (At Office)</Trans></option>
+                <option value="HYBRID"><Trans comment="opportunity-create-page option visible text">Hybrid (Flexible)</Trans></option>
+                <option value="REMOTE"><Trans comment="opportunity-create-page option visible text">Fully Remote</Trans></option>
               </select>
             </div>
 
             <div>
               <Label htmlFor="deadline" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Application Deadline <span className="text-red-400">*</span>
+                <Trans comment="opportunity-create-page Label visible text">Application Deadline </Trans><span className="text-red-400">{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"*"}</span>
               </Label>
               <Input
                 id="deadline"
@@ -396,14 +407,14 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
 
             <div>
               <Label htmlFor="allowanceXAF" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-                Monthly Allowance (XAF)
-              </Label>
+                <Trans comment="opportunity-create-page Label visible text">Monthly Allowance (XAF)
+              </Trans></Label>
               <Input
                 id="allowanceXAF"
                 type="number"
                 value={formData.allowanceXAF || ''}
                 onChange={(e) => setFormData({ ...formData, allowanceXAF: Number(e.target.value) || 0, isPaid: Number(e.target.value) > 0 })}
-                placeholder="e.g. 50000 (0 if unpaid)"
+                placeholder={t({ message: "e.g. 50000 (0 if unpaid)", comment: "opportunity-create-page component placeholder attribute" })}
                 className="h-11 bg-slate-800/80 border-slate-700 text-white text-xs focus:border-emerald-400"
               />
             </div>
@@ -412,8 +423,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
           {/* Required Skills */}
           <div>
             <Label className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1.5">
-              Required Skills
-            </Label>
+              <Trans comment="opportunity-create-page Label visible text">Required Skills
+            </Trans></Label>
             <div className="flex gap-2">
               <Input
                 value={formData.skillInput}
@@ -424,7 +435,7 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                     handleSkillAdd(formData.skillInput);
                   }
                 }}
-                placeholder="Type a skill and press Enter or click Add (e.g. Python, Excel, Teamwork)"
+                placeholder={t({ message: "Type a skill and press Enter or click Add (e.g. Python, Excel, Teamwork)", comment: "opportunity-create-page component placeholder attribute" })}
                 className="h-11 bg-slate-800/80 border-slate-700 text-white text-xs placeholder-slate-500 focus:border-emerald-400"
               />
               <Button
@@ -432,8 +443,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                 onClick={() => handleSkillAdd(formData.skillInput)}
                 className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4"
               >
-                <Plus className="w-4 h-4 mr-1" /> Add
-              </Button>
+                <Plus className="w-4 h-4 mr-1" /> <Trans comment="opportunity-create-page Button visible text">Add
+              </Trans></Button>
             </div>
 
             {formData.requiredSkills.length > 0 && (
@@ -449,8 +460,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                       onClick={() => handleSkillRemove(skill)}
                       className="text-slate-400 hover:text-red-400 text-xs ml-0.5"
                     >
-                      ×
-                    </button>
+                      {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"×"}</button>
                   </span>
                 ))}
               </div>
@@ -460,8 +471,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
           {/* Application Method */}
           <div className="pt-2 border-t border-slate-800 space-y-3">
             <Label className="text-xs font-semibold text-slate-200 uppercase tracking-wide block">
-              Application Method
-            </Label>
+              <Trans comment="opportunity-create-page Label visible text">Application Method
+            </Trans></Label>
             <div className="grid gap-3 sm:grid-cols-3">
               <div
                 onClick={() => setFormData({ ...formData, applicationMethod: 'MANTECH', applicationUrl: '' })}
@@ -471,8 +482,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                     : 'border-slate-800 bg-slate-800/40 text-slate-300 hover:border-slate-700'
                 }`}
               >
-                <div className="text-xs font-bold">Apply on MANTECH</div>
-                <div className="text-[11px] text-slate-400 mt-1 leading-snug">Direct Intern Passport submission with CV</div>
+                <div className="text-xs font-bold"><Trans comment="opportunity-create-page div visible text">Apply on MANTECH</Trans></div>
+                <div className="text-[11px] text-slate-400 mt-1 leading-snug"><Trans comment="opportunity-create-page div visible text">Direct Intern Passport submission with CV</Trans></div>
               </div>
 
               <div
@@ -483,8 +494,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                     : 'border-slate-800 bg-slate-800/40 text-slate-300 hover:border-slate-700'
                 }`}
               >
-                <div className="text-xs font-bold">Company Website</div>
-                <div className="text-[11px] text-slate-400 mt-1 leading-snug">Redirect to your institutional portal</div>
+                <div className="text-xs font-bold"><Trans comment="opportunity-create-page div visible text">Company Website</Trans></div>
+                <div className="text-[11px] text-slate-400 mt-1 leading-snug"><Trans comment="opportunity-create-page div visible text">Redirect to your institutional portal</Trans></div>
               </div>
 
               <div
@@ -495,22 +506,23 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
                     : 'border-slate-800 bg-slate-800/40 text-slate-300 hover:border-slate-700'
                 }`}
               >
-                <div className="text-xs font-bold">External Platform</div>
-                <div className="text-[11px] text-slate-400 mt-1 leading-snug">University hub, LinkedIn or partner portal</div>
+                <div className="text-xs font-bold"><Trans comment="opportunity-create-page div visible text">External Platform</Trans></div>
+                <div className="text-[11px] text-slate-400 mt-1 leading-snug"><Trans comment="opportunity-create-page div visible text">University hub, LinkedIn or partner portal</Trans></div>
               </div>
             </div>
 
             {formData.applicationMethod !== 'MANTECH' && (
               <div className="mt-3">
                 <Label htmlFor="applicationUrl" className="text-xs font-semibold text-slate-200 uppercase tracking-wide block mb-1">
-                  Application Link / URL <span className="text-red-400">*</span>
+                  <Trans comment="opportunity-create-page Label visible text">Application Link / URL </Trans><span className="text-red-400">{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"*"}</span>
                 </Label>
                 <Input
                   id="applicationUrl"
                   type="url"
                   value={formData.applicationUrl}
                   onChange={(e) => setFormData({ ...formData, applicationUrl: e.target.value })}
-                  placeholder="https://company.cm/internships/apply"
+                  placeholder={t({ message: "https://company.cm/internships/apply", comment: "opportunity-create-page component placeholder attribute" })}
                   required={formData.applicationMethod !== 'MANTECH'}
                   className="h-11 bg-slate-800/80 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 text-xs"
                 />
@@ -527,8 +539,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
               disabled={loading}
               className="border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold"
             >
-              Cancel
-            </Button>
+              <Trans comment="opportunity-create-page Button visible text">Cancel
+            </Trans></Button>
             <Button
               type="submit"
               disabled={loading}
@@ -537,8 +549,8 @@ export default function OpportunityCreatePage({ backHref }: { backHref: string }
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Publishing Internship...
-                </>
+                  <Trans comment="opportunity-create-page component visible text">Publishing Internship...
+                </Trans></>
               ) : (
                 'Publish Internship (0 FCFA)'
               )}
