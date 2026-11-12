@@ -7,6 +7,18 @@
       "skillPath": "skills/css-i18n/SKILL.md",
       "computedHash": "5b9022205abab88bc8c7d9d78cdf49811a306790be976054e92557fda08ddda6"
     },
+    "globalize-now-account-setup": {
+      "source": "globalize-now/globalize-skills",
+      "sourceType": "github",
+      "skillPath": "skills/globalize-now-account-setup/SKILL.md",
+      "computedHash": "741575997f80a9c4a2362df20802afa9169976b9ede417e67df0b776ad60531c"
+    },
+    "globalize-now-cli-use": {
+      "source": "globalize-now/globalize-skills",
+      "sourceType": "github",
+      "skillPath": "skills/globalize-now-cli-use/SKILL.md",
+      "computedHash": "c605c83f9db49c1364095e30589e1445b52040d95dc3908f6a7001398c08d013"
+    },
     "neon": {
       "source": "neondatabase/agent-skills",
       "sourceType": "github",
