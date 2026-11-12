@@ -1,7 +1,9 @@
 'use client';
+import { Trans } from '@lingui/react/macro';
+
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation.hooks';
 import type { Package } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import {
@@ -67,52 +69,52 @@ export function PackageEditButton({ pkg }: { pkg: Package }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button type="button" size="sm" variant="outline">Edit package</Button>
+        <Button type="button" size="sm" variant="outline"><Trans comment="package-edit-button Button visible text">Edit package</Trans></Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit {pkg.name}</DialogTitle>
-          <DialogDescription>Package pricing and limits are saved to the operational database.</DialogDescription>
+          <DialogTitle><Trans comment="package-edit-button DialogTitle visible text">Edit </Trans>{pkg.name}</DialogTitle>
+          <DialogDescription><Trans comment="package-edit-button DialogDescription visible text">Package pricing and limits are saved to the operational database.</Trans></DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="space-y-1 text-sm font-medium">Package name
-            <Input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} />
+          <label className="space-y-1 text-sm font-medium"><Trans comment="package-edit-button label visible text">Package name
+            </Trans><Input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} />
           </label>
-          <label className="space-y-1 text-sm font-medium">Price (XAF)
-            <Input type="number" min="0" value={form.priceXAF} onChange={(event) => setForm({ ...form, priceXAF: event.target.value })} />
+          <label className="space-y-1 text-sm font-medium"><Trans comment="package-edit-button label visible text">Price (XAF)
+            </Trans><Input type="number" min="0" value={form.priceXAF} onChange={(event) => setForm({ ...form, priceXAF: event.target.value })} />
           </label>
-          <label className="space-y-1 text-sm font-medium">Active opportunity limit
-            <Input type="number" min="0" value={form.opportunityLimit} onChange={(event) => setForm({ ...form, opportunityLimit: event.target.value })} />
+          <label className="space-y-1 text-sm font-medium"><Trans comment="package-edit-button label visible text">Active opportunity limit
+            </Trans><Input type="number" min="0" value={form.opportunityLimit} onChange={(event) => setForm({ ...form, opportunityLimit: event.target.value })} />
           </label>
-          <label className="space-y-1 text-sm font-medium">Monthly candidate views
-            <Input type="number" min="0" value={form.candidateSearchLimit} onChange={(event) => setForm({ ...form, candidateSearchLimit: event.target.value })} />
+          <label className="space-y-1 text-sm font-medium"><Trans comment="package-edit-button label visible text">Monthly candidate views
+            </Trans><Input type="number" min="0" value={form.candidateSearchLimit} onChange={(event) => setForm({ ...form, candidateSearchLimit: event.target.value })} />
           </label>
-          <label className="space-y-1 text-sm font-medium">Recruiter seats
-            <Input type="number" min="0" value={form.maxRecruiterAccounts} onChange={(event) => setForm({ ...form, maxRecruiterAccounts: event.target.value })} />
+          <label className="space-y-1 text-sm font-medium"><Trans comment="package-edit-button label visible text">Recruiter seats
+            </Trans><Input type="number" min="0" value={form.maxRecruiterAccounts} onChange={(event) => setForm({ ...form, maxRecruiterAccounts: event.target.value })} />
           </label>
-          <label className="space-y-1 text-sm font-medium">Featured opportunities
-            <Input type="number" min="0" value={form.featuredOpportunitiesLimit} onChange={(event) => setForm({ ...form, featuredOpportunitiesLimit: event.target.value })} />
+          <label className="space-y-1 text-sm font-medium"><Trans comment="package-edit-button label visible text">Featured opportunities
+            </Trans><Input type="number" min="0" value={form.featuredOpportunitiesLimit} onChange={(event) => setForm({ ...form, featuredOpportunitiesLimit: event.target.value })} />
           </label>
           <label className="flex items-center gap-2 text-sm font-medium">
             <input type="checkbox" checked={form.isFeaturedBadge} onChange={(event) => setForm({ ...form, isFeaturedBadge: event.target.checked })} />
-            Recommended package
-          </label>
+            <Trans comment="package-edit-button label visible text">Recommended package
+          </Trans></label>
           <label className="flex items-center gap-2 text-sm font-medium">
             <input type="checkbox" checked={form.prioritySupport} onChange={(event) => setForm({ ...form, prioritySupport: event.target.checked })} />
-            Priority support
-          </label>
+            <Trans comment="package-edit-button label visible text">Priority support
+          </Trans></label>
           <div className="space-y-1 sm:col-span-2">
-            <Label>Description</Label>
+            <Label><Trans comment="package-edit-button Label visible text">Description</Trans></Label>
             <Textarea value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} rows={3} />
           </div>
           <div className="space-y-1 sm:col-span-2">
-            <Label>Features (one per line)</Label>
+            <Label><Trans comment="package-edit-button Label visible text">Features (one per line)</Trans></Label>
             <Textarea value={form.features} onChange={(event) => setForm({ ...form, features: event.target.value })} rows={6} />
           </div>
         </div>
         {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={saving}>Cancel</Button>
+          <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={saving}><Trans comment="package-edit-button Button visible text">Cancel</Trans></Button>
           <Button type="button" onClick={save} disabled={saving}>{saving ? 'Saving…' : 'Save package'}</Button>
         </DialogFooter>
       </DialogContent>

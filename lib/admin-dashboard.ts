@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { redirect } from '@/i18n/redirect';
 import { AuthError, syncDbUser } from '@/lib/authz';
 import { isAdminEmail } from '@/lib/roles';
 import { prisma } from '@/lib/prisma';

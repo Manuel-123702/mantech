@@ -1,3 +1,5 @@
+import { getServerT } from '@/i18n/server';
+import { Trans } from '@lingui/react/macro';
 import { prisma } from '@/lib/prisma';
 import type { PackageCode } from '@prisma/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -31,6 +33,7 @@ type BillingOrganization = {
 };
 
 export async function BillingView({ organization }: { organization: BillingOrganization }) {
+  const t = getServerT();
   const [currentPkg, packages, limits] = await Promise.all([
     getPackageDefinition(organization.packageCode),
     prisma.package.findMany({ orderBy: { priceXAF: 'asc' } }),
@@ -116,10 +119,10 @@ export async function BillingView({ organization }: { organization: BillingOrgan
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Billing & Package</h2>
+          <h2 className="text-2xl font-bold text-slate-900"><Trans comment="billing-view h2 visible text">Billing & Package</Trans></h2>
           <p className="text-sm text-slate-500">
-            Current subscription, usage limits and package upgrades via MANTECH WhatsApp.
-          </p>
+            <Trans comment="billing-view p visible text">Current subscription, usage limits and package upgrades via MANTECH WhatsApp.
+          </Trans></p>
         </div>
         <a
           href={APP_CONFIG.contacts.whatsappLink}
@@ -127,9 +130,9 @@ export async function BillingView({ organization }: { organization: BillingOrgan
           rel="noopener noreferrer"
         >
           <Button>
-            <WhatsAppIcon className="mr-2 h-4 w-4" title="WhatsApp" />
-            Contact billing via WhatsApp
-          </Button>
+            <WhatsAppIcon className="mr-2 h-4 w-4" title={t({ message: "WhatsApp", comment: "billing-view component title attribute" })} />
+            <Trans comment="billing-view Button visible text">Contact billing via WhatsApp
+          </Trans></Button>
         </a>
       </div>
 
@@ -147,13 +150,13 @@ export async function BillingView({ organization }: { organization: BillingOrgan
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="text-xs uppercase tracking-wider text-slate-500">
-                      Current package
-                    </p>
+                      <Trans comment="billing-view p visible text">Current package
+                    </Trans></p>
                     {organization.verificationStatus === 'VERIFIED' && (
                       <Badge variant="outline" className="inline-flex items-center gap-1 text-[11px]">
                         <ShieldCheck className="h-3 w-3 text-emerald-600" />
-                        Verified
-                      </Badge>
+                        <Trans comment="billing-view Badge visible text">Verified
+                      </Trans></Badge>
                     )}
                   </div>
                   <p className="mt-1 text-2xl font-bold text-slate-900">{currentPkg.name}</p>
@@ -162,8 +165,8 @@ export async function BillingView({ organization }: { organization: BillingOrgan
               </div>
               <div className="text-right">
                 <p className="text-xs uppercase tracking-wider text-slate-500">
-                  Pricing
-                </p>
+                  <Trans comment="billing-view p visible text">Pricing
+                </Trans></p>
                 <p className="mt-1 text-2xl font-bold text-slate-900">
                   {currentPkg.priceXAF === 0 ? 'Free' : `${currentPkg.priceXAF.toLocaleString()} XAF`}
                 </p>
@@ -184,7 +187,8 @@ export async function BillingView({ organization }: { organization: BillingOrgan
                   </div>
                   <p className="mt-2 text-lg font-bold text-slate-900">
                     {u.used}
-                    <span className="text-sm font-normal text-slate-500"> / {u.limit}</span>
+                    <span className="text-sm font-normal text-slate-500"> {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"/ "}{u.limit}</span>
                   </p>
                   <div className="mt-3 h-2 w-full rounded-full bg-slate-200 overflow-hidden">
                     <div
@@ -199,8 +203,8 @@ export async function BillingView({ organization }: { organization: BillingOrgan
             {currentPkg.features && currentPkg.features.length > 0 && (
               <div className="mt-6">
                 <p className="text-xs uppercase tracking-wider text-slate-500 mb-2">
-                  Included features
-                </p>
+                  <Trans comment="billing-view p visible text">Included features
+                </Trans></p>
                 <ul className="grid gap-2 sm:grid-cols-2">
                   {currentPkg.features.map((f) => (
                     <li key={f} className="inline-flex items-start gap-2 text-sm text-slate-700">
@@ -218,8 +222,8 @@ export async function BillingView({ organization }: { organization: BillingOrgan
           <CardHeader>
             <CardTitle className="text-base inline-flex items-center gap-2">
               <Clock className="h-4 w-4 text-slate-500" />
-              Payment method
-            </CardTitle>
+              <Trans comment="billing-view CardTitle visible text">Payment method
+            </Trans></CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 p-4">
@@ -228,29 +232,29 @@ export async function BillingView({ organization }: { organization: BillingOrgan
                   <MessageCircle className="h-5 w-5 text-emerald-600" />
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900">WhatsApp concierge</p>
-                  <p className="text-xs text-slate-500">Manual activation · MANTECH team</p>
+                  <p className="font-semibold text-slate-900"><Trans comment="billing-view p visible text">WhatsApp concierge</Trans></p>
+                  <p className="text-xs text-slate-500"><Trans comment="billing-view p visible text">Manual activation · MANTECH team</Trans></p>
                 </div>
               </div>
             </div>
 
             <p className="text-sm text-slate-600">
-              MANTECH does not process cards in-app. Upgrades and activations are handled by
+              <Trans comment="billing-view p visible text">MANTECH does not process cards in-app. Upgrades and activations are handled by
               the MANTECH billing team on WhatsApp.
-            </p>
+            </Trans></p>
 
             <div className="rounded-lg border bg-white p-3 text-xs text-slate-500 space-y-1">
               <p className="inline-flex items-center gap-1.5">
-                <span className="font-semibold text-slate-700">Official contact:</span>
-                <WhatsAppIcon className="h-3.5 w-3.5 text-[#25D366]" title="WhatsApp" />
-                <span>Use the WhatsApp concierge button</span>
+                <span className="font-semibold text-slate-700"><Trans comment="billing-view span visible text">Official contact:</Trans></span>
+                <WhatsAppIcon className="h-3.5 w-3.5 text-[#25D366]" title={t({ message: "WhatsApp", comment: "billing-view component title attribute" })} />
+                <span><Trans comment="billing-view span visible text">Use the WhatsApp concierge button</Trans></span>
               </p>
               <p>
-                <span className="font-semibold text-slate-700">Phone:</span>{' '}
+                <span className="font-semibold text-slate-700"><Trans comment="billing-view span visible text">Phone:</Trans></span>{' '}
                 {APP_CONFIG.contacts.whatsappFormatted}
               </p>
               <p>
-                <span className="font-semibold text-slate-700">Working hours:</span>{' '}
+                <span className="font-semibold text-slate-700"><Trans comment="billing-view span visible text">Working hours:</Trans></span>{' '}
                 {APP_CONFIG.contacts.workingHours}
               </p>
             </div>
@@ -261,8 +265,8 @@ export async function BillingView({ organization }: { organization: BillingOrgan
       <div>
         <h3 className="text-lg font-semibold text-slate-900 mb-4 inline-flex items-center gap-2">
           <Crown className="h-5 w-5 text-amber-600" />
-          Upgrade plans
-        </h3>
+          <Trans comment="billing-view h3 visible text">Upgrade plans
+        </Trans></h3>
         <div className="grid gap-4 lg:grid-cols-3">
           {packages
             .filter((pkg) => pkg.code !== 'FREE')
@@ -285,8 +289,8 @@ export async function BillingView({ organization }: { organization: BillingOrgan
                     <div className="absolute top-3 right-3">
                       <Badge className="bg-blue-600 hover:bg-blue-700 text-white">
                         <Crown className="mr-1 h-3 w-3" />
-                        Recommended
-                      </Badge>
+                        <Trans comment="billing-view Badge visible text">Recommended
+                      </Trans></Badge>
                     </div>
                   )}
                   <CardHeader>
@@ -326,11 +330,11 @@ export async function BillingView({ organization }: { organization: BillingOrgan
                         isCurrent ? (
                           <>
                             <CheckCircle2 className="mr-2 h-4 w-4" />
-                            Current plan
-                          </>
+                            <Trans comment="billing-view component visible text">Current plan
+                          </Trans></>
                         ) : (
                           <>
-                            Upgrade to {pkg.name}
+                            <Trans comment="billing-view component visible text">Upgrade to </Trans>{pkg.name}
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </>
                         )
@@ -347,18 +351,18 @@ export async function BillingView({ organization }: { organization: BillingOrgan
       {subscriptions.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Subscription requests & billing history</CardTitle>
+            <CardTitle className="text-base"><Trans comment="billing-view CardTitle visible text">Subscription requests & billing history</Trans></CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto rounded-xl border">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-slate-600">
                   <tr>
-                    <th className="text-left px-4 py-3 font-medium">Package</th>
-                    <th className="text-left px-4 py-3 font-medium">Price</th>
-                    <th className="text-left px-4 py-3 font-medium">Status</th>
-                    <th className="text-left px-4 py-3 font-medium">Requested</th>
-                    <th className="text-left px-4 py-3 font-medium">Activated</th>
+                    <th className="text-left px-4 py-3 font-medium"><Trans comment="billing-view th visible text">Package</Trans></th>
+                    <th className="text-left px-4 py-3 font-medium"><Trans comment="billing-view th visible text">Price</Trans></th>
+                    <th className="text-left px-4 py-3 font-medium"><Trans comment="billing-view th visible text">Status</Trans></th>
+                    <th className="text-left px-4 py-3 font-medium"><Trans comment="billing-view th visible text">Requested</Trans></th>
+                    <th className="text-left px-4 py-3 font-medium"><Trans comment="billing-view th visible text">Activated</Trans></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
@@ -368,8 +372,8 @@ export async function BillingView({ organization }: { organization: BillingOrgan
                         {s.package.name}
                       </td>
                       <td className="px-4 py-3 text-slate-600">
-                        {s.package.priceXAF.toLocaleString()} XAF
-                      </td>
+                        {s.package.priceXAF.toLocaleString()} <Trans comment="billing-view td visible text">XAF
+                      </Trans></td>
                       <td className="px-4 py-3">
                         <Badge
                           variant={

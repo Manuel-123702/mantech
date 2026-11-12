@@ -1,7 +1,9 @@
 'use client';
+import { Trans } from '@lingui/react/macro';
+
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation.hooks';
 import { Button } from '@/components/ui/button';
 import type { ButtonProps } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -89,8 +91,8 @@ export function AdminActionButton({
               disabled={pending || !reason.trim()}
               onClick={() => run(true)}
             >
-              Confirm
-            </Button>
+              <Trans comment="admin-action-button Button visible text">Confirm
+            </Trans></Button>
             <Button
               type="button"
               variant="ghost"
@@ -102,8 +104,8 @@ export function AdminActionButton({
                 setError(null);
               }}
             >
-              Cancel
-            </Button>
+              <Trans comment="admin-action-button Button visible text">Cancel
+            </Trans></Button>
           </>
         )}
       </div>

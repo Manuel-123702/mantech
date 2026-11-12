@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
+import { usePathname } from '@/i18n/navigation.hooks';
 import {
   LayoutDashboard,
   ShieldCheck,

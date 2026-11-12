@@ -1,8 +1,11 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import Link from 'next/link';
+
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { WhatsAppIcon } from '@/components/shared/whatsapp-icon';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from '@/i18n/navigation.hooks';
 import {
   LayoutDashboard,
   Briefcase,
@@ -102,6 +105,7 @@ export function UniversityNav({
   canRecruit = true,
   canCoordinate = true,
 }: Props) {
+  const { t } = useLingui();
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -144,8 +148,8 @@ export function UniversityNav({
           <GraduationCap className="w-5 h-5" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-slate-900 leading-tight">MANTECH Nexus</p>
-          <p className="text-[11px] text-slate-500 leading-tight">University Portal</p>
+          <p className="text-sm font-bold text-slate-900 leading-tight"><Trans comment="university-nav p visible text">MANTECH Nexus</Trans></p>
+          <p className="text-[11px] text-slate-500 leading-tight"><Trans comment="university-nav p visible text">University Portal</Trans></p>
         </div>
       </Link>
 
@@ -188,8 +192,8 @@ export function UniversityNav({
             )}
           >
             <MapPin className="w-3.5 h-3.5" />
-            Placement Office
-          </button>
+            <Trans comment="university-nav button visible text">Placement Office
+          </Trans></button>
           <button
             type="button"
             onClick={() => switchMode('recruiter')}
@@ -201,8 +205,8 @@ export function UniversityNav({
             )}
           >
             <Building2 className="w-3.5 h-3.5" />
-            Recruiter
-          </button>
+            <Trans comment="university-nav button visible text">Recruiter
+          </Trans></button>
         </div>
       )}
 
@@ -234,16 +238,16 @@ export function UniversityNav({
       <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
         <p className="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
           <ArrowLeftRight className="w-3.5 h-3.5 text-slate-500" />
-          MANTECH Support
-        </p>
+          <Trans comment="university-nav p visible text">MANTECH Support
+        </Trans></p>
         <p className="text-[11px] text-slate-500 mb-3">
-          Institutional partnership, roster imports, and package upgrades.
-        </p>
+          <Trans comment="university-nav p visible text">Institutional partnership, roster imports, and package upgrades.
+        </Trans></p>
         <a href={APP_CONFIG.contacts.whatsappLink} target="_blank" rel="noopener noreferrer">
           <Button size="sm" variant="outline" className="w-full text-xs font-semibold border-slate-300">
-            <WhatsAppIcon className="mr-1.5 h-4 w-4 text-[#25D366]" title="WhatsApp" />
-            Contact on WhatsApp
-          </Button>
+            <WhatsAppIcon className="mr-1.5 h-4 w-4 text-[#25D366]" title={t({ message: "WhatsApp", comment: "university-nav component title attribute" })} />
+            <Trans comment="university-nav Button visible text">Contact on WhatsApp
+          </Trans></Button>
         </a>
       </div>
     </aside>

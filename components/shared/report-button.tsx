@@ -1,4 +1,6 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 /**
  * ReportButton — "Report this content" dialog for opportunities and intern
@@ -8,7 +10,7 @@
  */
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation.hooks';
 import { toast } from 'sonner';
 import { Flag, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -47,6 +49,7 @@ type ReportButtonProps = {
 };
 
 export function ReportButton({ targetType, targetId, label = 'Report', className }: ReportButtonProps) {
+  const { t } = useLingui();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<ReportReason | ''>('');
@@ -117,16 +120,16 @@ export function ReportButton({ targetType, targetId, label = 'Report', className
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-base font-bold text-slate-900">
-            Report this content
-          </DialogTitle>
+            <Trans comment="report-button DialogTitle visible text">Report this content
+          </Trans></DialogTitle>
           <DialogDescription className="text-xs text-slate-500">
-            Our national admins review every report. False reports may lead to restrictions.
-          </DialogDescription>
+            <Trans comment="report-button DialogDescription visible text">Our national admins review every report. False reports may lead to restrictions.
+          </Trans></DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700">Reason</label>
+            <label className="text-xs font-semibold text-slate-700"><Trans comment="report-button label visible text">Reason</Trans></label>
             <Select
               value={reason}
               onValueChange={(value) => {
@@ -135,7 +138,7 @@ export function ReportButton({ targetType, targetId, label = 'Report', className
               }}
             >
               <SelectTrigger className="h-10 text-sm">
-                <SelectValue placeholder="Choose a reason" />
+                <SelectValue placeholder={t({ message: "Choose a reason", comment: "report-button component placeholder attribute" })} />
               </SelectTrigger>
               <SelectContent>
                 {REPORT_REASONS.map((value) => (
@@ -150,7 +153,7 @@ export function ReportButton({ targetType, targetId, label = 'Report', className
 
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700">
-              Details <span className="font-normal text-slate-400">(optional)</span>
+              <Trans comment="report-button label visible text">Details </Trans><span className="font-normal text-slate-400"><Trans comment="report-button span visible text">(optional)</Trans></span>
             </label>
             <Textarea
               value={details}
@@ -158,7 +161,7 @@ export function ReportButton({ targetType, targetId, label = 'Report', className
                 setDetails(event.target.value);
                 setError(null);
               }}
-              placeholder="Anything admins should know…"
+              placeholder={t({ message: "Anything admins should know…", comment: "report-button component placeholder attribute" })}
               className="min-h-[90px] resize-none text-sm"
               maxLength={1000}
             />
@@ -169,8 +172,8 @@ export function ReportButton({ targetType, targetId, label = 'Report', className
 
         <DialogFooter className="gap-2">
           <Button type="button" variant="outline" size="sm" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
+            <Trans comment="report-button Button visible text">Cancel
+          </Trans></Button>
           <Button
             type="button"
             size="sm"
@@ -179,8 +182,8 @@ export function ReportButton({ targetType, targetId, label = 'Report', className
             className="bg-red-600 text-white hover:bg-red-700"
           >
             {pending && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
-            Send report
-          </Button>
+            <Trans comment="report-button Button visible text">Send report
+          </Trans></Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

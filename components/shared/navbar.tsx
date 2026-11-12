@@ -1,8 +1,12 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { msg } from '@lingui/core/macro';
+import type { MessageDescriptor } from '@lingui/core';
 
-import Link from 'next/link';
+
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation.hooks';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -44,32 +48,32 @@ import { waSupportLink } from '@/lib/whatsapp';
 
 interface NavMenuItem {
   href: string;
-  label: string;
-  description: string;
+  label: MessageDescriptor;
+  description: MessageDescriptor;
   icon: any;
-  badge?: string;
+  badge?: MessageDescriptor;
   color?: string;
 }
 
 const JOB_MENU: NavMenuItem[] = [
   {
     href: '/jobs',
-    label: 'All Cameroon Jobs',
-    description: 'Explore live graduate, tech & executive vacancies',
+    label: msg({ message: 'All Cameroon Jobs', comment: 'Jobs dropdown link label' }),
+    description: msg({ message: 'Explore live graduate, tech & executive vacancies', comment: 'Description below the jobs dropdown link' }),
     icon: Briefcase,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/fields',
-    label: '60 Professional Disciplines',
-    description: 'Target software, telecom, finance & engineering roles',
+    label: msg({ message: '60 Professional Disciplines', comment: 'Jobs dropdown link label for professional fields' }),
+    description: msg({ message: 'Target software, telecom, finance & engineering roles', comment: 'Description below the professional disciplines link' }),
     icon: Compass,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/locations',
-    label: 'Jobs by Region & City',
-    description: 'Douala, Yaoundé, Buea and all 10 national territories',
+    label: msg({ message: 'Jobs by Region & City', comment: 'Jobs dropdown link label for locations' }),
+    description: msg({ message: 'Douala, Yaoundé, Buea and all 10 national territories', comment: 'Description below the jobs by location link' }),
     icon: MapPin,
     color: 'text-orange-600 bg-orange-100/90',
   },
@@ -78,31 +82,31 @@ const JOB_MENU: NavMenuItem[] = [
 const INTERNSHIP_MENU: NavMenuItem[] = [
   {
     href: '/internships',
-    label: 'All Internships',
-    description: 'Explore live, verified student & graduate placements',
+    label: msg({ message: 'All Internships', comment: 'Internships dropdown link label' }),
+    description: msg({ message: 'Explore live, verified student & graduate placements', comment: 'Description below the internships dropdown link' }),
     icon: Briefcase,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/fields',
-    label: '60 Professional Fields',
-    description: 'IT, Engineering, Agriculture, Finance, Law & Health',
+    label: msg({ message: '60 Professional Fields', comment: 'Internships dropdown link label for professional fields' }),
+    description: msg({ message: 'IT, Engineering, Agriculture, Finance, Law & Health', comment: 'Description listing example professional fields' }),
     icon: Compass,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/locations',
-    label: 'By Region & City',
-    description: 'Douala, Yaoundé, Buea and all 10 national territories',
+    label: msg({ message: 'By Region & City', comment: 'Internships dropdown link label for locations' }),
+    description: msg({ message: 'Douala, Yaoundé, Buea and all 10 national territories', comment: 'Description below the internships by location link' }),
     icon: MapPin,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/register/intern',
-    label: 'Register Talent Profile',
-    description: 'Fill credentials to get your verified digital passport',
+    label: msg({ message: 'Register Talent Profile', comment: 'Internships dropdown link label for registration' }),
+    description: msg({ message: 'Fill credentials to get your verified digital passport', comment: 'Description below the registration link' }),
     icon: Award,
-    badge: 'Core Feature',
+    badge: msg({ message: 'Core Feature', comment: 'Badge identifying the talent profile feature' }),
     color: 'text-orange-600 bg-orange-100/90',
   },
 ];
@@ -110,23 +114,23 @@ const INTERNSHIP_MENU: NavMenuItem[] = [
 const ORGANIZATION_MENU: NavMenuItem[] = [
   {
     href: '/companies',
-    label: 'Host Enterprises',
-    description: 'Recruit, evaluate, and interview matched interns',
+    label: msg({ message: 'Host Enterprises', comment: 'Organizations dropdown link label for companies' }),
+    description: msg({ message: 'Recruit, evaluate, and interview matched interns', comment: 'Description below the host enterprises link' }),
     icon: Building2,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/universities',
-    label: 'Universities & Faculties',
-    description: 'Placement coordination & institutional recruiter mode',
+    label: msg({ message: 'Universities & Faculties', comment: 'Organizations dropdown link label for universities' }),
+    description: msg({ message: 'Placement coordination & institutional recruiter mode', comment: 'Description below the universities link' }),
     icon: GraduationCap,
-    badge: 'Dual-Mode',
+    badge: msg({ message: 'Dual-Mode', comment: 'Badge describing the two university operating modes' }),
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/how-it-works',
-    label: 'How Recruitment Works',
-    description: 'End-to-end lifecycle from discovery to onboarding',
+    label: msg({ message: 'How Recruitment Works', comment: 'Organizations dropdown link label for the recruitment guide' }),
+    description: msg({ message: 'End-to-end lifecycle from discovery to onboarding', comment: 'Description below the recruitment guide link' }),
     icon: Compass,
     color: 'text-orange-600 bg-orange-100/90',
   },
@@ -135,42 +139,44 @@ const ORGANIZATION_MENU: NavMenuItem[] = [
 const RESOURCE_MENU: NavMenuItem[] = [
   {
     href: '/pricing',
-    label: 'Pricing & Subscriptions',
-    description: 'Transparent plans for organizations, 100% free for interns',
+    label: msg({ message: 'Pricing & Subscriptions', comment: 'Resources dropdown link label for pricing' }),
+    description: msg({ message: 'Transparent plans for organizations, 100% free for interns', comment: 'Description below the pricing link' }),
     icon: CreditCard,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/resources',
-    label: 'Editorial Career Guides',
-    description: 'Articles and advice from MANTECH editorial team',
+    label: msg({ message: 'Editorial Career Guides', comment: 'Resources dropdown link label for career guides' }),
+    description: msg({ message: 'Articles and advice from MANTECH editorial team', comment: 'Description below the career guides link' }),
     icon: BookOpen,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/testimonials',
-    label: 'Community Stories',
-    description: 'Real feedback from placed interns and partner employers',
+    label: msg({ message: 'Community Stories', comment: 'Resources dropdown link label for testimonials' }),
+    description: msg({ message: 'Real feedback from placed interns and partner employers', comment: 'Description below the community stories link' }),
     icon: Star,
     color: 'text-orange-600 bg-orange-100/90',
   },
   {
     href: '/faq',
-    label: 'Help & Knowledge Base',
-    description: 'Frequently asked questions and support answers',
+    label: msg({ message: 'Help & Knowledge Base', comment: 'Resources dropdown link label for help' }),
+    description: msg({ message: 'Frequently asked questions and support answers', comment: 'Description below the help link' }),
     icon: HelpCircle,
     color: 'text-orange-600 bg-orange-100/90',
   },
 ];
 
-const ROLE_LABEL: Record<string, string> = {
-  INTERN: 'Intern',
-  COMPANY: 'Host Enterprise',
-  UNIVERSITY: 'University Partner',
-  ADMIN: 'Administrator',
+const ROLE_LABEL: Record<string, MessageDescriptor> = {
+  INTERN: msg({ message: 'Intern', comment: 'Account role shown in the profile menu' }),
+  COMPANY: msg({ message: 'Host Enterprise', comment: 'Account role shown in the profile menu' }),
+  UNIVERSITY: msg({ message: 'University Partner', comment: 'Account role shown in the profile menu' }),
+  ADMIN: msg({ message: 'Administrator', comment: 'Account role shown in the profile menu' }),
+  MEMBER: msg({ message: 'Member', comment: 'Fallback account role shown in the profile menu' }),
 };
 
 export function Navbar() {
+  const { t } = useLingui();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -192,7 +198,7 @@ export function Navbar() {
           ? '/dashboard/admin'
           : '/dashboard/intern';
 
-  const roleLabel = userRole ? (ROLE_LABEL[userRole] ?? userRole) : 'Member';
+  const roleLabel = t(userRole ? (ROLE_LABEL[userRole] ?? ROLE_LABEL.MEMBER) : ROLE_LABEL.MEMBER);
 
   // The Intern Passport directory is open to every signed-in member
   const canBrowsePassports = !!user;
@@ -265,7 +271,7 @@ export function Navbar() {
             <Link
               href="/"
               className="flex shrink-0 items-center gap-2 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 transition-transform hover:scale-[1.01]"
-              aria-label="MANTECH Nexus Home"
+              aria-label={t({ message: "MANTECH Nexus Home", comment: "navbar component aria-label attribute" })}
             >
               <Logo size={scrolled ? 135 : 150} />
             </Link>
@@ -291,7 +297,7 @@ export function Navbar() {
                       : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
                   )}
                 >
-                  <span>Jobs</span>
+                  <span><Trans comment="navbar span visible text">Jobs</Trans></span>
                   <ChevronDown className="h-3.5 w-3.5 text-orange-500 group-hover:text-orange-600 group-hover:rotate-180 transition-transform duration-200" />
                 </button>
               </DropdownMenuTrigger>
@@ -304,8 +310,8 @@ export function Navbar() {
               >
                 <div className="px-3 py-2 bg-orange-50/90 rounded-xl border border-orange-200/70 mb-1.5">
                   <p className="text-[11px] font-extrabold uppercase tracking-wider text-orange-600">
-                    Explore Cameroon Careers
-                  </p>
+                    <Trans comment="navbar p visible text">Explore Cameroon Careers
+                  </Trans></p>
                 </div>
                 {JOB_MENU.map((item) => (
                   <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
@@ -318,10 +324,10 @@ export function Navbar() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <span className="text-xs font-bold text-orange-500 group-hover:text-orange-600 transition-colors">
-                          {item.label}
+                          {t(item.label)}
                         </span>
                         <p className="text-[11px] text-slate-700 font-medium line-clamp-1 mt-0.5">
-                          {item.description}
+                          {t(item.description)}
                         </p>
                       </div>
                     </Link>
@@ -348,7 +354,7 @@ export function Navbar() {
                       : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
                   )}
                 >
-                  <span>Internships</span>
+                  <span><Trans comment="navbar span visible text">Internships</Trans></span>
                   <ChevronDown className="h-3.5 w-3.5 text-orange-500 group-hover:text-orange-600 group-hover:rotate-180 transition-transform duration-200" />
                 </button>
               </DropdownMenuTrigger>
@@ -361,8 +367,8 @@ export function Navbar() {
               >
                 <div className="px-3 py-2 bg-orange-50/90 rounded-xl border border-orange-200/70 mb-1.5">
                   <p className="text-[11px] font-extrabold uppercase tracking-wider text-orange-600">
-                    Find Opportunities
-                  </p>
+                    <Trans comment="navbar p visible text">Find Opportunities
+                  </Trans></p>
                 </div>
                 {INTERNSHIP_MENU.map((item) => (
                   <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
@@ -376,16 +382,16 @@ export function Navbar() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold text-orange-500 group-hover:text-orange-600 transition-colors">
-                            {item.label}
+                            {t(item.label)}
                           </span>
                           {item.badge && (
                             <Badge className="bg-orange-100 text-orange-700 text-[9px] px-1.5 py-0 border-orange-200 font-bold">
-                              {item.badge}
+                              {item.badge ? t(item.badge) : null}
                             </Badge>
                           )}
                         </div>
                         <p className="text-[11px] text-slate-700 font-medium line-clamp-1 mt-0.5">
-                          {item.description}
+                          {t(item.description)}
                         </p>
                       </div>
                     </Link>
@@ -412,7 +418,7 @@ export function Navbar() {
                       : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
                   )}
                 >
-                  <span>Organizations</span>
+                  <span><Trans comment="navbar span visible text">Organizations</Trans></span>
                   <ChevronDown className="h-3.5 w-3.5 text-orange-500 group-hover:text-orange-600 group-hover:rotate-180 transition-transform duration-200" />
                 </button>
               </DropdownMenuTrigger>
@@ -425,8 +431,8 @@ export function Navbar() {
               >
                 <div className="px-3 py-2 bg-orange-50/90 rounded-xl border border-orange-200/70 mb-1.5">
                   <p className="text-[11px] font-extrabold uppercase tracking-wider text-orange-600">
-                    Host Enterprises & Academia
-                  </p>
+                    <Trans comment="navbar p visible text">Host Enterprises & Academia
+                  </Trans></p>
                 </div>
                 {ORGANIZATION_MENU.map((item) => (
                   <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
@@ -440,16 +446,16 @@ export function Navbar() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold text-orange-500 group-hover:text-orange-600 transition-colors">
-                            {item.label}
+                            {t(item.label)}
                           </span>
                           {item.badge && (
                             <Badge className="bg-orange-100 text-orange-700 text-[9px] px-1.5 py-0 border-orange-200 font-bold">
-                              {item.badge}
+                              {item.badge ? t(item.badge) : null}
                             </Badge>
                           )}
                         </div>
                         <p className="text-[11px] text-slate-700 font-medium line-clamp-1 mt-0.5">
-                          {item.description}
+                          {t(item.description)}
                         </p>
                       </div>
                     </Link>
@@ -476,7 +482,7 @@ export function Navbar() {
                       : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
                   )}
                 >
-                  <span>Resources</span>
+                  <span><Trans comment="navbar span visible text">Resources</Trans></span>
                   <ChevronDown className="h-3.5 w-3.5 text-orange-500 group-hover:text-orange-600 group-hover:rotate-180 transition-transform duration-200" />
                 </button>
               </DropdownMenuTrigger>
@@ -489,8 +495,8 @@ export function Navbar() {
               >
                 <div className="px-3 py-2 bg-orange-50/90 rounded-xl border border-orange-200/70 mb-1.5">
                   <p className="text-[11px] font-extrabold uppercase tracking-wider text-orange-600">
-                    Platform Insights
-                  </p>
+                    <Trans comment="navbar p visible text">Platform Insights
+                  </Trans></p>
                 </div>
                 {RESOURCE_MENU.map((item) => (
                   <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
@@ -503,10 +509,10 @@ export function Navbar() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <span className="text-xs font-bold text-orange-500 group-hover:text-orange-600 transition-colors">
-                          {item.label}
+                          {t(item.label)}
                         </span>
                         <p className="text-[11px] text-slate-700 font-medium line-clamp-1 mt-0.5">
-                          {item.description}
+                          {t(item.description)}
                         </p>
                       </div>
                     </Link>
@@ -525,8 +531,8 @@ export function Navbar() {
                   : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
               )}
             >
-              About
-            </Link>
+              <Trans comment="navbar Link visible text">About
+            </Trans></Link>
 
             {/* 5. Direct Link: Contact */}
             <Link
@@ -538,8 +544,8 @@ export function Navbar() {
                   : 'text-orange-500 hover:bg-orange-50/80 hover:text-orange-600'
               )}
             >
-              Contact
-            </Link>
+              <Trans comment="navbar Link visible text">Contact
+            </Trans></Link>
           </div>
 
           {/* Right-Side Actions */}
@@ -549,9 +555,9 @@ export function Navbar() {
               <Link
                 href="/intern-passports"
                 className="cursor-pointer text-orange-500 font-extrabold relative text-xs px-3 py-1.5 inline-flex items-center justify-center text-center bg-gradient-to-r from-violet-500 from-10% via-sky-500 via-30% to-pink-500 to-90% bg-[length:400%] rounded-full z-10 hover:animate-gradient-xy hover:bg-[length:100%] before:content-[''] before:absolute before:-top-[2px] before:-bottom-[2px] before:-left-[2px] before:-right-[2px] before:bg-gradient-to-r before:from-violet-500 before:from-10% before:via-sky-500 before:via-30% before:to-pink-500 before:bg-[length:400%] before:-z-10 before:rounded-full before:hover:blur-md before:transition-all before:ease-in-out before:duration-1000 before:hover:bg-[length:10%] active:bg-violet-700"
-                title="Browse verified Passports"
+                title={t({ message: "Browse verified Passports", comment: "navbar component title attribute" })}
               >
-                <span className="text-white font-extrabold">Browse Passports</span>
+                <span className="text-white font-extrabold"><Trans comment="navbar span visible text">Browse Passports</Trans></span>
               </Link>
             )}
 
@@ -563,15 +569,15 @@ export function Navbar() {
                     size="sm"
                     className="h-8 px-3 text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-md shadow-blue-600/25 transition-all"
                   >
-                    Get Started
-                  </Button>
+                    <Trans comment="navbar Button visible text">Get Started
+                  </Trans></Button>
                 </Link>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
                       className="flex items-center gap-2 rounded-2xl p-1 pr-2.5 bg-orange-50/80 hover:bg-orange-100/90 border border-orange-200 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
-                      aria-label="User Account Menu"
+                      aria-label={t({ message: "User Account Menu", comment: "navbar component aria-label attribute" })}
                     >
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 text-xs font-extrabold text-white shadow-sm">
                         {initials}
@@ -601,7 +607,7 @@ export function Navbar() {
                     <DropdownMenuItem asChild className="group cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
                       <Link href={dashboardLink} className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-blue-400 group-hover:text-blue-400 transition-colors">
                         <LayoutDashboard className="h-4 w-4 text-orange-500 group-hover:text-blue-400 transition-colors" />
-                        <span>{roleLabel} Dashboard</span>
+                        <span>{t({ message: '{role} Dashboard', values: { role: roleLabel }, comment: 'Dashboard link for the signed-in account role' })}</span>
                       </Link>
                     </DropdownMenuItem>
 
@@ -609,7 +615,7 @@ export function Navbar() {
                       <DropdownMenuItem asChild className="group cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
                         <Link href="/dashboard/intern/passport" className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-blue-400 group-hover:text-blue-400 transition-colors">
                           <Award className="h-4 w-4 text-amber-600 group-hover:text-blue-400 transition-colors" />
-                          <span>My Passport</span>
+                          <span><Trans comment="navbar span visible text">My Passport</Trans></span>
                         </Link>
                       </DropdownMenuItem>
                     )}
@@ -617,7 +623,7 @@ export function Navbar() {
                     <DropdownMenuItem asChild className="group cursor-pointer rounded-xl p-2.5 hover:bg-orange-50/80 focus:bg-orange-50/80">
                       <Link href="/settings" className="flex items-center gap-2.5 text-xs font-bold text-orange-500 hover:text-blue-400 group-hover:text-blue-400 transition-colors">
                         <ShieldCheck className="h-4 w-4 text-slate-600 group-hover:text-blue-400 transition-colors" />
-                        <span>Security & Privacy</span>
+                        <span><Trans comment="navbar span visible text">Security & Privacy</Trans></span>
                       </Link>
                     </DropdownMenuItem>
 
@@ -628,7 +634,7 @@ export function Navbar() {
                       className="cursor-pointer rounded-xl p-2.5 text-xs font-bold text-red-600 hover:text-red-600 hover:bg-red-50 focus:bg-red-50 flex items-center gap-2.5 transition-colors"
                     >
                       <LogOut className="h-4 w-4 text-red-600" />
-                      <span>Sign Out</span>
+                      <span><Trans comment="navbar span visible text">Sign Out</Trans></span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -663,7 +669,7 @@ export function Navbar() {
                       className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-none"
                     />
                     <LogIn className="w-3.5 h-3.5 mr-1.5" />
-                    <span className="relative z-10">Sign In</span>
+                    <span className="relative z-10"><Trans comment="navbar span visible text">Sign In</Trans></span>
                     <ArrowRight className="relative z-10 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                   </motion.button>
                 </Link>
@@ -695,7 +701,7 @@ export function Navbar() {
                       }}
                       className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-none"
                     />
-                    <span className="relative z-10">Get Started</span>
+                    <span className="relative z-10"><Trans comment="navbar span visible text">Get Started</Trans></span>
                     <ArrowRight className="relative z-10 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                   </motion.button>
                 </Link>
@@ -708,7 +714,9 @@ export function Navbar() {
               size="icon"
               className="h-10 w-10 rounded-xl text-orange-500 hover:text-orange-600 hover:bg-orange-50/80 lg:hidden"
               onClick={() => setMobileOpen((open) => !open)}
-              aria-label={mobileOpen ? 'Close Menu' : 'Open Menu'}
+              aria-label={mobileOpen
+                ? t({ message: 'Close Menu', comment: 'Accessible label for the mobile navigation close button' })
+                : t({ message: 'Open Menu', comment: 'Accessible label for the mobile navigation open button' })}
               aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X className="h-5 w-5 text-orange-500" /> : <Menu className="h-5 w-5 text-orange-500" />}
@@ -747,7 +755,7 @@ export function Navbar() {
                     <div className="p-1.5 rounded-lg bg-orange-100 text-orange-600">
                       <Briefcase className="h-4 w-4" />
                     </div>
-                    <span>All Cameroon Jobs</span>
+                    <span><Trans comment="navbar span visible text">All Cameroon Jobs</Trans></span>
                   </Link>
                 </div>
 
@@ -755,8 +763,8 @@ export function Navbar() {
                 <div className="pt-2 border-t border-orange-100">
                   <div className="px-2.5 py-1 bg-orange-50/90 rounded-lg border border-orange-200/60 mb-2">
                     <p className="text-[10px] font-extrabold uppercase tracking-wider text-orange-600">
-                      Internships & Fields
-                    </p>
+                      <Trans comment="navbar p visible text">Internships & Fields
+                    </Trans></p>
                   </div>
                   <div className="space-y-1">
                     {INTERNSHIP_MENU.map((item) => (
@@ -769,7 +777,7 @@ export function Navbar() {
                         <div className={cn('p-1.5 rounded-lg shrink-0', item.color)}>
                           <item.icon className="h-4 w-4" />
                         </div>
-                        <span>{item.label}</span>
+                        <span>{t(item.label)}</span>
                       </Link>
                     ))}
                   </div>
@@ -779,8 +787,8 @@ export function Navbar() {
                 <div className="pt-2 border-t border-orange-100">
                   <div className="px-2.5 py-1 bg-orange-50/90 rounded-lg border border-orange-200/60 mb-2">
                     <p className="text-[10px] font-extrabold uppercase tracking-wider text-orange-600">
-                      Organizations
-                    </p>
+                      <Trans comment="navbar p visible text">Organizations
+                    </Trans></p>
                   </div>
                   <div className="space-y-1">
                     {ORGANIZATION_MENU.map((item) => (
@@ -793,7 +801,7 @@ export function Navbar() {
                         <div className={cn('p-1.5 rounded-lg shrink-0', item.color)}>
                           <item.icon className="h-4 w-4" />
                         </div>
-                        <span>{item.label}</span>
+                        <span>{t(item.label)}</span>
                       </Link>
                     ))}
                   </div>
@@ -803,8 +811,8 @@ export function Navbar() {
                 <div className="pt-2 border-t border-orange-100">
                   <div className="px-2.5 py-1 bg-orange-50/90 rounded-lg border border-orange-200/60 mb-2">
                     <p className="text-[10px] font-extrabold uppercase tracking-wider text-orange-600">
-                      Resources & Help
-                    </p>
+                      <Trans comment="navbar p visible text">Resources & Help
+                    </Trans></p>
                   </div>
                   <div className="space-y-1">
                     {RESOURCE_MENU.map((item) => (
@@ -817,7 +825,7 @@ export function Navbar() {
                         <div className={cn('p-1.5 rounded-lg shrink-0', item.color)}>
                           <item.icon className="h-4 w-4" />
                         </div>
-                        <span>{item.label}</span>
+                        <span>{t(item.label)}</span>
                       </Link>
                     ))}
                     <Link
@@ -828,7 +836,7 @@ export function Navbar() {
                       <div className="p-1.5 rounded-lg bg-orange-100 text-orange-600">
                         <Building2 className="h-4 w-4" />
                       </div>
-                      <span>About MANTECH</span>
+                      <span><Trans comment="navbar span visible text">About MANTECH</Trans></span>
                     </Link>
                     <Link
                       href="/contact"
@@ -838,7 +846,7 @@ export function Navbar() {
                       <div className="p-1.5 rounded-lg bg-orange-100 text-orange-600">
                         <MessageCircle className="h-4 w-4" />
                       </div>
-                      <span>Contact Us</span>
+                      <span><Trans comment="navbar span visible text">Contact Us</Trans></span>
                     </Link>
                     <Link
                       href="/install"
@@ -848,10 +856,10 @@ export function Navbar() {
                       <div className="p-1.5 rounded-lg bg-cyan-500 text-white shadow-sm">
                         <Smartphone className="h-4 w-4" />
                       </div>
-                      <span className="flex-1">Download Mobile App</span>
+                      <span className="flex-1"><Trans comment="navbar span visible text">Download Mobile App</Trans></span>
                       <span className="rounded-full bg-cyan-200/80 px-2 py-0.5 text-[10px] font-extrabold text-cyan-900">
-                        PWA
-                      </span>
+                        <Trans comment="navbar span visible text">PWA
+                      </Trans></span>
                     </Link>
                   </div>
                 </div>
@@ -860,8 +868,8 @@ export function Navbar() {
                   <div className="pt-2 border-t border-orange-100">
                     <div className="px-2.5 py-1 bg-orange-50/90 rounded-lg border border-orange-200/60 mb-2">
                       <p className="text-[10px] font-extrabold uppercase tracking-wider text-orange-600">
-                        Talent Discovery
-                      </p>
+                        <Trans comment="navbar p visible text">Talent Discovery
+                      </Trans></p>
                     </div>
                     <Link
                       href="/intern-passports"
@@ -871,7 +879,7 @@ export function Navbar() {
                       <div className="p-1.5 rounded-lg bg-orange-100 text-orange-600">
                         <Award className="h-4 w-4" />
                       </div>
-                      <span>Intern Directory</span>
+                      <span><Trans comment="navbar span visible text">Intern Directory</Trans></span>
                     </Link>
                   </div>
                 )}
@@ -886,7 +894,7 @@ export function Navbar() {
                         className="flex items-center justify-center gap-2 w-full p-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-md shadow-orange-500/20 transition-colors"
                       >
                         <LayoutDashboard className="h-4 w-4" />
-                        <span>Go to {roleLabel} Dashboard</span>
+                        <span>{t({ message: 'Go to {role} Dashboard', values: { role: roleLabel }, comment: 'Mobile dashboard link for the signed-in account role' })}</span>
                       </Link>
                       <Button
                         variant="outline"
@@ -898,7 +906,7 @@ export function Navbar() {
                         className="w-full text-xs text-red-600 hover:bg-red-50 hover:text-red-700 border-red-200 font-bold"
                       >
                         <LogOut className="h-4 w-4 mr-2" />
-                        <span>Sign Out</span>
+                        <span><Trans comment="navbar span visible text">Sign Out</Trans></span>
                       </Button>
                     </>
                   ) : (
@@ -932,7 +940,7 @@ export function Navbar() {
                             className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-none"
                           />
                           <LogIn className="w-3.5 h-3.5 mr-1.5" />
-                          <span className="relative z-10">Sign In</span>
+                          <span className="relative z-10"><Trans comment="navbar span visible text">Sign In</Trans></span>
                           <ArrowRight className="relative z-10 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                         </motion.button>
                       </Link>
@@ -965,7 +973,7 @@ export function Navbar() {
                             }}
                             className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-none"
                           />
-                          <span className="relative z-10">Get Started</span>
+                          <span className="relative z-10"><Trans comment="navbar span visible text">Get Started</Trans></span>
                           <ArrowRight className="relative z-10 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                         </motion.button>
                       </Link>
@@ -980,4 +988,3 @@ export function Navbar() {
     </header>
   );
 }
-

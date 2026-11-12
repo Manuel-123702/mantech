@@ -1,8 +1,10 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from '@/i18n/navigation.hooks';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -77,6 +79,7 @@ const PIPELINE_TABS = [
 ];
 
 export default function ApplicationsPage({ basePath }: { basePath: string }) {
+  const { t } = useLingui();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState<ApplicationItem[]>([]);
@@ -159,10 +162,10 @@ export default function ApplicationsPage({ basePath }: { basePath: string }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Applications</h2>
+          <h2 className="text-2xl font-bold text-slate-900"><Trans comment="applications-page h2 visible text">Applications</Trans></h2>
           <p className="text-sm text-slate-500">
-            Review, shortlist, interview, and recruit from submitted applications.
-          </p>
+            <Trans comment="applications-page p visible text">Review, shortlist, interview, and recruit from submitted applications.
+          </Trans></p>
         </div>
       </div>
 
@@ -175,37 +178,37 @@ export default function ApplicationsPage({ basePath }: { basePath: string }) {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Total</p>
+            <p className="text-xs text-slate-500"><Trans comment="applications-page p visible text">Total</Trans></p>
             <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Received</p>
+            <p className="text-xs text-slate-500"><Trans comment="applications-page p visible text">Received</Trans></p>
             <p className="text-2xl font-bold text-blue-700">{stats.received}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Under review</p>
+            <p className="text-xs text-slate-500"><Trans comment="applications-page p visible text">Under review</Trans></p>
             <p className="text-2xl font-bold text-indigo-700">{stats.review}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Shortlisted</p>
+            <p className="text-xs text-slate-500"><Trans comment="applications-page p visible text">Shortlisted</Trans></p>
             <p className="text-2xl font-bold text-amber-700">{stats.shortlisted}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Interviews</p>
+            <p className="text-xs text-slate-500"><Trans comment="applications-page p visible text">Interviews</Trans></p>
             <p className="text-2xl font-bold text-purple-700">{stats.interview}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Selected / Placed</p>
+            <p className="text-xs text-slate-500"><Trans comment="applications-page p visible text">Selected / Placed</Trans></p>
             <p className="text-2xl font-bold text-emerald-700">{stats.selected}</p>
           </CardContent>
         </Card>
@@ -228,7 +231,7 @@ export default function ApplicationsPage({ basePath }: { basePath: string }) {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <Input
-                placeholder="Search candidate, email, or opportunity…"
+                placeholder={t({ message: "Search candidate, email, or opportunity…", comment: "applications-page component placeholder attribute" })}
                 className="pl-9"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -236,10 +239,10 @@ export default function ApplicationsPage({ basePath }: { basePath: string }) {
             </div>
             <Select value={opportunityFilter} onValueChange={setOpportunityFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="Opportunity" />
+                <SelectValue placeholder={t({ message: "Opportunity", comment: "applications-page component placeholder attribute" })} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All opportunities</SelectItem>
+                <SelectItem value="ALL"><Trans comment="applications-page SelectItem visible text">All opportunities</Trans></SelectItem>
                 {opportunities.map(([id, title]) => (
                   <SelectItem key={id} value={id}>
                     {title}
@@ -249,7 +252,7 @@ export default function ApplicationsPage({ basePath }: { basePath: string }) {
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder={t({ message: "Status", comment: "applications-page component placeholder attribute" })} />
               </SelectTrigger>
               <SelectContent>
                 {STATUSES.map((s) => (
@@ -269,8 +272,8 @@ export default function ApplicationsPage({ basePath }: { basePath: string }) {
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-12 text-center text-slate-500">
-              No applications match the current filters.
-            </div>
+              <Trans comment="applications-page div visible text">No applications match the current filters.
+            </Trans></div>
           ) : (
             <div className="divide-y rounded-xl border">
               {filtered.map((app) => (
@@ -302,7 +305,8 @@ export default function ApplicationsPage({ basePath }: { basePath: string }) {
                       <p className="text-sm text-slate-500 truncate">
                         {app.opportunity.title}
                         {app.internProfile.fieldOfStudy?.name && (
-                          <> · {app.internProfile.fieldOfStudy.name}</>
+                          <> {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"· "}{app.internProfile.fieldOfStudy.name}</>
                         )}
                       </p>
                     </div>
@@ -317,8 +321,8 @@ export default function ApplicationsPage({ basePath }: { basePath: string }) {
                       {app.interviews && app.interviews.length > 0 && (
                         <div className="inline-flex items-center gap-1 ml-3">
                           <FileText className="h-3 w-3" />
-                          {app.interviews.length} interview
-                          {app.interviews.length === 1 ? '' : 's'}
+                          {app.interviews.length} <Trans comment="applications-page div visible text">interview
+                          </Trans>{app.interviews.length === 1 ? '' : 's'}
                         </div>
                       )}
                     </div>

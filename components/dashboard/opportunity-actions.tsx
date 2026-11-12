@@ -1,8 +1,10 @@
 'use client';
+import { Trans } from '@lingui/react/macro';
+
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from '@/i18n/navigation.hooks';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Button } from '@/components/ui/button';
 
 export function OpportunityActions({
@@ -31,16 +33,16 @@ export function OpportunityActions({
   return (
     <div className="flex flex-wrap gap-2">
       <Link href={`${opportunitiesBase}/${id}/edit`}>
-        <Button size="sm" variant="outline">Edit</Button>
+        <Button size="sm" variant="outline"><Trans comment="opportunity-actions Button visible text">Edit</Trans></Button>
       </Link>
       {status === 'DRAFT' && (
-        <Button size="sm" disabled={loading} onClick={() => setStatus('PENDING_REVIEW')}>Submit for review</Button>
+        <Button size="sm" disabled={loading} onClick={() => setStatus('PENDING_REVIEW')}><Trans comment="opportunity-actions Button visible text">Submit for review</Trans></Button>
       )}
       {status !== 'ARCHIVED' && (
-        <Button size="sm" variant="outline" disabled={loading} onClick={() => setStatus('ARCHIVED')}>Archive</Button>
+        <Button size="sm" variant="outline" disabled={loading} onClick={() => setStatus('ARCHIVED')}><Trans comment="opportunity-actions Button visible text">Archive</Trans></Button>
       )}
       {status === 'PUBLISHED' && (
-        <Button size="sm" variant="ghost" disabled={loading} onClick={() => setStatus('EXPIRED')}>Close</Button>
+        <Button size="sm" variant="ghost" disabled={loading} onClick={() => setStatus('EXPIRED')}><Trans comment="opportunity-actions Button visible text">Close</Trans></Button>
       )}
     </div>
   );

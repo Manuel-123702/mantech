@@ -1,3 +1,4 @@
+import { Trans, useLingui } from '@lingui/react/macro';
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { ChevronRight, MoreHorizontal } from 'lucide-react';
@@ -9,7 +10,10 @@ const Breadcrumb = React.forwardRef<
   React.ComponentPropsWithoutRef<'nav'> & {
     separator?: React.ReactNode;
   }
->(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
+>(({ ...props }, ref) => {
+  const { t } = useLingui();
+  return <nav ref={ref} aria-label={t({ message: 'breadcrumb', comment: 'Accessible name of the breadcrumb navigation landmark' })} {...props} />;
+});
 Breadcrumb.displayName = 'Breadcrumb';
 
 const BreadcrumbList = React.forwardRef<
@@ -99,7 +103,7 @@ const BreadcrumbEllipsis = ({
     {...props}
   >
     <MoreHorizontal className="h-4 w-4" />
-    <span className="sr-only">More</span>
+    <span className="sr-only"><Trans comment="breadcrumb span visible text">More</Trans></span>
   </span>
 );
 BreadcrumbEllipsis.displayName = 'BreadcrumbElipssis';

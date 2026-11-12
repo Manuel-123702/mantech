@@ -1,4 +1,6 @@
-import Link from "next/link";
+import { Trans, useLingui } from '@lingui/react/macro';
+import { msg } from '@lingui/core/macro';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Check, ArrowRight, Sparkles, ShieldCheck, Zap, Users } from "lucide-react";
 import { FadeIn, MotionSection, MotionItem } from "@/components/shared/section-animations";
 import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
@@ -13,6 +15,7 @@ import { APP_CONFIG } from "@/lib/config";
  * price.
  */
 export function MemberPlanSection() {
+  const { t } = useLingui();
   return (
     <section className="section-padding bg-[#061713] border-b border-slate-800/80 relative overflow-hidden text-white">
       {/* Ambient emerald & teal lighting */}
@@ -33,51 +36,51 @@ export function MemberPlanSection() {
               <div>
                 <span className="inline-flex items-center gap-2 rounded-full bg-emerald-950/80 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300 ring-1 ring-emerald-500/30">
                   <Sparkles className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-                  For every intern
-                </span>
+                  <Trans comment="member-plan-section span visible text">For every intern
+                </Trans></span>
 
                 <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  Internships are free.
-                  <span className="block text-emerald-400">Always.</span>
+                  <Trans comment="member-plan-section h2 visible text">Internships are free.
+                  </Trans><span className="block text-emerald-400"><Trans comment="member-plan-section span visible text">Always.</Trans></span>
                 </h2>
 
                 <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-300">
-                  Searching listings, applying and tracking every stage of your
+                  <Trans comment="member-plan-section p visible text">Searching listings, applying and tracking every stage of your
                   application cost you nothing. MANTECH earns from the organizations
                   who hire, so a student is never the one paying.
-                </p>
+                </Trans></p>
 
                 {/* Reassurance points */}
                 <ul className="mt-8 grid gap-4 sm:grid-cols-3">
                   {[
                     {
                       icon: Sparkles,
-                      title: "No fees, ever",
-                      text: "No subscription, no listing fee, no hidden charge.",
+                      title: msg({ message: "No fees, ever", comment: "Benefit heading in the free intern plan" }),
+                      text: msg({ message: "No subscription, no listing fee, no hidden charge.", comment: "Benefit description in the free intern plan" }),
                     },
                     {
                       icon: Zap,
-                      title: "Apply in minutes",
-                      text: "One profile, one CV, apply to any listing instantly.",
+                      title: msg({ message: "Apply in minutes", comment: "Benefit heading in the free intern plan" }),
+                      text: msg({ message: "One profile, one CV, apply to any listing instantly.", comment: "Benefit description in the free intern plan" }),
                     },
                     {
                       icon: ShieldCheck,
-                      title: "You stay in control",
-                      text: "Your phone number is never shared without your say-so.",
+                      title: msg({ message: "You stay in control", comment: "Benefit heading in the free intern plan" }),
+                      text: msg({ message: "Your phone number is never shared without your say-so.", comment: "Benefit description in the free intern plan" }),
                     },
                   ].map((item) => (
                     <li
-                      key={item.title}
+                      key={item.title.id}
                       className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4"
                     >
                       <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 shadow-sm">
                         <item.icon className="h-5 w-5" aria-hidden="true" />
                       </span>
                       <p className="mt-2.5 text-sm font-semibold text-white">
-                        {item.title}
+                        {t(item.title)}
                       </p>
                       <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                        {item.text}
+                        {t(item.text)}
                       </p>
                     </li>
                   ))}
@@ -88,42 +91,42 @@ export function MemberPlanSection() {
                     href="/internships"
                     className="inline-flex h-12 items-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white shadow-md shadow-emerald-600/30 transition-colors hover:bg-emerald-500"
                   >
-                    Browse free internships
-                    <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                    <Trans comment="member-plan-section Link visible text">Browse free internships
+                    </Trans><ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                   </Link>
                   <Link
                     href="/register/intern"
                     className="inline-flex h-12 items-center rounded-xl border border-slate-700 bg-slate-800/80 px-6 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-700 hover:text-white"
                   >
-                    Create your free profile
-                  </Link>
+                    <Trans comment="member-plan-section Link visible text">Create your free profile
+                  </Trans></Link>
                 </div>
               </div>
 
               {/* Right: what is included */}
               <div className="rounded-3xl border border-emerald-500/30 bg-slate-950/80 p-7 shadow-xl lg:p-8">
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                  Included with every account
-                </span>
+                  <Trans comment="member-plan-section span visible text">Included with every account
+                </Trans></span>
                 <p className="mt-2 text-sm font-semibold text-white">
-                  Everything a student needs to secure an internship in Cameroon:
-                </p>
+                  <Trans comment="member-plan-section p visible text">Everything a student needs to secure an internship in Cameroon:
+                </Trans></p>
 
                 <ul className="mt-6 space-y-3.5">
                   {[
-                    "Search and filter all verified internship listings",
-                    "Intern Passport with cryptographic verification ID",
-                    "Application tracker with real status updates",
-                    "Readiness score and profile checklist",
-                    "Interview schedule and placement history",
-                    "Direct messaging with recruiters",
+                    msg({ message: "Search and filter all verified internship listings", comment: "Feature included with the free intern account" }),
+                    msg({ message: "Intern Passport with cryptographic verification ID", comment: "Feature included with the free intern account" }),
+                    msg({ message: "Application tracker with real status updates", comment: "Feature included with the free intern account" }),
+                    msg({ message: "Readiness score and profile checklist", comment: "Feature included with the free intern account" }),
+                    msg({ message: "Interview schedule and placement history", comment: "Feature included with the free intern account" }),
+                    msg({ message: "Direct messaging with recruiters", comment: "Feature included with the free intern account" }),
                   ].map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
+                    <li key={feature.id} className="flex items-start gap-3">
                       <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-950 border border-emerald-500/30">
                         <Check className="h-3 w-3 text-emerald-400" aria-hidden="true" />
                       </span>
                       <span className="text-sm leading-relaxed text-slate-300">
-                        {feature}
+                        {t(feature)}
                       </span>
                     </li>
                   ))}
@@ -132,9 +135,9 @@ export function MemberPlanSection() {
                 {/* Answers the obvious question before it is asked. */}
                 <div className="mt-7 rounded-xl border border-dashed border-emerald-500/40 bg-emerald-950/40 p-4">
                   <p className="text-xs leading-relaxed text-emerald-200">
-                    <strong className="font-semibold text-white">100% Free Launch Phase:</strong>{" "}
-                    All candidate tools, company recruiting accounts, and university placement portals are currently 0 FCFA. No charges, no payment credentials required.
-                  </p>
+                    <strong className="font-semibold text-white"><Trans comment="member-plan-section strong visible text">100% Free Launch Phase:</Trans></strong>{" "}
+                    <Trans comment="member-plan-section p visible text">All candidate tools, company recruiting accounts, and university placement portals are currently 0 FCFA. No charges, no payment credentials required.
+                  </Trans></p>
                 </div>
               </div>
             </div>
@@ -147,18 +150,18 @@ export function MemberPlanSection() {
 
 const SUBSCRIPTION_STEPS = [
   {
-    title: "Create your organization workspace",
-    text: "Register your company or academic institution in under 2 minutes. Enter your organization details and primary contact information.",
+    title: msg({ message: "Create your organization workspace", comment: "Heading of the first organization subscription step" }),
+    text: msg({ message: "Register your company or academic institution in under 2 minutes. Enter your organization details and primary contact information.", comment: "Description of the first organization subscription step" }),
     tone: "blue",
   },
   {
-    title: "100% Free Access (0 FCFA)",
-    text: "During this launch phase, all recruiter features, candidate discovery, and unlimited opportunity postings are completely free of charge.",
+    title: msg({ message: "100% Free Access (0 FCFA)", comment: "Heading of the launch pricing step for organizations" }),
+    text: msg({ message: "During this launch phase, all recruiter features, candidate discovery, and unlimited opportunity postings are completely free of charge.", comment: "Description of the launch pricing step for organizations" }),
     tone: "emerald",
   },
   {
-    title: "Start Posting & Hiring Immediately",
-    text: "Publish verified internships, jobs, and fellow opportunities, or connect directly with students and candidates via WhatsApp and dashboard.",
+    title: msg({ message: "Start Posting & Hiring Immediately", comment: "Heading of the organization onboarding step" }),
+    text: msg({ message: "Publish verified internships, jobs, and fellow opportunities, or connect directly with students and candidates via WhatsApp and dashboard.", comment: "Description of the organization onboarding step" }),
     tone: "amber",
   },
 ] as const;
@@ -178,6 +181,7 @@ export function SubscriptionProcess({
   className?: string;
   motion?: "wipe" | "slideLeft";
 }) {
+  const { t } = useLingui();
   return (
     <div
       className={`rounded-3xl border border-slate-800 bg-[#080e1c] p-7 sm:p-10 shadow-2xl relative overflow-hidden text-white backdrop-blur-md ${className}`}
@@ -186,14 +190,14 @@ export function SubscriptionProcess({
       <div className="max-w-2xl relative z-10">
         <span className="inline-flex items-center gap-2 rounded-full bg-blue-950/80 border border-blue-500/30 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-300">
           <Users className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
-          Subscription Onboarding
-        </span>
+          <Trans comment="member-plan-section span visible text">Subscription Onboarding
+        </Trans></span>
         <h3 className="mt-4 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-blue-500">
-          Three Simple Steps. Zero Automated Card Charges.
-        </h3>
+          <Trans comment="member-plan-section h3 visible text">Three Simple Steps. Zero Automated Card Charges.
+        </Trans></h3>
         <p className="mt-2 text-sm leading-relaxed text-slate-300">
-          Every organization account is verified and activated by our team after confirming your payment. Zero automatic rebilling, zero stored credit card data.
-        </p>
+          <Trans comment="member-plan-section p visible text">Every organization account is verified and activated by our team after confirming your payment. Zero automatic rebilling, zero stored credit card data.
+        </Trans></p>
       </div>
 
       <MotionSection
@@ -202,7 +206,7 @@ export function SubscriptionProcess({
         className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 relative z-10"
       >
         {SUBSCRIPTION_STEPS.map((step, index) => (
-          <MotionItem key={step.title} motion={motion} className="h-full">
+          <MotionItem key={step.title.id} motion={motion} className="h-full">
             <div className="flex h-full flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md p-7 transition-all duration-300 hover:border-blue-400 hover:shadow-xl hover:bg-slate-800/90 hover:-translate-y-1 relative overflow-hidden group">
               <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent group-hover:via-blue-500 transition-colors" />
               <div>
@@ -215,23 +219,24 @@ export function SubscriptionProcess({
                         : "bg-emerald-600 text-white shadow-emerald-600/20"
                       }`}
                   >
-                    0{index + 1}
+                    {/* eslint-disable-next-line i18next/no-literal-string -- numeric value is data, not translation copy */}
+{"0"}{index + 1}
                   </span>
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-700">
-                    Stage 0{index + 1}
+                    <Trans comment="member-plan-section span visible text">Stage 0</Trans>{index + 1}
                   </span>
                 </div>
 
                 <h4 className="font-heading text-lg font-bold text-white">
-                  {step.title}
+                  {t(step.title)}
                 </h4>
                 <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-slate-300">
-                  {step.text}
+                  {t(step.text)}
                 </p>
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] font-semibold text-orange-400">
-                <span>Verified Step</span>
+                <span><Trans comment="member-plan-section span visible text">Verified Step</Trans></span>
                 <Check className="w-4 h-4 text-emerald-400" />
               </div>
             </div>
@@ -242,11 +247,11 @@ export function SubscriptionProcess({
       <div className="mt-8 flex flex-col gap-5 rounded-2xl border border-slate-800 bg-slate-950/80 backdrop-blur-md p-6 lg:flex-row lg:items-center lg:justify-between shadow-lg relative z-10">
         <div className="space-y-0.5">
           <p className="text-sm font-bold text-white">
-            Need a tailored enterprise or institutional convention?
-          </p>
+            <Trans comment="member-plan-section p visible text">Need a tailored enterprise or institutional convention?
+          </Trans></p>
           <p className="text-xs text-slate-400">
-            Tell us your recruitment volume or university scope, and our team will prepare a direct quote in XAF.
-          </p>
+            <Trans comment="member-plan-section p visible text">Tell us your recruitment volume or university scope, and our team will prepare a direct quote in XAF.
+          </Trans></p>
         </div>
         <div className="flex flex-wrap gap-2.5 sm:flex-nowrap lg:shrink-0">
           <a
@@ -255,15 +260,15 @@ export function SubscriptionProcess({
             rel="noopener noreferrer"
             className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 text-xs font-bold text-white shadow-md shadow-green-600/25 transition-colors hover:bg-[#128C7E]"
           >
-            <WhatsAppIcon className="h-3.5 w-3.5" title="WhatsApp" />
-            WhatsApp
-          </a>
+            <WhatsAppIcon className="h-3.5 w-3.5" title={t({ message: "WhatsApp", comment: "member-plan-section component title attribute" })} />
+            <Trans comment="member-plan-section a visible text">WhatsApp
+          </Trans></a>
           <Link
             href="/contact"
             className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-700 bg-slate-800/80 px-4 text-xs font-bold text-slate-200 transition-colors hover:bg-slate-700 hover:text-white"
           >
-            Contact Form
-          </Link>
+            <Trans comment="member-plan-section Link visible text">Contact Form
+          </Trans></Link>
         </div>
       </div>
     </div>

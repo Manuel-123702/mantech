@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
@@ -12,10 +13,11 @@ interface LogoProps {
  * Standalone image mark with no adjacent text.
  */
 export function Logo({ className, size = 44 }: LogoProps) {
+  const { t } = useLingui();
   return (
     <Image
       src="/logo.png"
-      alt="MANTECH Nexus"
+      alt={t({ message: "MANTECH Nexus", comment: "logo component alt attribute" })}
       width={size}
       height={size}
       className={cn('block h-auto max-w-full shrink-0 select-none object-contain transition-transform duration-300 hover:scale-105', className)}

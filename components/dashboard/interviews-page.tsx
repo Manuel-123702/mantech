@@ -1,8 +1,10 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from '@/i18n/navigation.hooks';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -72,6 +74,7 @@ type InterviewItem = {
 };
 
 export default function InterviewsPage({ basePath }: { basePath: string }) {
+  const { t } = useLingui();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -225,43 +228,44 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Interviews</h2>
+          <h2 className="text-2xl font-bold text-slate-900"><Trans comment="interviews-page h2 visible text">Interviews</Trans></h2>
           <p className="text-sm text-slate-500">
-            Schedule, track, and record outcomes for candidate interviews.
-          </p>
+            <Trans comment="interviews-page p visible text">Schedule, track, and record outcomes for candidate interviews.
+          </Trans></p>
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Schedule interview
-            </Button>
+              <Trans comment="interviews-page Button visible text">Schedule interview
+            </Trans></Button>
           </DialogTrigger>
           <DialogContent className="max-w-xl">
             <DialogHeader>
-              <DialogTitle>Schedule new interview</DialogTitle>
+              <DialogTitle><Trans comment="interviews-page DialogTitle visible text">Schedule new interview</Trans></DialogTitle>
               <DialogDescription>
-                The candidate will receive an automated notification.
-              </DialogDescription>
+                <Trans comment="interviews-page DialogDescription visible text">The candidate will receive an automated notification.
+              </Trans></DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <Label>Candidate / application *</Label>
+                <Label><Trans comment="interviews-page Label visible text">Candidate / application *</Trans></Label>
                 <Select value={form.applicationId} onValueChange={(v) => setForm({ ...form, applicationId: v })}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a shortlisted candidate" />
+                    <SelectValue placeholder={t({ message: "Select a shortlisted candidate", comment: "interviews-page component placeholder attribute" })} />
                   </SelectTrigger>
                   <SelectContent>
                     {selectedApplications.map((a) => (
                       <SelectItem key={a.id} value={a.id}>
-                        {a.name} — {a.opportunity}
+                        {a.name} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"— "}{a.opportunity}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="sm:col-span-2">
-                <Label>Date & time *</Label>
+                <Label><Trans comment="interviews-page Label visible text">Date & time *</Trans></Label>
                 <Input
                   type="datetime-local"
                   value={form.scheduledAt}
@@ -269,7 +273,7 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
                 />
               </div>
               <div>
-                <Label>Duration (minutes)</Label>
+                <Label><Trans comment="interviews-page Label visible text">Duration (minutes)</Trans></Label>
                 <Input
                   type="number"
                   min={15}
@@ -279,23 +283,23 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
                 />
               </div>
               <div>
-                <Label>Type</Label>
+                <Label><Trans comment="interviews-page Label visible text">Type</Trans></Label>
                 <Select value={form.type} onValueChange={(v: any) => setForm({ ...form, type: v })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="online">Online / video</SelectItem>
-                    <SelectItem value="onsite">On-site</SelectItem>
-                    <SelectItem value="phone">Phone</SelectItem>
+                    <SelectItem value="online"><Trans comment="interviews-page SelectItem visible text">Online / video</Trans></SelectItem>
+                    <SelectItem value="onsite"><Trans comment="interviews-page SelectItem visible text">On-site</Trans></SelectItem>
+                    <SelectItem value="phone"><Trans comment="interviews-page SelectItem visible text">Phone</Trans></SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               {form.type === 'online' && (
                 <div className="sm:col-span-2">
-                  <Label>Meeting link</Label>
+                  <Label><Trans comment="interviews-page Label visible text">Meeting link</Trans></Label>
                   <Input
-                    placeholder="https://meet.google.com/..."
+                    placeholder={t({ message: "https://meet.google.com/...", comment: "interviews-page component placeholder attribute" })}
                     value={form.meetingLink}
                     onChange={(e) => setForm({ ...form, meetingLink: e.target.value })}
                   />
@@ -303,24 +307,24 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
               )}
               {form.type === 'onsite' && (
                 <div className="sm:col-span-2">
-                  <Label>Location address</Label>
+                  <Label><Trans comment="interviews-page Label visible text">Location address</Trans></Label>
                   <Input
-                    placeholder="Office address"
+                    placeholder={t({ message: "Office address", comment: "interviews-page component placeholder attribute" })}
                     value={form.locationAddress}
                     onChange={(e) => setForm({ ...form, locationAddress: e.target.value })}
                   />
                 </div>
               )}
               <div className="sm:col-span-2">
-                <Label>Interviewer</Label>
+                <Label><Trans comment="interviews-page Label visible text">Interviewer</Trans></Label>
                 <Input
-                  placeholder="Name of interviewer"
+                  placeholder={t({ message: "Name of interviewer", comment: "interviews-page component placeholder attribute" })}
                   value={form.interviewerName}
                   onChange={(e) => setForm({ ...form, interviewerName: e.target.value })}
                 />
               </div>
               <div className="sm:col-span-2">
-                <Label>Instructions for candidate</Label>
+                <Label><Trans comment="interviews-page Label visible text">Instructions for candidate</Trans></Label>
                 <Textarea
                   rows={3}
                   value={form.instructions}
@@ -330,12 +334,12 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
             </div>
             <DialogFooter className="flex-col gap-2 sm:flex-row">
               <Button variant="ghost" onClick={() => setCreateOpen(false)}>
-                Cancel
-              </Button>
+                <Trans comment="interviews-page Button visible text">Cancel
+              </Trans></Button>
               <Button onClick={scheduleInterview} disabled={saving || !form.applicationId || !form.scheduledAt}>
                 {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Calendar className="mr-2 h-4 w-4" />}
-                Schedule interview
-              </Button>
+                <Trans comment="interviews-page Button visible text">Schedule interview
+              </Trans></Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -350,31 +354,31 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Total</p>
+            <p className="text-xs text-slate-500"><Trans comment="interviews-page p visible text">Total</Trans></p>
             <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Upcoming</p>
+            <p className="text-xs text-slate-500"><Trans comment="interviews-page p visible text">Upcoming</Trans></p>
             <p className="text-2xl font-bold text-blue-700">{stats.upcoming}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Scheduled</p>
+            <p className="text-xs text-slate-500"><Trans comment="interviews-page p visible text">Scheduled</Trans></p>
             <p className="text-2xl font-bold text-indigo-700">{stats.scheduled}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Completed</p>
+            <p className="text-xs text-slate-500"><Trans comment="interviews-page p visible text">Completed</Trans></p>
             <p className="text-2xl font-bold text-emerald-700">{stats.completed}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Cancelled</p>
+            <p className="text-xs text-slate-500"><Trans comment="interviews-page p visible text">Cancelled</Trans></p>
             <p className="text-2xl font-bold text-red-700">{stats.cancelled}</p>
           </CardContent>
         </Card>
@@ -384,9 +388,9 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
         <CardHeader className="pb-0">
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-              <TabsTrigger value="past">Past</TabsTrigger>
-              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="upcoming"><Trans comment="interviews-page TabsTrigger visible text">Upcoming</Trans></TabsTrigger>
+              <TabsTrigger value="past"><Trans comment="interviews-page TabsTrigger visible text">Past</Trans></TabsTrigger>
+              <TabsTrigger value="all"><Trans comment="interviews-page TabsTrigger visible text">All</Trans></TabsTrigger>
             </TabsList>
           </Tabs>
         </CardHeader>
@@ -400,7 +404,7 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
           ) : displayList.length === 0 ? (
             <div className="py-12 text-center text-slate-500">
               <Calendar className="mx-auto mb-2 h-10 w-10 text-slate-300" />
-              <p>No interviews to display.</p>
+              <p><Trans comment="interviews-page p visible text">No interviews to display.</Trans></p>
             </div>
           ) : (
             <div className="divide-y rounded-xl border">
@@ -449,8 +453,9 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
                           <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
                             <span className="inline-flex items-center gap-1">
                               <Clock className="h-3 w-3" />
-                              {when.toLocaleString()} · {iv.durationMinutes || 45} min
-                            </span>
+                              {when.toLocaleString()} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"· "}{iv.durationMinutes || 45} <Trans comment="interviews-page span visible text">min
+                            </Trans></span>
                             {iv.interviewerName && (
                               <span className="inline-flex items-center gap-1">
                                 <User className="h-3 w-3" />
@@ -465,8 +470,8 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
                                 className="inline-flex items-center gap-1 text-blue-700 hover:underline break-all"
                               >
                                 <Video className="h-3 w-3" />
-                                Meeting link
-                              </a>
+                                <Trans comment="interviews-page a visible text">Meeting link
+                              </Trans></a>
                             )}
                             {iv.locationAddress && (
                               <span className="inline-flex items-center gap-1">
@@ -477,12 +482,12 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
                           </div>
                           {iv.instructions && (
                             <p className="mt-2 text-xs text-slate-600 rounded-md bg-slate-50 p-2">
-                              Instructions: {iv.instructions}
+                              <Trans comment="interviews-page p visible text">Instructions: </Trans>{iv.instructions}
                             </p>
                           )}
                           {iv.feedbackNotes && (
                             <p className="mt-2 text-xs text-slate-700 rounded-md bg-emerald-50 border border-emerald-200 p-2">
-                              <span className="font-semibold">Outcome:</span> {iv.feedbackNotes}
+                              <span className="font-semibold"><Trans comment="interviews-page span visible text">Outcome:</Trans></span> {iv.feedbackNotes}
                             </p>
                           )}
                         </div>
@@ -494,8 +499,8 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
                         >
                           <Button size="sm" variant="outline">
                             <FileText className="mr-1.5 h-3.5 w-3.5" />
-                            Application
-                            <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                            <Trans comment="interviews-page Button visible text">Application
+                            </Trans><ChevronRight className="ml-1 h-3.5 w-3.5" />
                           </Button>
                         </Link>
                         {!isPast && (
@@ -504,18 +509,18 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
                             onOpenChange={(o) => o && setFeedbackOpen(iv.id)}
                           >
                             <DialogTrigger asChild>
-                              <Button size="sm">Record outcome</Button>
+                              <Button size="sm"><Trans comment="interviews-page Button visible text">Record outcome</Trans></Button>
                             </DialogTrigger>
                             <DialogContent>
                               <DialogHeader>
-                                <DialogTitle>Interview outcome</DialogTitle>
+                                <DialogTitle><Trans comment="interviews-page DialogTitle visible text">Interview outcome</Trans></DialogTitle>
                                 <DialogDescription>
-                                  Mark this interview with its result and add feedback notes.
-                                </DialogDescription>
+                                  <Trans comment="interviews-page DialogDescription visible text">Mark this interview with its result and add feedback notes.
+                                </Trans></DialogDescription>
                               </DialogHeader>
                               <div className="space-y-4">
                                 <div>
-                                  <Label>Outcome</Label>
+                                  <Label><Trans comment="interviews-page Label visible text">Outcome</Trans></Label>
                                   <Select
                                     value={outcome}
                                     onValueChange={(v: any) => setOutcome(v)}
@@ -527,42 +532,42 @@ export default function InterviewsPage({ basePath }: { basePath: string }) {
                                       <SelectItem value="completed">
                                         <span className="inline-flex items-center gap-2">
                                           <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                                          Completed
-                                        </span>
+                                          <Trans comment="interviews-page span visible text">Completed
+                                        </Trans></span>
                                       </SelectItem>
                                       <SelectItem value="rescheduled">
                                         <span className="inline-flex items-center gap-2">
                                           <RefreshCw className="h-4 w-4 text-amber-600" />
-                                          Rescheduled / No show
-                                        </span>
+                                          <Trans comment="interviews-page span visible text">Rescheduled / No show
+                                        </Trans></span>
                                       </SelectItem>
                                       <SelectItem value="cancelled">
                                         <span className="inline-flex items-center gap-2">
                                           <XCircle className="h-4 w-4 text-red-600" />
-                                          Cancelled
-                                        </span>
+                                          <Trans comment="interviews-page span visible text">Cancelled
+                                        </Trans></span>
                                       </SelectItem>
                                     </SelectContent>
                                   </Select>
                                 </div>
                                 <div>
-                                  <Label>Feedback notes</Label>
+                                  <Label><Trans comment="interviews-page Label visible text">Feedback notes</Trans></Label>
                                   <Textarea
                                     rows={5}
                                     value={feedback}
                                     onChange={(e) => setFeedback(e.target.value)}
-                                    placeholder="How it went, follow-up, hiring recommendation…"
+                                    placeholder={t({ message: "How it went, follow-up, hiring recommendation…", comment: "interviews-page component placeholder attribute" })}
                                   />
                                 </div>
                               </div>
                               <DialogFooter className="flex-col gap-2 sm:flex-row">
                                 <Button variant="ghost" onClick={() => setFeedbackOpen(null)}>
-                                  Cancel
-                                </Button>
+                                  <Trans comment="interviews-page Button visible text">Cancel
+                                </Trans></Button>
                                 <Button onClick={() => saveOutcome(iv.id)} disabled={saving}>
                                   {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
-                                  Save outcome
-                                </Button>
+                                  <Trans comment="interviews-page Button visible text">Save outcome
+                                </Trans></Button>
                               </DialogFooter>
                             </DialogContent>
                           </Dialog>

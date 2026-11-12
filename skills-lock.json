@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "css-i18n": {
+      "source": "globalize-now/globalize-skills",
+      "sourceType": "github",
+      "skillPath": "skills/css-i18n/SKILL.md",
+      "computedHash": "5b9022205abab88bc8c7d9d78cdf49811a306790be976054e92557fda08ddda6"
+    },
     "neon": {
       "source": "neondatabase/agent-skills",
       "sourceType": "github",

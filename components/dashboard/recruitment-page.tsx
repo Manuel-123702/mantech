@@ -1,8 +1,10 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from '@/i18n/navigation.hooks';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -64,6 +66,7 @@ type PlacementItem = {
 };
 
 export default function RecruitmentPage({ basePath }: { basePath: string }) {
+  const { t } = useLingui();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -217,28 +220,28 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Recruitment & Placements</h2>
+          <h2 className="text-2xl font-bold text-slate-900"><Trans comment="recruitment-page h2 visible text">Recruitment & Placements</Trans></h2>
           <p className="text-sm text-slate-500">
-            Selected interns, placement confirmations, active internships, and onboarding milestones.
-          </p>
+            <Trans comment="recruitment-page p visible text">Selected interns, placement confirmations, active internships, and onboarding milestones.
+          </Trans></p>
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              New placement
-            </Button>
+              <Trans comment="recruitment-page Button visible text">New placement
+            </Trans></Button>
           </DialogTrigger>
           <DialogContent className="max-w-xl">
             <DialogHeader>
-              <DialogTitle>Create internship placement</DialogTitle>
+              <DialogTitle><Trans comment="recruitment-page DialogTitle visible text">Create internship placement</Trans></DialogTitle>
               <DialogDescription>
-                Select a candidate that has already been marked as &ldquo;Selected&rdquo;.
-              </DialogDescription>
+                <Trans comment="recruitment-page DialogDescription visible text">Select a candidate that has already been marked as &ldquo;Selected&rdquo;.
+              </Trans></DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <Label>Candidate *</Label>
+                <Label><Trans comment="recruitment-page Label visible text">Candidate *</Trans></Label>
                 <SelectFallback
                   value={form.applicationId}
                   onChange={(v) => setForm({ ...form, applicationId: v })}
@@ -246,19 +249,19 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                     value: a.id,
                     label: `${a.internProfile?.user?.fullName} — ${a.opportunity?.title}`,
                   }))}
-                  placeholder="Select selected candidate"
+                  placeholder={t({ message: "Select selected candidate", comment: "recruitment-page component placeholder attribute" })}
                 />
               </div>
               <div className="sm:col-span-2">
-                <Label>Department</Label>
+                <Label><Trans comment="recruitment-page Label visible text">Department</Trans></Label>
                 <Input
-                  placeholder="e.g. Engineering, Marketing"
+                  placeholder={t({ message: "e.g. Engineering, Marketing", comment: "recruitment-page component placeholder attribute" })}
                   value={form.department}
                   onChange={(e) => setForm({ ...form, department: e.target.value })}
                 />
               </div>
               <div>
-                <Label>Start date *</Label>
+                <Label><Trans comment="recruitment-page Label visible text">Start date *</Trans></Label>
                 <Input
                   type="date"
                   value={form.startDate}
@@ -266,7 +269,7 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                 />
               </div>
               <div>
-                <Label>End date *</Label>
+                <Label><Trans comment="recruitment-page Label visible text">End date *</Trans></Label>
                 <Input
                   type="date"
                   value={form.endDate}
@@ -274,23 +277,23 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                 />
               </div>
               <div className="sm:col-span-2">
-                <Label>Objectives</Label>
+                <Label><Trans comment="recruitment-page Label visible text">Objectives</Trans></Label>
                 <Textarea
                   rows={4}
                   value={form.objectives}
                   onChange={(e) => setForm({ ...form, objectives: e.target.value })}
-                  placeholder="Learning goals, projects, or expected deliverables…"
+                  placeholder={t({ message: "Learning goals, projects, or expected deliverables…", comment: "recruitment-page component placeholder attribute" })}
                 />
               </div>
             </div>
             <DialogFooter className="flex-col gap-2 sm:flex-row">
               <Button variant="ghost" onClick={() => setCreateOpen(false)}>
-                Cancel
-              </Button>
+                <Trans comment="recruitment-page Button visible text">Cancel
+              </Trans></Button>
               <Button onClick={createPlacement} disabled={saving || !form.applicationId || !form.startDate || !form.endDate}>
                 {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileCheck className="mr-2 h-4 w-4" />}
-                Create placement
-              </Button>
+                <Trans comment="recruitment-page Button visible text">Create placement
+              </Trans></Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -305,25 +308,25 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Placements</p>
+            <p className="text-xs text-slate-500"><Trans comment="recruitment-page p visible text">Placements</Trans></p>
             <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Active internships</p>
+            <p className="text-xs text-slate-500"><Trans comment="recruitment-page p visible text">Active internships</Trans></p>
             <p className="text-2xl font-bold text-emerald-700">{stats.active}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Pending confirm</p>
+            <p className="text-xs text-slate-500"><Trans comment="recruitment-page p visible text">Pending confirm</Trans></p>
             <p className="text-2xl font-bold text-amber-700">{stats.pending}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-xs text-slate-500">Completed</p>
+            <p className="text-xs text-slate-500"><Trans comment="recruitment-page p visible text">Completed</Trans></p>
             <p className="text-2xl font-bold text-blue-700">{stats.completed}</p>
           </CardContent>
         </Card>
@@ -334,8 +337,8 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <AlertTriangle className="h-4 w-4 text-amber-600" />
-              Awaiting placement ({applications.length})
-            </CardTitle>
+              <Trans comment="recruitment-page CardTitle visible text">Awaiting placement (</Trans>{applications.length}{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{")"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -365,11 +368,11 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
         <CardHeader className="pb-0">
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="completed">Completed</TabsTrigger>
-              <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
-              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="active"><Trans comment="recruitment-page TabsTrigger visible text">Active</Trans></TabsTrigger>
+              <TabsTrigger value="pending"><Trans comment="recruitment-page TabsTrigger visible text">Pending</Trans></TabsTrigger>
+              <TabsTrigger value="completed"><Trans comment="recruitment-page TabsTrigger visible text">Completed</Trans></TabsTrigger>
+              <TabsTrigger value="cancelled"><Trans comment="recruitment-page TabsTrigger visible text">Cancelled</Trans></TabsTrigger>
+              <TabsTrigger value="all"><Trans comment="recruitment-page TabsTrigger visible text">All</Trans></TabsTrigger>
             </TabsList>
           </Tabs>
         </CardHeader>
@@ -383,7 +386,7 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
           ) : displayed.length === 0 ? (
             <div className="py-12 text-center text-slate-500">
               <UserCheck className="mx-auto mb-2 h-10 w-10 text-slate-300" />
-              <p>No placements in this view.</p>
+              <p><Trans comment="recruitment-page p visible text">No placements in this view.</Trans></p>
             </div>
           ) : (
             <div className="grid gap-4 lg:grid-cols-2">
@@ -439,7 +442,8 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                             <p className="text-sm text-slate-500 truncate">{p.application.opportunity.title}</p>
                             <p className="mt-1 text-xs text-slate-500 inline-flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
-                              {start.toLocaleDateString()} → {end.toLocaleDateString()}
+                              {start.toLocaleDateString()} {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"→ "}{end.toLocaleDateString()}
                             </p>
                           </div>
                         </div>
@@ -449,19 +453,19 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                         >
                           <DialogTrigger asChild>
                             <Button size="sm" variant="outline">
-                              Update
-                            </Button>
+                              <Trans comment="recruitment-page Button visible text">Update
+                            </Trans></Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Update placement status</DialogTitle>
+                              <DialogTitle><Trans comment="recruitment-page DialogTitle visible text">Update placement status</Trans></DialogTitle>
                               <DialogDescription>
-                                Change the status of {p.internProfile.user.fullName}&apos;s placement.
-                              </DialogDescription>
+                                <Trans comment="recruitment-page DialogDescription visible text">Change the status of </Trans>{p.internProfile.user.fullName}<Trans comment="recruitment-page DialogDescription visible text">&apos;s placement.
+                              </Trans></DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label>New status</Label>
+                                <Label><Trans comment="recruitment-page Label visible text">New status</Trans></Label>
                                 <SelectFallback
                                   value={statusForm}
                                   onChange={setStatusForm}
@@ -477,15 +481,15 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                             </div>
                             <DialogFooter className="flex-col gap-2 sm:flex-row">
                               <Button variant="ghost" onClick={() => setPlacementId(null)}>
-                                Cancel
-                              </Button>
+                                <Trans comment="recruitment-page Button visible text">Cancel
+                              </Trans></Button>
                               <Button
                                 onClick={() => updatePlacementStatus(p.id, statusForm)}
                                 disabled={saving}
                               >
                                 {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
-                                Save status
-                              </Button>
+                                <Trans comment="recruitment-page Button visible text">Save status
+                              </Trans></Button>
                             </DialogFooter>
                           </DialogContent>
                         </Dialog>
@@ -493,15 +497,16 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
 
                       {p.department && (
                         <p className="text-xs text-slate-500">
-                          <span className="font-semibold">Department:</span> {p.department}
+                          <span className="font-semibold"><Trans comment="recruitment-page span visible text">Department:</Trans></span> {p.department}
                         </p>
                       )}
 
                       {(p.status === 'ACTIVE' || p.status === 'CONFIRMED') && (
                         <div>
                           <div className="flex justify-between text-xs text-slate-500 mb-1.5">
-                            <span>Internship progress</span>
-                            <span>{Math.round(progress)}%</span>
+                            <span><Trans comment="recruitment-page span visible text">Internship progress</Trans></span>
+                            <span>{Math.round(progress)}{/* eslint-disable-next-line i18next/no-literal-string -- numeric value is data, not translation copy */}
+{"%"}</span>
                           </div>
                           <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
                             <div
@@ -516,8 +521,9 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                         <div className="rounded-xl border bg-slate-50/60 p-3">
                           <p className="text-xs font-semibold text-slate-700 mb-2 inline-flex items-center gap-1">
                             <ClipboardList className="h-3.5 w-3.5" />
-                            Onboarding ({doneItems}/{totalItems})
-                          </p>
+                            <Trans comment="recruitment-page p visible text">Onboarding (</Trans>{doneItems}{/* eslint-disable-next-line i18next/no-literal-string -- numeric value is data, not translation copy */}
+{"/"}{totalItems}{/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{")"}</p>
                           <ul className="space-y-2">
                             {p.onboardingItems.map((item) => (
                               <li key={item.id}>
@@ -550,7 +556,7 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
 
                       {p.objectives && (
                         <div className="rounded-lg bg-slate-50 p-3 text-xs text-slate-600">
-                          <span className="font-semibold text-slate-900">Objectives:</span>{' '}
+                          <span className="font-semibold text-slate-900"><Trans comment="recruitment-page span visible text">Objectives:</Trans></span>{' '}
                           {p.objectives}
                         </div>
                       )}
@@ -558,8 +564,8 @@ export default function RecruitmentPage({ basePath }: { basePath: string }) {
                       <div className="flex flex-wrap items-center gap-2 border-t pt-3">
                         <Link href={`${basePath}/applications/${p.application.id}`}>
                           <Button size="sm" variant="ghost">
-                            Application
-                          </Button>
+                            <Trans comment="recruitment-page Button visible text">Application
+                          </Trans></Button>
                         </Link>
                       </div>
                     </CardContent>

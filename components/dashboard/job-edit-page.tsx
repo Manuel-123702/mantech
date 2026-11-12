@@ -1,8 +1,11 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation.hooks';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -66,6 +69,7 @@ const emptyForm: FormState = {
 };
 
 export default function JobEditPage({ backHref }: { backHref: string }) {
+  const { t } = useLingui();
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const { fields, regions, error: taxonomyError } = useTaxonomy();
@@ -170,7 +174,7 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
         <div className="max-w-3xl mx-auto">
           <div className="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
             <Loader2 className="w-8 h-8 mx-auto animate-spin mb-4 text-slate-400" />
-            <p className="text-sm text-slate-500">Loading job…</p>
+            <p className="text-sm text-slate-500"><Trans comment="job-edit-page p visible text">Loading job…</Trans></p>
           </div>
         </div>
       </div>
@@ -184,7 +188,7 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
           <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center shadow-sm">
             <h2 className="text-sm font-semibold text-red-800">{error}</h2>
             <Link href={backHref} className="mt-4 inline-block">
-              <Button variant="outline">Back to Jobs</Button>
+              <Button variant="outline"><Trans comment="job-edit-page Button visible text">Back to Jobs</Trans></Button>
             </Link>
           </div>
         </div>
@@ -199,13 +203,13 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
           <Link href={backHref}>
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Jobs
-            </Button>
+              <Trans comment="job-edit-page Button visible text">Back to Jobs
+            </Trans></Button>
           </Link>
-          <h1 className="text-3xl font-bold text-slate-900">Edit Job Posting</h1>
+          <h1 className="text-3xl font-bold text-slate-900"><Trans comment="job-edit-page h1 visible text">Edit Job Posting</Trans></h1>
           <p className="text-slate-600">
-            Update the details of this job vacancy.
-          </p>
+            <Trans comment="job-edit-page p visible text">Update the details of this job vacancy.
+          </Trans></p>
         </div>
 
         {taxonomyError && (
@@ -224,23 +228,23 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="title">Job Title *</Label>
+                <Label htmlFor="title"><Trans comment="job-edit-page Label visible text">Job Title *</Trans></Label>
                 <Input
                   id="title"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  placeholder="e.g. Software Engineer, Accountant, Marketing Manager"
+                  placeholder={t({ message: "e.g. Software Engineer, Accountant, Marketing Manager", comment: "job-edit-page component placeholder attribute" })}
                   required
                 />
               </div>
 
               <div>
-                <Label htmlFor="description">Job Description *</Label>
+                <Label htmlFor="description"><Trans comment="job-edit-page Label visible text">Job Description *</Trans></Label>
                 <Textarea
                   id="description"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Describe the role, responsibilities, and what the candidate will do…"
+                  placeholder={t({ message: "Describe the role, responsibilities, and what the candidate will do…", comment: "job-edit-page component placeholder attribute" })}
                   rows={5}
                   required
                 />
@@ -248,33 +252,33 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <Label htmlFor="department">Department</Label>
+                  <Label htmlFor="department"><Trans comment="job-edit-page Label visible text">Department</Trans></Label>
                   <Input
                     id="department"
                     value={form.department}
                     onChange={(e) => setForm({ ...form, department: e.target.value })}
-                    placeholder="e.g. Engineering, Sales, HR"
+                    placeholder={t({ message: "e.g. Engineering, Sales, HR", comment: "job-edit-page component placeholder attribute" })}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="educationLevel">Education Level</Label>
+                  <Label htmlFor="educationLevel"><Trans comment="job-edit-page Label visible text">Education Level</Trans></Label>
                   <Input
                     id="educationLevel"
                     value={form.educationLevel}
                     onChange={(e) => setForm({ ...form, educationLevel: e.target.value })}
-                    placeholder="e.g. Bachelor, HND, Master"
+                    placeholder={t({ message: "e.g. Bachelor, HND, Master", comment: "job-edit-page component placeholder attribute" })}
                   />
                 </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <Label htmlFor="field">Professional Field</Label>
+                  <Label htmlFor="field"><Trans comment="job-edit-page Label visible text">Professional Field</Trans></Label>
                   <Select
                     onValueChange={(value) => setForm({ ...form, fieldId: value, specializationId: '' })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select field" />
+                      <SelectValue placeholder={t({ message: "Select field", comment: "job-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
                       {fields.map((f) => (
@@ -286,13 +290,13 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="specialization">Specialization</Label>
+                  <Label htmlFor="specialization"><Trans comment="job-edit-page Label visible text">Specialization</Trans></Label>
                   <Select
                     onValueChange={(value) => setForm({ ...form, specializationId: value })}
                     disabled={!form.fieldId}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select specialization" />
+                      <SelectValue placeholder={t({ message: "Select specialization", comment: "job-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
                       {fields.find((f) => f.id === form.fieldId)?.specializations.map((s) => (
@@ -304,10 +308,10 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="region">Region</Label>
+                  <Label htmlFor="region"><Trans comment="job-edit-page Label visible text">Region</Trans></Label>
                   <Select onValueChange={(value) => setForm({ ...form, regionId: value })}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select region" />
+                      <SelectValue placeholder={t({ message: "Select region", comment: "job-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
                       {regions.map((r) => (
@@ -322,59 +326,59 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <Label htmlFor="city">City *</Label>
+                  <Label htmlFor="city"><Trans comment="job-edit-page Label visible text">City *</Trans></Label>
                   <Input
                     id="city"
                     value={form.city}
                     onChange={(e) => setForm({ ...form, city: e.target.value })}
-                    placeholder="e.g. Douala, Yaoundé"
+                    placeholder={t({ message: "e.g. Douala, Yaoundé", comment: "job-edit-page component placeholder attribute" })}
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="location">Location / Address</Label>
+                  <Label htmlFor="location"><Trans comment="job-edit-page Label visible text">Location / Address</Trans></Label>
                   <Input
                     id="location"
                     value={form.location}
                     onChange={(e) => setForm({ ...form, location: e.target.value })}
-                    placeholder="e.g. Bonapriso, Douala"
+                    placeholder={t({ message: "e.g. Bonapriso, Douala", comment: "job-edit-page component placeholder attribute" })}
                   />
                 </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <Label htmlFor="workMode">Work Mode</Label>
+                  <Label htmlFor="workMode"><Trans comment="job-edit-page Label visible text">Work Mode</Trans></Label>
                   <Select
                     value={form.workMode}
                     onValueChange={(value) => setForm({ ...form, workMode: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select work mode" />
+                      <SelectValue placeholder={t({ message: "Select work mode", comment: "job-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ONSITE">On-site</SelectItem>
-                      <SelectItem value="HYBRID">Hybrid</SelectItem>
-                      <SelectItem value="REMOTE">Remote</SelectItem>
+                      <SelectItem value="ONSITE"><Trans comment="job-edit-page SelectItem visible text">On-site</Trans></SelectItem>
+                      <SelectItem value="HYBRID"><Trans comment="job-edit-page SelectItem visible text">Hybrid</Trans></SelectItem>
+                      <SelectItem value="REMOTE"><Trans comment="job-edit-page SelectItem visible text">Remote</Trans></SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="type">Job Type</Label>
+                  <Label htmlFor="type"><Trans comment="job-edit-page Label visible text">Job Type</Trans></Label>
                   <Select
                     value={form.type}
                     onValueChange={(value) => setForm({ ...form, type: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
+                      <SelectValue placeholder={t({ message: "Select type", comment: "job-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="FULL_TIME">Full-time</SelectItem>
-                      <SelectItem value="PART_TIME">Part-time</SelectItem>
-                      <SelectItem value="CONTRACT">Contract</SelectItem>
-                      <SelectItem value="INTERNSHIP">Internship</SelectItem>
-                      <SelectItem value="VOLUNTEER">Volunteer</SelectItem>
-                      <SelectItem value="FREELANCE">Freelance</SelectItem>
+                      <SelectItem value="FULL_TIME"><Trans comment="job-edit-page SelectItem visible text">Full-time</Trans></SelectItem>
+                      <SelectItem value="PART_TIME"><Trans comment="job-edit-page SelectItem visible text">Part-time</Trans></SelectItem>
+                      <SelectItem value="CONTRACT"><Trans comment="job-edit-page SelectItem visible text">Contract</Trans></SelectItem>
+                      <SelectItem value="INTERNSHIP"><Trans comment="job-edit-page SelectItem visible text">Internship</Trans></SelectItem>
+                      <SelectItem value="VOLUNTEER"><Trans comment="job-edit-page SelectItem visible text">Volunteer</Trans></SelectItem>
+                      <SelectItem value="FREELANCE"><Trans comment="job-edit-page SelectItem visible text">Freelance</Trans></SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -384,34 +388,34 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
                     onCheckedChange={(checked) => setForm({ ...form, isRemote: !!checked })}
                   />
                   <Label htmlFor="isRemote" className="ml-2 text-sm text-slate-600">
-                    Remote position
-                  </Label>
+                    <Trans comment="job-edit-page Label visible text">Remote position
+                  </Trans></Label>
                 </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <Label htmlFor="salaryMinXAF">Salary Min (XAF)</Label>
+                  <Label htmlFor="salaryMinXAF"><Trans comment="job-edit-page Label visible text">Salary Min (XAF)</Trans></Label>
                   <Input
                     id="salaryMinXAF"
                     type="number"
                     value={form.salaryMinXAF}
                     onChange={(e) => setForm({ ...form, salaryMinXAF: e.target.value })}
-                    placeholder="e.g. 150000"
+                    placeholder={t({ message: "e.g. 150000", comment: "job-edit-page component placeholder attribute" })}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="salaryMaxXAF">Salary Max (XAF)</Label>
+                  <Label htmlFor="salaryMaxXAF"><Trans comment="job-edit-page Label visible text">Salary Max (XAF)</Trans></Label>
                   <Input
                     id="salaryMaxXAF"
                     type="number"
                     value={form.salaryMaxXAF}
                     onChange={(e) => setForm({ ...form, salaryMaxXAF: e.target.value })}
-                    placeholder="e.g. 300000"
+                    placeholder={t({ message: "e.g. 300000", comment: "job-edit-page component placeholder attribute" })}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="expiryDate">Expiry Date *</Label>
+                  <Label htmlFor="expiryDate"><Trans comment="job-edit-page Label visible text">Expiry Date *</Trans></Label>
                   <Input
                     id="expiryDate"
                     type="date"
@@ -424,8 +428,8 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
 
               <div className="pt-4 border-t">
                 <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
-                  Required Skills
-                </h3>
+                  <Trans comment="job-edit-page h3 visible text">Required Skills
+                </Trans></h3>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {form.requiredSkills.map((skill, i) => (
                     <span key={i} className="px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-200/60 text-xs font-semibold text-blue-800 flex items-center gap-2">
@@ -435,18 +439,18 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
                         onClick={() => handleSkillRemove(skill, 'required')}
                         className="text-blue-400 hover:text-blue-600"
                       >
-                        ×
-                      </button>
+                        {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"×"}</button>
                     </span>
                   ))}
                   {form.requiredSkills.length === 0 && (
-                    <p className="text-xs text-slate-400 italic">No required skills added yet.</p>
+                    <p className="text-xs text-slate-400 italic"><Trans comment="job-edit-page p visible text">No required skills added yet.</Trans></p>
                   )}
                 </div>
                 <div className="flex gap-2">
                   <Input
                     id="new-required-skill"
-                    placeholder="Add a required skill…"
+                    placeholder={t({ message: "Add a required skill…", comment: "job-edit-page component placeholder attribute" })}
                     className="flex-1 text-xs"
                   />
                   <Button
@@ -460,15 +464,15 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
                       }
                     }}
                   >
-                    Add
-                  </Button>
+                    <Trans comment="job-edit-page Button visible text">Add
+                  </Trans></Button>
                 </div>
               </div>
 
               <div className="pt-4 border-t">
                 <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
-                  Preferred Skills
-                </h3>
+                  <Trans comment="job-edit-page h3 visible text">Preferred Skills
+                </Trans></h3>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {form.preferredSkills.map((skill, i) => (
                     <span key={i} className="px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700 flex items-center gap-2">
@@ -478,18 +482,18 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
                         onClick={() => handleSkillRemove(skill, 'preferred')}
                         className="text-slate-400 hover:text-slate-600"
                       >
-                        ×
-                      </button>
+                        {/* eslint-disable-next-line i18next/no-literal-string -- punctuation or symbol separator cannot be translated */}
+{"×"}</button>
                     </span>
                   ))}
                   {form.preferredSkills.length === 0 && (
-                    <p className="text-xs text-slate-400 italic">No preferred skills added yet.</p>
+                    <p className="text-xs text-slate-400 italic"><Trans comment="job-edit-page p visible text">No preferred skills added yet.</Trans></p>
                   )}
                 </div>
                 <div className="flex gap-2">
                   <Input
                     id="new-preferred-skill"
-                    placeholder="Add a preferred skill…"
+                    placeholder={t({ message: "Add a preferred skill…", comment: "job-edit-page component placeholder attribute" })}
                     className="flex-1 text-xs"
                   />
                   <Button
@@ -503,74 +507,74 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
                       }
                     }}
                   >
-                    Add
-                  </Button>
+                    <Trans comment="job-edit-page Button visible text">Add
+                  </Trans></Button>
                 </div>
               </div>
 
               <div className="pt-4 border-t">
                 <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
-                  Application Method
-                </h3>
+                  <Trans comment="job-edit-page h3 visible text">Application Method
+                </Trans></h3>
                 <div>
-                  <Label htmlFor="applicationMethod">Application Method *</Label>
+                  <Label htmlFor="applicationMethod"><Trans comment="job-edit-page Label visible text">Application Method *</Trans></Label>
                   <Select
                     onValueChange={(value) => setForm({ ...form, applicationMethod: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select application method" />
+                      <SelectValue placeholder={t({ message: "Select application method", comment: "job-edit-page component placeholder attribute" })} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="MANTECH">Apply on MANTECH</SelectItem>
-                      <SelectItem value="COMPANY_WEBSITE">Apply on Company Website</SelectItem>
-                      <SelectItem value="EXTERNAL">Apply Externally</SelectItem>
+                      <SelectItem value="MANTECH"><Trans comment="job-edit-page SelectItem visible text">Apply on MANTECH</Trans></SelectItem>
+                      <SelectItem value="COMPANY_WEBSITE"><Trans comment="job-edit-page SelectItem visible text">Apply on Company Website</Trans></SelectItem>
+                      <SelectItem value="EXTERNAL"><Trans comment="job-edit-page SelectItem visible text">Apply Externally</Trans></SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {(form.applicationMethod === 'COMPANY_WEBSITE' || form.applicationMethod === 'EXTERNAL') && (
                   <div className="mt-4">
-                    <Label htmlFor="applicationUrl">Application URL *</Label>
+                    <Label htmlFor="applicationUrl"><Trans comment="job-edit-page Label visible text">Application URL *</Trans></Label>
                     <Input
                       id="applicationUrl"
                       value={form.applicationUrl}
                       onChange={(e) => setForm({ ...form, applicationUrl: e.target.value })}
-                      placeholder="https://..."
+                      placeholder={t({ message: "https://...", comment: "job-edit-page component placeholder attribute" })}
                     />
                   </div>
                 )}
 
                 {form.applicationMethod === 'EXTERNAL' && (
                   <div className="mt-4">
-                    <Label htmlFor="externalPlatform">Platform Name</Label>
+                    <Label htmlFor="externalPlatform"><Trans comment="job-edit-page Label visible text">Platform Name</Trans></Label>
                     <Input
                       id="externalPlatform"
                       value={form.externalPlatform}
                       onChange={(e) => setForm({ ...form, externalPlatform: e.target.value })}
-                      placeholder="e.g. LinkedIn, University Portal"
+                      placeholder={t({ message: "e.g. LinkedIn, University Portal", comment: "job-edit-page component placeholder attribute" })}
                     />
                   </div>
                 )}
 
                 <div className="mt-4">
-                  <Label htmlFor="instructions">Application Instructions</Label>
+                  <Label htmlFor="instructions"><Trans comment="job-edit-page Label visible text">Application Instructions</Trans></Label>
                   <Textarea
                     id="instructions"
                     value={form.instructions}
                     onChange={(e) => setForm({ ...form, instructions: e.target.value })}
-                    placeholder="Any specific instructions for applicants…"
+                    placeholder={t({ message: "Any specific instructions for applicants…", comment: "job-edit-page component placeholder attribute" })}
                     rows={3}
                   />
                 </div>
 
                 <div className="mt-4">
-                  <Label htmlFor="contactEmail">Contact Email</Label>
+                  <Label htmlFor="contactEmail"><Trans comment="job-edit-page Label visible text">Contact Email</Trans></Label>
                   <Input
                     id="contactEmail"
                     type="email"
                     value={form.contactEmail}
                     onChange={(e) => setForm({ ...form, contactEmail: e.target.value })}
-                    placeholder="recruitment@company.cm"
+                    placeholder={t({ message: "recruitment@company.cm", comment: "job-edit-page component placeholder attribute" })}
                   />
                 </div>
               </div>
@@ -578,20 +582,20 @@ export default function JobEditPage({ backHref }: { backHref: string }) {
               <div className="flex justify-end gap-4 pt-6 border-t">
                 <Link href={backHref}>
                   <Button variant="outline" type="button">
-                    Cancel
-                  </Button>
+                    <Trans comment="job-edit-page Button visible text">Cancel
+                  </Trans></Button>
                 </Link>
                 <Button type="submit" disabled={saving}>
                   {saving ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Saving…
-                    </>
+                      <Trans comment="job-edit-page component visible text">Saving…
+                    </Trans></>
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      Save changes
-                    </>
+                      <Trans comment="job-edit-page component visible text">Save changes
+                    </Trans></>
                   )}
                 </Button>
               </div>

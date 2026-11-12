@@ -1,3 +1,5 @@
+import { getServerT } from '@/i18n/server';
+import { Trans } from '@lingui/react/macro';
 import { prisma } from '@/lib/prisma';
 import type { UserRole } from '@prisma/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -123,6 +125,7 @@ export async function SettingsView({
   organization: SettingsOrganization;
   userId: string;
 }) {
+  const t = getServerT();
   const isUniversity = orgType === 'UNIVERSITY';
 
   const actorRoles: UserRole[] = isUniversity ? ['UNIVERSITY', 'ADMIN'] : ['COMPANY', 'ADMIN'];
@@ -155,10 +158,10 @@ export async function SettingsView({
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Settings</h2>
+          <h2 className="text-2xl font-bold text-slate-900"><Trans comment="settings-view h2 visible text">Settings</Trans></h2>
           <p className="text-sm text-slate-500">
-            {isUniversity ? 'Institution profile' : 'Organization profile'}, team members, notifications, security and activity.
-          </p>
+            {isUniversity ? 'Institution profile' : 'Organization profile'}<Trans comment="settings-view p visible text">, team members, notifications, security and activity.
+          </Trans></p>
         </div>
       </div>
 
@@ -172,7 +175,7 @@ export async function SettingsView({
             )}
             <div>
               <p className="font-semibold">
-                Verification status: {organization.verificationStatus}
+                <Trans comment="settings-view p visible text">Verification status: </Trans>{organization.verificationStatus}
               </p>
               {organization.verificationStatus === 'VERIFIED' ? (
                 <p className="text-sm opacity-80">
@@ -182,9 +185,9 @@ export async function SettingsView({
                 </p>
               ) : (
                 <p className="text-sm opacity-80">
-                  Complete verification with MANTECH to unlock Intern Passport search, authorized CV access,
+                  <Trans comment="settings-view p visible text">Complete verification with MANTECH to unlock Intern Passport search, authorized CV access,
                   and priority visibility.
-                </p>
+                </Trans></p>
               )}
             </div>
           </div>
@@ -195,8 +198,8 @@ export async function SettingsView({
               rel="noopener noreferrer"
             >
               <Badge variant="default" className="cursor-pointer">
-                Request verification on WhatsApp
-              </Badge>
+                <Trans comment="settings-view Badge visible text">Request verification on WhatsApp
+              </Trans></Badge>
             </a>
           )}
         </CardContent>
@@ -229,8 +232,8 @@ export async function SettingsView({
             <CardHeader>
               <CardTitle className="text-lg inline-flex items-center gap-2">
                 <Users className="h-5 w-5 text-slate-500" />
-                Team members & permissions
-              </CardTitle>
+                <Trans comment="settings-view CardTitle visible text">Team members & permissions
+              </Trans></CardTitle>
               <CardDescription>
                 {isUniversity
                   ? 'Invite staff and control who can coordinate placements or recruit on behalf of the institution.'
@@ -252,8 +255,8 @@ export async function SettingsView({
                           </p>
                           {m.isOwner && (
                             <Badge variant="default" className="bg-amber-600 hover:bg-amber-700">
-                              Owner
-                            </Badge>
+                              <Trans comment="settings-view Badge visible text">Owner
+                            </Trans></Badge>
                           )}
                         </div>
                         <p className="text-xs text-slate-500 truncate">{m.user.email}</p>
@@ -276,11 +279,11 @@ export async function SettingsView({
             <CardHeader>
               <CardTitle className="text-lg inline-flex items-center gap-2">
                 <Bell className="h-5 w-5 text-slate-500" />
-                Notifications
-              </CardTitle>
+                <Trans comment="settings-view CardTitle visible text">Notifications
+              </Trans></CardTitle>
               <CardDescription>
-                Choose which updates reach you by email and in-platform.
-              </CardDescription>
+                <Trans comment="settings-view CardDescription visible text">Choose which updates reach you by email and in-platform.
+              </Trans></CardDescription>
             </CardHeader>
             <CardContent>
               <SettingsClient mode="notifications" orgType={orgType} organization={orgData} userId={userId} />
@@ -293,29 +296,29 @@ export async function SettingsView({
             <CardHeader>
               <CardTitle className="text-base inline-flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-slate-500" />
-                Privacy & data access
-              </CardTitle>
+                <Trans comment="settings-view CardTitle visible text">Privacy & data access
+              </Trans></CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div className="rounded-lg bg-slate-50 p-3">
                 <p className="font-semibold text-slate-900 inline-flex items-center gap-1.5">
                   <FileText className="h-3.5 w-3.5" />
-                  CV access
-                </p>
+                  <Trans comment="settings-view p visible text">CV access
+                </Trans></p>
                 <p className="text-slate-600 mt-1">
-                  CVs are never exposed publicly. Access is server-authorized, auditable, and
+                  <Trans comment="settings-view p visible text">CVs are never exposed publicly. Access is server-authorized, auditable, and
                   only granted to verified organizations.
-                </p>
+                </Trans></p>
               </div>
               <div className="rounded-lg bg-slate-50 p-3">
                 <p className="font-semibold text-slate-900 inline-flex items-center gap-1.5">
                   <Lock className="h-3.5 w-3.5" />
-                  Candidate phone privacy
-                </p>
+                  <Trans comment="settings-view p visible text">Candidate phone privacy
+                </Trans></p>
                 <p className="text-slate-600 mt-1">
-                  Phone numbers default to private. Use the &ldquo;Contact&rdquo; action to
+                  <Trans comment="settings-view p visible text">Phone numbers default to private. Use the &ldquo;Contact&rdquo; action to
                   request access; candidates must approve it.
-                </p>
+                </Trans></p>
               </div>
             </CardContent>
           </Card>
@@ -324,12 +327,12 @@ export async function SettingsView({
             <CardHeader>
               <CardTitle className="text-base inline-flex items-center gap-2">
                 <History className="h-4 w-4 text-slate-500" />
-                Recent activity
-              </CardTitle>
+                <Trans comment="settings-view CardTitle visible text">Recent activity
+              </Trans></CardTitle>
             </CardHeader>
             <CardContent>
               {recentAudit.length === 0 ? (
-                <p className="py-4 text-center text-sm text-slate-500">No recent activity.</p>
+                <p className="py-4 text-center text-sm text-slate-500"><Trans comment="settings-view p visible text">No recent activity.</Trans></p>
               ) : (
                 <ol className="space-y-3 border-l border-slate-200 pl-4">
                   {recentAudit.map((entry) => (
@@ -355,8 +358,8 @@ export async function SettingsView({
             <CardHeader>
               <CardTitle className="text-base inline-flex items-center gap-2">
                 <Briefcase className="h-4 w-4 text-slate-500" />
-                MANTECH support
-              </CardTitle>
+                <Trans comment="settings-view CardTitle visible text">MANTECH support
+              </Trans></CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <a
@@ -366,10 +369,10 @@ export async function SettingsView({
                 className="block rounded-lg bg-emerald-50 border border-emerald-200 p-3 hover:bg-emerald-100 transition"
               >
                 <p className="font-semibold text-emerald-900 inline-flex items-center gap-1.5">
-                  <WhatsAppIcon className="h-4 w-4 text-[#25D366]" title="WhatsApp" />
-                  WhatsApp concierge
-                </p>
-                <p className="text-emerald-800 text-xs">Start a chat with MANTECH</p>
+                  <WhatsAppIcon className="h-4 w-4 text-[#25D366]" title={t({ message: "WhatsApp", comment: "settings-view component title attribute" })} />
+                  <Trans comment="settings-view p visible text">WhatsApp concierge
+                </Trans></p>
+                <p className="text-emerald-800 text-xs"><Trans comment="settings-view p visible text">Start a chat with MANTECH</Trans></p>
               </a>
             </CardContent>
           </Card>

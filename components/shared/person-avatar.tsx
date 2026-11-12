@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLingui } from '@lingui/react/macro';
 
 /**
  * Professional portrait avatars for editorial content (success stories and
@@ -111,6 +112,7 @@ export type PersonAvatarProps = {
  * and smooth fallback so profile portraits never display as broken or empty boxes.
  */
 export function PersonAvatar({ id, name, className = '', imageUrl }: PersonAvatarProps) {
+  const { t } = useLingui();
   const fallbackSrc = buildPortrait(`${id}:${name}`, name);
   const [imgSrc, setImgSrc] = useState<string>(imageUrl || fallbackSrc);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -147,7 +149,7 @@ export function PersonAvatar({ id, name, className = '', imageUrl }: PersonAvata
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={hasError ? fallbackSrc : imgSrc}
-        alt={`${name} — profile portrait`}
+        alt={t({ message: '{name} — profile portrait', values: { name }, comment: 'Alternative text for the person’s profile photo' })}
         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
           isLoaded || hasError ? 'opacity-100' : 'opacity-0'
         }`}

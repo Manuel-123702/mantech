@@ -1,4 +1,6 @@
 'use client';
+import { Trans } from '@lingui/react/macro';
+
 
 import { useState } from 'react';
 import { Rocket, Loader2 } from 'lucide-react';
@@ -35,7 +37,7 @@ export function BoostRequestButton({
     return (
       <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
         <Rocket className="h-3 w-3" />
-        Boosted until {new Date(boost.endsAt).toLocaleDateString()}
+        <Trans comment="boost-request-button span visible text">Boosted until </Trans>{new Date(boost.endsAt).toLocaleDateString()}
       </span>
     );
   }
@@ -43,8 +45,8 @@ export function BoostRequestButton({
     return (
       <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700">
         <Rocket className="h-3 w-3" />
-        Boost pending review
-      </span>
+        <Trans comment="boost-request-button span visible text">Boost pending review
+      </Trans></span>
     );
   }
 
@@ -82,15 +84,15 @@ export function BoostRequestButton({
         className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-60"
       >
         <Rocket className="h-3 w-3" />
-        Request boost
-      </button>
+        <Trans comment="boost-request-button button visible text">Request boost
+      </Trans></button>
 
       {open && (
         <div className="absolute right-0 z-10 mt-2 w-56 rounded-xl border border-slate-200 bg-white p-3 shadow-lg">
-          <p className="text-[11px] font-semibold text-slate-700">Choose a boost length</p>
+          <p className="text-[11px] font-semibold text-slate-700"><Trans comment="boost-request-button p visible text">Choose a boost length</Trans></p>
           <p className="mt-0.5 text-[10px] text-slate-500">
-            An admin reviews the request; approved boosts feature this posting until the window ends.
-          </p>
+            <Trans comment="boost-request-button p visible text">An admin reviews the request; approved boosts feature this posting until the window ends.
+          </Trans></p>
           <div className="mt-2 flex gap-1.5">
             {BOOST_DAY_OPTIONS.map((days) => (
               <button
@@ -100,15 +102,15 @@ export function BoostRequestButton({
                 disabled={busy}
                 className="flex-1 rounded-lg bg-slate-900 px-2 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-slate-700 disabled:opacity-60"
               >
-                {days}d
-              </button>
+                {days}<Trans comment="boost-request-button button visible text">d
+              </Trans></button>
             ))}
           </div>
           {error && <p className="mt-2 text-[10px] font-medium text-red-600">{error}</p>}
           {busy && (
             <p className="mt-2 flex items-center gap-1 text-[10px] text-slate-500">
-              <Loader2 className="h-3 w-3 animate-spin" /> Sending…
-            </p>
+              <Loader2 className="h-3 w-3 animate-spin" /> <Trans comment="boost-request-button p visible text">Sending…
+            </Trans></p>
           )}
         </div>
       )}

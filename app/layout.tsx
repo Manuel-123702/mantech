@@ -1,17 +1,17 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import { AuthProvider } from '@/lib/clerk';
-import { Navbar } from '@/components/shared/navbar';
-import { Footer } from '@/components/shared/footer';
-import { LoadingScreen } from '@/components/shared/loading-screen';
-import { WhatsAppFloat } from '@/components/shared/whatsapp-float';
-import { ScrollToTop } from '@/components/shared/scroll-to-top';
-import { PWAInstallPrompt } from '@/components/shared/pwa-install-prompt';
-import { Toaster } from '@/components/ui/sonner';
 import { SITE_URL, organizationJsonLd } from '@/lib/seo';
+import { getDirection, resolveLocale, sourceLocale } from '@/i18n/locales';
+import { getI18nInstance } from './appRouterI18n';
+import { setI18n } from '@lingui/react/server';
+import { headers } from 'next/headers';
+import { LinguiClientProvider } from './LinguiClientProvider';
+import { LanguageSwitcher } from '@/components/shared/language-switcher';
+import { msg } from '@lingui/core/macro';
 
 const inter = { variable: 'font-sans' };
 const sora = { variable: 'font-heading' };
+const sourceI18n = getI18nInstance(sourceLocale);
 
 export const viewport: Viewport = {
   themeColor: '#020617',
@@ -23,16 +23,15 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'MANTECH Nexus — Internships in Cameroon',
-    template: '%s | MANTECH Nexus',
+    default: sourceI18n._(msg({ message: 'MANTECH Nexus — Internships in Cameroon', comment: 'Default browser title for the MANTECH internship marketplace' })),
+    template: sourceI18n._(msg({ message: '{page} | MANTECH Nexus', comment: 'Browser title pattern; page is replaced by the current page title' }), { page: '%s' }),
   },
-  description:
-    'Find verified internships in Cameroon — Douala, Yaoundé, Buea. Verified companies, universities, real placements, Intern Passport.',
+  description: sourceI18n._(msg({ message: 'Find verified internships in Cameroon — Douala, Yaoundé, Buea. Verified companies, universities, real placements, Intern Passport.', comment: 'Default search description for the MANTECH marketplace' })),
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'MANTECH Nexus',
+    title: sourceI18n._(msg({ message: 'MANTECH Nexus', comment: 'Installed app name shown by the operating system' })),
   },
   keywords: [
     'MANTECH',
@@ -49,29 +48,33 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: 'MANTECH Nexus — Internships in Cameroon',
-    description:
-      'Verified internships, companies and universities across Cameroon — Douala, Yaoundé, Buea.',
+    title: sourceI18n._(msg({ message: 'MANTECH Nexus — Internships in Cameroon', comment: 'Open Graph title used when the site is shared' })),
+    description: sourceI18n._(msg({ message: 'Verified internships, companies and universities across Cameroon — Douala, Yaoundé, Buea.', comment: 'Open Graph description used when the site is shared' })),
     type: 'website',
     locale: 'en_US',
     url: SITE_URL,
-    siteName: 'MANTECH Nexus',
+    siteName: sourceI18n._(msg({ message: 'MANTECH Nexus', comment: 'Site name attached to shared links' })),
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MANTECH Nexus — Internships in Cameroon',
-    description: 'Verified internships & placements across Cameroon.',
+    title: sourceI18n._(msg({ message: 'MANTECH Nexus — Internships in Cameroon', comment: 'Twitter card title for the MANTECH website' })),
+    description: sourceI18n._(msg({ message: 'Verified internships & placements across Cameroon.', comment: 'Twitter card description for the MANTECH website' })),
   },
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const requestHeaders = await headers();
+  const locale = resolveLocale(requestHeaders.get('x-mantech-locale'));
+  const i18n = getI18nInstance(locale);
+  setI18n(i18n);
+
   return (
-    <html lang="en" className={`${inter.variable} ${sora.variable}`}>
+    <html lang={locale} dir={getDirection(locale)} className={`${inter.variable} ${sora.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -79,16 +82,10 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-slate-950 text-foreground">
-        <AuthProvider>
-          <LoadingScreen />
-          <Navbar />
-          <main className="min-h-screen pt-16">{children}</main>
-          <Footer />
-          <WhatsAppFloat />
-          <ScrollToTop />
-          <PWAInstallPrompt />
-          <Toaster position="top-center" richColors closeButton />
-        </AuthProvider>
+        <LinguiClientProvider initialLocale={locale} initialMessages={i18n.messages}>
+          <LanguageSwitcher />
+          {children}
+        </LinguiClientProvider>
       </body>
     </html>
   );

@@ -1,11 +1,13 @@
 'use client';
+import { Trans } from '@lingui/react/macro';
+
 
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Circle, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { profileCompletion } from '@/lib/profile-completion';
 
 /**
@@ -52,13 +54,14 @@ export function ProfileCompletionCard() {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="font-bold text-slate-900 text-sm">
-            Complete your profile
-          </p>
+            <Trans comment="profile-completion-card p visible text">Complete your profile
+          </Trans></p>
           <p className="text-xs text-slate-600">
-            Complete profiles get 3x more responses.
-          </p>
+            <Trans comment="profile-completion-card p visible text">Complete profiles get 3x more responses.
+          </Trans></p>
         </div>
-        <Badge className="bg-blue-600 text-white shrink-0">{data.percent}%</Badge>
+        <Badge className="bg-blue-600 text-white shrink-0">{data.percent}{/* eslint-disable-next-line i18next/no-literal-string -- numeric value is data, not translation copy */}
+{"%"}</Badge>
       </div>
       <Progress value={data.percent} className="mt-3 h-2" />
       <ul className="mt-3 space-y-1.5">
@@ -79,8 +82,8 @@ export function ProfileCompletionCard() {
         href="/dashboard/intern/passport"
         className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline"
       >
-        Complete now
-        <ArrowRight className="h-3 w-3" />
+        <Trans comment="profile-completion-card Link visible text">Complete now
+        </Trans><ArrowRight className="h-3 w-3" />
       </Link>
     </Card>
   );

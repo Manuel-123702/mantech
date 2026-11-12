@@ -1,7 +1,9 @@
 'use client';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 
 import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
+import { LocaleLink as Link } from '@/components/shared/locale-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -60,6 +62,7 @@ type Candidate = {
 };
 
 export default function CandidatesPage() {
+  const { t } = useLingui();
   const { fields, regions, error: taxonomyError } = useTaxonomy();
   const [loading, setLoading] = useState(true);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
@@ -181,10 +184,10 @@ export default function CandidatesPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Intern Discovery</h2>
+          <h2 className="text-2xl font-bold text-slate-900"><Trans comment="candidates-page h2 visible text">Intern Discovery</Trans></h2>
           <p className="text-sm text-slate-500">
-            Search Intern Passports, shortlist candidates, and request authorized CV access.
-          </p>
+            <Trans comment="candidates-page p visible text">Search Intern Passports, shortlist candidates, and request authorized CV access.
+          </Trans></p>
         </div>
       </div>
 
@@ -192,10 +195,10 @@ export default function CandidatesPage() {
         <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
           <div>
-            <p className="font-semibold">Verification required</p>
+            <p className="font-semibold"><Trans comment="candidates-page p visible text">Verification required</Trans></p>
             <p className="mt-1">
-              Candidate search and CV access unlock after MANTECH verifies your organization.
-            </p>
+              <Trans comment="candidates-page p visible text">Candidate search and CV access unlock after MANTECH verifies your organization.
+            </Trans></p>
           </div>
         </div>
       )}
@@ -213,7 +216,7 @@ export default function CandidatesPage() {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <Input
-                placeholder="Search by name, headline, qualification, or skills…"
+                placeholder={t({ message: "Search by name, headline, qualification, or skills…", comment: "candidates-page component placeholder attribute" })}
                 className="pl-9"
                 value={filters.q}
                 onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
@@ -223,16 +226,16 @@ export default function CandidatesPage() {
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setShowFilters((v) => !v)}>
                 <Filter className="mr-2 h-4 w-4" />
-                Filters
-              </Button>
-              <Button onClick={handleSearch}>Search</Button>
+                <Trans comment="candidates-page Button visible text">Filters
+              </Trans></Button>
+              <Button onClick={handleSearch}><Trans comment="candidates-page Button visible text">Search</Trans></Button>
             </div>
           </div>
 
           {showFilters && (
             <div className="grid gap-4 rounded-xl border bg-slate-50 p-4 sm:grid-cols-2 lg:grid-cols-4">
               <div>
-                <Label>Field</Label>
+                <Label><Trans comment="candidates-page Label visible text">Field</Trans></Label>
                 <Select
                   onValueChange={(value) =>
                     setFilters((f) => ({ ...f, fieldId: value === 'all' ? '' : value }))
@@ -240,10 +243,10 @@ export default function CandidatesPage() {
                   value={filters.fieldId || 'all'}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="All fields" />
+                    <SelectValue placeholder={t({ message: "All fields", comment: "candidates-page component placeholder attribute" })} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All fields</SelectItem>
+                    <SelectItem value="all"><Trans comment="candidates-page SelectItem visible text">All fields</Trans></SelectItem>
                     {fields.map((f) => (
                       <SelectItem key={f.id} value={f.id}>
                         {f.name}
@@ -253,7 +256,7 @@ export default function CandidatesPage() {
                 </Select>
               </div>
               <div>
-                <Label>Region</Label>
+                <Label><Trans comment="candidates-page Label visible text">Region</Trans></Label>
                 <Select
                   onValueChange={(value) =>
                     setFilters((f) => ({ ...f, regionId: value === 'all' ? '' : value }))
@@ -261,10 +264,10 @@ export default function CandidatesPage() {
                   value={filters.regionId || 'all'}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="All regions" />
+                    <SelectValue placeholder={t({ message: "All regions", comment: "candidates-page component placeholder attribute" })} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All regions</SelectItem>
+                    <SelectItem value="all"><Trans comment="candidates-page SelectItem visible text">All regions</Trans></SelectItem>
                     {regions.map((r) => (
                       <SelectItem key={r.id} value={r.id}>
                         {r.name}
@@ -274,7 +277,7 @@ export default function CandidatesPage() {
                 </Select>
               </div>
               <div>
-                <Label>Work mode</Label>
+                <Label><Trans comment="candidates-page Label visible text">Work mode</Trans></Label>
                 <Select
                   onValueChange={(value) =>
                     setFilters((f) => ({ ...f, workMode: value === 'all' ? '' : value }))
@@ -282,20 +285,20 @@ export default function CandidatesPage() {
                   value={filters.workMode || 'all'}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Any" />
+                    <SelectValue placeholder={t({ message: "Any", comment: "candidates-page component placeholder attribute" })} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Any</SelectItem>
-                    <SelectItem value="ONSITE">On-site</SelectItem>
-                    <SelectItem value="HYBRID">Hybrid</SelectItem>
-                    <SelectItem value="REMOTE">Remote</SelectItem>
+                    <SelectItem value="all"><Trans comment="candidates-page SelectItem visible text">Any</Trans></SelectItem>
+                    <SelectItem value="ONSITE"><Trans comment="candidates-page SelectItem visible text">On-site</Trans></SelectItem>
+                    <SelectItem value="HYBRID"><Trans comment="candidates-page SelectItem visible text">Hybrid</Trans></SelectItem>
+                    <SelectItem value="REMOTE"><Trans comment="candidates-page SelectItem visible text">Remote</Trans></SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label>Availability</Label>
+                <Label><Trans comment="candidates-page Label visible text">Availability</Trans></Label>
                 <Input
-                  placeholder="e.g. Immediate"
+                  placeholder={t({ message: "e.g. Immediate", comment: "candidates-page component placeholder attribute" })}
                   value={filters.availability}
                   onChange={(e) => setFilters((f) => ({ ...f, availability: e.target.value }))}
                 />
@@ -343,8 +346,8 @@ export default function CandidatesPage() {
                       {c.isSaved && (
                         <Badge variant="secondary" className="shrink-0">
                           <Star className="mr-1 h-3 w-3 fill-amber-400 text-amber-400" />
-                          Saved
-                        </Badge>
+                          <Trans comment="candidates-page Badge visible text">Saved
+                        </Trans></Badge>
                       )}
                     </div>
                     <p className="text-sm text-slate-500 truncate">
@@ -373,7 +376,7 @@ export default function CandidatesPage() {
                     </span>
                   )}
                   {typeof c.readinessScore === 'number' && (
-                    <Badge variant="outline">Readiness {c.readinessScore}</Badge>
+                    <Badge variant="outline"><Trans comment="candidates-page Badge visible text">Readiness </Trans>{c.readinessScore}</Badge>
                   )}
                 </div>
 
@@ -398,8 +401,8 @@ export default function CandidatesPage() {
                   >
                     <Button variant="outline" size="sm" className="w-full">
                       <Eye className="mr-1.5 h-3.5 w-3.5" />
-                      Passport
-                    </Button>
+                      <Trans comment="candidates-page Button visible text">Passport
+                    </Trans></Button>
                   </Link>
                   <Dialog onOpenChange={(o) => o && viewCV(c.id, c.cvFiles?.[0]?.id)} open={cvAccessId === c.id}>
                     <DialogTrigger asChild>
@@ -410,37 +413,37 @@ export default function CandidatesPage() {
                         className="w-full"
                       >
                         <FileText className="mr-1.5 h-3.5 w-3.5" />
-                        View CV
-                      </Button>
+                        <Trans comment="candidates-page Button visible text">View CV
+                      </Trans></Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Authorized CV access</DialogTitle>
+                        <DialogTitle><Trans comment="candidates-page DialogTitle visible text">Authorized CV access</Trans></DialogTitle>
                         <DialogDescription>
-                          Access is audited and tied to your verified organization.
-                        </DialogDescription>
+                          <Trans comment="candidates-page DialogDescription visible text">Access is audited and tied to your verified organization.
+                        </Trans></DialogDescription>
                       </DialogHeader>
                       {cvLoading ? (
                         <div className="py-6 text-center text-slate-500">
-                          Requesting secure access…
-                        </div>
+                          <Trans comment="candidates-page div visible text">Requesting secure access…
+                        </Trans></div>
                       ) : cvUrl ? (
                         <div className="space-y-3">
                           <p className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-3">
-                            Secure access granted. Access logged.
-                          </p>
+                            <Trans comment="candidates-page p visible text">Secure access granted. Access logged.
+                          </Trans></p>
                           <Button asChild className="w-full">
                             <a href={cvUrl} target="_blank" rel="noopener noreferrer">
                               <FileText className="mr-2 h-4 w-4" />
-                              Open CV
-                            </a>
+                              <Trans comment="candidates-page a visible text">Open CV
+                            </Trans></a>
                           </Button>
                         </div>
                       ) : (
                         <div className="py-4 text-sm text-slate-500">
-                          CV access could not be issued. Upgrade to Professional or verify your
+                          <Trans comment="candidates-page div visible text">CV access could not be issued. Upgrade to Professional or verify your
                           organization via WhatsApp.
-                        </div>
+                        </Trans></div>
                       )}
                       <DialogFooter>
                         <Button
@@ -450,8 +453,8 @@ export default function CandidatesPage() {
                             setCvUrl(null);
                           }}
                         >
-                          Close
-                        </Button>
+                          <Trans comment="candidates-page Button visible text">Close
+                        </Trans></Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
@@ -467,50 +470,50 @@ export default function CandidatesPage() {
                     {c.isSaved ? (
                       <>
                         <Check className="mr-1.5 h-3.5 w-3.5" />
-                        Saved
-                      </>
+                        <Trans comment="candidates-page component visible text">Saved
+                      </Trans></>
                     ) : (
                       <>
                         <BookmarkPlus className="mr-1.5 h-3.5 w-3.5" />
-                        Shortlist
-                      </>
+                        <Trans comment="candidates-page component visible text">Shortlist
+                      </Trans></>
                     )}
                   </Button>
                   <Dialog onOpenChange={(o) => o && setContactId(c.id)} open={contactId === c.id}>
                     <DialogTrigger asChild>
                       <Button size="sm" disabled={!isVerified}>
                         <Send className="mr-1.5 h-3.5 w-3.5" />
-                        Contact
-                      </Button>
+                        <Trans comment="candidates-page Button visible text">Contact
+                      </Trans></Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Contact {c.user.fullName}</DialogTitle>
+                        <DialogTitle><Trans comment="candidates-page DialogTitle visible text">Contact </Trans>{c.user.fullName}</DialogTitle>
                         <DialogDescription>
-                          Send a recruitment request. The candidate can approve phone and CV
+                          <Trans comment="candidates-page DialogDescription visible text">Send a recruitment request. The candidate can approve phone and CV
                           access.
-                        </DialogDescription>
+                        </Trans></DialogDescription>
                       </DialogHeader>
                       <div className="space-y-3">
-                        <Label>Message</Label>
+                        <Label><Trans comment="candidates-page Label visible text">Message</Trans></Label>
                         <Textarea
                           rows={5}
                           value={contactMessage}
                           onChange={(e) => setContactMessage(e.target.value)}
-                          placeholder="Introduce your team, the role, and why you are reaching out…"
+                          placeholder={t({ message: "Introduce your team, the role, and why you are reaching out…", comment: "candidates-page component placeholder attribute" })}
                         />
                       </div>
                       <DialogFooter className="flex-col gap-2 sm:flex-row">
                         <Button variant="ghost" onClick={() => setContactId(null)}>
-                          Cancel
-                        </Button>
+                          <Trans comment="candidates-page Button visible text">Cancel
+                        </Trans></Button>
                         <Button
                           onClick={contactCandidate}
                           disabled={savingId === c.id}
                         >
                           <Send className="mr-2 h-4 w-4" />
-                          Send request
-                        </Button>
+                          <Trans comment="candidates-page Button visible text">Send request
+                        </Trans></Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
