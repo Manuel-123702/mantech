@@ -6,6 +6,7 @@ import { Check, ArrowRight, ShieldCheck, Sparkles, Building2, GraduationCap, Sch
 import { WhatsAppIcon } from '@/components/shared/whatsapp-icon';
 import { APP_CONFIG } from '@/lib/config';
 import { FadeIn, MotionSection, MotionItem } from '@/components/shared/section-animations';
+import { PricingFeaturesSection } from './pricing-features-section';
 
 const WHATSAPP_CTA = APP_CONFIG.support.whatsapp;
 
@@ -153,6 +154,9 @@ export default function PricingPage() {
               </MotionItem>
             ))}
           </MotionSection>
+
+          {/* ── 6 CAMEROON MONETIZATION & VALUE-ADD SERVICES ────── */}
+          <PricingFeaturesSection />
 
           {/* Institutional Trust & WhatsApp Concierge Strip */}
           <div className="mt-14 rounded-3xl border border-slate-800 bg-slate-900/80 backdrop-blur-xl p-8 sm:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">

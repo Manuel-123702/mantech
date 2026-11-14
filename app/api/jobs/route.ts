@@ -4,10 +4,39 @@ import { prisma } from '@/lib/prisma';
 import { logDatabaseUnavailable } from '@/lib/db-health';
 import { notifyMatchingAlerts } from '@/lib/alert-delivery';
 import { syncDbUser } from '@/lib/authz';
+import { CAMEROON_MARKETPLACE_JOBS, MarketplaceJob } from '@/lib/cameroon-marketplace-data';
 
 const WORK_MODE_STRINGS = ['ONSITE', 'HYBRID', 'REMOTE'];
 const APP_METHOD_STRINGS = ['MANTECH', 'COMPANY_WEBSITE', 'EXTERNAL'];
 const JOB_TYPE_STRINGS = ['FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERNSHIP', 'VOLUNTEER', 'FREELANCE'];
+
+function mapMarketplaceJob(m: MarketplaceJob) {
+  return {
+    id: m.id,
+    slug: m.slug,
+    title: m.title,
+    description: m.description,
+    department: m.department,
+    type: m.type,
+    workMode: m.workMode,
+    city: m.city,
+    salaryMinXAF: m.salaryMinXAF,
+    salaryMaxXAF: m.salaryMaxXAF,
+    requiredSkills: m.requiredSkills,
+    educationLevel: m.educationLevel,
+    moderationStatus: 'PUBLISHED',
+    isFeatured: Boolean(m.isFeatured),
+    postingDate: new Date().toISOString(),
+    expiryDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+    organization: {
+      name: m.companyName,
+      slug: m.companySlug,
+      logoUrl: m.logoUrl || null,
+    },
+    region: { name: m.region },
+    field: { name: m.field },
+  };
+}
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
@@ -61,8 +90,26 @@ export async function GET(request: NextRequest) {
     ];
   }
 
+  let filteredMarketplace = CAMEROON_MARKETPLACE_JOBS.filter((j) => {
+    if (city && city.toLowerCase() !== 'all' && !j.city.toLowerCase().includes(city.toLowerCase())) return false;
+    if (workMode && workMode !== 'all' && j.workMode !== workMode) return false;
+    if (jobType && jobType !== 'all' && j.type !== jobType) return false;
+    if (field && field.toLowerCase() !== 'all' && !j.field.toLowerCase().includes(field.toLowerCase())) return false;
+    if (search) {
+      const s = search.toLowerCase();
+      const matches =
+        j.title.toLowerCase().includes(s) ||
+        j.description.toLowerCase().includes(s) ||
+        j.companyName.toLowerCase().includes(s) ||
+        j.city.toLowerCase().includes(s) ||
+        j.field.toLowerCase().includes(s);
+      if (!matches) return false;
+    }
+    return true;
+  }).map(mapMarketplaceJob);
+
   try {
-    const [jobs, total] = await Promise.all([
+    const [dbJobs, totalCount] = await Promise.all([
       prisma.job.findMany({
         where,
         include: { organization: { include: { companyProfile: true, universityProfile: true } }, field: true, specialization: true, region: true },
@@ -72,12 +119,35 @@ export async function GET(request: NextRequest) {
       }),
       prisma.job.count({ where }),
     ]);
-    return NextResponse.json({ jobs, page, limit, total, pages: Math.ceil(total / limit) });
+
+    // Combine database jobs and marketplace jobs, avoiding slug duplicates
+    const seenSlugs = new Set(dbJobs.map((j) => j.slug));
+    const combined = [...dbJobs];
+    for (const m of filteredMarketplace) {
+      if (!seenSlugs.has(m.slug)) {
+        combined.push(m as any);
+        seenSlugs.add(m.slug);
+      }
+    }
+
+    return NextResponse.json({
+      jobs: combined.slice(0, limit),
+      page,
+      limit,
+      total: Math.max(totalCount, combined.length),
+      pages: Math.ceil(Math.max(totalCount, combined.length) / limit),
+    });
   } catch (error) {
     logDatabaseUnavailable('jobs', error);
     return NextResponse.json(
-      { jobs: [], page, limit, total: 0, pages: 0 },
-      { status: 200, headers: { 'X-Data-Source': 'db-unavailable' } },
+      {
+        jobs: filteredMarketplace.slice((page - 1) * limit, page * limit),
+        page,
+        limit,
+        total: filteredMarketplace.length,
+        pages: Math.ceil(filteredMarketplace.length / limit),
+      },
+      { status: 200, headers: { 'X-Data-Source': 'catalog-fallback' } },
     );
   }
 }

@@ -36,6 +36,35 @@ const KNOWN_BRANDS: Record<string, { bg: string; text: string; domain?: string; 
   'ecobank': { bg: 'from-teal-700 to-blue-900', text: 'text-white font-bold', domain: 'ecobank.com', short: 'ECOBANK' },
   'nexttel': { bg: 'from-red-600 to-orange-500', text: 'text-white font-bold', domain: 'nexttel.cm', short: 'NEXTTEL' },
 
+  // Healthcare, Hospitals & Clinics
+  'hopital': { bg: 'from-red-600 to-rose-700', text: 'text-white font-bold', short: 'HOPITAL' },
+  'laquintinie': { bg: 'from-blue-600 to-cyan-600', text: 'text-white font-bold', short: 'LAQUINTINIE' },
+  'clinique': { bg: 'from-teal-600 to-emerald-700', text: 'text-white font-bold', short: 'CLINIQUE' },
+  'pharmacie': { bg: 'from-emerald-600 to-teal-700', text: 'text-white font-bold', short: 'PHARMA' },
+
+  // Culinary, Restaurants & Hospitality
+  'acropole': { bg: 'from-amber-600 to-yellow-600', text: 'text-slate-950 font-black', short: 'ACROPOLE' },
+  'fourchette': { bg: 'from-rose-700 to-amber-700', text: 'text-white font-bold', short: 'FOURCHETTE' },
+  'krystal': { bg: 'from-slate-900 to-amber-500', text: 'text-amber-200 font-extrabold', short: 'KRYSTAL' },
+
+  // Retail, Supermarkets & Commerce
+  'carrefour': { bg: 'from-blue-600 to-red-600', text: 'text-white font-black', short: 'CARREFOUR' },
+  'santa lucia': { bg: 'from-emerald-600 to-amber-600', text: 'text-white font-bold', short: 'SANTA LUCIA' },
+  'distributeurs': { bg: 'from-cyan-700 to-blue-800', text: 'text-white font-bold', short: 'DISTRIB' },
+
+  // Schools, Colleges & Academies
+  'libermann': { bg: 'from-blue-900 to-indigo-800', text: 'text-blue-200 font-bold', short: 'LIBERMANN' },
+  'bilingual academy': { bg: 'from-indigo-900 to-cyan-800', text: 'text-cyan-200 font-bold', short: 'ACADEMY' },
+  'tutors': { bg: 'from-violet-900 to-indigo-900', text: 'text-violet-200 font-bold', short: 'TUTORS' },
+
+  // Property, Domestic & Logistics
+  'bonapriso': { bg: 'from-purple-950 to-indigo-900', text: 'text-purple-200 font-bold', short: 'BONAPRISO' },
+  'bastos': { bg: 'from-slate-900 to-blue-900', text: 'text-blue-300 font-bold', short: 'BASTOS' },
+  'camsolar': { bg: 'from-amber-500 to-orange-600', text: 'text-slate-950 font-black', short: 'SOLAR' },
+  'mecanique': { bg: 'from-slate-800 to-cyan-900', text: 'text-cyan-300 font-bold', short: 'MÉCANIQUE' },
+  'express cargo': { bg: 'from-blue-700 to-cyan-600', text: 'text-white font-bold', short: 'EXPRESS' },
+  'cdc': { bg: 'from-emerald-800 to-green-900', text: 'text-emerald-200 font-bold', short: 'CDC' },
+
   // Universities
   'yaounde i': { bg: 'from-blue-900 to-indigo-950', text: 'text-blue-300 font-bold', domain: 'uy1.uninet.cm', short: 'UY1' },
   'yaoundé i': { bg: 'from-blue-900 to-indigo-950', text: 'text-blue-300 font-bold', domain: 'uy1.uninet.cm', short: 'UY1' },

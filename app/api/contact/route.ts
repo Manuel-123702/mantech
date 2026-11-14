@@ -80,16 +80,32 @@ export async function POST(request: Request) {
       logDatabaseUnavailable('contact:persist', dbError);
     }
 
-    const delivered = await sendEmail({
+    // 1. Notify MANTECH Support Team
+    const adminDelivered = await sendEmail({
       to_email: APP_CONFIG.contacts.email,
       to_name: APP_CONFIG.name,
       subject: fullSubject,
-      message: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+      message: `New Inquiry Received from Website Contact Form:\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
       from_name: name,
       reply_to: email,
-    });
+    }).catch(() => false);
 
-    return NextResponse.json({ ok: true, delivered, persisted });
+    // 2. Dispatch Automated Receipt / Acknowledgment to Sender
+    const userDelivered = await sendEmail({
+      to_email: email,
+      to_name: name,
+      subject: `Inquiry Received: ${subject} — MANTECH Nexus`,
+      message: `Dear ${name},\n\nThank you for contacting MANTECH Nexus! We have received your inquiry:\n\n"${subject}"\n\nOur Cameroon support and recruitment team will review your message and reply directly to ${email} as soon as possible.\n\nFor urgent placement or support assistance, you can also reach our team on WhatsApp: ${APP_CONFIG.contacts.whatsapp}\n\nBest regards,\nMANTECH Nexus Team\nDouala & Yaoundé, Cameroon`,
+      from_name: 'MANTECH Nexus Support',
+      reply_to: APP_CONFIG.contacts.email,
+    }).catch(() => false);
+
+    return NextResponse.json({
+      ok: true,
+      delivered: Boolean(adminDelivered || userDelivered),
+      userNotified: Boolean(userDelivered),
+      persisted,
+    });
   } catch (error) {
     console.error('[contact] submission failed:', error);
     // Never leak internals to the client.

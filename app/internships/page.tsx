@@ -16,12 +16,14 @@ import {
   Banknote,
   SlidersHorizontal,
   X,
+  Plus,
 } from "lucide-react";
 import type { InternshipOpportunity } from "@/lib/types";
 import { useTaxonomy } from "@/lib/use-taxonomy";
 import { useAuth } from "@/lib/auth-context";
 import { calculateMatch, matchLabel, type MatchProfile } from "@/lib/matching";
-import { fieldNameOf, regionNameOf } from "@/lib/catalog-shape";
+import { fieldNameOf, regionNameOf, organizationNameOf, organizationLogoOf } from "@/lib/catalog-shape";
+import { OrgLogo } from "@/components/shared/org-logo";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -480,7 +482,7 @@ export default function InternshipsPage() {
         <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500/8 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/8 blur-[110px] rounded-full pointer-events-none" />
         <div className="container-mantech px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative z-10">
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700/60">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-700/60">
             <div>
               <h2 className="text-xl font-bold text-white font-heading">
                 Available Positions
@@ -490,6 +492,13 @@ export default function InternshipsPage() {
               </p>
             </div>
 
+            <Link
+              href="/post?type=internship"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-cyan-500/20 hover:opacity-95 transition-opacity self-start sm:self-auto"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Post an Internship Free (10s)</span>
+            </Link>
           </div>
 
           {loading ? (
@@ -601,29 +610,44 @@ export default function InternshipsPage() {
                         {opp.isFeatured ? (
                           <Badge
                             variant="secondary"
-                            className="bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-900 text-[9px] border border-amber-200"
+                            className="bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 text-[9px] border border-amber-500/30"
                           >
                             <Sparkles className="w-3 h-3 mr-1" /> Featured
                           </Badge>
                         ) : null}
                       </div>
 
-                      <h3 className="font-heading text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
-                        {opp.title}
-                      </h3>
-
-                      <div className="flex items-center gap-2 text-xs text-slate-400 mt-1 font-medium">
-                        <MapPin className="w-3.5 h-3.5 text-slate-500" />
-                        <span>
-                          {opp.city},{" "}
-                          {regionNameOf(opp as unknown as Record<string, unknown>) ||
-                            "Cameroon"}
-                        </span>
-                        <span>•</span>
-                        <span className="uppercase font-semibold text-slate-300">
-                          {String(opp.workMode || opp.work_mode || "ONSITE")}
-                        </span>
+                      {/* Company Profile Row with Logo */}
+                      <div className="flex items-center gap-2.5 mb-2.5">
+                        <OrgLogo
+                          name={organizationNameOf(opp as unknown as Record<string, unknown>) || "Verified Enterprise"}
+                          logoUrl={organizationLogoOf(opp as unknown as Record<string, unknown>)}
+                          size="sm"
+                          type="COMPANY"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-slate-200 truncate group-hover:text-cyan-400 transition-colors">
+                            {organizationNameOf(opp as unknown as Record<string, unknown>) || "Verified Enterprise"}
+                          </p>
+                          <div className="flex items-center gap-1 text-[11px] text-slate-400">
+                            <MapPin className="w-3 h-3 text-slate-500" />
+                            <span>
+                              {opp.city},{" "}
+                              {regionNameOf(opp as unknown as Record<string, unknown>) || "Cameroon"}
+                            </span>
+                            <span>•</span>
+                            <span className="uppercase font-semibold text-slate-300 text-[10px]">
+                              {String(opp.workMode || opp.work_mode || "ONSITE")}
+                            </span>
+                          </div>
+                        </div>
                       </div>
+
+                      <Link href={`/internships/${opp.slug}`}>
+                        <h3 className="font-heading text-base font-bold text-white group-hover:text-cyan-300 transition-colors line-clamp-2 break-words min-h-[2.75rem] mb-2">
+                          {opp.title}
+                        </h3>
+                      </Link>
 
                       <p className="mt-3 text-xs text-slate-400 line-clamp-2 leading-relaxed">
                         {opp.description ||

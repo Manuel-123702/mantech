@@ -16,11 +16,13 @@ import {
   Clock,
   Sparkles,
   Filter,
-  CheckCircle2
+  CheckCircle2,
+  Plus,
 } from "lucide-react";
 import type { Job } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
 import { Badge } from "@/components/ui/badge";
+import { OrgLogo } from "@/components/shared/org-logo";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -159,16 +161,20 @@ export default function JobsPage() {
             Real vacancies from 110+ verified enterprises, public corporations, financial institutions, and universities across all 10 national regions.
           </p>
 
-          {/* Quick Counter Badges */}
+          {/* Action to Post Free & Counters */}
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs mb-8">
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-medium">
+            <Link
+              href="/post?type=job"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 px-5 py-2 text-xs font-bold text-white shadow-lg shadow-cyan-500/25 hover:opacity-95 transition-opacity"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Post a Job Free (Flyer or Text)</span>
+            </Link>
+            <span className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-medium">
               🏢 <strong className="text-white">127+</strong> Top Enterprises
             </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-medium">
-              🎓 <strong className="text-white">30</strong> Partner Universities
-            </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-medium">
-              💼 <strong className="text-white">{counts.total || "130+"}</strong> Real Job Postings
+            <span className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-medium">
+              💼 <strong className="text-white">{counts.total || "130+"}</strong> Real Vacancies
             </span>
           </div>
 
@@ -316,26 +322,35 @@ export default function JobsPage() {
                         </Badge>
                       </div>
 
-                      <span className="text-[11px] font-bold text-slate-400">
-                        {job.type || "FULL_TIME"}
+                      <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
+                        (job.type || 'FULL_TIME').toUpperCase() === 'PART_TIME'
+                          ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                          : (job.type || 'FULL_TIME').toUpperCase() === 'CONTRACT'
+                          ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                          : (job.type || 'FULL_TIME').toUpperCase() === 'INTERNSHIP'
+                          ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
+                          : (job.type || 'FULL_TIME').toUpperCase() === 'FREELANCE'
+                          ? 'bg-violet-500/15 text-violet-300 border-violet-500/30'
+                          : 'bg-blue-500/15 text-blue-300 border-blue-500/30'
+                      }`}>
+                        {(job.type || "FULL_TIME").replace('_', ' ')}
                       </span>
                     </div>
 
                     {/* Enterprise Row with Logo */}
                     <div className="flex items-center gap-2.5 mb-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden shrink-0">
-                        {org?.logoUrl ? (
-                          <Image src={org.logoUrl} alt={org.name} width={36} height={36} className="w-full h-full object-cover" />
-                        ) : (
-                          <Building2 className="w-4 h-4 text-slate-400" />
-                        )}
-                      </div>
+                      <OrgLogo
+                        name={org?.name || "Verified Enterprise"}
+                        logoUrl={org?.logoUrl}
+                        size="sm"
+                        type="COMPANY"
+                      />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1">
-                          <p className="text-xs font-bold text-slate-200 truncate group-hover:text-blue-400 transition-colors">
+                          <p className="text-xs font-bold text-slate-200 truncate group-hover:text-cyan-400 transition-colors">
                             {org?.name || "Verified Enterprise"}
                           </p>
-                          <ShieldCheck className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                         </div>
                         <div className="flex items-center gap-1 text-[11px] text-slate-500">
                           <MapPin className="w-3 h-3" />
@@ -346,7 +361,7 @@ export default function JobsPage() {
 
                     {/* Job Title */}
                     <Link href={`/jobs/${job.slug}`}>
-                      <h3 className="font-heading text-base font-bold text-white group-hover:text-blue-300 transition-colors line-clamp-2 mb-2">
+                      <h3 className="font-heading text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 transition-colors line-clamp-2 break-words min-h-[3rem] mb-2">
                         {job.title}
                       </h3>
                     </Link>

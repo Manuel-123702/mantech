@@ -392,7 +392,7 @@ export default function InternRegistrationPage() {
               </Button>
             </Link>
             <Link href="/jobs" className="flex-1">
-              <Button variant="outline" className="w-full h-11 border-slate-700 text-slate-200 hover:bg-slate-800 text-xs font-bold">
+              <Button variant="outline" className="w-full h-11 border-slate-700 bg-slate-800 text-xs font-bold">
                 Browse Cameroon Jobs
               </Button>
             </Link>
@@ -431,19 +431,17 @@ export default function InternRegistrationPage() {
           {[1, 2, 3, 4].map((stepNum) => (
             <div key={stepNum} className="flex items-center">
               <div
-                className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-xs transition-all shadow-md ${
-                  step >= stepNum
-                    ? 'bg-blue-600 text-white shadow-blue-600/30 border border-blue-400/40'
-                    : 'bg-slate-800 text-slate-400 border border-slate-700'
-                }`}
+                className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-xs transition-all shadow-md ${step >= stepNum
+                  ? 'bg-blue-600 text-white shadow-blue-600/30 border border-blue-400/40'
+                  : 'bg-slate-800 text-slate-400 border border-slate-700'
+                  }`}
               >
                 {step > stepNum ? <Check className="w-4 h-4 text-emerald-300" /> : `0${stepNum}`}
               </div>
               {stepNum < totalSteps && (
                 <div
-                  className={`w-12 sm:w-16 h-1 mx-2 rounded-full transition-colors ${
-                    step > stepNum ? 'bg-blue-500' : 'bg-slate-800'
-                  }`}
+                  className={`w-12 sm:w-16 h-1 mx-2 rounded-full transition-colors ${step > stepNum ? 'bg-blue-500' : 'bg-slate-800'
+                    }`}
                 />
               )}
             </div>
@@ -943,7 +941,7 @@ export default function InternRegistrationPage() {
                 variant="outline"
                 onClick={handleBack}
                 disabled={loading}
-                className="border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold"
+                className="border-slate-700 bg-slate-800 text-xs font-bold"
               >
                 Previous Step
               </Button>

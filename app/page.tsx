@@ -63,6 +63,8 @@ import {
   StaggerItem,
   AnimatedCard,
   StatReveal,
+  WordReveal,
+  LetterReveal,
 } from "@/components/shared/section-animations";
 import type { InternshipOpportunity } from "@/lib/types";
 import { fieldNameOf, regionNameOf } from "@/lib/catalog-shape";
@@ -618,11 +620,10 @@ export default function HomePage() {
               </div>
 
               <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight text-white">
-                Cameroon&apos;s{" "}
-                <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">
-                  Enterprise
-                </span>{" "}
-                Internship Marketplace
+                <WordReveal
+                  text="Cameroon's Enterprise Internship Marketplace"
+                  wordClassName="font-extrabold"
+                />
               </h1>
 
               <p className="mt-6 text-base sm:text-lg text-slate-300/90 leading-relaxed max-w-xl">
@@ -937,7 +938,10 @@ export default function HomePage() {
                 <span className="text-[10px] font-semibold text-blue-300 uppercase">MINESUP & MINPOSTEL Aligned</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
-                Verified Host Enterprises & Academic Partners
+                <WordReveal
+                  text="Verified Host Enterprises & Academic Partners"
+                  wordClassName="font-extrabold"
+                />
               </h2>
               <p className="text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
                 Accredited institutions actively screening technical competencies, evaluating candidates through verified Intern Passports, and hosting placements across Cameroon.
@@ -1030,9 +1034,11 @@ export default function HomePage() {
               ].map((item, i) => (
                 <StaggerItem key={i}>
                   <div className="p-5 rounded-3xl border border-slate-800 bg-slate-900/85 backdrop-blur-md text-center shadow-lg flex flex-col justify-between h-full">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-slate-800 to-blue-900 text-white font-bold text-xl flex items-center justify-center mx-auto mb-3.5 shadow-sm">
-                      {item.name.charAt(0)}
-                    </div>
+                    <OrgLogo
+                      name={item.name}
+                      size="lg"
+                      className="mx-auto mb-3.5"
+                    />
                     <div>
                       <div className="font-bold text-xs sm:text-sm text-white truncate">
                         {item.name}
@@ -1061,7 +1067,10 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
             <div>
               <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
-                Latest Job Openings
+                <WordReveal
+                  text="Latest Job Openings"
+                  wordClassName="font-extrabold"
+                />
               </h2>
               <p className="mt-2 text-slate-400 text-sm">
                 Freshly posted positions from verified employers across Cameroon.
@@ -1073,35 +1082,75 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredJobs.length > 0 ? (
-              featuredJobs.map((job) => (
-                <div key={job.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 hover:border-blue-500/50 hover:bg-slate-800/90 transition-all duration-200">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-xl bg-blue-900/50 flex items-center justify-center text-blue-400">
-                        <Building2 className="w-4 h-4" />
+              featuredJobs.map((job) => {
+                const jobTypeStr = (job.type || 'FULL_TIME').toUpperCase();
+                const badgeColor =
+                  jobTypeStr === 'PART_TIME'
+                    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                    : jobTypeStr === 'CONTRACT'
+                    ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                    : jobTypeStr === 'INTERNSHIP'
+                    ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
+                    : jobTypeStr === 'FREELANCE'
+                    ? 'bg-violet-500/15 text-violet-300 border-violet-500/30'
+                    : 'bg-blue-500/15 text-blue-300 border-blue-500/30';
+                const formattedType = jobTypeStr.replace('_', ' ');
+
+                return (
+                  <div
+                    key={job.id}
+                    className="flex flex-col h-full justify-between rounded-2xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-xl p-5 hover:border-cyan-500/40 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-200 group"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <OrgLogo
+                            name={job.organization?.name || 'Verified Employer'}
+                            logoUrl={job.organization?.logoUrl}
+                            size="sm"
+                            type="COMPANY"
+                          />
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-white truncate group-hover:text-cyan-400 transition-colors">
+                              {job.organization?.name || 'Verified Employer'}
+                            </p>
+                            <p className="text-[10px] text-slate-400">{job.city}, Cameroon</p>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className={`text-[10px] uppercase font-bold shrink-0 ${badgeColor}`}>
+                          {formattedType}
+                        </Badge>
                       </div>
-                      <div>
-                        <p className="text-xs font-bold text-white truncate">{job.organization?.name || "Verified Employer"}</p>
-                        <p className="text-[10px] text-slate-500">{job.city}, Cameroon</p>
+
+                      <Link href={`/jobs/${job.slug}`}>
+                        <h3 className="text-sm sm:text-base font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors line-clamp-2 break-words min-h-[2.75rem]">
+                          {job.title}
+                        </h3>
+                      </Link>
+                      <p className="text-xs text-slate-300 line-clamp-2 mb-4 leading-relaxed">
+                        {job.description || 'Exciting career opportunity with a verified employer in Cameroon.'}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {(job.requiredSkills || []).slice(0, 3).map((skill: string) => (
+                          <span
+                            key={skill}
+                            className="px-2 py-0.5 rounded-md bg-slate-800 text-[10px] text-slate-300 border border-slate-700/60"
+                          >
+                            {skill}
+                          </span>
+                        ))}
                       </div>
                     </div>
-                    <Badge variant="secondary" className="text-[10px]">{job.type}</Badge>
+
+                    <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs">
+                      <span className="text-emerald-400 font-bold">
+                        {job.salaryMinXAF ? `${job.salaryMinXAF.toLocaleString()} XAF` : 'Competitive'}
+                      </span>
+                      <span className="text-slate-400 text-[11px] uppercase font-medium">{job.workMode}</span>
+                    </div>
                   </div>
-                  <Link href={`/jobs/${job.slug}`}>
-                    <h3 className="text-base font-bold text-white mb-2 hover:text-blue-400 transition-colors line-clamp-1">{job.title}</h3>
-                  </Link>
-                  <p className="text-sm text-slate-400 line-clamp-2 mb-4">{job.description || "Exciting career opportunity with a verified employer in Cameroon."}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {(job.requiredSkills || []).slice(0, 3).map((skill: string) => (
-                      <span key={skill} className="px-2 py-1 rounded-md bg-slate-800 text-[10px] text-slate-300 border border-slate-700/60">{skill}</span>
-                    ))}
-                  </div>
-                  <div className="mt-auto pt-4 border-t border-slate-800/50 flex items-center justify-between text-xs">
-                    <span className="text-emerald-400 font-bold">{job.salaryMinXAF ? job.salaryMinXAF.toLocaleString() + " XAF" : "Competitive"}</span>
-                    <span className="text-slate-500">{job.workMode}</span>
-                  </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="col-span-3 py-16 text-center text-slate-500">
                 No jobs posted yet. Be the first to <Link href="/dashboard/company/jobs/create" className="text-blue-400 hover:underline">post a job</Link>.
