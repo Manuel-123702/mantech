@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Offline Mode — MANTECH Nexus</title>
+  <title>Connection Status — MANTECH Nexus</title>
   <link rel="icon" href="/favicon.ico">
   <style>
     * {
@@ -24,12 +24,12 @@
       padding: 24px;
     }
     .card {
-      max-width: 480px;
+      max-width: 490px;
       width: 100%;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(56, 189, 248, 0.25);
       border-radius: 28px;
-      padding: 36px 28px;
+      padding: 38px 28px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(12px);
     }
@@ -37,32 +37,47 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(14, 165, 233, 0.12);
-      border: 1px solid rgba(14, 165, 233, 0.3);
-      color: #38bdf8;
+      padding: 6px 14px;
+      border-radius: 9999px;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      padding: 6px 14px;
-      border-radius: 9999px;
       margin-bottom: 20px;
+    }
+    .badge-web {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+    .badge-pwa {
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      color: #38bdf8;
     }
     .icon-wrapper {
       width: 72px;
       height: 72px;
       border-radius: 20px;
-      background: rgba(14, 165, 233, 0.12);
-      border: 1px solid rgba(14, 165, 233, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 20px auto;
     }
+    .icon-web {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+    .icon-pwa {
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      color: #38bdf8;
+    }
     h1 {
       font-size: 22px;
       font-weight: 800;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       color: #ffffff;
       letter-spacing: -0.02em;
     }
@@ -70,7 +85,7 @@
       font-size: 14px;
       color: #94a3b8;
       line-height: 1.6;
-      margin-bottom: 24px;
+      margin-bottom: 26px;
     }
     .btn-group {
       display: flex;
@@ -90,6 +105,9 @@
       cursor: pointer;
       border: none;
       transition: transform 0.15s, opacity 0.2s;
+    }
+    .btn-install {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
     }
     .btn-primary:active {
       transform: scale(0.98);
@@ -111,19 +129,49 @@
       background: rgba(51, 65, 85, 0.8);
     }
     .note {
-      margin-top: 20px;
+      margin-top: 22px;
       font-size: 11px;
       color: #64748b;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="badge">
-      <span>● Offline Protection</span>
+  <!-- VIEW 1: WEB BROWSER (ONLINE REQUIRED) -->
+  <div id="web-view" class="card" style="display: none;">
+    <div class="badge badge-web">
+      <span>● Web Browser Mode · Online Required</span>
     </div>
 
-    <div class="icon-wrapper">
+    <div class="icon-wrapper icon-web">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+    </div>
+
+    <h1>Internet Connection Required on Web</h1>
+    <p>You are viewing MANTECH Nexus through a standard web browser tab. Browsing the live platform on the web requires an active connection.</p>
+
+    <div class="btn-group">
+      <button class="btn-primary" onclick="window.location.reload()">
+        ↻ Reconnect to Internet
+      </button>
+      <a href="/install" class="btn-primary btn-install">
+        ⚡ Install PWA App to Unlock Offline Access
+      </a>
+    </div>
+
+    <p class="note">Want to browse offline? Install the MANTECH Nexus App from your browser menu to work without internet.</p>
+  </div>
+
+  <!-- VIEW 2: INSTALLED PWA APP (OFFLINE CACHE READY) -->
+  <div id="pwa-view" class="card" style="display: none;">
+    <div class="badge badge-pwa">
+      <span>● MANTECH Nexus App · Offline Mode</span>
+    </div>
+
+    <div class="icon-wrapper icon-pwa">
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="1" y1="1" x2="23" y2="23"></line>
         <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
@@ -135,25 +183,44 @@
       </svg>
     </div>
 
-    <h1>No Internet Connection</h1>
-    <p>You are currently offline. MANTECH Nexus has preserved your cached opportunities and application states. When your connection returns, live sync will resume automatically.</p>
+    <h1>You Are in Offline App Mode</h1>
+    <p>You are using the installed MANTECH Nexus app. Cached opportunities and application states are ready to browse even without cellular or Wi-Fi coverage.</p>
 
     <div class="btn-group">
       <button class="btn-primary" onclick="window.location.reload()">
-        ↻ Recheck Network Connection
+        ↻ Check Live Sync
       </button>
-      <a href="/" class="btn-secondary">
-        Return to Cached Home
+      <a href="/?source=pwa" class="btn-secondary">
+        Browse Cached Home
       </a>
-      <a href="/jobs" class="btn-secondary">
+      <a href="/jobs?source=pwa" class="btn-secondary">
         Browse Cached Jobs
       </a>
-      <a href="/internships" class="btn-secondary">
+      <a href="/internships?source=pwa" class="btn-secondary">
         Browse Cached Internships
       </a>
     </div>
 
-    <p class="note">MANTECH Nexus PWA · Stale-While-Revalidate Engine Active</p>
+    <p class="note">MANTECH Nexus PWA · Offline App Engine Active</p>
   </div>
+
+  <script>
+    (function() {
+      var isInstalled =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true ||
+        window.location.search.indexOf('source=pwa') !== -1 ||
+        document.referrer.indexOf('source=pwa') !== -1 ||
+        document.cookie.indexOf('mantech_pwa_standalone=true') !== -1;
+
+      if (isInstalled) {
+        document.getElementById('pwa-view').style.display = 'block';
+        document.getElementById('web-view').style.display = 'none';
+      } else {
+        document.getElementById('web-view').style.display = 'block';
+        document.getElementById('pwa-view').style.display = 'none';
+      }
+    })();
+  </script>
 </body>
 </html>

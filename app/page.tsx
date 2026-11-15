@@ -619,17 +619,42 @@ export default function HomePage() {
                 Live Cameroon Professional Internship Ecosystem
               </div>
 
-              <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight text-white">
-                <WordReveal
-                  text="Cameroon's Enterprise Internship Marketplace"
-                  wordClassName="font-extrabold"
-                />
+              <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight">
+                <span className="text-white drop-shadow-md">Cameroon&apos;s</span>{' '}
+                <span className="bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(6,182,212,0.4)]">
+                  Enterprise
+                </span>{' '}
+                <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(245,158,11,0.35)]">
+                  Internship
+                </span>{' '}
+                <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(99,102,241,0.4)]">
+                  Marketplace
+                </span>
               </h1>
 
-              <p className="mt-6 text-base sm:text-lg text-slate-300/90 leading-relaxed max-w-xl">
-                Connecting students, institutions, and verified enterprises across
-                all 10 regions. Empowering talent discovery with our verifiable
-                digital <strong>Intern Passport</strong>.
+              <p className="mt-6 text-base sm:text-lg leading-relaxed max-w-xl text-slate-300">
+                Connecting{' '}
+                <span className="font-bold text-cyan-300 border-b border-cyan-500/40 pb-0.5">
+                  students
+                </span>
+                ,{' '}
+                <span className="font-bold text-emerald-300 border-b border-emerald-500/40 pb-0.5">
+                  institutions
+                </span>
+                , and{' '}
+                <span className="font-bold text-amber-300 border-b border-amber-500/40 pb-0.5">
+                  verified enterprises
+                </span>{' '}
+                across{' '}
+                <span className="font-extrabold text-indigo-300">
+                  all 10 regions
+                </span>
+                . Empowering talent discovery with our verifiable digital{' '}
+                <span className="inline-flex items-center gap-1 font-extrabold text-amber-300 bg-amber-950/70 border border-amber-500/40 px-2.5 py-0.5 rounded-lg shadow-md shadow-amber-500/10">
+                  <Award className="w-3.5 h-3.5 text-amber-400" />
+                  Intern Passport
+                </span>
+                .
               </p>
 
               {/* SRS §20: Internship Search Inside Hero */}
@@ -1080,7 +1105,7 @@ export default function HomePage() {
               View All Jobs <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredJobs.length > 0 ? (
               featuredJobs.map((job) => {
                 const jobTypeStr = (job.type || 'FULL_TIME').toUpperCase();
@@ -1097,66 +1122,69 @@ export default function HomePage() {
                 const formattedType = jobTypeStr.replace('_', ' ');
 
                 return (
-                  <div
-                    key={job.id}
-                    className="flex flex-col h-full justify-between rounded-2xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-xl p-5 hover:border-cyan-500/40 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-200 group"
-                  >
-                    <div>
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <OrgLogo
-                            name={job.organization?.name || 'Verified Employer'}
-                            logoUrl={job.organization?.logoUrl}
-                            size="sm"
-                            type="COMPANY"
-                          />
-                          <div className="min-w-0">
-                            <p className="text-xs font-bold text-white truncate group-hover:text-cyan-400 transition-colors">
-                              {job.organization?.name || 'Verified Employer'}
-                            </p>
-                            <p className="text-[10px] text-slate-400">{job.city}, Cameroon</p>
+                  <StaggerItem key={job.id} className="h-full">
+                    <motion.div
+                      whileHover={{ y: -6, scale: 1.01 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex flex-col h-full justify-between rounded-2xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-xl p-5 hover:border-cyan-500/40 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-200 group"
+                    >
+                      <div>
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <OrgLogo
+                              name={job.organization?.name || 'Verified Employer'}
+                              logoUrl={job.organization?.logoUrl}
+                              size="sm"
+                              type="COMPANY"
+                            />
+                            <div className="min-w-0">
+                              <p className="text-xs font-bold text-white truncate group-hover:text-cyan-400 transition-colors">
+                                {job.organization?.name || 'Verified Employer'}
+                              </p>
+                              <p className="text-[10px] text-slate-400">{job.city}, Cameroon</p>
+                            </div>
                           </div>
+                          <Badge variant="outline" className={`text-[10px] uppercase font-bold shrink-0 ${badgeColor}`}>
+                            {formattedType}
+                          </Badge>
                         </div>
-                        <Badge variant="outline" className={`text-[10px] uppercase font-bold shrink-0 ${badgeColor}`}>
-                          {formattedType}
-                        </Badge>
+
+                        <Link href={`/jobs/${job.slug}`}>
+                          <h3 className="text-sm sm:text-base font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors line-clamp-2 break-words min-h-[2.75rem]">
+                            {job.title}
+                          </h3>
+                        </Link>
+                        <p className="text-xs text-slate-300 line-clamp-2 mb-4 leading-relaxed">
+                          {job.description || 'Exciting career opportunity with a verified employer in Cameroon.'}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {(job.requiredSkills || []).slice(0, 3).map((skill: string) => (
+                            <span
+                              key={skill}
+                              className="px-2 py-0.5 rounded-md bg-slate-800 text-[10px] text-slate-300 border border-slate-700/60"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
                       </div>
 
-                      <Link href={`/jobs/${job.slug}`}>
-                        <h3 className="text-sm sm:text-base font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors line-clamp-2 break-words min-h-[2.75rem]">
-                          {job.title}
-                        </h3>
-                      </Link>
-                      <p className="text-xs text-slate-300 line-clamp-2 mb-4 leading-relaxed">
-                        {job.description || 'Exciting career opportunity with a verified employer in Cameroon.'}
-                      </p>
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {(job.requiredSkills || []).slice(0, 3).map((skill: string) => (
-                          <span
-                            key={skill}
-                            className="px-2 py-0.5 rounded-md bg-slate-800 text-[10px] text-slate-300 border border-slate-700/60"
-                          >
-                            {skill}
-                          </span>
-                        ))}
+                      <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs">
+                        <span className="text-emerald-400 font-bold">
+                          {job.salaryMinXAF ? `${job.salaryMinXAF.toLocaleString()} XAF` : 'Competitive'}
+                        </span>
+                        <span className="text-slate-400 text-[11px] uppercase font-medium">{job.workMode}</span>
                       </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs">
-                      <span className="text-emerald-400 font-bold">
-                        {job.salaryMinXAF ? `${job.salaryMinXAF.toLocaleString()} XAF` : 'Competitive'}
-                      </span>
-                      <span className="text-slate-400 text-[11px] uppercase font-medium">{job.workMode}</span>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </StaggerItem>
                 );
               })
             ) : (
               <div className="col-span-3 py-16 text-center text-slate-500">
-                No jobs posted yet. Be the first to <Link href="/dashboard/company/jobs/create" className="text-blue-400 hover:underline">post a job</Link>.
+                No jobs posted yet. Be the first to <Link href="/post?type=job" className="text-blue-400 hover:underline">post a job</Link>.
               </div>
             )}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 

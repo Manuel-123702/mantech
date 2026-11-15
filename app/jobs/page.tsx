@@ -198,32 +198,29 @@ export default function JobsPage() {
           <div className="flex items-center gap-1.5 p-1 bg-slate-900/90 border border-slate-800 rounded-xl text-xs">
             <button
               onClick={() => setFilters({ ...filters, availability: "all" })}
-              className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all ${
-                filters.availability === "all"
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all ${filters.availability === "all"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "text-slate-400 hover:text-white"
+                }`}
             >
               All Postings ({counts.total})
             </button>
             <button
               onClick={() => setFilters({ ...filters, availability: "active" })}
-              className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 ${
-                filters.availability === "active"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 ${filters.availability === "active"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "text-slate-400 hover:text-white"
+                }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               Active ({counts.active})
             </button>
             <button
               onClick={() => setFilters({ ...filters, availability: "expired" })}
-              className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all ${
-                filters.availability === "expired"
-                  ? "bg-rose-600/80 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all ${filters.availability === "expired"
+                ? "bg-rose-600/80 text-white shadow-sm"
+                : "text-slate-400 hover:text-white"
+                }`}
             >
               Past / Expired ({counts.expired})
             </button>
@@ -284,11 +281,11 @@ export default function JobsPage() {
         ) : filteredJobs.length === 0 ? (
           <div className="text-center py-20 bg-slate-900/40 border border-slate-800/60 rounded-2xl p-8 max-w-md mx-auto">
             <Inbox className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <h3 className="font-bold text-white text-base mb-1">No vacancies found</h3>
+            <h3 className="font-bold text-blue-500 text-base mb-1">No vacancies found</h3>
             <p className="text-slate-400 text-xs mb-5">
               Try adjusting your search keywords or switching availability to view past/expired positions.
             </p>
-            <Button variant="outline" size="sm" onClick={clearFilters} className="text-xs border-slate-700">
+            <Button variant="outline" size="sm" onClick={clearFilters} className="text-xs bg-white/50 border-slate-700">
               Clear All Filters
             </Button>
           </div>
@@ -322,17 +319,16 @@ export default function JobsPage() {
                         </Badge>
                       </div>
 
-                      <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
-                        (job.type || 'FULL_TIME').toUpperCase() === 'PART_TIME'
-                          ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                          : (job.type || 'FULL_TIME').toUpperCase() === 'CONTRACT'
+                      <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${(job.type || 'FULL_TIME').toUpperCase() === 'PART_TIME'
+                        ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                        : (job.type || 'FULL_TIME').toUpperCase() === 'CONTRACT'
                           ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
                           : (job.type || 'FULL_TIME').toUpperCase() === 'INTERNSHIP'
-                          ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
-                          : (job.type || 'FULL_TIME').toUpperCase() === 'FREELANCE'
-                          ? 'bg-violet-500/15 text-violet-300 border-violet-500/30'
-                          : 'bg-blue-500/15 text-blue-300 border-blue-500/30'
-                      }`}>
+                            ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
+                            : (job.type || 'FULL_TIME').toUpperCase() === 'FREELANCE'
+                              ? 'bg-violet-500/15 text-violet-300 border-violet-500/30'
+                              : 'bg-blue-500/15 text-blue-300 border-blue-500/30'
+                        }`}>
                         {(job.type || "FULL_TIME").replace('_', ' ')}
                       </span>
                     </div>

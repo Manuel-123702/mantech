@@ -31,9 +31,13 @@ export function PWAInstallPrompt() {
     // 1. Check if already installed / running in standalone mode
     const standalone =
       window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+      (window.navigator as unknown as { standalone?: boolean }).standalone === true ||
+      window.location.search.includes('source=pwa');
     setIsStandalone(standalone);
-    if (standalone) return;
+    if (standalone) {
+      document.cookie = 'mantech_pwa_standalone=true; path=/; max-age=31536000';
+      return;
+    }
 
     // 2. Check if dismissed recently (within 5 days)
     const lastDismissed = localStorage.getItem('mantech_pwa_dismissed');

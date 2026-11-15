@@ -1,12 +1,13 @@
-// MANTECH Nexus Service Worker (PWA) v2 — Offline-First & Stale-While-Revalidate
-const CACHE_NAME = 'mantech-nexus-v2';
-const STATIC_CACHE_NAME = 'mantech-static-v2';
+// MANTECH Nexus Service Worker (PWA) v3 — Selective Offline Engine
+// - Installed PWA (Standalone app): Full offline access to cached pages.
+// - Standard Web Browser: Online connection required.
+const CACHE_NAME = 'mantech-nexus-v3';
+const STATIC_CACHE_NAME = 'mantech-static-v3';
 const OFFLINE_URL = '/offline.html';
 
 const CORE_ASSETS = [
   '/',
   OFFLINE_URL,
-  '/manifest.json',
   '/favicon.ico',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
@@ -56,7 +57,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 1. Navigation requests (Page HTML): Stale-While-Revalidate with Offline Fallback
+  // 1. Navigation requests (Page HTML): Stale-While-Revalidate with PWA-Only Offline Access
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
@@ -70,15 +71,25 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(async () => {
-          // If offline, try serving matching cached page first
-          const cachedResponse = await caches.match(event.request);
-          if (cachedResponse) return cachedResponse;
+          // Check if request is from the INSTALLED PWA
+          // (source=pwa param, referrer has source=pwa, or standalone cookie)
+          const cookieHeader = event.request.headers.get('cookie') || '';
+          const isInstalledPwa =
+            url.searchParams.get('source') === 'pwa' ||
+            (event.request.referrer && event.request.referrer.includes('source=pwa')) ||
+            cookieHeader.includes('mantech_pwa_standalone=true');
 
-          // If not in cache, try root page cache
-          const rootCached = await caches.match('/');
-          if (rootCached) return rootCached;
+          if (isInstalledPwa) {
+            // INSTALLED PWA APP: Allow full offline access to cached pages!
+            const cachedResponse = await caches.match(event.request);
+            if (cachedResponse) return cachedResponse;
 
-          // Fallback to offline page
+            const rootCached = await caches.match('/');
+            if (rootCached) return rootCached;
+          }
+
+          // STANDARD WEB BROWSER / SEARCH ENGINE:
+          // Web browsing requires live internet connection; show installation notice
           const offlinePage = await caches.match(OFFLINE_URL);
           return offlinePage || new Response('Offline', { status: 503, statusText: 'Offline' });
         })
