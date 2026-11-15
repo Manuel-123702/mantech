@@ -1,5 +1,5 @@
-import JobCreatePage from '@/components/dashboard/job-create-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <JobCreatePage backHref="/dashboard/company/jobs" />;
+  redirect('/post?type=job');
 }

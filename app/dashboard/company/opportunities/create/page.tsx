@@ -1,5 +1,5 @@
-import OpportunityCreatePage from '@/components/dashboard/opportunity-create-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <OpportunityCreatePage backHref="/dashboard/company?tab=opportunities" />;
+  redirect('/post?type=internship');
 }

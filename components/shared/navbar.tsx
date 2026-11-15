@@ -544,6 +544,18 @@ export function Navbar() {
               </Link>
             )}
 
+            {/* Quick Post CTA — 100% Free & No Sign-In Required */}
+            <Link href="/post" className="inline-flex">
+              <Button
+                size="sm"
+                className="h-8.5 px-3.5 text-xs font-extrabold bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:opacity-95 text-slate-950 rounded-xl shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-1.5"
+                title="Post a job or internship free — no login required"
+              >
+                <Zap className="w-3.5 h-3.5 fill-slate-950" />
+                <span>Post Free</span>
+              </Button>
+            </Link>
+
             {user ? (
               /* Signed-In User Profile Menu */
               <div className="flex items-center gap-2">
@@ -816,6 +828,15 @@ export function Navbar() {
 
                 {/* Mobile Auth Actions */}
                 <div className="pt-3 border-t border-slate-800/80 space-y-2">
+                  <Link
+                    href="/post"
+                    onClick={closeMobile}
+                    className="flex items-center justify-center gap-2 w-full p-3 rounded-xl bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 text-slate-950 font-extrabold text-xs shadow-lg shadow-cyan-500/20"
+                  >
+                    <Zap className="h-4 w-4 fill-slate-950" />
+                    <span>Post a Job / Internship Free (No Login)</span>
+                  </Link>
+
                   {user ? (
                     <>
                       <Link

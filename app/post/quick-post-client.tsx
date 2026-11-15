@@ -9,6 +9,7 @@ import {
   Image as ImageIcon,
   MessageSquare,
   Link as LinkIcon,
+  FileText,
   Sparkles,
   CheckCircle2,
   ArrowRight,
@@ -18,7 +19,10 @@ import {
   MapPin,
   Phone,
   Zap,
-  Share2,
+  Building2,
+  DollarSign,
+  Layers,
+  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,8 +30,30 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
-type PostMode = 'flyer' | 'whatsapp' | 'link';
+type PostMode = 'flyer' | 'whatsapp' | 'link' | 'detailed';
 type PostType = 'job' | 'internship';
+
+const CAMEROON_CITIES = [
+  'Douala',
+  'Yaoundé',
+  'Buea',
+  'Limbe',
+  'Bafoussam',
+  'Bamenda',
+  'Garoua',
+  'Maroua',
+  'Ngaoundéré',
+  'Kribi',
+  'Bertoua',
+  'Ebolowa',
+  'Other / Remote',
+];
+
+const WORK_MODES = [
+  { id: 'ONSITE', label: 'On-site (Au bureau / Sur site)' },
+  { id: 'HYBRID', label: 'Hybrid (Mixte présentiel / télétravail)' },
+  { id: 'REMOTE', label: '100% Remote (Télétravail complet)' },
+];
 
 export function QuickPostClient() {
   const searchParams = useSearchParams();
@@ -37,16 +63,30 @@ export function QuickPostClient() {
   const [postType, setPostType] = useState<PostType>(initialType);
   const [mode, setMode] = useState<PostMode>('flyer');
 
-  // Form State
-  const [flyerFile, setFlyerFile] = useState<File | null>(null);
-  const [flyerPreview, setFlyerPreview] = useState<string | null>(null);
+  // Shared Form State (No Login Required)
   const [title, setTitle] = useState('');
   const [employerName, setEmployerName] = useState('');
   const [whatsappPhone, setWhatsappPhone] = useState('+237 ');
   const [city, setCity] = useState('Douala');
+  const [isUrgentBoosted, setIsUrgentBoosted] = useState(true); // Default true for 0 FCFA launch promo!
+
+  // Mode 1: Flyer State
+  const [flyerFile, setFlyerFile] = useState<File | null>(null);
+  const [flyerPreview, setFlyerPreview] = useState<string | null>(null);
+
+  // Mode 2: WhatsApp State
   const [whatsappText, setWhatsappText] = useState('');
+
+  // Mode 3: External Link State
   const [externalUrl, setExternalUrl] = useState('');
-  const [isUrgentBoosted, setIsUrgentBoosted] = useState(true); // Default true for free launch promo!
+
+  // Mode 4: Detailed Form State
+  const [detailedDescription, setDetailedDescription] = useState('');
+  const [workMode, setWorkMode] = useState('ONSITE');
+  const [requiredSkills, setRequiredSkills] = useState('');
+  const [salaryMin, setSalaryMin] = useState('');
+  const [salaryMax, setSalaryMax] = useState('');
+  const [educationLevel, setEducationLevel] = useState('All levels welcome');
 
   const [submitting, setSubmitting] = useState(false);
   const [publishedData, setPublishedData] = useState<{
@@ -99,25 +139,37 @@ export function QuickPostClient() {
       const effectiveTitle =
         title.trim() ||
         (mode === 'flyer'
-          ? `${postType === 'internship' ? 'Internship' : 'Job'} Opportunity (${city})`
+          ? `${postType === 'internship' ? 'Internship' : 'Job'} Opening (${city})`
           : 'New Opening');
+
+      let finalDescription = '';
+      if (mode === 'flyer') {
+        finalDescription = `Recruitment flyer uploaded by employer. Contact directly via WhatsApp/Phone: ${whatsappPhone}.\n\n[Flyer URL]: ${flyerUrl}`;
+      } else if (mode === 'whatsapp') {
+        finalDescription = `${whatsappText}\n\nDirect WhatsApp/Phone Contact: ${whatsappPhone}`;
+      } else if (mode === 'link') {
+        finalDescription = `Apply directly at official careers portal: ${externalUrl}\n\nContact: ${whatsappPhone}`;
+      } else {
+        finalDescription = detailedDescription;
+      }
 
       const payload = {
         title: effectiveTitle,
-        organizationName: employerName.trim() || 'Verified Employer',
+        organizationName: employerName.trim() || 'Verified Enterprise',
         city: city || 'Douala',
-        workMode: 'ONSITE',
+        workMode: workMode || 'ONSITE',
         type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
-        description:
-          mode === 'flyer'
-            ? `Opportunity flyer uploaded by employer. Contact directly via WhatsApp/Phone: ${whatsappPhone}.\n\n[Flyer URL]: ${flyerUrl}`
-            : mode === 'whatsapp'
-            ? `${whatsappText}\n\nDirect WhatsApp/Phone Contact: ${whatsappPhone}`
-            : `Apply directly at official link: ${externalUrl}\n\nContact: ${whatsappPhone}`,
-        applicationMethod: mode === 'link' ? 'COMPANY_WEBSITE' : 'EXTERNAL',
+        description: finalDescription,
+        applicationMethod: mode === 'link' ? 'COMPANY_WEBSITE' : 'MANTECH',
         applicationUrl: mode === 'link' ? externalUrl : undefined,
         flyerUrl: flyerUrl || undefined,
         contactPhone: whatsappPhone,
+        requiredSkills: requiredSkills
+          ? requiredSkills.split(',').map((s) => s.trim()).filter(Boolean)
+          : [],
+        salaryMinXAF: salaryMin ? parseInt(salaryMin, 10) : undefined,
+        salaryMaxXAF: salaryMax ? parseInt(salaryMax, 10) : undefined,
+        educationLevel: educationLevel || undefined,
         isFeatured: isUrgentBoosted,
       };
 
@@ -198,9 +250,9 @@ export function QuickPostClient() {
                   setFlyerPreview(null);
                   setTitle('');
                   setWhatsappText('');
-                  setExternalUrl('');
+                  setDetailedDescription('');
                 }}
-                className="rounded-xl border border-slate-700 bg-slate-800/80 px-6 py-3 text-xs font-bold text-slate-200 hover:bg-slate-700 hover:text-white"
+                className="rounded-xl border border-slate-700 bg-slate-800/80 px-6 py-3 text-xs font-bold text-slate-200 hover:bg-slate-700"
               >
                 Post Another Opportunity
               </button>
@@ -208,396 +260,409 @@ export function QuickPostClient() {
           </motion.div>
         ) : (
           /* FORM VIEW */
-          <div>
-            {/* Header */}
-            <div className="text-center max-w-xl mx-auto mb-8">
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-cyan-300 backdrop-blur-md mb-3">
-                <Zap className="h-3.5 w-3.5 text-cyan-400" />
-                Quick 10-Second Post • No Login Required
+          <div className="space-y-6">
+            {/* Header Banner */}
+            <div className="text-center space-y-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/60 px-4 py-1.5 text-xs font-extrabold text-cyan-300 shadow-lg shadow-cyan-500/10">
+                <Sparkles className="h-4 w-4 text-cyan-400" />
+                <span>Zero Login Required · 100% Free National Rollout</span>
               </div>
-              <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white font-heading">
                 Publish a Job or Internship
               </h1>
-              <p className="mt-2 text-xs sm:text-sm text-slate-300">
-                Choose how you want to post. Upload an image flyer, paste a WhatsApp text, or share
-                a link.
+              <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+                Choose your preferred way to recruit: drop a Canva flyer image, paste a WhatsApp forward, share an external portal link, or write a detailed job description.
               </p>
             </div>
 
-            {/* Step 1: Category Selector (Job vs Internship) */}
-            <div className="flex items-center justify-center gap-3 mb-6">
+            {/* Type Selector (Job vs Internship) */}
+            <div className="grid grid-cols-2 gap-3 rounded-2xl bg-slate-900/90 p-1.5 border border-slate-800 backdrop-blur-xl">
               <button
                 type="button"
                 onClick={() => setPostType('job')}
-                className={`flex-1 max-w-[200px] flex items-center justify-center gap-2 rounded-2xl py-3 px-4 text-xs font-bold transition-all border ${
+                className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                   postType === 'job'
-                    ? 'border-cyan-500 bg-cyan-950/60 text-cyan-300 shadow-lg shadow-cyan-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:text-white'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-600/30'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 <Briefcase className="h-4 w-4" />
-                Job Vacancy
+                <span>Job Opening (Emploi)</span>
               </button>
               <button
                 type="button"
                 onClick={() => setPostType('internship')}
-                className={`flex-1 max-w-[200px] flex items-center justify-center gap-2 rounded-2xl py-3 px-4 text-xs font-bold transition-all border ${
+                className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                   postType === 'internship'
-                    ? 'border-blue-500 bg-blue-950/60 text-blue-300 shadow-lg shadow-blue-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:text-white'
-                }`}
-              >
-                <GraduationCap className="h-4 w-4" />
-                Internship
-              </button>
-            </div>
-
-            {/* Step 2: Posting Mode Tabs (Flyer vs WhatsApp vs Link) */}
-            <div className="grid grid-cols-3 gap-2 p-1.5 rounded-2xl border border-slate-800 bg-slate-900/80 mb-6 backdrop-blur-md">
-              <button
-                type="button"
-                onClick={() => setMode('flyer')}
-                className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 rounded-xl py-2.5 px-3 text-xs font-bold transition-all ${
-                  mode === 'flyer'
-                    ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-md'
+                    ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white shadow-lg shadow-cyan-600/30'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
+                <GraduationCap className="h-4 w-4" />
+                <span>Internship (Stage)</span>
+              </button>
+            </div>
+
+            {/* Mode Tabs (Flyer vs WhatsApp vs Link vs Detailed) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button
+                type="button"
+                onClick={() => setMode('flyer')}
+                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
+                  mode === 'flyer'
+                    ? 'border-cyan-500 bg-cyan-950/50 text-cyan-300 shadow-md shadow-cyan-500/20'
+                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                }`}
+              >
                 <ImageIcon className="h-4 w-4" />
-                <span>Upload Flyer</span>
+                <span className="text-xs font-bold">1. Poster Flyer</span>
+                <span className="text-[10px] opacity-75">Upload Image</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setMode('whatsapp')}
-                className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 rounded-xl py-2.5 px-3 text-xs font-bold transition-all ${
+                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
                   mode === 'whatsapp'
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'border-emerald-500 bg-emerald-950/50 text-emerald-300 shadow-md shadow-emerald-500/20'
+                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
                 }`}
               >
                 <MessageSquare className="h-4 w-4" />
-                <span>WhatsApp Text</span>
+                <span className="text-xs font-bold">2. WhatsApp Text</span>
+                <span className="text-[10px] opacity-75">Paste Forward</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setMode('link')}
-                className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 rounded-xl py-2.5 px-3 text-xs font-bold transition-all ${
+                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
                   mode === 'link'
-                    ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'border-blue-500 bg-blue-950/50 text-blue-300 shadow-md shadow-blue-500/20'
+                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
                 }`}
               >
                 <LinkIcon className="h-4 w-4" />
-                <span>Paste Link</span>
+                <span className="text-xs font-bold">3. Career Link</span>
+                <span className="text-[10px] opacity-75">External URL</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMode('detailed')}
+                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
+                  mode === 'detailed'
+                    ? 'border-indigo-500 bg-indigo-950/50 text-indigo-300 shadow-md shadow-indigo-500/20'
+                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                }`}
+              >
+                <FileText className="h-4 w-4" />
+                <span className="text-xs font-bold">4. Detailed Form</span>
+                <span className="text-[10px] opacity-75">Skills & Salary</span>
               </button>
             </div>
 
-            {/* Step 3: Form Card */}
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-xl p-6 sm:p-8 shadow-2xl relative">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* MODE 1: FLYER UPLOAD (Pure & Simple, NO department / specialization!) */}
-                {mode === 'flyer' && (
-                  <div className="space-y-4">
-                    <div>
-                      <Label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
-                        Upload Announcement Flyer (Affiche) <span className="text-red-400">*</span>
-                      </Label>
-                      <div className="border-2 border-dashed border-cyan-500/40 hover:border-cyan-400 rounded-2xl p-6 text-center transition-all bg-slate-950/60">
+            {/* The Main Form */}
+            <form
+              onSubmit={handleSubmit}
+              className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6"
+            >
+              {/* MODE 1: FLYER UPLOAD */}
+              {mode === 'flyer' && (
+                <div className="space-y-4">
+                  <div className="rounded-2xl border-2 border-dashed border-cyan-500/40 bg-cyan-950/10 p-6 text-center hover:border-cyan-500 transition-colors relative">
+                    {flyerPreview ? (
+                      <div className="space-y-3">
+                        <div className="relative mx-auto h-64 max-w-sm overflow-hidden rounded-xl border border-slate-700">
+                          <Image
+                            src={flyerPreview}
+                            alt="Flyer preview"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <p className="text-xs text-cyan-300 font-semibold">{flyerFile?.name}</p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleFlyerChange(null)}
+                          className="text-xs border-slate-700 bg-slate-800 text-slate-300 hover:text-white"
+                        >
+                          Change Flyer
+                        </Button>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer flex flex-col items-center justify-center space-y-3 py-6">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/20 text-cyan-400">
+                          <Upload className="h-6 w-6" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-bold text-white">
+                            Click to upload recruitment poster or flyer
+                          </p>
+                          <p className="text-xs text-slate-400">
+                            PNG, JPG, WEBP up to 10MB · Everything is visible on the image
+                          </p>
+                        </div>
                         <input
-                          id="flyer-input"
                           type="file"
                           accept="image/*"
-                          onChange={(e) => handleFlyerChange(e.target.files?.[0] || null)}
                           className="hidden"
+                          onChange={(e) => handleFlyerChange(e.target.files?.[0] || null)}
                         />
-                        <label htmlFor="flyer-input" className="cursor-pointer block">
-                          {flyerPreview ? (
-                            <div className="space-y-3">
-                              <div className="relative mx-auto h-48 w-48 rounded-xl overflow-hidden border border-cyan-500/40 shadow-lg">
-                                <Image
-                                  src={flyerPreview}
-                                  alt="Flyer Preview"
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div>
-                              <p className="text-xs font-bold text-cyan-300">
-                                Click to change flyer image
-                              </p>
-                            </div>
-                          ) : (
-                            <div className="space-y-2">
-                              <Upload className="h-10 w-10 mx-auto text-cyan-400" />
-                              <p className="text-sm font-bold text-white">
-                                Click to select recruitment poster / flyer
-                              </p>
-                              <p className="text-xs text-slate-400">
-                                PNG, JPG, or WebP (everything is on the image!)
-                              </p>
-                            </div>
-                          )}
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label
-                          htmlFor="title"
-                          className="text-xs font-semibold text-slate-300 block mb-1.5"
-                        >
-                          Role Title (e.g. Cook, Nurse, Waiter, Cashier)
-                        </Label>
-                        <Input
-                          id="title"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                          placeholder="e.g. Line Cook / Cuisinier"
-                          className="bg-slate-950/60 border-slate-700 text-white"
-                        />
-                      </div>
-
-                      <div>
-                        <Label
-                          htmlFor="employerName"
-                          className="text-xs font-semibold text-slate-300 block mb-1.5"
-                        >
-                          Enterprise or Business Name
-                        </Label>
-                        <Input
-                          id="employerName"
-                          value={employerName}
-                          onChange={(e) => setEmployerName(e.target.value)}
-                          placeholder="e.g. Restaurant La Fourchette"
-                          className="bg-slate-950/60 border-slate-700 text-white"
-                        />
-                      </div>
-                    </div>
+                      </label>
+                    )}
                   </div>
-                )}
+                  <p className="text-[11px] text-slate-400 text-center">
+                    💡 <em>No department or specialization needed! Your flyer contains all requirements.</em>
+                  </p>
+                </div>
+              )}
 
-                {/* MODE 2: WHATSAPP TEXT */}
-                {mode === 'whatsapp' && (
-                  <div className="space-y-4">
-                    <div>
-                      <Label
-                        htmlFor="whatsappText"
-                        className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-1.5"
-                      >
-                        Paste WhatsApp / Social Media Announcement{' '}
-                        <span className="text-red-400">*</span>
+              {/* MODE 2: WHATSAPP FORWARD */}
+              {mode === 'whatsapp' && (
+                <div className="space-y-2">
+                  <Label htmlFor="waText" className="text-xs font-bold text-slate-300">
+                    Paste WhatsApp Broadcast / Forwarded Message:
+                  </Label>
+                  <Textarea
+                    id="waText"
+                    rows={6}
+                    value={whatsappText}
+                    onChange={(e) => setWhatsappText(e.target.value)}
+                    placeholder="Paste the recruitment message copied from your WhatsApp groups or chats here..."
+                    className="bg-slate-950 border-slate-800 text-white text-xs leading-relaxed"
+                    required
+                  />
+                </div>
+              )}
+
+              {/* MODE 3: CAREER LINK */}
+              {mode === 'link' && (
+                <div className="space-y-2">
+                  <Label htmlFor="linkUrl" className="text-xs font-bold text-slate-300">
+                    Direct Careers Portal / LinkedIn Job Link:
+                  </Label>
+                  <Input
+                    id="linkUrl"
+                    type="url"
+                    value={externalUrl}
+                    onChange={(e) => setExternalUrl(e.target.value)}
+                    placeholder="https://company.com/careers/job-123 or https://linkedin.com/jobs/..."
+                    className="bg-slate-950 border-slate-800 text-white text-xs h-11"
+                    required
+                  />
+                  <p className="text-[11px] text-slate-400">
+                    Candidates who click &ldquo;Apply&rdquo; will be redirected straight to this link.
+                  </p>
+                </div>
+              )}
+
+              {/* MODE 4: DETAILED HR FORM */}
+              {mode === 'detailed' && (
+                <div className="space-y-4 pt-1">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold text-slate-300">
+                      Detailed Job / Internship Description:
+                    </Label>
+                    <Textarea
+                      rows={6}
+                      value={detailedDescription}
+                      onChange={(e) => setDetailedDescription(e.target.value)}
+                      placeholder="Outline core responsibilities, team missions, daily tasks, tools used..."
+                      className="bg-slate-950 border-slate-800 text-white text-xs leading-relaxed"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-bold text-slate-300">
+                        Work Mode (Mode de travail)
                       </Label>
-                      <Textarea
-                        id="whatsappText"
-                        value={whatsappText}
-                        onChange={(e) => setWhatsappText(e.target.value)}
-                        placeholder="Paste the forwarded WhatsApp recruitment message here... (e.g. Urgently hiring 2 waiters in Douala Akwa. Salary 80,000 FCFA. Contact 699...)"
-                        rows={5}
-                        required
-                        className="bg-slate-950/60 border-slate-700 text-white text-sm"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label
-                          htmlFor="title"
-                          className="text-xs font-semibold text-slate-300 block mb-1.5"
-                        >
-                          Role Title <span className="text-red-400">*</span>
-                        </Label>
-                        <Input
-                          id="title"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                          placeholder="e.g. Storekeeper / Sales Agent"
-                          required
-                          className="bg-slate-950/60 border-slate-700 text-white"
-                        />
-                      </div>
-
-                      <div>
-                        <Label
-                          htmlFor="employerName"
-                          className="text-xs font-semibold text-slate-300 block mb-1.5"
-                        >
-                          Enterprise or Employer Name
-                        </Label>
-                        <Input
-                          id="employerName"
-                          value={employerName}
-                          onChange={(e) => setEmployerName(e.target.value)}
-                          placeholder="e.g. Santa Lucia Supermarket"
-                          className="bg-slate-950/60 border-slate-700 text-white"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* MODE 3: LINK */}
-                {mode === 'link' && (
-                  <div className="space-y-4">
-                    <div>
-                      <Label
-                        htmlFor="externalUrl"
-                        className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-1.5"
+                      <select
+                        value={workMode}
+                        onChange={(e) => setWorkMode(e.target.value)}
+                        className="w-full h-11 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs px-3"
                       >
-                        Job / Application Link (URL) <span className="text-red-400">*</span>
-                      </Label>
-                      <Input
-                        id="externalUrl"
-                        type="url"
-                        value={externalUrl}
-                        onChange={(e) => setExternalUrl(e.target.value)}
-                        placeholder="https://linkedin.com/jobs/... or https://careers.company.cm"
-                        required
-                        className="bg-slate-950/60 border-slate-700 text-white text-sm"
-                      />
+                        {WORK_MODES.map((wm) => (
+                          <option key={wm.id} value={wm.id}>
+                            {wm.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label
-                          htmlFor="title"
-                          className="text-xs font-semibold text-slate-300 block mb-1.5"
-                        >
-                          Role Title <span className="text-red-400">*</span>
-                        </Label>
-                        <Input
-                          id="title"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                          placeholder="e.g. Telecommunications Engineer"
-                          required
-                          className="bg-slate-950/60 border-slate-700 text-white"
-                        />
-                      </div>
-
-                      <div>
-                        <Label
-                          htmlFor="employerName"
-                          className="text-xs font-semibold text-slate-300 block mb-1.5"
-                        >
-                          Enterprise / Organization
-                        </Label>
-                        <Input
-                          id="employerName"
-                          value={employerName}
-                          onChange={(e) => setEmployerName(e.target.value)}
-                          placeholder="e.g. Orange Cameroun"
-                          className="bg-slate-950/60 border-slate-700 text-white"
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs font-bold text-slate-300">
+                        Minimum Education Level (Niveau académique)
+                      </Label>
+                      <select
+                        value={educationLevel}
+                        onChange={(e) => setEducationLevel(e.target.value)}
+                        className="w-full h-11 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs px-3"
+                      >
+                        <option value="All levels welcome">All levels welcome (Tous niveaux)</option>
+                        <option value="Baccalauréat / GCE A-Level">Baccalauréat / GCE A-Level</option>
+                        <option value="Bac+2 (BTS / DUT / HND)">Bac+2 (BTS / DUT / HND)</option>
+                        <option value="Bac+3 (Licence / Bachelor)">Bac+3 (Licence / Bachelor)</option>
+                        <option value="Bac+5 (Master / Ingénieur)">Bac+5 (Master / Ingénieur)</option>
+                      </select>
                     </div>
                   </div>
-                )}
 
-                {/* Shared Contact & City Row */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
-                  <div>
-                    <Label
-                      htmlFor="whatsappPhone"
-                      className="text-xs font-semibold text-slate-300 flex items-center gap-1.5 mb-1.5"
-                    >
-                      <Phone className="h-3.5 w-3.5 text-emerald-400" />
-                      WhatsApp / Contact Phone <span className="text-red-400">*</span>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold text-slate-300">
+                      Required Skills (Compétences requises — séparées par des virgules):
                     </Label>
                     <Input
-                      id="whatsappPhone"
-                      value={whatsappPhone}
-                      onChange={(e) => setWhatsappPhone(e.target.value)}
-                      placeholder="+237 6XX XXX XXX"
-                      required
-                      className="bg-slate-950/60 border-slate-700 text-white font-mono"
+                      value={requiredSkills}
+                      onChange={(e) => setRequiredSkills(e.target.value)}
+                      placeholder="e.g. React, Node.js, Accounting, Sales, Customer Service"
+                      className="bg-slate-950 border-slate-800 text-white text-xs h-11"
                     />
                   </div>
 
-                  <div>
-                    <Label
-                      htmlFor="city"
-                      className="text-xs font-semibold text-slate-300 flex items-center gap-1.5 mb-1.5"
-                    >
-                      <MapPin className="h-3.5 w-3.5 text-cyan-400" />
-                      City / Location
-                    </Label>
-                    <select
-                      id="city"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className="w-full h-10 rounded-xl bg-slate-950/60 border border-slate-700 text-white px-3 text-xs focus:outline-none focus:border-cyan-400"
-                    >
-                      <option value="Douala">Douala (Littoral)</option>
-                      <option value="Yaoundé">Yaoundé (Centre)</option>
-                      <option value="Buea">Buea (South-West)</option>
-                      <option value="Limbe">Limbe (South-West)</option>
-                      <option value="Bafoussam">Bafoussam (West)</option>
-                      <option value="Bamenda">Bamenda (North-West)</option>
-                      <option value="Garoua">Garoua (North)</option>
-                      <option value="Maroua">Maroua (Far North)</option>
-                      <option value="Ngaoundéré">Ngaoundéré (Adamawa)</option>
-                      <option value="Kribi">Kribi (South)</option>
-                      <option value="Bertoua">Bertoua (East)</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* MONETIZATION FEATURE: URGENT BOOST (FREE PROMO) */}
-                <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 backdrop-blur-md">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                        <Sparkles className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-xs font-bold text-white">
-                            Urgent Top-Listing &amp; WhatsApp Alert Boost
-                          </h4>
-                          <span className="rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-extrabold">
-                            PROMO 0 FCFA
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-300 mt-0.5">
-                          Highlights your opportunity in gold and broadcasts to candidate WhatsApp
-                          groups. (Regular: 3,500 FCFA).
-                        </p>
-                      </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-bold text-slate-300">
+                        Salary / Monthly Stipend Min (XAF - Optionnel)
+                      </Label>
+                      <Input
+                        type="number"
+                        value={salaryMin}
+                        onChange={(e) => setSalaryMin(e.target.value)}
+                        placeholder="e.g. 50000"
+                        className="bg-slate-950 border-slate-800 text-white text-xs h-11"
+                      />
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={isUrgentBoosted}
-                      onChange={(e) => setIsUrgentBoosted(e.target.checked)}
-                      className="h-5 w-5 rounded border-slate-700 bg-slate-900 text-amber-500 focus:ring-amber-500"
-                    />
+                    <div className="space-y-2">
+                      <Label className="text-xs font-bold text-slate-300">
+                        Salary / Stipend Max (XAF - Optionnel)
+                      </Label>
+                      <Input
+                        type="number"
+                        value={salaryMax}
+                        onChange={(e) => setSalaryMax(e.target.value)}
+                        placeholder="e.g. 150000"
+                        className="bg-slate-950 border-slate-800 text-white text-xs h-11"
+                      />
+                    </div>
                   </div>
                 </div>
+              )}
 
-                {/* Submit Action */}
-                <Button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full h-12 rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 font-bold text-sm text-white shadow-xl shadow-cyan-500/25 hover:opacity-95 transition-opacity"
-                >
-                  {submitting ? (
-                    <span className="flex items-center gap-2">
-                      <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                      Publishing Instantly...
+              {/* SHARED FIELDS ACROSS ALL MODES */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="text-xs font-bold text-slate-300">
+                    Role / Position Title:
+                  </Label>
+                  <Input
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g. Sales Associate, Registered Nurse, Fullstack Dev"
+                    className="bg-slate-950 border-slate-800 text-white text-xs h-11"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="employer" className="text-xs font-bold text-slate-300">
+                    Company / Employer / Shop Name:
+                  </Label>
+                  <Input
+                    id="employer"
+                    value={employerName}
+                    onChange={(e) => setEmployerName(e.target.value)}
+                    placeholder="e.g. Boutique Modern, Orange, Cabinet Médical..."
+                    className="bg-slate-950 border-slate-800 text-white text-xs h-11"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="city" className="text-xs font-bold text-slate-300">
+                    City / Location (Cameroon):
+                  </Label>
+                  <select
+                    id="city"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full h-11 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs px-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  >
+                    {CAMEROON_CITIES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-xs font-bold text-slate-300">
+                    WhatsApp or Phone Contact (For applicants):
+                  </Label>
+                  <Input
+                    id="phone"
+                    value={whatsappPhone}
+                    onChange={(e) => setWhatsappPhone(e.target.value)}
+                    placeholder="+237 6XXXXXXXX"
+                    className="bg-slate-950 border-slate-800 text-white text-xs h-11"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* URGENT BOOST OPTION (FREE PROMO) */}
+              <div className="rounded-2xl border border-amber-500/30 bg-amber-950/20 p-4 flex items-center justify-between">
+                <div className="space-y-1 pr-4">
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4 fill-amber-400 text-amber-400" />
+                    <span className="text-xs font-bold text-amber-300">
+                      Apply Urgent Placement Boost (Top Ranking)
                     </span>
-                  ) : (
+                    <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-500/30">
+                      0 FCFA Launch Promo
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300">
+                    Pins this posting at the top of search listings with a priority highlight badge.
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={isUrgentBoosted}
+                  onChange={(e) => setIsUrgentBoosted(e.target.checked)}
+                  className="h-5 w-5 rounded border-amber-500 text-amber-500 accent-amber-500 cursor-pointer shrink-0"
+                />
+              </div>
+
+              {/* SUBMIT BUTTON */}
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="w-full h-12 rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 hover:opacity-95 text-slate-950 font-extrabold text-sm shadow-xl shadow-cyan-500/20 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {submitting ? (
+                  <span>Publishing Opportunity...</span>
+                ) : (
+                  <>
                     <span>
-                      Publish {postType === 'internship' ? 'Internship' : 'Job'} Free (1 Click)
+                      Publish {postType === 'internship' ? 'Internship' : 'Job'} (100% Free · No Login)
                     </span>
-                  )}
-                </Button>
-              </form>
-            </div>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </form>
           </div>
         )}
       </div>
     </div>
   );
 }
-

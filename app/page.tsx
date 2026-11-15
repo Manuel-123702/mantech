@@ -1160,43 +1160,72 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- POST AN OPPORTUNITY (EMPLOYERS & HOSTS) --- */}
-      <section className="py-20 bg-slate-950 border-b border-slate-800/50">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-blue-900/20 via-slate-900 to-indigo-900/80 p-8 sm:p-12 text-center shadow-2xl shadow-blue-900/20 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-6 uppercase tracking-wider">
-                <Briefcase className="w-4 h-4" /> For Employers &amp; Hosts
+      {/* --- INSTANT EXPRESS POSTING HUB (NO LOGIN REQUIRED) --- */}
+      <section className="py-20 bg-slate-950 border-b border-slate-800/80 relative overflow-hidden">
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 blur-[130px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-10 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-blue-950/60 p-8 sm:p-14 text-center shadow-2xl backdrop-blur-2xl relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
+
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-extrabold uppercase tracking-wider mb-6 shadow-lg shadow-cyan-500/10">
+              <Zap className="w-4 h-4 text-cyan-400 fill-cyan-400" />
+              <span>Instant Public Posting · 100% Free · No Sign-In Required</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-heading max-w-3xl mx-auto leading-tight">
+              Have an Opening to Post?{' '}
+              <span className="bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
+                Publish it in 30 Seconds.
+              </span>
+            </h2>
+
+            <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-4 mb-8 leading-relaxed">
+              Recruiting in Cameroon has never been simpler. Upload a recruitment poster image, paste a forwarded WhatsApp announcement, share your career link, or write a detailed job description — completely free, with zero account registration friction.
+            </p>
+
+            {/* 4 Express Modes Showcase */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto mb-10 text-left">
+              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 backdrop-blur-md">
+                <div className="text-xl mb-1.5">📸</div>
+                <div className="text-xs font-bold text-white">Poster / Flyer Drop</div>
+                <p className="text-[11px] text-slate-400 mt-1">Upload an image. No department or HR forms required.</p>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
-                Ready to post your first opportunity?
-              </h2>
-              <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
-                Publish a job or internship opportunity and start attracting verified
-                talent from across Cameroon&apos;s 10 regions. Listings go through a
-                quick moderation review before appearing on the marketplace.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link href="/dashboard/company/jobs/create">
-                  <Button size="lg" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20">
-                    <Plus className="w-5 h-5 mr-2" />
-                    Post a Job
-                  </Button>
-                </Link>
-                <Link href="/dashboard/company/opportunities/create">
-                  <Button size="lg" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/20 border border-transparent">
-                    <Briefcase className="w-5 h-5 mr-2" />
-                    Create Internship Opportunity
-                  </Button>
-                </Link>
+
+              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 backdrop-blur-md">
+                <div className="text-xl mb-1.5">💬</div>
+                <div className="text-xs font-bold text-white">WhatsApp Forward</div>
+                <p className="text-[11px] text-slate-400 mt-1">Copy and paste group recruitment announcements.</p>
               </div>
-              <p className="mt-6 text-xs text-slate-400">
-                Already have an account?{' '}
-                <Link href="/dashboard/company" className="text-blue-400 hover:underline font-medium">
-                  Go to your dashboard
-                </Link>
-              </p>
+
+              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 backdrop-blur-md">
+                <div className="text-xl mb-1.5">🔗</div>
+                <div className="text-xs font-bold text-white">External Career Link</div>
+                <p className="text-[11px] text-slate-400 mt-1">Direct redirect to LinkedIn or company careers portal.</p>
+              </div>
+
+              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 backdrop-blur-md">
+                <div className="text-xl mb-1.5">📋</div>
+                <div className="text-xs font-bold text-white">Detailed HR Posting</div>
+                <p className="text-[11px] text-slate-400 mt-1">Set work mode, required skills, and salary expectations.</p>
+              </div>
+            </div>
+
+            {/* Dual CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link href="/post?type=job">
+                <Button size="lg" className="w-full sm:w-auto px-8 py-6 text-sm font-extrabold bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 hover:opacity-95 text-white shadow-xl shadow-cyan-500/25 rounded-2xl">
+                  <Briefcase className="w-5 h-5 mr-2" />
+                  Post a Job Free (No Login)
+                </Button>
+              </Link>
+              <Link href="/post?type=internship">
+                <Button size="lg" className="w-full sm:w-auto px-8 py-6 text-sm font-extrabold bg-slate-900 hover:bg-slate-800 text-white border border-cyan-500/40 shadow-xl rounded-2xl">
+                  <GraduationCap className="w-5 h-5 mr-2 text-cyan-400" />
+                  Post an Internship Free (No Login)
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
