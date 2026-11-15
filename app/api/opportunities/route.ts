@@ -53,7 +53,7 @@ export async function GET() {
         region: true,
         applications: true,
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
     });
 
     return NextResponse.json({ opportunities });
@@ -131,6 +131,30 @@ export async function POST(request: Request) {
       details: { title: opportunity.title, status: opportunity.moderationStatus },
       request,
     });
+
+    // Shadow/provisional moderation: Opportunity is immediately published and
+    // browsable across Cameroon, while notifying administrators for background review.
+    if (opportunity.moderationStatus === 'PUBLISHED') {
+      try {
+        const admins = await prisma.user.findMany({
+          where: { role: 'ADMIN' },
+          select: { id: true },
+        });
+        for (const admin of admins) {
+          await prisma.notification.create({
+            data: {
+              userId: admin.id,
+              title: `New Internship Posted: ${opportunity.title}`,
+              message: `Posted by ${organization.name} in ${opportunity.city}. Live in directory — review for verified badge.`,
+              category: 'moderation',
+              link: `/internships/${opportunity.slug || opportunity.id}`,
+            },
+          });
+        }
+      } catch (adminNotifyErr) {
+        console.warn('[opportunities] Admin notification skipped (non-fatal):', adminNotifyErr);
+      }
+    }
 
     return NextResponse.json({ opportunity }, { status: 201 });
   } catch (error) {

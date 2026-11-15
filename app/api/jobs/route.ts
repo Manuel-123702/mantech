@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
       prisma.job.findMany({
         where,
         include: { organization: { include: { companyProfile: true, universityProfile: true } }, field: true, specialization: true, region: true },
-        orderBy: [{ postingDate: 'desc' }, { id: 'desc' }],
+        orderBy: [{ isFeatured: 'desc' }, { postingDate: 'desc' }, { id: 'desc' }],
         skip: (page - 1) * limit,
         take: limit,
       }),
@@ -239,6 +239,28 @@ export async function POST(request: NextRequest) {
         workMode: String(job.workMode ?? ''),
         kind: 'job',
       });
+
+      // Shadow/provisional moderation: Posting appears immediately in directory,
+      // and administrators are notified to verify accreditation whenever convenient.
+      try {
+        const admins = await prisma.user.findMany({
+          where: { role: 'ADMIN' },
+          select: { id: true },
+        });
+        for (const admin of admins) {
+          await prisma.notification.create({
+            data: {
+              userId: admin.id,
+              title: `New Job Posted: ${job.title}`,
+              message: `Posted by ${job.organization?.name || 'Recruiter'} in ${job.city || 'Cameroon'}. Live in directory — review for verified badge.`,
+              category: 'moderation',
+              link: `/jobs/${job.slug || job.id}`,
+            },
+          });
+        }
+      } catch (adminNotifyErr) {
+        console.warn('[jobs] Admin notification skipped (non-fatal):', adminNotifyErr);
+      }
     }
 
     return NextResponse.json({ job }, { status: 201 });

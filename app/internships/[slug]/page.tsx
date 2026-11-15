@@ -22,6 +22,7 @@ import { waShareInternshipLink, waApplyLink } from "@/lib/whatsapp";
 import { jobPostingJsonLd } from "@/lib/seo";
 import { toast } from "sonner";
 import { copyToClipboard } from "@/lib/clipboard";
+import { BoostListingModal } from "@/components/shared/boost-listing-modal";
 const WHATSAPP_LINK = APP_CONFIG.support.whatsapp;
 import {
   MapPin,
@@ -44,6 +45,7 @@ import {
   Briefcase,
   Users,
   Phone,
+  Zap,
 } from "lucide-react";
 
 export default function InternshipDetailPage() {
@@ -66,6 +68,7 @@ export default function InternshipDetailPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showBoostModal, setShowBoostModal] = useState(false);
 
   useEffect(() => {
     async function loadOpp() {
@@ -207,11 +210,31 @@ export default function InternshipDetailPage() {
   // Copy the page URL with a fallback chain: the async Clipboard API only
   // exists on secure origins and can be blocked in embedded frames, so a
   // silent rejection used to make this button look dead. execCommand is the
-  // legacy escape hatch; if even that fails we tell the user instead of
-  // doing nothing.
+  // Live share: opens the device's native share sheet (WhatsApp, Messenger,
+  // Telegram, SMS, etc.) on phones & supported browsers, falling back to
+  // copying the link to clipboard with clear feedback.
   const handleShare = async () => {
     if (typeof window === "undefined") return;
-    const ok = await copyToClipboard(window.location.href);
+    const url = window.location.href;
+    const shareTitle = opportunity?.title
+      ? `${opportunity.title} — ${opportunity.companyName || organization?.name || 'MANTECH Nexus'}`
+      : 'Internship Opportunity on MANTECH Nexus';
+    const shareText = `Check out this internship in Cameroon: ${shareTitle} (${opportunity?.city || 'Cameroon'})\n${url}`;
+
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url,
+        });
+        return;
+      } catch (err: any) {
+        if (err?.name === "AbortError") return; // User closed share sheet
+      }
+    }
+
+    const ok = await copyToClipboard(url);
     if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -436,23 +459,33 @@ export default function InternshipDetailPage() {
               <span>{isSaved ? "Saved" : "Save"}</span>
             </Button>
             <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowBoostModal(true)}
+              className="h-9 px-3 gap-1.5 text-xs border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 font-semibold"
+              title="Boost this internship to top placement"
+            >
+              <Zap className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+              <span>Boost</span>
+            </Button>
+            <Button
               size="sm"
               onClick={handleWhatsAppShare}
               className="h-9 px-3 gap-1.5 text-xs bg-[#25D366] hover:bg-[#1ebe57] text-white"
-              title="Share this internship on WhatsApp"
+              title="Share this internship directly on WhatsApp"
             >
               <WhatsAppIcon className="w-4 h-4" />
-              <span>Share</span>
+              <span>WhatsApp</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleShare}
-              className="h-9 px-3 gap-1.5 text-xs text-slate-600"
-              title="Copy link"
+              className="h-9 px-3 gap-1.5 text-xs text-slate-600 hover:text-slate-900"
+              title="Share via device or copy link"
             >
               <Share2 className="w-4 h-4" />
-              <span>{copied ? "Copied!" : "Copy"}</span>
+              <span>{copied ? "Copied!" : "Share"}</span>
             </Button>
             {opportunity?.id && (
               <ReportButton
@@ -880,6 +913,19 @@ export default function InternshipDetailPage() {
           </div>
         </div>
       </div>
+
+      {opportunity && (
+        <BoostListingModal
+          isOpen={showBoostModal}
+          onClose={() => setShowBoostModal(false)}
+          itemId={opportunity.id}
+          itemType="internship"
+          itemTitle={opportunity.title}
+          onSuccess={() => {
+            setOpportunity((prev) => (prev ? { ...prev, isFeatured: true } : prev));
+          }}
+        />
+      )}
     </div>
   );
 }

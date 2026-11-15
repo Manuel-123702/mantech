@@ -24,7 +24,8 @@ import {
   Users,
   GraduationCap,
   Layers,
-  Award
+  Award,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +33,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { copyToClipboard } from "@/lib/clipboard";
 import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
+import { BoostListingModal } from "@/components/shared/boost-listing-modal";
 import { APP_CONFIG } from "@/lib/config";
 import type { Job } from "@/lib/types";
 import Loading from "@/app/loading";
@@ -48,6 +50,7 @@ export default function JobDetailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [applied, setApplied] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
+  const [showBoostModal, setShowBoostModal] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -79,11 +82,39 @@ export default function JobDetailPage() {
   }, [slug]);
 
   const handleShare = async () => {
-    if (typeof window !== "undefined") {
-      const url = window.location.href;
-      await copyToClipboard(url);
-      toast.success("Job link copied to clipboard!");
+    if (typeof window === "undefined") return;
+    const url = window.location.href;
+    const shareTitle = job?.title ? `${job.title} — ${job.companyName || 'MANTECH Nexus'}` : 'Job opening on MANTECH Nexus';
+    const shareText = `Check out this job in Cameroon: ${shareTitle} (${job?.city || 'Cameroon'})\n${url}`;
+
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url,
+        });
+        return;
+      } catch (err: any) {
+        if (err?.name === "AbortError") return; // User closed native share sheet
+      }
     }
+
+    const ok = await copyToClipboard(url);
+    if (ok) {
+      toast.success("Job link copied to clipboard!");
+    } else {
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  const handleWhatsAppShare = () => {
+    if (typeof window === "undefined" || !job) return;
+    const url = window.location.href;
+    const shareText = `Check out this job opportunity in Cameroon: *${job.title}* at *${job.companyName || 'MANTECH Nexus'}* (${job.city || 'Cameroon'})\n\nView details & apply: ${url}`;
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+    window.open(waUrl, "_blank", "noopener,noreferrer");
   };
 
   // Internal MANTECH application for jobs — creates an Application record
@@ -164,8 +195,29 @@ export default function JobDetailPage() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => setShowBoostModal(true)}
+              className="border-amber-500/40 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-xs gap-1.5 shadow-sm"
+              title="Boost this job to top placement"
+            >
+              <Zap className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              <span>Boost</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleWhatsAppShare}
+              className="border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-xs gap-1.5"
+              title="Share on WhatsApp"
+            >
+              <WhatsAppIcon className="w-3.5 h-3.5 text-emerald-400" />
+              <span>WhatsApp</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleShare}
               className="border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs"
+              title="Share via device or copy link"
             >
               <Share2 className="w-3.5 h-3.5 mr-1.5" />
               Share
@@ -526,6 +578,19 @@ export default function JobDetailPage() {
           </div>
         </div>
       </div>
+
+      {job && (
+        <BoostListingModal
+          isOpen={showBoostModal}
+          onClose={() => setShowBoostModal(false)}
+          itemId={job.id}
+          itemType="job"
+          itemTitle={job.title}
+          onSuccess={() => {
+            setJob((prev) => (prev ? { ...prev, isFeatured: true } : prev));
+          }}
+        />
+      )}
     </div>
   );
 }
