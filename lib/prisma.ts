@@ -34,7 +34,12 @@ function withConnectionRetry() {
             try {
               return await query(args);
             } catch (error) {
-              const giveUp = !isDatabaseUnavailable(error) || attempt >= MAX_ATTEMPTS;
+              const isInitFailure =
+                error instanceof Error &&
+                (error.name === 'PrismaClientInitializationError' ||
+                  error.message.includes("Can't reach database server") ||
+                  error.message.includes('P1001'));
+              const giveUp = isInitFailure || !isDatabaseUnavailable(error) || attempt >= MAX_ATTEMPTS;
               if (giveUp) throw error;
               await new Promise((resolve) => setTimeout(resolve, backoffMs(attempt)));
             }
