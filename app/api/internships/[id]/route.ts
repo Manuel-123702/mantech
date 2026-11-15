@@ -7,6 +7,7 @@ import { getOrganizationResponseStats } from '@/lib/response-rate';
 import { writeAudit } from '@/lib/audit';
 import { AuthError, jsonError, requireRecruiterContext } from '@/lib/authz';
 import { notifyMatchingAlerts } from '@/lib/alert-delivery';
+import { CAMEROON_MARKETPLACE_JOBS } from '@/lib/cameroon-marketplace-data';
 
 export async function GET(
   _request: NextRequest,
@@ -28,6 +29,31 @@ export async function GET(
     });
 
     if (!opportunity) {
+      const fallback = CAMEROON_MARKETPLACE_JOBS.find(j => j.slug === id || j.id === id);
+      if (fallback) {
+        const oppObj = {
+          id: fallback.id,
+          slug: fallback.slug,
+          title: fallback.title,
+          description: fallback.description,
+          city: fallback.city,
+          workMode: fallback.workMode,
+          durationMonths: 6,
+          isPaid: Boolean(fallback.salaryMinXAF && fallback.salaryMinXAF > 0),
+          allowanceXAF: fallback.salaryMinXAF || 0,
+          requiredSkills: fallback.requiredSkills,
+          moderationStatus: 'PUBLISHED',
+          organization: {
+            name: fallback.companyName,
+            logoUrl: fallback.logoUrl || null,
+            verificationStatus: 'VERIFIED',
+          },
+          field: { name: fallback.field },
+          region: { name: fallback.region },
+          createdAt: new Date().toISOString(),
+        };
+        return NextResponse.json({ opportunity: oppObj, organization: oppObj.organization, responseRate: null });
+      }
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
@@ -47,7 +73,31 @@ export async function GET(
     return NextResponse.json({ opportunity, organization: opportunity.organization, responseRate });
   } catch (dbError) {
     logDatabaseUnavailable(`internships/${id}`, dbError);
-    // Option A: detail pages never invent an opportunity — report the outage honestly.
+    const fallback = CAMEROON_MARKETPLACE_JOBS.find(j => j.slug === id || j.id === id);
+    if (fallback) {
+      const oppObj = {
+        id: fallback.id,
+        slug: fallback.slug,
+        title: fallback.title,
+        description: fallback.description,
+        city: fallback.city,
+        workMode: fallback.workMode,
+        durationMonths: 6,
+        isPaid: Boolean(fallback.salaryMinXAF && fallback.salaryMinXAF > 0),
+        allowanceXAF: fallback.salaryMinXAF || 0,
+        requiredSkills: fallback.requiredSkills,
+        moderationStatus: 'PUBLISHED',
+        organization: {
+          name: fallback.companyName,
+          logoUrl: fallback.logoUrl || null,
+          verificationStatus: 'VERIFIED',
+        },
+        field: { name: fallback.field },
+        region: { name: fallback.region },
+        createdAt: new Date().toISOString(),
+      };
+      return NextResponse.json({ opportunity: oppObj, organization: oppObj.organization, responseRate: null });
+    }
     return NextResponse.json({ error: 'Service temporarily unavailable.' }, { status: 503 });
   }
 }

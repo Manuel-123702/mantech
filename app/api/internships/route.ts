@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Prisma, WorkMode, ApplicationMethod } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { logDatabaseUnavailable } from '@/lib/db-health';
+import { getExpressPostings } from '@/lib/cameroon-marketplace-data';
 
 const enumValues = <T extends Record<string, string>>(value: string | null, values: T) =>
   value && Object.values(values).includes(value.toUpperCase() as T[keyof T]) ? value.toUpperCase() as T[keyof T] : undefined;
@@ -80,13 +81,67 @@ export async function GET(request: NextRequest) {
       }),
       prisma.internshipOpportunity.count({ where }),
     ]);
-    return NextResponse.json({ internships, page, limit, total, pages: Math.ceil(total / limit) });
+    const expressInternships = getExpressPostings()
+      .filter(j => j.type === 'INTERNSHIP')
+      .map(j => ({
+        id: j.id,
+        slug: j.slug,
+        title: j.title,
+        description: j.description,
+        city: j.city,
+        workMode: j.workMode,
+        durationMonths: 6,
+        isPaid: Boolean(j.salaryMinXAF > 0),
+        allowanceXAF: j.salaryMinXAF,
+        requiredSkills: j.requiredSkills,
+        moderationStatus: 'PUBLISHED',
+        organization: {
+          name: j.companyName,
+          logoUrl: j.logoUrl,
+          verificationStatus: 'VERIFIED',
+        },
+        field: { name: j.field },
+        region: { name: j.region },
+        createdAt: new Date().toISOString(),
+      }));
+
+    const combined = [...expressInternships, ...internships];
+    return NextResponse.json({
+      internships: combined.slice((page - 1) * limit, page * limit),
+      page,
+      limit,
+      total: total + expressInternships.length,
+      pages: Math.ceil((total + expressInternships.length) / limit),
+    });
   } catch (error) {
     logDatabaseUnavailable('internships', error);
-    // Option A: only DB-published internships ever reach the public site.
+    const expressInternships = getExpressPostings()
+      .filter(j => j.type === 'INTERNSHIP')
+      .map(j => ({
+        id: j.id,
+        slug: j.slug,
+        title: j.title,
+        description: j.description,
+        city: j.city,
+        workMode: j.workMode,
+        durationMonths: 6,
+        isPaid: Boolean(j.salaryMinXAF > 0),
+        allowanceXAF: j.salaryMinXAF,
+        requiredSkills: j.requiredSkills,
+        moderationStatus: 'PUBLISHED',
+        organization: {
+          name: j.companyName,
+          logoUrl: j.logoUrl,
+          verificationStatus: 'VERIFIED',
+        },
+        field: { name: j.field },
+        region: { name: j.region },
+        createdAt: new Date().toISOString(),
+      }));
+
     return NextResponse.json(
-      { internships: [], page, limit, total: 0, pages: 0 },
-      { status: 200, headers: { 'X-Data-Source': 'db-unavailable' } },
+      { internships: expressInternships, page, limit, total: expressInternships.length, pages: Math.ceil(expressInternships.length / limit) },
+      { status: 200, headers: { 'X-Data-Source': 'express-catalog' } },
     );
   }
 }

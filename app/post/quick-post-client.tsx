@@ -117,40 +117,60 @@ export function QuickPostClient() {
 
       // Upload flyer if mode is flyer
       if (mode === 'flyer') {
-        if (!flyerFile) {
-          toast.error('Please select an image flyer / poster to upload');
+        if (!flyerFile && !flyerPreview) {
+          toast.error('Please select an image flyer or poster to upload');
           setSubmitting(false);
           return;
         }
 
-        const formData = new FormData();
-        formData.append('file', flyerFile);
-        const uploadRes = await fetch('/api/interns/upload-photo', {
-          method: 'POST',
-          body: formData,
-        });
+        if (flyerFile) {
+          try {
+            const formData = new FormData();
+            formData.append('file', flyerFile);
+            const uploadRes = await fetch('/api/interns/upload-photo', {
+              method: 'POST',
+              body: formData,
+            });
 
-        if (uploadRes.ok) {
-          const uploadJson = await uploadRes.json();
-          flyerUrl = uploadJson.photoUrl || '';
+            if (uploadRes.ok) {
+              const uploadJson = await uploadRes.json();
+              flyerUrl = uploadJson.photoUrl || '';
+            }
+          } catch (uploadErr) {
+            console.warn('[post] Flyer upload warning:', uploadErr);
+          }
         }
+      }
+
+      if (mode === 'whatsapp' && !whatsappText.trim()) {
+        toast.error('Please paste your WhatsApp announcement text');
+        setSubmitting(false);
+        return;
+      }
+
+      if (mode === 'link' && !externalUrl.trim()) {
+        toast.error('Please enter the job application or website link');
+        setSubmitting(false);
+        return;
       }
 
       const effectiveTitle =
         title.trim() ||
         (mode === 'flyer'
           ? `${postType === 'internship' ? 'Internship' : 'Job'} Opening (${city})`
-          : 'New Opening');
+          : employerName.trim()
+          ? `${postType === 'internship' ? 'Internship' : 'Job'} at ${employerName.trim()}`
+          : 'New Professional Opportunity');
 
       let finalDescription = '';
       if (mode === 'flyer') {
-        finalDescription = `Recruitment flyer uploaded by employer. Contact directly via WhatsApp/Phone: ${whatsappPhone}.\n\n[Flyer URL]: ${flyerUrl}`;
+        finalDescription = `Recruitment flyer uploaded by employer. Contact directly via WhatsApp/Phone: ${whatsappPhone || 'MANTECH'}.\n\n[Flyer URL]: ${flyerUrl || flyerPreview || ''}`;
       } else if (mode === 'whatsapp') {
-        finalDescription = `${whatsappText}\n\nDirect WhatsApp/Phone Contact: ${whatsappPhone}`;
+        finalDescription = `${whatsappText}\n\nDirect WhatsApp/Phone Contact: ${whatsappPhone || 'MANTECH'}`;
       } else if (mode === 'link') {
-        finalDescription = `Apply directly at official careers portal: ${externalUrl}\n\nContact: ${whatsappPhone}`;
+        finalDescription = `Apply directly at official careers portal: ${externalUrl}\n\nContact: ${whatsappPhone || 'MANTECH'}`;
       } else {
-        finalDescription = detailedDescription;
+        finalDescription = detailedDescription || `${effectiveTitle} opening at ${employerName || 'Verified Enterprise'}. Contact: ${whatsappPhone || 'MANTECH'}`;
       }
 
       const payload = {
@@ -159,11 +179,12 @@ export function QuickPostClient() {
         city: city || 'Douala',
         workMode: workMode || 'ONSITE',
         type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
+        postType: postType,
         description: finalDescription,
         applicationMethod: mode === 'link' ? 'COMPANY_WEBSITE' : 'MANTECH',
         applicationUrl: mode === 'link' ? externalUrl : undefined,
-        flyerUrl: flyerUrl || undefined,
-        contactPhone: whatsappPhone,
+        flyerUrl: flyerUrl || flyerPreview || undefined,
+        contactPhone: whatsappPhone || '+237 600 000 000',
         requiredSkills: requiredSkills
           ? requiredSkills.split(',').map((s) => s.trim()).filter(Boolean)
           : [],
@@ -238,10 +259,14 @@ export function QuickPostClient() {
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
-                href={publishedData.type === 'internship' ? '/internships' : '/jobs'}
+                href={
+                  publishedData.type === 'internship'
+                    ? `/internships/${publishedData.slug}`
+                    : `/jobs/${publishedData.slug}`
+                }
                 className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-cyan-500/20 hover:opacity-95"
               >
-                View on Marketplace <ArrowRight className="h-4 w-4" />
+                View Your Opportunity <ArrowRight className="h-4 w-4" />
               </Link>
               <button
                 onClick={() => {

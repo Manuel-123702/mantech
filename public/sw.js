@@ -1,8 +1,8 @@
-// MANTECH Nexus Service Worker (PWA) v3 — Selective Offline Engine
+// MANTECH Nexus Service Worker (PWA) v4 — Selective Offline Engine
 // - Installed PWA (Standalone app): Full offline access to cached pages.
 // - Standard Web Browser: Online connection required.
-const CACHE_NAME = 'mantech-nexus-v3';
-const STATIC_CACHE_NAME = 'mantech-static-v3';
+const CACHE_NAME = 'mantech-nexus-v4';
+const STATIC_CACHE_NAME = 'mantech-static-v4';
 const OFFLINE_URL = '/offline.html';
 
 const CORE_ASSETS = [

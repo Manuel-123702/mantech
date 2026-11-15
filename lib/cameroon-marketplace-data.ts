@@ -505,3 +505,75 @@ export const CAMEROON_MARKETPLACE_JOBS: MarketplaceJob[] = [
   },
 ];
 
+// ── Persistent Express Postings Store ──────────────────────────────────────────
+let inMemoryExpressPostings: MarketplaceJob[] = [];
+
+if (typeof window === 'undefined') {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'data', 'express-postings.json');
+    if (fs.existsSync(filePath)) {
+      const saved = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) {
+        inMemoryExpressPostings = saved;
+        for (const s of saved) {
+          if (!CAMEROON_MARKETPLACE_JOBS.some((j) => j.slug === s.slug)) {
+            CAMEROON_MARKETPLACE_JOBS.unshift(s);
+          }
+        }
+      }
+    }
+  } catch {}
+}
+
+export function getExpressPostings(): MarketplaceJob[] {
+  return inMemoryExpressPostings;
+}
+
+export function saveExpressPosting(job: any): void {
+  const normalized: MarketplaceJob = {
+    id: job.id || `job-exp-${Date.now()}`,
+    slug: job.slug || `job-${Date.now()}`,
+    title: job.title,
+    companyName: job.companyName || job.organization?.name || 'Verified Enterprise',
+    companySlug: job.companySlug || 'verified-enterprise',
+    logoUrl: job.logoUrl || job.organization?.logoUrl || job.flyerUrl || null,
+    city: job.city || 'Douala',
+    region: job.region || 'Littoral',
+    workMode: job.workMode || 'ONSITE',
+    type: job.type || 'FULL_TIME',
+    salaryMinXAF: job.salaryMinXAF ? Number(job.salaryMinXAF) : 0,
+    salaryMaxXAF: job.salaryMaxXAF ? Number(job.salaryMaxXAF) : 0,
+    description: job.description || '',
+    department: job.department || 'General',
+    field: job.field || 'General Business & Technology',
+    requiredSkills: Array.isArray(job.requiredSkills) ? job.requiredSkills : [],
+    educationLevel: job.educationLevel || 'All levels welcome',
+    isFeatured: Boolean(job.isFeatured),
+  };
+
+  const existingIdx = CAMEROON_MARKETPLACE_JOBS.findIndex((j) => j.slug === normalized.slug);
+  if (existingIdx >= 0) {
+    CAMEROON_MARKETPLACE_JOBS[existingIdx] = normalized;
+  } else {
+    CAMEROON_MARKETPLACE_JOBS.unshift(normalized);
+  }
+
+  inMemoryExpressPostings = [normalized, ...inMemoryExpressPostings.filter((j) => j.slug !== normalized.slug)];
+
+  if (typeof window === 'undefined') {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const dir = path.join(process.cwd(), 'data');
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      const filePath = path.join(dir, 'express-postings.json');
+      fs.writeFileSync(filePath, JSON.stringify(inMemoryExpressPostings, null, 2), 'utf-8');
+    } catch (err) {
+      console.warn('[marketplace] Error persisting express posting to file:', err);
+    }
+  }
+}
+
+

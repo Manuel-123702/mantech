@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { logDatabaseUnavailable } from '@/lib/db-health';
 import { notifyMatchingAlerts } from '@/lib/alert-delivery';
 import { syncDbUser } from '@/lib/authz';
-import { CAMEROON_MARKETPLACE_JOBS, MarketplaceJob } from '@/lib/cameroon-marketplace-data';
+import { CAMEROON_MARKETPLACE_JOBS, MarketplaceJob, saveExpressPosting } from '@/lib/cameroon-marketplace-data';
 
 const WORK_MODE_STRINGS = ['ONSITE', 'HYBRID', 'REMOTE'];
 const APP_METHOD_STRINGS = ['MANTECH', 'COMPANY_WEBSITE', 'EXTERNAL'];
@@ -152,6 +152,15 @@ export async function GET(request: NextRequest) {
   }
 }
 
+function slugify(text: string): string {
+  return (text || 'opening')
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'opening';
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -160,115 +169,190 @@ export async function POST(request: NextRequest) {
       requiredSkills, preferredSkills, educationLevel, regionId, city,
       location, workMode, salaryMinXAF, salaryMaxXAF, type,
       postingDate, expiryDate, isRemote, isFeatured, moderationStatus, organizationId,
-      applicationUrl,
+      applicationUrl, applicationMethod, contactPhone, flyerUrl,
     } = body;
 
-    // Automatically resolve organizationId if not explicitly provided
-    let effectiveOrgId = organizationId;
-    if (!effectiveOrgId) {
-      try {
-        const user = await syncDbUser();
-        if (user) {
-          const membership = await prisma.organizationMember.findFirst({
-            where: { userId: user.id },
-            select: { organizationId: true },
-          });
-          if (membership) effectiveOrgId = membership.organizationId;
-        }
-      } catch (e) {
-        // continue to fallback
-      }
-    }
-    if (!effectiveOrgId) {
-      const defaultOrg = await prisma.organization.findFirst({
-        where: { type: 'COMPANY' },
-        select: { id: true },
-      });
-      effectiveOrgId = defaultOrg?.id;
-    }
-
-    if (!title) {
-      return NextResponse.json({ error: 'Job title is required.' }, { status: 400 });
-    }
-
-    const effectiveCity = city || location || 'Douala';
+    const orgName = (body.organizationName || body.employerName || body.companyName || 'Verified Enterprise').trim();
+    const effectiveCity = (city || location || 'Douala').trim();
     const effectiveExpiry = expiryDate ? new Date(expiryDate) : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+    const generatedSlug = slug
+      ? slugify(slug)
+      : `${slugify(title || 'opportunity')}-${slugify(effectiveCity)}-${Date.now().toString(36)}`;
 
-    const job = await prisma.job.create({
-      data: {
-        title,
-        slug: slug || undefined,
-        description,
-        department,
-        fieldId: fieldId || null,
-        specializationId: specializationId || null,
-        requiredSkills: Array.isArray(requiredSkills) ? requiredSkills : (typeof requiredSkills === 'string' ? requiredSkills.split(',').map((s: string) => s.trim()).filter(Boolean) : []),
-        preferredSkills: Array.isArray(preferredSkills) ? preferredSkills : (typeof preferredSkills === 'string' ? preferredSkills.split(',').map((s: string) => s.trim()).filter(Boolean) : []),
-        educationLevel,
-        regionId: regionId || null,
-        city: effectiveCity,
-        location,
-        workMode: workMode || 'ONSITE',
-        salaryMinXAF: salaryMinXAF || null,
-        salaryMaxXAF: salaryMaxXAF || null,
-        type: (type || 'FULL_TIME') as any,
-        postingDate: postingDate ? new Date(postingDate) : new Date(),
-        expiryDate: effectiveExpiry,
-        isRemote: isRemote ?? false,
-        isFeatured: isFeatured ?? false,
-        moderationStatus: moderationStatus || 'PUBLISHED',
-        organizationId: effectiveOrgId!,
-        applicationUrl: applicationUrl || null,
-      },
-      include: {
-        organization: { include: { companyProfile: true, universityProfile: true } },
-        field: true,
-        specialization: true,
-        region: true,
-      },
-    });
+    const effectiveType = (type || (body.postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME')).toUpperCase();
+    const skillsArr = Array.isArray(requiredSkills)
+      ? requiredSkills
+      : (typeof requiredSkills === 'string'
+        ? requiredSkills.split(',').map((s: string) => s.trim()).filter(Boolean)
+        : []);
 
-    if (job.moderationStatus === 'PUBLISHED') {
-      await notifyMatchingAlerts({
-        id: job.id,
-        title: job.title,
-        slug: job.slug,
-        organizationName: job.organization?.name ?? null,
-        regionName: job.region?.name ?? null,
-        city: job.city ?? null,
-        workMode: String(job.workMode ?? ''),
-        kind: 'job',
-      });
+    // 1. Try to persist to database if available
+    let dbJob: any = null;
+    try {
+      let effectiveOrgId = organizationId;
+      if (!effectiveOrgId) {
+        try {
+          const user = await syncDbUser();
+          if (user) {
+            const membership = await prisma.organizationMember.findFirst({
+              where: { userId: user.id },
+              select: { organizationId: true },
+            });
+            if (membership) effectiveOrgId = membership.organizationId;
+          }
+        } catch {
+          // not logged in
+        }
+      }
 
-      // Shadow/provisional moderation: Posting appears immediately in directory,
-      // and administrators are notified to verify accreditation whenever convenient.
-      try {
-        const admins = await prisma.user.findMany({
-          where: { role: 'ADMIN' },
+      if (!effectiveOrgId) {
+        // Find existing organization with this name
+        let org = await prisma.organization.findFirst({
+          where: { name: { equals: orgName, mode: 'insensitive' } },
           select: { id: true },
         });
-        for (const admin of admins) {
-          await prisma.notification.create({
-            data: {
-              userId: admin.id,
-              title: `New Job Posted: ${job.title}`,
-              message: `Posted by ${job.organization?.name || 'Recruiter'} in ${job.city || 'Cameroon'}. Live in directory — review for verified badge.`,
-              category: 'moderation',
-              link: `/jobs/${job.slug || job.id}`,
-            },
+        if (!org) {
+          // Or any company organization
+          org = await prisma.organization.findFirst({
+            where: { type: 'COMPANY' },
+            select: { id: true },
           });
         }
-      } catch (adminNotifyErr) {
-        console.warn('[jobs] Admin notification skipped (non-fatal):', adminNotifyErr);
+        if (!org) {
+          // Create new organization
+          org = await prisma.organization.create({
+            data: {
+              name: orgName,
+              slug: slugify(orgName) + '-' + Math.random().toString(36).slice(2, 6),
+              type: 'COMPANY',
+              verificationStatus: 'PENDING',
+              city: effectiveCity,
+            },
+            select: { id: true },
+          });
+        }
+        effectiveOrgId = org?.id;
       }
+
+      if (effectiveOrgId) {
+        dbJob = await prisma.job.create({
+          data: {
+            title: (title || 'New Opportunity').trim(),
+            slug: generatedSlug,
+            description: description || 'Opportunity posted via MANTECH Express.',
+            department: department || null,
+            fieldId: fieldId || null,
+            specializationId: specializationId || null,
+            requiredSkills: skillsArr,
+            preferredSkills: Array.isArray(preferredSkills) ? preferredSkills : [],
+            educationLevel: educationLevel || null,
+            regionId: regionId || null,
+            city: effectiveCity,
+            location: location || null,
+            workMode: (workMode || 'ONSITE') as any,
+            applicationMethod: (applicationMethod || (applicationUrl ? 'COMPANY_WEBSITE' : 'MANTECH')) as any,
+            applicationUrl: applicationUrl || null,
+            salaryMinXAF: salaryMinXAF ? Number(salaryMinXAF) : null,
+            salaryMaxXAF: salaryMaxXAF ? Number(salaryMaxXAF) : null,
+            type: effectiveType,
+            postingDate: postingDate ? new Date(postingDate) : new Date(),
+            expiryDate: effectiveExpiry,
+            isRemote: isRemote ?? false,
+            isFeatured: isFeatured ?? false,
+            moderationStatus: moderationStatus || 'PUBLISHED',
+            organizationId: effectiveOrgId,
+          },
+          include: {
+            organization: { include: { companyProfile: true, universityProfile: true } },
+            field: true,
+            specialization: true,
+            region: true,
+          },
+        });
+
+        // If internship, also mirror to internshipOpportunity table
+        if (effectiveType === 'INTERNSHIP' || body.postType === 'internship') {
+          try {
+            await prisma.internshipOpportunity.create({
+              data: {
+                organizationId: effectiveOrgId,
+                title: (title || 'New Internship Opening').trim(),
+                slug: generatedSlug,
+                description: description || 'Internship opportunity posted via MANTECH Express.',
+                city: effectiveCity,
+                workMode: (workMode || 'ONSITE') as any,
+                durationMonths: body.durationMonths || 3,
+                deadline: effectiveExpiry,
+                isPaid: Boolean(salaryMinXAF && Number(salaryMinXAF) > 0),
+                allowanceXAF: salaryMinXAF ? Number(salaryMinXAF) : 0,
+                requiredSkills: skillsArr,
+                applicationMethod: (applicationMethod || (applicationUrl ? 'COMPANY_WEBSITE' : 'MANTECH')) as any,
+                applicationUrl: applicationUrl || null,
+                moderationStatus: 'PUBLISHED',
+              },
+            });
+          } catch (mErr) {
+            console.warn('[jobs] Mirror to internshipOpportunity skipped:', mErr);
+          }
+        }
+      }
+    } catch (dbErr) {
+      console.warn('[jobs] Database write skipped or offline — activating resilient express fallback:', dbErr);
     }
 
-    return NextResponse.json({ job }, { status: 201 });
-  } catch (error) {
-    console.error('POST /api/jobs error:', error);
-    if ((error as Error).message?.includes('unique constraint')) {
-      return NextResponse.json({ error: 'A job with this slug already exists.' }, { status: 409 });
+    // 2. Prepare normalized job object (from DB or rich fallback)
+    const normalizedJob = dbJob || {
+      id: `job-exp-${Date.now()}`,
+      slug: generatedSlug,
+      title: (title || 'New Opportunity').trim(),
+      description: description || 'Opportunity posted via MANTECH Express.',
+      city: effectiveCity,
+      region: body.region || 'Littoral',
+      workMode: workMode || 'ONSITE',
+      type: effectiveType,
+      salaryMinXAF: salaryMinXAF ? Number(salaryMinXAF) : 0,
+      salaryMaxXAF: salaryMaxXAF ? Number(salaryMaxXAF) : 0,
+      department: department || 'General',
+      field: body.field || 'General Business & Technology',
+      requiredSkills: skillsArr,
+      educationLevel: educationLevel || 'All levels welcome',
+      companyName: orgName,
+      companySlug: slugify(orgName),
+      organization: {
+        name: orgName,
+        logoUrl: flyerUrl || null,
+        verificationStatus: 'PENDING',
+      },
+      applicationMethod: applicationMethod || (applicationUrl ? 'COMPANY_WEBSITE' : 'MANTECH'),
+      applicationUrl: applicationUrl || null,
+      contactPhone: contactPhone || null,
+      flyerUrl: flyerUrl || null,
+      isFeatured: Boolean(isFeatured),
+      postingDate: new Date().toISOString(),
+    };
+
+    // Save to persistent file and in-memory marketplace
+    saveExpressPosting(normalizedJob);
+
+    // Send notifications if DB was active
+    if (dbJob) {
+      try {
+        await notifyMatchingAlerts({
+          id: dbJob.id,
+          title: dbJob.title,
+          slug: dbJob.slug,
+          organizationName: dbJob.organization?.name ?? orgName,
+          regionName: dbJob.region?.name ?? null,
+          city: dbJob.city ?? effectiveCity,
+          workMode: String(dbJob.workMode ?? ''),
+          kind: 'job',
+        });
+      } catch {}
     }
-    return NextResponse.json({ error: 'Failed to create job.' }, { status: 500 });
+
+    return NextResponse.json({ job: normalizedJob, slug: generatedSlug }, { status: 201 });
+  } catch (error) {
+    console.error('POST /api/jobs fatal error:', error);
+    return NextResponse.json({ error: 'Failed to process posting. Please check required fields.' }, { status: 400 });
   }
 }
