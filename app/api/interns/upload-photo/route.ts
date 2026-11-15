@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     const filePath = path.join(uploadDir, fileKey);
     const arrayBuffer = await file.arrayBuffer();
-    fs.writeFileSync(filePath, Buffer.from(arrayBuffer));
+    fs.writeFileSync(filePath, Buffer.from(arrayBuffer) as any);
 
     const photoUrl = `/uploads/photos/${fileKey}`;
 
