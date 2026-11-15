@@ -55,6 +55,7 @@ export function sendEmail(params: EmailParams): Promise<boolean> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(5000),
       });
       resolveResult(response.ok);
       if (!response.ok) {
@@ -75,8 +76,16 @@ export function sendEmail(params: EmailParams): Promise<boolean> {
 export const emailTemplates = {
   notification: (name: string, email: string, subject: string, message: string) => ({
     to_email: email,
+    email: email,
+    user_email: email,
+    recipient_email: email,
+    reply_to: email,
     to_name: name,
+    name: name,
+    user_name: name,
     subject,
+    title: subject,
     message,
+    content: message,
   }),
 };

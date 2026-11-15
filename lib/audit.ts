@@ -63,14 +63,16 @@ export async function notifyUser(opts: {
     },
   });
 
-  // ── Email channel ──────────────────────────────────────────────────────────
+  // ── Email channel (fire-and-forget) ───────────────────────────────────────
   if (recipient?.email) {
-    await sendEmail(emailTemplates.notification(
+    sendEmail(emailTemplates.notification(
       recipient.fullName,
       recipient.email,
       opts.title,
       opts.message,
-    ));
+    )).catch((err) => {
+      console.warn('[EmailJS] Notification delivery failed (non-fatal):', err);
+    });
   }
 
   // ── WhatsApp channel (fire-and-forget) ─────────────────────────────────────
