@@ -211,30 +211,54 @@ export function HeroInternPreviewCard() {
             </motion.div>
           </div>
 
+          {/* Live Verified Recruiter Activity Ticker Row */}
+          <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 px-3.5 py-2.5 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-7 h-7 rounded-lg bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center text-yellow-400 shrink-0 font-bold">
+                <Building2 className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-white flex items-center gap-1.5 truncate">
+                  <span className="truncate">MTN Cameroon</span>
+                  <span className="px-1.5 py-0.2 rounded-md bg-emerald-500/20 text-emerald-300 text-[9px] font-black uppercase tracking-wider">
+                    Inspected
+                  </span>
+                </div>
+                <div className="text-[10px] text-slate-400 truncate">
+                  Reviewed Passport Skills & Experience
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 text-[10px] font-mono text-cyan-300 shrink-0 font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+              <span>2m ago</span>
+            </div>
+          </div>
+
           {/* Intern Passport Verifiable Credential Action */}
           <Link
             href="/dashboard/intern/passport"
             className="block group/passport"
           >
-            <div className="rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-yellow-500/15 border border-amber-500/40 hover:border-amber-400/70 p-3.5 flex items-center justify-between transition-all hover:bg-amber-500/20 shadow-lg shadow-amber-500/5 hover:shadow-amber-500/15">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 group-hover/passport:scale-110 transition-transform">
-                  <Award className="w-5 h-5 text-amber-400" />
+            <div className="rounded-2xl bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-yellow-500/20 border border-amber-500/40 hover:border-amber-400/80 p-3.5 sm:p-4 flex items-center justify-between transition-all hover:bg-amber-500/25 shadow-lg shadow-amber-500/10">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md group-hover/passport:scale-105 transition-transform">
+                  <Award className="w-5 h-5 text-slate-950" />
                 </div>
-                <div>
-                  <div className="text-xs sm:text-sm text-amber-300 font-extrabold flex items-center gap-1.5">
+                <div className="min-w-0">
+                  <div className="text-xs sm:text-sm text-white font-extrabold flex items-center gap-2 truncate">
                     <span>Intern Passport</span>
-                    <span className="px-1.5 py-0.5 rounded-md bg-amber-500/20 text-[9px] font-black text-amber-300 uppercase tracking-wider">
-                      Verifiable
+                    <span className="px-1.5 py-0.5 rounded-md bg-amber-400/20 text-[9px] font-mono font-bold text-amber-300 border border-amber-400/30 uppercase tracking-wider">
+                      MN-CM-2026
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-300">
-                    Permanent verifiable credential
+                  <div className="text-[10px] sm:text-[11px] text-slate-300 truncate">
+                    Permanent verifiable academic & technical credential
                   </div>
                 </div>
               </div>
 
-              <span className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1 group-hover/passport:translate-x-0.5 transition-all">
+              <span className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 text-xs font-black shadow-md flex items-center gap-1.5 shrink-0 group-hover/passport:translate-x-0.5 transition-all">
                 <span>View Passport</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
@@ -263,34 +287,6 @@ export function HeroInternPreviewCard() {
           </div>
           <div className="text-[10px] text-slate-400 font-medium">
             MANTECH Direct Sync • Live
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Floating Notification Badge 2: Bottom Left (Live Placement Alert) */}
-      <motion.div
-        animate={{ y: [0, 7, 0] }}
-        transition={{
-          duration: 4.6,
-          repeat: Infinity,
-          repeatDelay: 0.2,
-          ease: 'easeInOut',
-          delay: 1.2,
-        }}
-        className="hidden sm:flex absolute -bottom-5 -left-4 sm:-left-6 bg-slate-900/95 text-white rounded-2xl shadow-2xl border border-cyan-500/40 px-3.5 py-2.5 items-center gap-3 z-20 backdrop-blur-xl"
-      >
-        <div className="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 shrink-0">
-          <Building2 className="h-4 w-4" />
-        </div>
-        <div>
-          <div className="text-xs font-extrabold text-white flex items-center gap-1.5">
-            <span>MTN Cameroon</span>
-            <span className="px-1.5 py-0.2 rounded-md bg-cyan-500/20 text-cyan-300 text-[9px] font-bold">
-              Inspected
-            </span>
-          </div>
-          <div className="text-[10px] text-cyan-300/80 font-medium">
-            Reviewed Passport Skills • 2m ago
           </div>
         </div>
       </motion.div>
