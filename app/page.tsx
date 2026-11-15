@@ -76,6 +76,7 @@ import {
 } from "@/lib/whatsapp";
 import { DashboardShowcase } from "@/components/home/dashboard-showcase";
 import { TestimonialSubmissionModal } from "@/components/home/testimonial-submission-modal";
+import { HeroKineticHeadline } from "@/components/home/hero-kinetic-headline";
 import { OrgLogo } from "@/components/shared/org-logo";
 import { TOP_30_COMPANIES, TOP_30_UNIVERSITIES, VERIFIED_COMMUNITY_STORIES } from "@/lib/cameroon-directory";
 import { CAMEROON_MARKETPLACE_JOBS } from "@/lib/cameroon-marketplace-data";
@@ -740,18 +741,7 @@ export default function HomePage() {
                 Live Cameroon Professional Internship Ecosystem
               </div>
 
-              <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight">
-                <span className="text-white drop-shadow-md">Cameroon&apos;s</span>{' '}
-                <span className="bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(6,182,212,0.4)]">
-                  Enterprise
-                </span>{' '}
-                <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(245,158,11,0.35)]">
-                  Internship
-                </span>{' '}
-                <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(99,102,241,0.4)]">
-                  Marketplace
-                </span>
-              </h1>
+              <HeroKineticHeadline />
 
               <p className="mt-6 text-base sm:text-lg leading-relaxed max-w-xl text-slate-300">
                 Connecting{' '}
