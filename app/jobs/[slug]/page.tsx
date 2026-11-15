@@ -84,7 +84,8 @@ export default function JobDetailPage() {
   const handleShare = async () => {
     if (typeof window === "undefined") return;
     const url = window.location.href;
-    const shareTitle = job?.title ? `${job.title} — ${job.companyName || 'MANTECH Nexus'}` : 'Job opening on MANTECH Nexus';
+    const company = (job as any)?.companyName || job?.organization?.name || 'MANTECH Nexus';
+    const shareTitle = job?.title ? `${job.title} — ${company}` : 'Job opening on MANTECH Nexus';
     const shareText = `Check out this job in Cameroon: ${shareTitle} (${job?.city || 'Cameroon'})\n${url}`;
 
     if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
@@ -112,7 +113,8 @@ export default function JobDetailPage() {
   const handleWhatsAppShare = () => {
     if (typeof window === "undefined" || !job) return;
     const url = window.location.href;
-    const shareText = `Check out this job opportunity in Cameroon: *${job.title}* at *${job.companyName || 'MANTECH Nexus'}* (${job.city || 'Cameroon'})\n\nView details & apply: ${url}`;
+    const company = (job as any)?.companyName || job?.organization?.name || 'MANTECH Nexus';
+    const shareText = `Check out this job opportunity in Cameroon: *${job.title}* at *${company}* (${job.city || 'Cameroon'})\n\nView details & apply: ${url}`;
     const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
     window.open(waUrl, "_blank", "noopener,noreferrer");
   };
