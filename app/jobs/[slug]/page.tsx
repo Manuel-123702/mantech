@@ -8,7 +8,6 @@ import {
   MapPin,
   Clock,
   Banknote,
-  Building2,
   CheckCircle2,
   ShieldCheck,
   ArrowLeft,
@@ -268,7 +267,7 @@ export default function JobDetailPage() {
                     {org?.logoUrl ? (
                       <Image src={org.logoUrl} alt={org.name} width={32} height={32} className="w-full h-full object-cover" />
                     ) : (
-                      <Building2 className="w-4 h-4" />
+                      <span className="text-xs font-black uppercase text-blue-400">{(org?.name?.[0] || job.title?.[0] || 'E').toUpperCase()}</span>
                     )}
                   </div>
                   <span className="font-semibold text-white">{org?.name || "Verified Enterprise"}</span>
@@ -498,11 +497,11 @@ export default function JobDetailPage() {
             {/* About the Employer Card */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
               <div className="flex items-start gap-3">
-                <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-950 to-slate-900 border border-blue-500/30 flex items-center justify-center overflow-hidden shrink-0 shadow-md">
                   {org?.logoUrl ? (
                     <Image src={org.logoUrl} alt={org.name} width={48} height={48} className="w-full h-full object-cover" />
                   ) : (
-                    <Building2 className="w-6 h-6 text-slate-400" />
+                    <span className="text-lg font-black uppercase text-blue-400">{(org?.name?.[0] || 'E').toUpperCase()}</span>
                   )}
                 </div>
                 <div>

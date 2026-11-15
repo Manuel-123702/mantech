@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Building2, GraduationCap } from 'lucide-react';
 
 interface OrgLogoProps {
   name: string;
@@ -152,7 +151,8 @@ export function OrgLogo({
     );
   }
 
-  // Generic styled Cameroon institution badge with icon & initials
+  // Generic styled Cameroon institution badge with first letter / initials (no generic icons)
+  const firstLetter = (name.trim()[0] || 'M').toUpperCase();
   const initials = name
     .split(' ')
     .filter(Boolean)
@@ -164,14 +164,14 @@ export function OrgLogo({
 
   return (
     <div
-      className={`relative shrink-0 overflow-hidden flex items-center justify-center border shadow-md font-bold ${
+      className={`relative shrink-0 overflow-hidden flex items-center justify-center border shadow-md font-black ${
         isUni
           ? 'bg-gradient-to-tr from-emerald-950 via-slate-900 to-teal-950 border-emerald-500/30 text-emerald-300'
           : 'bg-gradient-to-tr from-blue-950 via-slate-900 to-indigo-950 border-blue-500/30 text-blue-300'
       } ${sizeCls} ${className}`}
       title={name}
     >
-      <span className="tracking-wider">{initials || (isUni ? <GraduationCap className="w-5 h-5" /> : <Building2 className="w-5 h-5" />)}</span>
+      <span className="tracking-wider uppercase">{initials || firstLetter}</span>
     </div>
   );
 }

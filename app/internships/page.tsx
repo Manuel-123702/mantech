@@ -8,7 +8,6 @@ import {
   MapPin,
   Briefcase,
   Clock,
-  Building2,
   Loader2,
   Inbox,
   ArrowRight,

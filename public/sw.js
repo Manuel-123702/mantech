@@ -1,12 +1,13 @@
-// MANTECH Nexus Service Worker (PWA) v4 — Selective Offline Engine
-// - Installed PWA (Standalone app): Full offline access to cached pages.
-// - Standard Web Browser: Online connection required.
-const CACHE_NAME = 'mantech-nexus-v4';
-const STATIC_CACHE_NAME = 'mantech-static-v4';
+// MANTECH Nexus Service Worker (PWA) v5 — 100% Online-First Engine
+// - Both standard Web and installed PWA app operate strictly in live online mode.
+// - If the user loses network connection (offline), a creative, innovative
+//   diagnostic offline page is presented with auto-reconnection detection.
+
+const CACHE_NAME = 'mantech-nexus-v5';
+const STATIC_CACHE_NAME = 'mantech-static-v5';
 const OFFLINE_URL = '/offline.html';
 
 const CORE_ASSETS = [
-  '/',
   OFFLINE_URL,
   '/favicon.ico',
   '/icons/icon-192.png',
@@ -47,7 +48,7 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
 
-  // Bypass API routes, Clerk auth, and chrome-extension schemes
+  // Bypass API routes, Clerk auth, and non-http schemes
   if (
     url.pathname.startsWith('/api/') ||
     url.pathname.startsWith('/_clerk/') ||
@@ -57,47 +58,25 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 1. Navigation requests (Page HTML): Stale-While-Revalidate with PWA-Only Offline Access
+  // 1. Navigation requests (Page HTML): 100% Online-First
+  // Web and PWA both require live internet. If fetch fails (offline), serve the creative offline screen.
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseClone);
-            });
-          }
-          return networkResponse;
-        })
-        .catch(async () => {
-          // Check if request is from the INSTALLED PWA
-          // (source=pwa param, referrer has source=pwa, or standalone cookie)
-          const cookieHeader = event.request.headers.get('cookie') || '';
-          const isInstalledPwa =
-            url.searchParams.get('source') === 'pwa' ||
-            (event.request.referrer && event.request.referrer.includes('source=pwa')) ||
-            cookieHeader.includes('mantech_pwa_standalone=true');
-
-          if (isInstalledPwa) {
-            // INSTALLED PWA APP: Allow full offline access to cached pages!
-            const cachedResponse = await caches.match(event.request);
-            if (cachedResponse) return cachedResponse;
-
-            const rootCached = await caches.match('/');
-            if (rootCached) return rootCached;
-          }
-
-          // STANDARD WEB BROWSER / SEARCH ENGINE:
-          // Web browsing requires live internet connection; show installation notice
-          const offlinePage = await caches.match(OFFLINE_URL);
-          return offlinePage || new Response('Offline', { status: 503, statusText: 'Offline' });
-        })
+      fetch(event.request).catch(async () => {
+        const offlinePage = await caches.match(OFFLINE_URL);
+        return (
+          offlinePage ||
+          new Response(
+            '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Offline</title></head><body style="background:#020617;color:#fff;font-family:sans-serif;padding:40px;text-align:center"><h1>You are offline</h1><p>Please reconnect to the internet to use MANTECH Nexus.</p></body></html>',
+            { headers: { 'Content-Type': 'text/html; charset=utf-8' }, status: 503 }
+          )
+        );
+      })
     );
     return;
   }
 
-  // 2. Static Next.js Chunks, CSS, Images, Fonts: Cache-First with Network Revalidation
+  // 2. Static Next.js Chunks, CSS, Images, Fonts: Cache-First with Background Revalidation
   const isStaticAsset =
     url.pathname.startsWith('/_next/static/') ||
     url.pathname.startsWith('/icons/') ||
@@ -113,7 +92,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request).then((cached) => {
         if (cached) {
-          // Revalidate in background
           fetch(event.request)
             .then((networkResponse) => {
               if (networkResponse && networkResponse.status === 200) {
@@ -140,18 +118,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. All other requests: Network-first, fallback to cache
+  // 3. Fallback for other GET requests: Network with cache fallback
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200) {
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
-        }
-        return networkResponse;
-      })
-      .catch(() => caches.match(event.request))
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });

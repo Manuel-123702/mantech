@@ -2,225 +2,707 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connection Status — MANTECH Nexus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Offline · Connection Radar — MANTECH Nexus</title>
   <link rel="icon" href="/favicon.ico">
   <style>
+    :root {
+      --bg: #020617;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --border: rgba(56, 189, 248, 0.2);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --cyan: #06b6d4;
+      --blue: #2563eb;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
     body {
-      background-color: #030712;
-      color: #f8fafc;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 10% 90%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+      color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-      padding: 24px;
+      padding: 20px;
+      overflow-x: hidden;
     }
-    .card {
-      max-width: 490px;
+
+    .container {
       width: 100%;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 28px;
-      padding: 38px 28px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(12px);
+      max-width: 520px;
+      position: relative;
     }
-    .badge {
+
+    /* Outer glow pulse */
+    .glow-aura {
+      position: absolute;
+      top: -15px;
+      left: 10%;
+      right: 10%;
+      height: 120px;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(37, 99, 235, 0.2));
+      filter: blur(40px);
+      border-radius: 9999px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 34px 28px;
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      text-align: center;
+    }
+
+    /* Cameroon Tri-color subtle top highlight */
+    .cameroon-stripe {
+      position: absolute;
+      top: 0;
+      left: 32px;
+      right: 32px;
+      height: 3px;
+      display: flex;
+      border-radius: 0 0 4px 4px;
+      overflow: hidden;
+    }
+    .stripe-green { flex: 1; background: #007a5e; }
+    .stripe-red { flex: 1; background: #ce1126; position: relative; }
+    .stripe-red::after {
+      content: '★';
+      position: absolute;
+      left: 50%;
+      top: -5px;
+      transform: translateX(-50%);
+      color: #fcd116;
+      font-size: 8px;
+    }
+    .stripe-yellow { flex: 1; background: #fcd116; }
+
+    /* Live connection banner */
+    .live-status {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
+      gap: 8px;
+      padding: 6px 16px;
       border-radius: 9999px;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 20px;
+      letter-spacing: 0.06em;
+      margin-bottom: 22px;
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: #fb7185;
+      transition: all 0.3s ease;
     }
-    .badge-web {
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
+    .live-status.reconnecting {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
     }
-    .badge-pwa {
-      background: rgba(14, 165, 233, 0.12);
-      border: 1px solid rgba(14, 165, 233, 0.3);
-      color: #38bdf8;
+    .live-status.online {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
     }
-    .icon-wrapper {
-      width: 72px;
-      height: 72px;
-      border-radius: 20px;
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.4; }
+    }
+
+    /* Radar scan sphere */
+    .radar-wrapper {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px auto;
     }
-    .icon-web {
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
+
+    .radar-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(6, 182, 212, 0.25);
     }
-    .icon-pwa {
-      background: rgba(14, 165, 233, 0.12);
-      border: 1px solid rgba(14, 165, 233, 0.3);
-      color: #38bdf8;
+    .radar-ring:nth-child(2) {
+      inset: -12px;
+      border-color: rgba(6, 182, 212, 0.15);
+      border-style: dashed;
+      animation: spin 20s linear infinite;
     }
+    .radar-ring:nth-child(3) {
+      inset: -24px;
+      border-color: rgba(6, 182, 212, 0.08);
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .radar-core {
+      width: 60px;
+      height: 60px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.2);
+    }
+
     h1 {
       font-size: 22px;
       font-weight: 800;
-      margin-bottom: 12px;
-      color: #ffffff;
       letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 8px;
     }
-    p {
-      font-size: 14px;
-      color: #94a3b8;
-      line-height: 1.6;
-      margin-bottom: 26px;
+
+    .lead-text {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 24px;
     }
+
+    /* Diagnostic Card Strip */
+    .diagnostics-strip {
+      background: rgba(2, 6, 23, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 22px;
+      font-size: 11px;
+    }
+    .diag-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .diag-label {
+      color: #64748b;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .diag-value {
+      font-weight: 700;
+      color: #e2e8f0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* Action Buttons */
     .btn-group {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      margin-bottom: 22px;
     }
+
     .btn-primary {
-      display: block;
       width: 100%;
       background: linear-gradient(135deg, #0284c7, #06b6d4);
       color: #ffffff;
       padding: 14px 20px;
       border-radius: 14px;
-      text-decoration: none;
       font-size: 14px;
       font-weight: 700;
-      cursor: pointer;
       border: none;
-      transition: transform 0.15s, opacity 0.2s;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
+      transition: transform 0.15s, opacity 0.2s, box-shadow 0.2s;
     }
-    .btn-install {
-      background: linear-gradient(135deg, #2563eb, #06b6d4);
+    .btn-primary:hover {
+      opacity: 0.95;
+      box-shadow: 0 12px 24px -5px rgba(2, 132, 199, 0.6);
     }
     .btn-primary:active {
       transform: scale(0.98);
     }
+
     .btn-secondary {
-      display: block;
       width: 100%;
-      background: rgba(30, 41, 59, 0.8);
+      background: rgba(30, 41, 59, 0.7);
       border: 1px solid rgba(148, 163, 184, 0.2);
       color: #e2e8f0;
-      padding: 12px 20px;
+      padding: 12px 18px;
       border-radius: 14px;
-      text-decoration: none;
       font-size: 13px;
       font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       transition: background 0.2s;
     }
     .btn-secondary:hover {
       background: rgba(51, 65, 85, 0.8);
     }
-    .note {
-      margin-top: 22px;
+
+    /* Accordion for Cameroon network tips */
+    .tips-toggle {
+      background: none;
+      border: none;
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .tips-toggle:hover {
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    .cameroon-tips {
+      display: none;
+      margin-top: 14px;
+      padding: 16px;
+      background: rgba(2, 6, 23, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 16px;
+      text-align: left;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .cameroon-tips.open {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .tip-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .tip-title {
+      font-weight: 700;
+      color: #f1f5f9;
       font-size: 11px;
+      margin-bottom: 2px;
+    }
+    .tip-code {
+      font-family: monospace;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    /* Mini Signal Runner Game section */
+    .game-section {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .game-toggle-btn {
+      background: none;
+      border: none;
       color: #64748b;
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .game-canvas-wrap {
+      display: none;
+      margin-top: 12px;
+      position: relative;
+    }
+    .game-canvas-wrap.active {
+      display: block;
+    }
+    canvas {
+      background: #090d16;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 14px;
+      width: 100%;
+      height: 120px;
+      display: block;
+    }
+    .game-score {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--cyan);
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <!-- VIEW 1: WEB BROWSER (ONLINE REQUIRED) -->
-  <div id="web-view" class="card" style="display: none;">
-    <div class="badge badge-web">
-      <span>● Web Browser Mode · Online Required</span>
+  <div class="container">
+    <div class="glow-aura"></div>
+
+    <div class="card">
+      <div class="cameroon-stripe">
+        <div class="stripe-green"></div>
+        <div class="stripe-red"></div>
+        <div class="stripe-yellow"></div>
+      </div>
+
+      <!-- Live status tag -->
+      <div id="status-badge" class="live-status">
+        <span class="pulse-dot"></span>
+        <span id="status-text">Connection Lost · Live Mode Required</span>
+      </div>
+
+      <!-- Radar Animation -->
+      <div class="radar-wrapper">
+        <div class="radar-ring"></div>
+        <div class="radar-ring"></div>
+        <div class="radar-ring"></div>
+        <div class="radar-core">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+            <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+            <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+            <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+          </svg>
+        </div>
+      </div>
+
+      <h1>You are Currently Offline</h1>
+      <p class="lead-text">
+        MANTECH Nexus runs entirely in live online mode to protect job veracity, real-time recruiter messaging, and verified placement tracking across Cameroon.
+      </p>
+
+      <!-- Diagnostics Telemetry -->
+      <div class="diagnostics-strip">
+        <div class="diag-item">
+          <span class="diag-label">Engine</span>
+          <span class="diag-value">Online-First</span>
+        </div>
+        <div class="diag-item">
+          <span class="diag-label">Status</span>
+          <span id="diag-state" class="diag-value" style="color: #f87171;">Offline</span>
+        </div>
+        <div class="diag-item">
+          <span class="diag-label">Auto-Sync</span>
+          <span class="diag-value" style="color: #38bdf8;">Listening...</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="btn-group">
+        <button id="retry-btn" class="btn-primary" onclick="testAndReload()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"></path>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+            <path d="M3 22v-6h6"></path>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+          </svg>
+          <span id="retry-btn-label">Test Connection & Reconnect</span>
+        </button>
+
+        <button class="btn-secondary" onclick="toggleTips()">
+          <span>Cameroon Mobile Data Assist</span>
+          <span id="tips-arrow">▾</span>
+        </button>
+      </div>
+
+      <!-- Cameroon Network Assist Tips -->
+      <div id="tips-container" class="cameroon-tips">
+        <strong style="color: #f8fafc;">Quick USSD Shortcuts:</strong>
+        <div class="tips-grid">
+          <div class="tip-box">
+            <div class="tip-title">MTN Cameroon</div>
+            <div>Check bundle: <span class="tip-code">*123*1#</span></div>
+            <div>MoMo recharge: <span class="tip-code">*126#</span></div>
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">Orange Cameroun</div>
+            <div>Check data: <span class="tip-code">*148#</span></div>
+            <div>OM recharge: <span class="tip-code">*150#</span></div>
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">CAMTEL Blue</div>
+            <div>Check bundle balance via Blue Portal or SIM card menu.</div>
+          </div>
+          <div class="tip-box">
+            <div class="tip-title">Wi-Fi & Hotspot</div>
+            <div>Toggle Airplane mode off/on or check router signal.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Mini Signal Game -->
+      <div class="game-section">
+        <button class="game-toggle-btn" onclick="toggleGame()">
+          🎮 Tap to play Signal Runner while waiting
+        </button>
+        <div id="game-wrap" class="game-canvas-wrap">
+          <div id="score-display" class="game-score">Score: 0</div>
+          <canvas id="game-canvas" width="460" height="120"></canvas>
+          <p style="font-size: 10px; color: #64748b; margin-top: 4px;">Tap screen or press Space to jump</p>
+        </div>
+      </div>
     </div>
-
-    <div class="icon-wrapper icon-web">
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="2" y1="12" x2="22" y2="12"></line>
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-      </svg>
-    </div>
-
-    <h1>Internet Connection Required on Web</h1>
-    <p>You are viewing MANTECH Nexus through a standard web browser tab. Browsing the live platform on the web requires an active connection.</p>
-
-    <div class="btn-group">
-      <button class="btn-primary" onclick="window.location.reload()">
-        ↻ Reconnect to Internet
-      </button>
-      <a href="/install" class="btn-primary btn-install">
-        ⚡ Install PWA App to Unlock Offline Access
-      </a>
-    </div>
-
-    <p class="note">Want to browse offline? Install the MANTECH Nexus App from your browser menu to work without internet.</p>
-  </div>
-
-  <!-- VIEW 2: INSTALLED PWA APP (OFFLINE CACHE READY) -->
-  <div id="pwa-view" class="card" style="display: none;">
-    <div class="badge badge-pwa">
-      <span>● MANTECH Nexus App · Offline Mode</span>
-    </div>
-
-    <div class="icon-wrapper icon-pwa">
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="1" y1="1" x2="23" y2="23"></line>
-        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
-        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
-        <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
-        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
-        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
-        <line x1="12" y1="20" x2="12.01" y2="20"></line>
-      </svg>
-    </div>
-
-    <h1>You Are in Offline App Mode</h1>
-    <p>You are using the installed MANTECH Nexus app. Cached opportunities and application states are ready to browse even without cellular or Wi-Fi coverage.</p>
-
-    <div class="btn-group">
-      <button class="btn-primary" onclick="window.location.reload()">
-        ↻ Check Live Sync
-      </button>
-      <a href="/?source=pwa" class="btn-secondary">
-        Browse Cached Home
-      </a>
-      <a href="/jobs?source=pwa" class="btn-secondary">
-        Browse Cached Jobs
-      </a>
-      <a href="/internships?source=pwa" class="btn-secondary">
-        Browse Cached Internships
-      </a>
-    </div>
-
-    <p class="note">MANTECH Nexus PWA · Offline App Engine Active</p>
   </div>
 
   <script>
-    (function() {
-      var isInstalled =
-        window.matchMedia('(display-mode: standalone)').matches ||
-        window.navigator.standalone === true ||
-        window.location.search.indexOf('source=pwa') !== -1 ||
-        document.referrer.indexOf('source=pwa') !== -1 ||
-        document.cookie.indexOf('mantech_pwa_standalone=true') !== -1;
+    // 1. LIVE RECONNECT LISTENER & AUTO-RELOAD
+    var isChecking = false;
 
-      if (isInstalled) {
-        document.getElementById('pwa-view').style.display = 'block';
-        document.getElementById('web-view').style.display = 'none';
-      } else {
-        document.getElementById('web-view').style.display = 'block';
-        document.getElementById('pwa-view').style.display = 'none';
+    function handleOnline() {
+      var badge = document.getElementById('status-badge');
+      var text = document.getElementById('status-text');
+      var diag = document.getElementById('diag-state');
+      var btnLabel = document.getElementById('retry-btn-label');
+
+      badge.className = 'live-status online';
+      text.innerText = '⚡ Connection Restored! Reconnecting in 2s...';
+      diag.innerText = 'Online';
+      diag.style.color = '#34d399';
+      btnLabel.innerText = 'Redirecting to Live Platform...';
+
+      setTimeout(function() {
+        window.location.reload();
+      }, 2000);
+    }
+
+    function handleOffline() {
+      var badge = document.getElementById('status-badge');
+      var text = document.getElementById('status-text');
+      var diag = document.getElementById('diag-state');
+      badge.className = 'live-status';
+      text.innerText = 'Connection Lost · Live Mode Required';
+      diag.innerText = 'Offline';
+      diag.style.color = '#f87171';
+    }
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    // Initial check
+    if (navigator.onLine) {
+      // Test ping if browser reports online
+      pingTest();
+    }
+
+    // Ping check with small HEAD request
+    function pingTest() {
+      fetch('/favicon.ico?t=' + Date.now(), { method: 'HEAD', cache: 'no-store' })
+        .then(function(res) {
+          if (res.ok) handleOnline();
+        })
+        .catch(function() {
+          handleOffline();
+        });
+    }
+
+    // Periodic ping every 5 seconds to catch auto-reconnect
+    setInterval(function() {
+      if (navigator.onLine) pingTest();
+    }, 5000);
+
+    function testAndReload() {
+      var btnLabel = document.getElementById('retry-btn-label');
+      var badge = document.getElementById('status-badge');
+      var text = document.getElementById('status-text');
+
+      badge.className = 'live-status reconnecting';
+      text.innerText = 'Pinging MANTECH Servers...';
+      btnLabel.innerText = 'Scanning signal...';
+
+      fetch('/favicon.ico?t=' + Date.now(), { method: 'HEAD', cache: 'no-store' })
+        .then(function(res) {
+          if (res.ok) {
+            handleOnline();
+          } else {
+            throw new Error('Not reachable');
+          }
+        })
+        .catch(function() {
+          setTimeout(function() {
+            handleOffline();
+            btnLabel.innerText = 'Retry Connection';
+          }, 800);
+        });
+    }
+
+    function toggleTips() {
+      var tips = document.getElementById('tips-container');
+      var arrow = document.getElementById('tips-arrow');
+      tips.classList.toggle('open');
+      arrow.innerText = tips.classList.contains('open') ? '▴' : '▾';
+    }
+
+    // 2. MINI SIGNAL RUNNER GAME
+    var gameStarted = false;
+    var canvas, ctx;
+    var player = { x: 40, y: 80, vy: 0, w: 16, h: 16, grounded: true };
+    var obstacles = [];
+    var score = 0;
+    var animFrame;
+
+    function toggleGame() {
+      var wrap = document.getElementById('game-wrap');
+      wrap.classList.toggle('active');
+      if (wrap.classList.contains('active') && !gameStarted) {
+        initGame();
       }
-    })();
+    }
+
+    function initGame() {
+      canvas = document.getElementById('game-canvas');
+      ctx = canvas.getContext('2d');
+      gameStarted = true;
+      score = 0;
+      obstacles = [];
+
+      window.addEventListener('keydown', function(e) {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          jump();
+        }
+      });
+      canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        jump();
+      });
+      canvas.addEventListener('mousedown', function(e) {
+        jump();
+      });
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function jump() {
+      if (player.grounded) {
+        player.vy = -7.5;
+        player.grounded = false;
+      }
+    }
+
+    function gameLoop() {
+      if (!gameStarted) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Ground
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, 100);
+      ctx.lineTo(canvas.width, 100);
+      ctx.stroke();
+
+      // Physics
+      player.y += player.vy;
+      player.vy += 0.4;
+      if (player.y >= 84) {
+        player.y = 84;
+        player.vy = 0;
+        player.grounded = true;
+      }
+
+      // Draw player (Glowing cyan data orb)
+      ctx.fillStyle = '#06b6d4';
+      ctx.shadowColor = '#06b6d4';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(player.x + 8, player.y + 8, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Obstacles (Signal Towers)
+      if (Math.random() < 0.02 && (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - 120)) {
+        obstacles.push({ x: canvas.width, w: 12, h: 22 });
+      }
+
+      for (var i = obstacles.length - 1; i >= 0; i--) {
+        var obs = obstacles[i];
+        obs.x -= 3.2;
+
+        ctx.fillStyle = '#f43f5e';
+        ctx.fillRect(obs.x, 100 - obs.h, obs.w, obs.h);
+
+        // Antenna top
+        ctx.fillStyle = '#fcd116';
+        ctx.beginPath();
+        ctx.arc(obs.x + obs.w / 2, 100 - obs.h - 3, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Collision check
+        if (
+          player.x < obs.x + obs.w &&
+          player.x + player.w > obs.x &&
+          player.y < 100 &&
+          player.y + player.h > 100 - obs.h
+        ) {
+          score = 0; // Reset
+        }
+
+        if (obs.x + obs.w < 0) {
+          obstacles.splice(i, 1);
+          score += 10;
+          document.getElementById('score-display').innerText = 'Score: ' + score;
+        }
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
   </script>
 </body>
 </html>

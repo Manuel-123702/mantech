@@ -11,7 +11,6 @@ import {
   Inbox,
   ArrowRight,
   Banknote,
-  Building2,
   ShieldCheck,
   Clock,
   Sparkles,

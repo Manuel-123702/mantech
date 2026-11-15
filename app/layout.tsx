@@ -7,6 +7,7 @@ import { LoadingScreen } from '@/components/shared/loading-screen';
 import { WhatsAppFloat } from '@/components/shared/whatsapp-float';
 import { ScrollToTop } from '@/components/shared/scroll-to-top';
 import { PWAInstallPrompt } from '@/components/shared/pwa-install-prompt';
+import { OfflineDetector } from '@/components/shared/offline-detector';
 import { Toaster } from '@/components/ui/sonner';
 import { SITE_URL, organizationJsonLd } from '@/lib/seo';
 
@@ -87,6 +88,7 @@ export default function RootLayout({
           <WhatsAppFloat />
           <ScrollToTop />
           <PWAInstallPrompt />
+          <OfflineDetector />
           <Toaster position="top-center" richColors closeButton />
         </AuthProvider>
       </body>
