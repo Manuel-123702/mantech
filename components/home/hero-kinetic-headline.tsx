@@ -154,17 +154,14 @@ export function HeroKineticHeadline() {
           <motion.span
             initial={{ opacity: 1 }}
             animate={{
-              opacity: [1, 0, 1],
+              opacity: [1, 0, 1, 0, 1, 0, 0],
             }}
             transition={{
-              duration: 0.5,
-              repeat: Math.ceil(CAMEROON_FINISH_TIME / 0.5),
+              duration: CAMEROON_FINISH_TIME + 0.4,
+              times: [0, 0.2, 0.4, 0.6, 0.8, 0.95, 1],
               ease: 'linear',
             }}
-            className="inline-block w-1 h-7 sm:h-9 bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.9)] ml-1 self-center rounded-sm"
-            style={{
-              animation: `fade-out 0.3s forwards ${CAMEROON_FINISH_TIME + 0.3}s`,
-            }}
+            className="inline-block w-1 h-7 sm:h-9 bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.9)] ml-1 self-center rounded-sm pointer-events-none"
           />
 
           {/* Cameroon Star Emblem pop-in after typing finishes */}
@@ -297,7 +294,11 @@ export function HeroKineticHeadline() {
 
       {/* Interactive replay button */}
       <button
-        onClick={replay}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          replay();
+        }}
         type="button"
         title="Click to replay headline animation"
         className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-mono text-slate-400 hover:text-cyan-300 cursor-pointer"
