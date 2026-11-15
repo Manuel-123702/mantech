@@ -546,27 +546,32 @@ export function Navbar() {
             )}
 
             {/* Quick Post CTA — 100% Free & No Sign-In Required */}
-            <Link href="/post" className="inline-flex">
-              <Button
-                size="sm"
-                className="h-8.5 px-3.5 text-xs font-extrabold bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:opacity-95 text-slate-950 rounded-xl shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-1.5"
+            <Link href="/post" className="inline-flex items-center">
+              <button
+                type="button"
+                className="h-9 px-3.5 sm:px-4 text-xs font-extrabold text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 hover:brightness-105 active:scale-[0.98] rounded-xl shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all flex items-center justify-center gap-2 border border-cyan-300/40 cursor-pointer"
                 title="Post a job or internship free — no login required"
               >
-                <Zap className="w-3.5 h-3.5 fill-slate-950" />
-                <span>Post Free</span>
-              </Button>
+                <span className="flex items-center justify-center w-5 h-5 rounded-lg bg-slate-950/15">
+                  <Zap className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
+                </span>
+                <span className="font-extrabold tracking-tight">Post Free</span>
+                <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-md bg-slate-950/20 text-[10px] font-black uppercase tracking-wider">
+                  No Login
+                </span>
+              </button>
             </Link>
 
             {user ? (
               /* Signed-In User Profile Menu */
               <div className="flex items-center gap-2">
                 <Link href="/register/intern" className="hidden sm:inline-flex">
-                  <Button
-                    size="sm"
-                    className="h-8 px-3 text-xs font-bold bg-gradient-to-r from-blue-600 to-cyan-600 hover:opacity-95 text-white rounded-xl shadow-md shadow-cyan-500/20 transition-all"
+                  <button
+                    type="button"
+                    className="h-9 px-4 text-xs font-bold bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 hover:opacity-95 text-white rounded-xl shadow-md shadow-cyan-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    Get Started
-                  </Button>
+                    <span>Get Started</span>
+                  </button>
                 </Link>
 
                 <DropdownMenu>
