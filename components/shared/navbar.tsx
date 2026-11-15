@@ -545,19 +545,16 @@ export function Navbar() {
               </Link>
             )}
 
-            {/* Quick Post CTA — 100% Free & No Sign-In Required */}
+            {/* Quick Post CTA — 100% Free */}
             <Link
               href="/post"
-              className="h-9 px-3.5 sm:px-4 text-xs font-extrabold text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 hover:brightness-105 active:scale-[0.98] rounded-xl shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all inline-flex items-center justify-center gap-2 border border-cyan-300/40 cursor-pointer shrink-0"
-              title="Post a job or internship free — no login required"
+              className="h-9 px-4 text-xs font-extrabold text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 hover:brightness-105 active:scale-[0.98] rounded-xl shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all inline-flex items-center justify-center gap-2 border border-cyan-300/40 cursor-pointer shrink-0"
+              title="Post a job or internship free"
             >
               <span className="flex items-center justify-center w-5 h-5 rounded-lg bg-slate-950/15">
                 <Zap className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
               </span>
               <span className="font-extrabold tracking-tight">Post Free</span>
-              <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-md bg-slate-950/20 text-[10px] font-black uppercase tracking-wider">
-                No Login
-              </span>
             </Link>
 
             {user ? (
