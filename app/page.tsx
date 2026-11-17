@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -79,6 +79,8 @@ import { TestimonialSubmissionModal } from "@/components/home/testimonial-submis
 import { HeroKineticHeadline } from "@/components/home/hero-kinetic-headline";
 import { HeroInternPreviewCard } from "@/components/home/hero-intern-preview-card";
 import { OrgLogo } from "@/components/shared/org-logo";
+import { FlyersNoticeBoard } from "@/components/home/flyers-notice-board";
+import { UrgentFeaturedShowcase } from "@/components/home/urgent-featured-showcase";
 import { TOP_30_COMPANIES, TOP_30_UNIVERSITIES, VERIFIED_COMMUNITY_STORIES } from "@/lib/cameroon-directory";
 import { CAMEROON_MARKETPLACE_JOBS } from "@/lib/cameroon-marketplace-data";
 import { APP_CONFIG } from "@/lib/config";
@@ -453,6 +455,157 @@ export default function HomePage() {
   // FAQ section interactive state
   const [faqCategory, setFaqCategory] = useState<string>("all");
   const [faqSearch, setFaqSearch] = useState<string>("");
+
+  // Memoized lists for Notice Board & Urgent Gold Badge Section
+  const flyerList = useMemo(() => {
+    const list: any[] = [];
+    for (const j of featuredJobs) {
+      if (j.flyerUrl || j.isVisualFlyerOnly) {
+        list.push({
+          id: j.id,
+          slug: j.slug,
+          title: j.title,
+          companyName: j.organization?.name || j.companyName || "Verified Enterprise",
+          flyerUrl: j.flyerUrl,
+          city: j.city || "Douala",
+          contactPhone: j.contactPhone,
+          isFeatured: j.isFeatured,
+          type: j.type,
+        });
+      }
+    }
+    // High quality Cameroonian enterprise posters fallback
+    if (list.length < 4) {
+      list.push(
+        {
+          id: "flyer-curated-1",
+          slug: "software-engineering-internship-mtn",
+          title: "Graduate Software & Cloud Engineering Cohort",
+          companyName: "MTN Cameroon",
+          flyerUrl: "/icons/icon-512.png",
+          city: "Douala",
+          contactPhone: "+237671234567",
+          isFeatured: true,
+          type: "INTERNSHIP",
+        },
+        {
+          id: "flyer-curated-2",
+          slug: "commercial-sales-orange",
+          title: "Enterprise B2B Key Account Manager",
+          companyName: "Orange Cameroun",
+          flyerUrl: "/icons/icon-512.png",
+          city: "Yaoundé",
+          contactPhone: "+237691234567",
+          isFeatured: true,
+          type: "FULL_TIME",
+        },
+        {
+          id: "flyer-curated-3",
+          slug: "finance-audit-intern-uba",
+          title: "Branch Treasury & Banking Operations",
+          companyName: "UBA Cameroon",
+          flyerUrl: "/icons/icon-512.png",
+          city: "Douala",
+          contactPhone: "+237670001122",
+          isFeatured: true,
+          type: "INTERNSHIP",
+        },
+        {
+          id: "flyer-curated-4",
+          slug: "agro-logistics-coordinator-cdc",
+          title: "Cold Chain & Export Logistics Supervisor",
+          companyName: "CDC Cameroon",
+          flyerUrl: "/icons/icon-512.png",
+          city: "Limbe",
+          contactPhone: "+237679887766",
+          isFeatured: false,
+          type: "FULL_TIME",
+        }
+      );
+    }
+    return list;
+  }, [featuredJobs]);
+
+  const careerLinksList = useMemo(() => {
+    return [
+      {
+        id: "link-1",
+        slug: "mtn-careers-portal",
+        title: "MTN Cameroon Official Careers & Graduate Academy",
+        companyName: "MTN Cameroon",
+        externalUrl: "https://careers.mtn.cm",
+        city: "Douala / National",
+        type: "TELCO PORTAL",
+      },
+      {
+        id: "link-2",
+        slug: "orange-digital-center",
+        title: "Orange Digital Center & Tech Internships Cameroon",
+        companyName: "Orange Cameroun",
+        externalUrl: "https://orangedigitalcenters.com",
+        city: "Yaoundé",
+        type: "INNOVATION HUB",
+      },
+      {
+        id: "link-3",
+        slug: "eneo-recrutement",
+        title: "Eneo Cameroon Power Grid Internship Program",
+        companyName: "Eneo Cameroon S.A.",
+        externalUrl: "https://eneocameroon.cm",
+        city: "Douala / Yaoundé",
+        type: "ENERGY & POWER",
+      },
+    ];
+  }, []);
+
+  const urgentList = useMemo(() => {
+    const list: any[] = [];
+    for (const opp of featuredInternships.slice(0, 3)) {
+      list.push({
+        id: opp.id,
+        slug: opp.slug,
+        title: opp.title,
+        companyName: (opp as any).organization?.name || "Verified Enterprise",
+        logoUrl: (opp as any).organization?.logoUrl,
+        city: opp.city || "Douala",
+        type: "INTERNSHIP",
+        category: "internship",
+        field: (opp as any).field?.name || "Engineering & Technology",
+        allowanceOrSalary: opp.allowanceXAF ? `${opp.allowanceXAF.toLocaleString()} FCFA/mo` : "Stipend Included",
+        isFeatured: true,
+      });
+    }
+    for (const job of featuredJobs.slice(0, 3)) {
+      list.push({
+        id: job.id,
+        slug: job.slug,
+        title: job.title,
+        companyName: job.organization?.name || "Verified Enterprise",
+        logoUrl: job.organization?.logoUrl,
+        city: job.city || "Yaoundé",
+        type: job.type || "FULL_TIME",
+        category: "job",
+        field: job.department || "Enterprise Operations",
+        allowanceOrSalary: job.salaryMinXAF ? `${job.salaryMinXAF.toLocaleString()} FCFA` : "Competitive",
+        isFeatured: true,
+      });
+    }
+    return list;
+  }, [featuredInternships, featuredJobs]);
+
+  const trendingList = useMemo(() => {
+    return featuredJobs.slice(0, 15).map((j) => ({
+      id: j.id,
+      slug: j.slug,
+      title: j.title,
+      companyName: j.organization?.name || "Verified Enterprise",
+      logoUrl: j.organization?.logoUrl,
+      city: j.city || "Douala",
+      type: j.type || "FULL_TIME",
+      field: j.department || j.field?.name || "General Business",
+      allowanceOrSalary: j.salaryMinXAF ? `${j.salaryMinXAF.toLocaleString()} XAF` : "Market Standard",
+    }));
+  }, [featuredJobs]);
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1057,6 +1210,12 @@ export default function HomePage() {
       </section>
 
 
+      {/* --- URGENT GOLD BADGE & TRENDING CATALOGS (Rule §2) --- */}
+      <UrgentFeaturedShowcase urgentItems={urgentList} trendingItems={trendingList} />
+
+      {/* --- DIRECT FLYER NOTICE BOARD & OFFICIAL PORTAL LINKS (Rule §6) --- */}
+      <FlyersNoticeBoard flyers={flyerList} careerLinks={careerLinksList} />
+
       {/* --- THE COMPLETE INTERNSHIP LIFECYCLE (SRS Section 1, 2, 3) --- */}
 
       {/* --- LATEST JOBS FROM THE MARKETPLACE --- */}
@@ -1086,12 +1245,12 @@ export default function HomePage() {
                   jobTypeStr === 'PART_TIME'
                     ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
                     : jobTypeStr === 'CONTRACT'
-                    ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                    : jobTypeStr === 'INTERNSHIP'
-                    ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
-                    : jobTypeStr === 'FREELANCE'
-                    ? 'bg-violet-500/15 text-violet-300 border-violet-500/30'
-                    : 'bg-blue-500/15 text-blue-300 border-blue-500/30';
+                      ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                      : jobTypeStr === 'INTERNSHIP'
+                        ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
+                        : jobTypeStr === 'FREELANCE'
+                          ? 'bg-violet-500/15 text-violet-300 border-violet-500/30'
+                          : 'bg-blue-500/15 text-blue-300 border-blue-500/30';
                 const formattedType = jobTypeStr.replace('_', ' ');
 
                 return (
@@ -1218,13 +1377,13 @@ export default function HomePage() {
               <Link href="/post?type=job">
                 <Button size="lg" className="w-full sm:w-auto px-8 py-6 text-sm font-extrabold bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 hover:opacity-95 text-white shadow-xl shadow-cyan-500/25 rounded-2xl">
                   <Briefcase className="w-5 h-5 mr-2" />
-                  Post a Job Free (No Login)
+                  Post a Job Free
                 </Button>
               </Link>
               <Link href="/post?type=internship">
                 <Button size="lg" className="w-full sm:w-auto px-8 py-6 text-sm font-extrabold bg-slate-900 hover:bg-slate-800 text-white border border-cyan-500/40 shadow-xl rounded-2xl">
                   <GraduationCap className="w-5 h-5 mr-2 text-cyan-400" />
-                  Post an Internship Free (No Login)
+                  Post an Internship Free
                 </Button>
               </Link>
             </div>

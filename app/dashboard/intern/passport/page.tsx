@@ -26,6 +26,8 @@ import {
   MessageCircle,
 } from "lucide-react";
 import Image from "next/image";
+import { generateQrDataUrl } from "@/lib/qr-code";
+import { InternPassportActions } from "@/components/intern/intern-passport-actions";
 
 export default async function InternPassportDashboardPage() {
   const user = await requireUser();
@@ -111,6 +113,10 @@ export default async function InternPassportDashboardPage() {
 
   const initials = (profile.user.fullName || "I").charAt(0).toUpperCase();
 
+  // Generate permanent cryptographic QR code for online verification
+  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://app.mantech-nexus.cm"}/verify/passport/${profile.id}`;
+  const qrDataUrl = await generateQrDataUrl(verificationUrl, { width: 180, margin: 1 });
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -123,7 +129,8 @@ export default async function InternPassportDashboardPage() {
             recruiting on MANTECH Nexus.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <InternPassportActions profile={profile as any} qrDataUrl={qrDataUrl} />
           <Link href="/dashboard/intern/settings">
             <Button variant="outline" size="sm">
               <Edit className="mr-2 h-4 w-4" />

@@ -102,23 +102,22 @@ export default function InternshipsPage() {
     return map;
   }, [matchProfile, internships]);
 
-  // Re-rank the list when the user picks "Best match". Cards with no score
-  // (guests, or a profile that could not be loaded) keep the default order —
-  // the toggle is disabled in that case so the two never disagree.
+  // Re-rank the list when the user picks "Best match", while ALWAYS pinning
+  // Featured Enterprise postings to the very top (Rule §2).
   const sortedInternships = useMemo(() => {
-    if (sortMode === "match" && matchScores.size > 0) {
-      // Re-rank by the signed-in intern's match score (best → worst).
-      return [...internships].sort(
-        (a, b) =>
-          (matchScores.get(b.id) ?? -1) - (matchScores.get(a.id) ?? -1),
+    return [...internships].sort((a, b) => {
+      // 1. Featured Enterprise Opportunities pinned to top
+      if (Boolean(a.isFeatured) && !Boolean(b.isFeatured)) return -1;
+      if (!Boolean(a.isFeatured) && Boolean(b.isFeatured)) return 1;
+
+      // 2. Best Match or Newest
+      if (sortMode === "match" && matchScores.size > 0) {
+        return (matchScores.get(b.id) ?? -1) - (matchScores.get(a.id) ?? -1);
+      }
+      return (
+        new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()
       );
-    }
-    // "Default": deterministic newest-first order (a real sort, not a
-    // passthrough of the backend array).
-    return [...internships].sort(
-      (a, b) =>
-        new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime(),
-    );
+    });
   }, [internships, matchScores, sortMode]);
 
   // If the match profile goes away (sign-out) while "Best match" is selected,
@@ -533,7 +532,7 @@ export default function InternshipsPage() {
                 return (
                   <MotionItem key={opp.id} motion="pop">
                     <AnimatedCard className="h-full">
-                      <div className="flex h-full flex-col justify-between rounded-3xl border border-slate-700/60 bg-slate-900/85 backdrop-blur-md p-6 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all group">
+                      <div className={`flex h-full flex-col justify-between rounded-3xl ${opp.isFeatured ? 'border-2 border-amber-500/60 shadow-xl shadow-amber-500/10' : 'border border-slate-700/60'} bg-slate-900/85 backdrop-blur-md p-6 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all group`}>
                         <div>
                           <div className="flex items-center justify-between gap-2 mb-3">
                             <Badge
@@ -609,9 +608,9 @@ export default function InternshipsPage() {
                         {opp.isFeatured ? (
                           <Badge
                             variant="secondary"
-                            className="bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 text-[9px] border border-amber-500/30"
+                            className="bg-gradient-to-r from-amber-500/25 to-yellow-500/25 text-amber-300 text-[10px] font-black uppercase tracking-wider border border-amber-500/40 shadow-sm animate-pulse"
                           >
-                            <Sparkles className="w-3 h-3 mr-1" /> Featured
+                            <Sparkles className="w-3 h-3 mr-1 text-amber-400" /> Featured Enterprise
                           </Badge>
                         ) : null}
                       </div>

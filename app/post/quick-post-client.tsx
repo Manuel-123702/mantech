@@ -23,6 +23,7 @@ import {
   DollarSign,
   Layers,
   Check,
+  Calendar,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -87,6 +88,10 @@ export function QuickPostClient() {
   const [salaryMin, setSalaryMin] = useState('');
   const [salaryMax, setSalaryMax] = useState('');
   const [educationLevel, setEducationLevel] = useState('All levels welcome');
+
+  // Expiring Date State (Rule §5)
+  const [expiryOption, setExpiryOption] = useState<string>('30');
+  const [customExpiryDate, setCustomExpiryDate] = useState<string>('');
 
   const [submitting, setSubmitting] = useState(false);
   const [publishedData, setPublishedData] = useState<{
@@ -154,13 +159,24 @@ export function QuickPostClient() {
         return;
       }
 
+      // Calculate expiry date selected by user (Rule §5)
+      let effectiveExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      if (expiryOption === 'custom' && customExpiryDate) {
+        effectiveExpiry = new Date(customExpiryDate);
+      } else {
+        const days = parseInt(expiryOption, 10) || 30;
+        effectiveExpiry = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+      }
+
       const effectiveTitle =
         title.trim() ||
         (mode === 'flyer'
-          ? `${postType === 'internship' ? 'Internship' : 'Job'} Opening (${city})`
-          : employerName.trim()
-          ? `${postType === 'internship' ? 'Internship' : 'Job'} at ${employerName.trim()}`
-          : 'New Professional Opportunity');
+          ? `${postType === 'internship' ? 'Internship' : 'Job'} Flyer Opportunity (${city})`
+          : mode === 'link'
+            ? `${postType === 'internship' ? 'Internship' : 'Job'} via External Portal`
+            : employerName.trim()
+              ? `${postType === 'internship' ? 'Internship' : 'Job'} at ${employerName.trim()}`
+              : 'New Professional Opportunity');
 
       let finalDescription = '';
       if (mode === 'flyer') {
@@ -175,7 +191,7 @@ export function QuickPostClient() {
 
       const payload = {
         title: effectiveTitle,
-        organizationName: employerName.trim() || 'Verified Enterprise',
+        organizationName: employerName.trim() || (mode === 'flyer' ? 'Enterprise Poster' : mode === 'link' ? 'Career Portal' : 'Verified Enterprise'),
         city: city || 'Douala',
         workMode: workMode || 'ONSITE',
         type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
@@ -192,6 +208,9 @@ export function QuickPostClient() {
         salaryMaxXAF: salaryMax ? parseInt(salaryMax, 10) : undefined,
         educationLevel: educationLevel || undefined,
         isFeatured: isUrgentBoosted,
+        expiryDate: effectiveExpiry.toISOString(),
+        isVisualFlyerOnly: mode === 'flyer',
+        isLinkOnly: mode === 'link',
       };
 
       const res = await fetch('/api/jobs', {
@@ -305,11 +324,10 @@ export function QuickPostClient() {
               <button
                 type="button"
                 onClick={() => setPostType('job')}
-                className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                  postType === 'job'
-                    ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-600/30'
-                    : 'text-slate-400 hover:text-white'
-                }`}
+                className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all ${postType === 'job'
+                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-600/30'
+                  : 'text-slate-400 hover:text-white'
+                  }`}
               >
                 <Briefcase className="h-4 w-4" />
                 <span>Job Opening (Emploi)</span>
@@ -317,11 +335,10 @@ export function QuickPostClient() {
               <button
                 type="button"
                 onClick={() => setPostType('internship')}
-                className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                  postType === 'internship'
-                    ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white shadow-lg shadow-cyan-600/30'
-                    : 'text-slate-400 hover:text-white'
-                }`}
+                className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all ${postType === 'internship'
+                  ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white shadow-lg shadow-cyan-600/30'
+                  : 'text-slate-400 hover:text-white'
+                  }`}
               >
                 <GraduationCap className="h-4 w-4" />
                 <span>Internship (Stage)</span>
@@ -333,11 +350,10 @@ export function QuickPostClient() {
               <button
                 type="button"
                 onClick={() => setMode('flyer')}
-                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
-                  mode === 'flyer'
-                    ? 'border-cyan-500 bg-cyan-950/50 text-cyan-300 shadow-md shadow-cyan-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
-                }`}
+                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${mode === 'flyer'
+                  ? 'border-cyan-500 bg-cyan-950/50 text-cyan-300 shadow-md shadow-cyan-500/20'
+                  : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                  }`}
               >
                 <ImageIcon className="h-4 w-4" />
                 <span className="text-xs font-bold">1. Poster Flyer</span>
@@ -347,11 +363,10 @@ export function QuickPostClient() {
               <button
                 type="button"
                 onClick={() => setMode('whatsapp')}
-                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
-                  mode === 'whatsapp'
-                    ? 'border-emerald-500 bg-emerald-950/50 text-emerald-300 shadow-md shadow-emerald-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
-                }`}
+                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${mode === 'whatsapp'
+                  ? 'border-emerald-500 bg-emerald-950/50 text-emerald-300 shadow-md shadow-emerald-500/20'
+                  : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                  }`}
               >
                 <MessageSquare className="h-4 w-4" />
                 <span className="text-xs font-bold">2. WhatsApp Text</span>
@@ -361,11 +376,10 @@ export function QuickPostClient() {
               <button
                 type="button"
                 onClick={() => setMode('link')}
-                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
-                  mode === 'link'
-                    ? 'border-blue-500 bg-blue-950/50 text-blue-300 shadow-md shadow-blue-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
-                }`}
+                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${mode === 'link'
+                  ? 'border-blue-500 bg-blue-950/50 text-blue-300 shadow-md shadow-blue-500/20'
+                  : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                  }`}
               >
                 <LinkIcon className="h-4 w-4" />
                 <span className="text-xs font-bold">3. Career Link</span>
@@ -375,11 +389,10 @@ export function QuickPostClient() {
               <button
                 type="button"
                 onClick={() => setMode('detailed')}
-                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
-                  mode === 'detailed'
-                    ? 'border-indigo-500 bg-indigo-950/50 text-indigo-300 shadow-md shadow-indigo-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
-                }`}
+                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${mode === 'detailed'
+                  ? 'border-indigo-500 bg-indigo-950/50 text-indigo-300 shadow-md shadow-indigo-500/20'
+                  : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                  }`}
               >
                 <FileText className="h-4 w-4" />
                 <span className="text-xs font-bold">4. Detailed Form</span>
@@ -579,24 +592,35 @@ export function QuickPostClient() {
               )}
 
               {/* SHARED FIELDS ACROSS ALL MODES */}
+              {mode === 'flyer' && (
+                <div className="rounded-xl bg-cyan-500/10 border border-cyan-500/30 p-3 text-xs text-cyan-200">
+                  ✨ <strong>Image-Only Posting Active</strong>: No need to fill title or company info if you don&apos;t want to! Your uploaded flyer communicates all requirements directly.
+                </div>
+              )}
+              {mode === 'link' && (
+                <div className="rounded-xl bg-blue-500/10 border border-blue-500/30 p-3 text-xs text-blue-200">
+                  🔗 <strong>Link-Only Posting Active</strong>: Candidates will be directed to your link. Title and company name below are optional.
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-xs font-bold text-slate-300">
-                    Role / Position Title:
+                    Role / Position Title {mode === 'flyer' || mode === 'link' ? '(Optional)' : '*'}:
                   </Label>
                   <Input
                     id="title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Sales Associate, Registered Nurse, Fullstack Dev"
+                    placeholder={mode === 'flyer' ? 'e.g. As shown on flyer' : 'e.g. Sales Associate, Registered Nurse, Fullstack Dev'}
                     className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                    required
+                    required={mode !== 'flyer' && mode !== 'link'}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="employer" className="text-xs font-bold text-slate-300">
-                    Company / Employer / Shop Name:
+                    Company / Employer / Shop Name {mode === 'flyer' || mode === 'link' ? '(Optional)' : '*'}:
                   </Label>
                   <Input
                     id="employer"
@@ -604,7 +628,7 @@ export function QuickPostClient() {
                     onChange={(e) => setEmployerName(e.target.value)}
                     placeholder="e.g. Boutique Modern, Orange, Cabinet Médical..."
                     className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                    required
+                    required={mode !== 'flyer' && mode !== 'link'}
                   />
                 </div>
               </div>
@@ -638,9 +662,54 @@ export function QuickPostClient() {
                     onChange={(e) => setWhatsappPhone(e.target.value)}
                     placeholder="+237 6XXXXXXXX"
                     className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                    required
                   />
                 </div>
+              </div>
+
+              {/* EXPIRING DATE SELECTOR (Rule §5) */}
+              <div className="space-y-3 pt-3 border-t border-slate-800">
+                <div className="flex flex-wrap items-center justify-between gap-1">
+                  <Label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4 text-cyan-400" />
+                    <span>Application Deadline &amp; Expiring Date (Date d&apos;expiration)</span>
+                  </Label>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    Shows for 1 extra week after expiry before auto-deletion
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { label: '14 Days (2 Semaines)', val: '14' },
+                    { label: '30 Days (1 Mois)', val: '30' },
+                    { label: '60 Days (2 Mois)', val: '60' },
+                    { label: 'Custom Date', val: 'custom' },
+                  ].map((preset) => (
+                    <button
+                      key={preset.val}
+                      type="button"
+                      onClick={() => setExpiryOption(preset.val)}
+                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
+                        expiryOption === preset.val
+                          ? 'border-cyan-500 bg-cyan-950/40 text-cyan-300 shadow-sm'
+                          : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+
+                {expiryOption === 'custom' && (
+                  <Input
+                    type="date"
+                    value={customExpiryDate}
+                    onChange={(e) => setCustomExpiryDate(e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="bg-slate-950 border-slate-800 text-white text-xs h-10 mt-1"
+                    required
+                  />
+                )}
               </div>
 
               {/* URGENT BOOST OPTION (FREE PROMO) */}
@@ -678,7 +747,11 @@ export function QuickPostClient() {
                 ) : (
                   <>
                     <span>
-                      Publish {postType === 'internship' ? 'Internship' : 'Job'} (100% Free · No Login)
+                      {mode === 'flyer'
+                        ? 'Publish Flyer Free (Image Only)'
+                        : mode === 'link'
+                          ? 'Publish Career Link Free'
+                          : `Publish ${postType === 'internship' ? 'Internship' : 'Job'} (100% Free)`}
                     </span>
                     <ArrowRight className="h-4 w-4" />
                   </>

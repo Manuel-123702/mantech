@@ -28,6 +28,7 @@ import { buildReadinessChecklist, readinessPercent, nextActions } from '@/lib/re
 import { loadInternHistory } from '@/lib/intern-history-data';
 import { statusLabel } from '@/lib/intern-history';
 import { calculateMatch, matchLabel, type MatchProfile } from '@/lib/matching';
+import { UrgentAcademicMatchCard } from '@/components/intern/urgent-academic-match-card';
 
 export const metadata = {
   title: 'Intern Dashboard | MANTECH Nexus',
@@ -371,6 +372,8 @@ export default async function InternDashboardPage() {
           Track your applications, interviews and progress across Cameroon.
         </p>
       </div>
+
+      <UrgentAcademicMatchCard currentAvailability={profile.availability} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (

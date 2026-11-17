@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -85,8 +86,18 @@
       border-radius: 0 0 4px 4px;
       overflow: hidden;
     }
-    .stripe-green { flex: 1; background: #007a5e; }
-    .stripe-red { flex: 1; background: #ce1126; position: relative; }
+
+    .stripe-green {
+      flex: 1;
+      background: #007a5e;
+    }
+
+    .stripe-red {
+      flex: 1;
+      background: #ce1126;
+      position: relative;
+    }
+
     .stripe-red::after {
       content: '★';
       position: absolute;
@@ -96,7 +107,11 @@
       color: #fcd116;
       font-size: 8px;
     }
-    .stripe-yellow { flex: 1; background: #fcd116; }
+
+    .stripe-yellow {
+      flex: 1;
+      background: #fcd116;
+    }
 
     /* Live connection banner */
     .live-status {
@@ -115,11 +130,13 @@
       color: #fb7185;
       transition: all 0.3s ease;
     }
+
     .live-status.reconnecting {
       background: rgba(245, 158, 11, 0.12);
       border-color: rgba(245, 158, 11, 0.3);
       color: #fbbf24;
     }
+
     .live-status.online {
       background: rgba(16, 185, 129, 0.15);
       border-color: rgba(16, 185, 129, 0.4);
@@ -136,8 +153,17 @@
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.6); opacity: 0.4; }
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.6);
+        opacity: 0.4;
+      }
     }
 
     /* Radar scan sphere */
@@ -157,20 +183,27 @@
       border-radius: 50%;
       border: 1px solid rgba(6, 182, 212, 0.25);
     }
+
     .radar-ring:nth-child(2) {
       inset: -12px;
       border-color: rgba(6, 182, 212, 0.15);
       border-style: dashed;
       animation: spin 20s linear infinite;
     }
+
     .radar-ring:nth-child(3) {
       inset: -24px;
       border-color: rgba(6, 182, 212, 0.08);
     }
 
     @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .radar-core {
@@ -212,17 +245,20 @@
       margin-bottom: 22px;
       font-size: 11px;
     }
+
     .diag-item {
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
+
     .diag-label {
       color: #64748b;
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+
     .diag-value {
       font-weight: 700;
       color: #e2e8f0;
@@ -254,10 +290,12 @@
       box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
       transition: transform 0.15s, opacity 0.2s, box-shadow 0.2s;
     }
+
     .btn-primary:hover {
       opacity: 0.95;
       box-shadow: 0 12px 24px -5px rgba(2, 132, 199, 0.6);
     }
+
     .btn-primary:active {
       transform: scale(0.98);
     }
@@ -278,6 +316,7 @@
       gap: 6px;
       transition: background 0.2s;
     }
+
     .btn-secondary:hover {
       background: rgba(51, 65, 85, 0.8);
     }
@@ -297,6 +336,7 @@
       border-radius: 8px;
       transition: background 0.15s;
     }
+
     .tips-toggle:hover {
       background: rgba(6, 182, 212, 0.1);
     }
@@ -313,6 +353,7 @@
       color: #94a3b8;
       line-height: 1.6;
     }
+
     .cameroon-tips.open {
       display: block;
       animation: fadeIn 0.25s ease;
@@ -324,18 +365,21 @@
       gap: 10px;
       margin-top: 8px;
     }
+
     .tip-box {
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.05);
       padding: 10px;
       border-radius: 10px;
     }
+
     .tip-title {
       font-weight: 700;
       color: #f1f5f9;
       font-size: 11px;
       margin-bottom: 2px;
     }
+
     .tip-code {
       font-family: monospace;
       color: var(--cyan);
@@ -348,6 +392,7 @@
       padding-top: 16px;
       border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
+
     .game-toggle-btn {
       background: none;
       border: none;
@@ -356,14 +401,17 @@
       cursor: pointer;
       text-decoration: underline;
     }
+
     .game-canvas-wrap {
       display: none;
       margin-top: 12px;
       position: relative;
     }
+
     .game-canvas-wrap.active {
       display: block;
     }
+
     canvas {
       background: #090d16;
       border: 1px solid rgba(56, 189, 248, 0.3);
@@ -372,6 +420,7 @@
       height: 120px;
       display: block;
     }
+
     .game-score {
       position: absolute;
       top: 8px;
@@ -383,11 +432,19 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="glow-aura"></div>
@@ -411,7 +468,8 @@
         <div class="radar-ring"></div>
         <div class="radar-ring"></div>
         <div class="radar-core">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <line x1="1" y1="1" x2="23" y2="23"></line>
             <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
             <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
@@ -425,7 +483,8 @@
 
       <h1>You are Currently Offline</h1>
       <p class="lead-text">
-        MANTECH Nexus runs entirely in live online mode to protect job veracity, real-time recruiter messaging, and verified placement tracking across Cameroon.
+        MANTECH Nexus runs entirely in live online mode to protect job veracity, real-time recruiter messaging, and
+        verified placement tracking across Cameroon.
       </p>
 
       <!-- Diagnostics Telemetry -->
@@ -447,7 +506,8 @@
       <!-- Actions -->
       <div class="btn-group">
         <button id="retry-btn" class="btn-primary" onclick="testAndReload()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 2v6h-6"></path>
             <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
             <path d="M3 22v-6h6"></path>
@@ -517,7 +577,7 @@
       diag.style.color = '#34d399';
       btnLabel.innerText = 'Redirecting to Live Platform...';
 
-      setTimeout(function() {
+      setTimeout(function () {
         window.location.reload();
       }, 2000);
     }
@@ -544,16 +604,16 @@
     // Ping check with small HEAD request
     function pingTest() {
       fetch('/favicon.ico?t=' + Date.now(), { method: 'HEAD', cache: 'no-store' })
-        .then(function(res) {
+        .then(function (res) {
           if (res.ok) handleOnline();
         })
-        .catch(function() {
+        .catch(function () {
           handleOffline();
         });
     }
 
     // Periodic ping every 5 seconds to catch auto-reconnect
-    setInterval(function() {
+    setInterval(function () {
       if (navigator.onLine) pingTest();
     }, 5000);
 
@@ -567,15 +627,15 @@
       btnLabel.innerText = 'Scanning signal...';
 
       fetch('/favicon.ico?t=' + Date.now(), { method: 'HEAD', cache: 'no-store' })
-        .then(function(res) {
+        .then(function (res) {
           if (res.ok) {
             handleOnline();
           } else {
             throw new Error('Not reachable');
           }
         })
-        .catch(function() {
-          setTimeout(function() {
+        .catch(function () {
+          setTimeout(function () {
             handleOffline();
             btnLabel.innerText = 'Retry Connection';
           }, 800);
@@ -612,17 +672,17 @@
       score = 0;
       obstacles = [];
 
-      window.addEventListener('keydown', function(e) {
+      window.addEventListener('keydown', function (e) {
         if (e.code === 'Space') {
           e.preventDefault();
           jump();
         }
       });
-      canvas.addEventListener('touchstart', function(e) {
+      canvas.addEventListener('touchstart', function (e) {
         e.preventDefault();
         jump();
       });
-      canvas.addEventListener('mousedown', function(e) {
+      canvas.addEventListener('mousedown', function (e) {
         jump();
       });
 
@@ -705,4 +765,5 @@
     }
   </script>
 </body>
+
 </html>

@@ -122,6 +122,11 @@ export default function JobsPage() {
       if (filters.city !== "all" && filters.city !== job.city) return false;
 
       return true;
+    }).sort((a, b) => {
+      // Rule §2: Featured enterprise opportunities are pinned to the very top!
+      if (Boolean(a.isFeatured) && !Boolean(b.isFeatured)) return -1;
+      if (!Boolean(a.isFeatured) && Boolean(b.isFeatured)) return 1;
+      return 0;
     });
   }, [jobs, filters]);
 
@@ -297,12 +302,22 @@ export default function JobsPage() {
               return (
                 <MotionItem
                   key={job.id}
-                  className="bg-slate-900/90 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:shadow-blue-950/20 group relative overflow-hidden"
+                  className={`${
+                    job.isFeatured
+                      ? 'border-2 border-amber-500/60 shadow-xl shadow-amber-500/10'
+                      : 'border border-slate-800/80 hover:border-slate-700'
+                  } bg-slate-900/90 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 hover:shadow-xl group relative overflow-hidden`}
                 >
                   <div>
                     {/* Top Status & Type Strip */}
                     <div className="flex items-center justify-between gap-2 mb-3">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {job.isFeatured && (
+                          <Badge className="bg-gradient-to-r from-amber-500/25 to-yellow-500/25 text-amber-300 border-amber-500/40 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-sm animate-pulse">
+                            <Sparkles className="w-3 h-3 text-amber-400" />
+                            Featured Enterprise
+                          </Badge>
+                        )}
                         {isExpired ? (
                           <Badge className="bg-rose-500/10 text-rose-400 border-rose-500/30 text-[10px] px-2 py-0.5">
                             Expired

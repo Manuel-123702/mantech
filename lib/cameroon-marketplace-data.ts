@@ -25,6 +25,13 @@ export interface MarketplaceJob {
   requiredSkills: string[];
   educationLevel: string;
   isFeatured?: boolean;
+  expiryDate?: string | Date;
+  isVisualFlyerOnly?: boolean;
+  flyerUrl?: string | null;
+  isLinkOnly?: boolean;
+  externalUrl?: string | null;
+  contactPhone?: string | null;
+  isExpired?: boolean;
 }
 
 export const CAMEROON_MARKETPLACE_JOBS: MarketplaceJob[] = [
@@ -528,10 +535,36 @@ if (typeof window === 'undefined') {
 }
 
 export function getExpressPostings(): MarketplaceJob[] {
-  return inMemoryExpressPostings;
+  const now = Date.now();
+  const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+  // Filter out any posting that expired more than 1 week ago (Auto-Purged)
+  return inMemoryExpressPostings
+    .filter((j) => {
+      if (!j.expiryDate) return true;
+      const expTime = new Date(j.expiryDate).getTime();
+      return now <= expTime + ONE_WEEK_MS;
+    })
+    .map((j) => {
+      const expTime = j.expiryDate ? new Date(j.expiryDate).getTime() : now + 30 * 24 * 60 * 60 * 1000;
+      return {
+        ...j,
+        isExpired: now > expTime,
+      };
+    });
+}
+
+export function getVisualFlyerPostings(): MarketplaceJob[] {
+  return getExpressPostings().filter((j) => j.isVisualFlyerOnly || Boolean(j.flyerUrl));
+}
+
+export function getLinkOnlyPostings(): MarketplaceJob[] {
+  return getExpressPostings().filter((j) => j.isLinkOnly || Boolean(j.externalUrl));
 }
 
 export function saveExpressPosting(job: any): void {
+  const defaultExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
   const normalized: MarketplaceJob = {
     id: job.id || `job-exp-${Date.now()}`,
     slug: job.slug || `job-${Date.now()}`,
@@ -551,6 +584,13 @@ export function saveExpressPosting(job: any): void {
     requiredSkills: Array.isArray(job.requiredSkills) ? job.requiredSkills : [],
     educationLevel: job.educationLevel || 'All levels welcome',
     isFeatured: Boolean(job.isFeatured),
+    expiryDate: job.expiryDate || defaultExpiry,
+    isVisualFlyerOnly: Boolean(job.isVisualFlyerOnly),
+    flyerUrl: job.flyerUrl || null,
+    isLinkOnly: Boolean(job.isLinkOnly),
+    externalUrl: job.externalUrl || job.applicationUrl || null,
+    contactPhone: job.contactPhone || null,
+    isExpired: job.expiryDate ? Date.now() > new Date(job.expiryDate).getTime() : false,
   };
 
   const existingIdx = CAMEROON_MARKETPLACE_JOBS.findIndex((j) => j.slug === normalized.slug);

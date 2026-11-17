@@ -56,14 +56,24 @@ export async function GET(request: NextRequest) {
   if (params.has('applicationMethod') && !applicationMethod) return NextResponse.json({ error: 'Invalid application method.' }, { status: 400 });
   if (params.has('jobType') && !jobType) return NextResponse.json({ error: 'Invalid job type.' }, { status: 400 });
 
+  const now = new Date();
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  // Background auto-purge for jobs expired more than 1 week
+  prisma.job.deleteMany({
+    where: { expiryDate: { lt: oneWeekAgo } },
+  }).catch(() => {});
+
   const where: Prisma.JobWhereInput = {
     moderationStatus: 'PUBLISHED',
+    // Rule §5: Expired postings still show for 1 week; older are purged
+    expiryDate: { gte: oneWeekAgo },
   };
   const availability = params.get('availability');
   if (availability === 'active') {
-    where.expiryDate = { gte: new Date() };
+    where.expiryDate = { gte: now };
   } else if (availability === 'expired') {
-    where.expiryDate = { lt: new Date() };
+    where.expiryDate = { lt: now, gte: oneWeekAgo };
   }
   const field = params.get('field');
   const specialization = params.get('specialization');
@@ -328,6 +338,10 @@ export async function POST(request: NextRequest) {
       contactPhone: contactPhone || null,
       flyerUrl: flyerUrl || null,
       isFeatured: Boolean(isFeatured),
+      isVisualFlyerOnly: Boolean(body.isVisualFlyerOnly),
+      isLinkOnly: Boolean(body.isLinkOnly),
+      externalUrl: applicationUrl || null,
+      expiryDate: effectiveExpiry.toISOString(),
       postingDate: new Date().toISOString(),
     };
 

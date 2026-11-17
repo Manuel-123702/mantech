@@ -35,14 +35,24 @@ export async function GET(request: NextRequest) {
   }
   if (paid !== null && paid !== 'true' && paid !== 'false') return NextResponse.json({ error: 'Invalid paid filter.' }, { status: 400 });
 
+  const now = new Date();
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  // Background auto-purge for internships expired more than 1 week
+  prisma.internshipOpportunity.deleteMany({
+    where: { deadline: { lt: oneWeekAgo } },
+  }).catch(() => {});
+
   const where: Prisma.InternshipOpportunityWhereInput = {
     moderationStatus: 'PUBLISHED',
+    // Rule §5: Expired postings still show for 1 week; older are purged
+    deadline: { gte: oneWeekAgo },
   };
   const availability = params.get('availability');
   if (availability === 'active') {
-    where.deadline = { gte: new Date() };
+    where.deadline = { gte: now };
   } else if (availability === 'expired') {
-    where.deadline = { lt: new Date() };
+    where.deadline = { lt: now, gte: oneWeekAgo };
   }
   const field = params.get('field');
   const specialization = params.get('specialization');
