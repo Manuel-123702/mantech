@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Logo } from './logo';
 import { ShieldCheck, Server, Database, Globe, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
-import { useDataSaver } from '@/lib/use-data-saver';
 
 interface LoadingScreenProps {
   onComplete?: () => void;
@@ -23,12 +22,11 @@ export function LoadingScreen({ onComplete, minDuration = 2600 }: LoadingScreenP
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(0);
   const [stageIndex, setStageIndex] = useState(0);
-  const dataSaver = useDataSaver();
 
   useEffect(() => {
-    // Skip loader entirely on slow/data-saver connections — save bandwidth
+    // Check if user already saw the loader in this session to avoid annoyance
     const hasSeenLoader = sessionStorage.getItem('mantech_seen_loader');
-    if (hasSeenLoader || dataSaver) {
+    if (hasSeenLoader) {
       setIsVisible(false);
       onComplete?.();
       return;
@@ -78,28 +76,20 @@ export function LoadingScreen({ onComplete, minDuration = 2600 }: LoadingScreenP
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-0 z-[99999] flex flex-col items-center justify-between p-6 sm:p-10 bg-slate-950 text-white overflow-hidden select-none"
       >
-        {/* Background: CSS-only animated gradient — replaces 2.6 MB loading-video.mp4.
-            Renders instantly on slow Cameroon mobile connections. Same visual quality. */}
+        {/* Background Video Element */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Animated gradient mesh background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-blue-950/40 to-slate-950" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(59,130,246,0.18),transparent)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_80%,rgba(6,182,212,0.10),transparent)]" />
-          {/* Animated scan-line pulse */}
-          <div
-            className="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/60 to-transparent"
-            style={{ animation: 'scanline 3s linear infinite', top: '40%' }}
-          />
-          <style>{`
-            @keyframes scanline {
-              0%   { transform: translateY(-120px); opacity: 0; }
-              10%  { opacity: 1; }
-              90%  { opacity: 1; }
-              100% { transform: translateY(120px); opacity: 0; }
-            }
-          `}</style>
-          {/* Deep dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/90" />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover scale-105 filter brightness-50 contrast-125"
+          >
+            <source src="/videos/loading-video.mp4" type="video/mp4" />
+          </video>
+
+          {/* Deep dark gradient overlay with cyan/blue accents */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/90 backdrop-blur-[2px]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/15 via-transparent to-transparent" />
         </div>
 

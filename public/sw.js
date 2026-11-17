@@ -1,13 +1,10 @@
-// MANTECH Nexus Service Worker (PWA) v6 — Data-Efficient Online-First Engine
-// - Both standard Web and installed PWA operate strictly in live online mode.
-// - If the user loses network connection (offline), the creative diagnostic
-//   offline page is presented with auto-reconnection detection.
-// - v6: Next.js self-hosted fonts cached aggressively so repeat visits
-//   require ZERO font downloads (huge saving on Cameroon mobile data).
+// MANTECH Nexus Service Worker (PWA) v5 — 100% Online-First Engine
+// - Both standard Web and installed PWA app operate strictly in live online mode.
+// - If the user loses network connection (offline), a creative, innovative
+//   diagnostic offline page is presented with auto-reconnection detection.
 
-const CACHE_NAME = 'mantech-nexus-v6';
-const STATIC_CACHE_NAME = 'mantech-static-v6';
-const FONT_CACHE_NAME = 'mantech-fonts-v6';
+const CACHE_NAME = 'mantech-nexus-v5';
+const STATIC_CACHE_NAME = 'mantech-static-v5';
 const OFFLINE_URL = '/offline.html';
 
 const CORE_ASSETS = [
@@ -35,7 +32,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((name) => {
-          if (name !== CACHE_NAME && name !== STATIC_CACHE_NAME && name !== FONT_CACHE_NAME) {
+          if (name !== CACHE_NAME && name !== STATIC_CACHE_NAME) {
             return caches.delete(name);
           }
         })
@@ -79,26 +76,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 1b. Self-hosted font files from next/font — Cache-first, permanent TTL.
-  //     Once cached, fonts are served 100% from cache with zero network cost.
-  //     This is the biggest data saving for repeat Cameroon mobile users.
-  const isFontAsset =
-    url.pathname.startsWith('/_next/static/media/') &&
-    (url.pathname.endsWith('.woff2') || url.pathname.endsWith('.woff'));
-
-  if (isFontAsset) {
-    event.respondWith(
-      caches.open(FONT_CACHE_NAME).then(async (cache) => {
-        const cached = await cache.match(event.request);
-        if (cached) return cached;
-        const response = await fetch(event.request);
-        if (response && response.status === 200) cache.put(event.request, response.clone());
-        return response;
-      })
-    );
-    return;
-  }
-
   // 2. Static Next.js Chunks, CSS, Images, Fonts: Cache-First with Background Revalidation
   const isStaticAsset =
     url.pathname.startsWith('/_next/static/') ||
@@ -109,7 +86,6 @@ self.addEventListener('fetch', (event) => {
     url.pathname.endsWith('.png') ||
     url.pathname.endsWith('.jpg') ||
     url.pathname.endsWith('.webp') ||
-    url.pathname.endsWith('.avif') ||
     url.pathname.endsWith('.svg');
 
   if (isStaticAsset) {

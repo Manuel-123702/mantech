@@ -1,6 +1,5 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import { Inter, Sora } from 'next/font/google';
 import { AuthProvider } from '@/lib/clerk';
 import { Navbar } from '@/components/shared/navbar';
 import { Footer } from '@/components/shared/footer';
@@ -12,23 +11,8 @@ import { OfflineDetector } from '@/components/shared/offline-detector';
 import { Toaster } from '@/components/ui/sonner';
 import { SITE_URL, organizationJsonLd } from '@/lib/seo';
 
-// Self-hosted via next/font — zero Google CDN round-trip, fonts served from
-// the same origin as the app. Subsetting to Latin reduces download by ~60%.
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-  preload: true,
-  weight: ['400', '500', '600', '700'],
-});
-
-const sora = Sora({
-  subsets: ['latin'],
-  variable: '--font-sora',
-  display: 'swap',
-  preload: false, // Only needed for headings, defer load
-  weight: ['600', '700', '800'],
-});
+const inter = { variable: 'font-sans' };
+const sora = { variable: 'font-heading' };
 
 export const viewport: Viewport = {
   themeColor: '#020617',
