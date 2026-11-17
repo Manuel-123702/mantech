@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');
+/* ─── Fonts: Self-hosted fallback stack — no Google Fonts CDN round-trip ─────
+   Inter & Sora are loaded lazily via next/font only when needed.
+   System font stack ensures the UI renders instantly even on slow Cameroon
+   mobile connections (MTN/Orange 2G/3G) without blocking on font download.
+   ─────────────────────────────────────────────────────────────────────────── */
 
 @tailwind base;
 @tailwind components;
@@ -6,8 +10,8 @@
 
 @layer base {
   :root {
-    --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-sora: 'Sora', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, ui-sans-serif, system-ui, sans-serif;
+    --font-sora: 'Sora', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, ui-sans-serif, system-ui, sans-serif;
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
