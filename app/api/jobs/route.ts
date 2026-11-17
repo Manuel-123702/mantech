@@ -216,20 +216,16 @@ export async function POST(request: NextRequest) {
       }
 
       if (!effectiveOrgId) {
-        // Find existing organization with this name
+        // Find existing organization with this exact name, or create a new one.
+        // IMPORTANT: Never fall back to findFirst({ type: 'COMPANY' }) — that
+        // would silently assign the first company in the DB (e.g. MTN) to every
+        // anonymous express posting regardless of what the poster typed.
         let org = await prisma.organization.findFirst({
           where: { name: { equals: orgName, mode: 'insensitive' } },
           select: { id: true },
         });
         if (!org) {
-          // Or any company organization
-          org = await prisma.organization.findFirst({
-            where: { type: 'COMPANY' },
-            select: { id: true },
-          });
-        }
-        if (!org) {
-          // Create new organization
+          // Always create a brand-new org record for the name supplied by the poster.
           org = await prisma.organization.create({
             data: {
               name: orgName,
