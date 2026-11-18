@@ -115,11 +115,30 @@ export function OrgLogo({
   const [imageError, setImageError] = useState(false);
   const brand = getBrandInfo(name);
 
-  // Determine effective logo URL — strictly forbid third-party avatar scrapers (e.g. unavatar.io)
-  // that can inadvertently return human face photos or personal profiles.
+  // Determine effective logo URL
   let effectiveUrl = logoUrl;
   if (effectiveUrl && (effectiveUrl.includes('unavatar.io') || effectiveUrl.includes('dicebear'))) {
     effectiveUrl = null;
+  }
+
+  // Automatic match with authentic local Cameroon brand SVG logos
+  if (!effectiveUrl) {
+    const lower = name.toLowerCase();
+    if (lower.includes('mtn')) effectiveUrl = '/images/logos/mtn.svg';
+    else if (lower.includes('orange')) effectiveUrl = '/images/logos/orange.svg';
+    else if (lower.includes('sabc') || lower.includes('boissons')) effectiveUrl = '/images/logos/sabc.svg';
+    else if (lower.includes('eneo')) effectiveUrl = '/images/logos/eneo.svg';
+    else if (lower.includes('uba')) effectiveUrl = '/images/logos/uba.svg';
+    else if (lower.includes('camtel')) effectiveUrl = '/images/logos/camtel.svg';
+    else if (lower.includes('total')) effectiveUrl = '/images/logos/totalenergies.svg';
+    else if (lower.includes('societe generale') || lower.includes('société générale')) effectiveUrl = '/images/logos/socgen.svg';
+    else if (lower.includes('tradex')) effectiveUrl = '/images/logos/tradex.svg';
+    else if (lower.includes('dangote')) effectiveUrl = '/images/logos/dangote.svg';
+    else if (lower.includes('activa')) effectiveUrl = '/images/logos/activa.svg';
+    else if (lower.includes('iuc')) effectiveUrl = '/images/logos/iuc.svg';
+    else if (lower.includes('pwc')) effectiveUrl = '/images/logos/pwc.svg';
+    else if (lower.includes('bastos') && (lower.includes('clinique') || lower.includes('cmc'))) effectiveUrl = '/images/logos/bastos.svg';
+    else if (lower.includes('hopital central') || lower.includes('hôpital central')) effectiveUrl = '/images/logos/hcy.svg';
   }
 
   const sizeCls = SIZE_CLASSES[size] || SIZE_CLASSES.md;

@@ -97,6 +97,10 @@ export default function JobsPage() {
   const filteredJobs = useMemo(() => {
     const now = new Date();
     return jobs.filter((job) => {
+      // Representation as card is ONLY for detailed forms and WhatsApp group broadcasts
+      // Pure image flyers and external links have their own dedicated visual galleries/directories
+      if ((job as any).isVisualFlyerOnly || (job as any).isLinkOnly) return false;
+
       // Availability filter
       const isJobExpired = job.expiryDate ? new Date(job.expiryDate) < now : false;
       if (filters.availability === "active" && isJobExpired) return false;
@@ -165,21 +169,34 @@ export default function JobsPage() {
             Real vacancies from 110+ verified enterprises, public corporations, financial institutions, and universities across all 10 national regions.
           </p>
 
-          {/* Action to Post Free & Counters */}
-          <div className="flex flex-wrap items-center justify-center gap-3 text-xs mb-8">
+          {/* Method Navigation Tabs */}
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs mb-8">
+            <Link
+              href="/jobs"
+              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold flex items-center gap-1.5 shadow-lg shadow-blue-600/25"
+            >
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Structured Vacancies (Cards)</span>
+            </Link>
+            <Link
+              href="/jobs/flyers"
+              className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center gap-1.5 font-medium transition-colors"
+            >
+              <span>🖼️ Visual Posters &amp; Flyers</span>
+            </Link>
+            <Link
+              href="/jobs/links"
+              className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center gap-1.5 font-medium transition-colors"
+            >
+              <span>🔗 Official Career Links</span>
+            </Link>
             <Link
               href="/post?type=job"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 px-5 py-2 text-xs font-bold text-white shadow-lg shadow-cyan-500/25 hover:opacity-95 transition-opacity"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-cyan-500/25 hover:opacity-95 transition-opacity ml-1"
             >
               <Plus className="w-4 h-4" />
-              <span>Post a Job Free (Flyer or Text)</span>
+              <span>Post a Job Free</span>
             </Link>
-            <span className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-medium">
-              🏢 <strong className="text-white">127+</strong> Top Enterprises
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-medium">
-              💼 <strong className="text-white">{counts.total || "130+"}</strong> Real Vacancies
-            </span>
           </div>
 
           {/* Main Search Bar */}

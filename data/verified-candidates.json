@@ -1,0 +1,942 @@
+[
+  {
+    "id": "cand-01",
+    "fullName": "Brenda Mengue",
+    "email": "brenda.mengue@enspy.cm",
+    "avatarUrl": "/images/avatars/intern_1.svg",
+    "internProfile": {
+      "id": "prof-01",
+      "qualification": "BSc Software Engineering & Cloud",
+      "academicLevel": "Master 1",
+      "institution": "École Nationale Supérieure Polytechnique de Yaoundé (ENSPY)",
+      "city": "Yaoundé",
+      "targetRole": "Fullstack Cloud Developer",
+      "readinessScore": 94,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Software Engineering",
+        "slug": "software-engineering"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-8812",
+        "headline": "Next.js & Cloud Architect • ENSPY Honor Student",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "React"
+          }
+        },
+        {
+          "skill": {
+            "name": "Node.js"
+          }
+        },
+        {
+          "skill": {
+            "name": "PostgreSQL"
+          }
+        },
+        {
+          "skill": {
+            "name": "Docker"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-02",
+    "fullName": "Cyrille Fotso",
+    "email": "cyrille.fotso@iuc-univ.cm",
+    "avatarUrl": "/images/avatars/intern_2.svg",
+    "internProfile": {
+      "id": "prof-02",
+      "qualification": "Licence Réseaux & Systèmes Télécom",
+      "academicLevel": "Licence 3",
+      "institution": "Institut Universitaire de la Côte (IUC Douala)",
+      "city": "Douala",
+      "targetRole": "DevOps & Systems Administrator",
+      "readinessScore": 91,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Telecommunications & Systems",
+        "slug": "telecom"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-4019",
+        "headline": "Linux Kernel & Kubernetes Enthusiast • Cisco CCNA Certified",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Linux"
+          }
+        },
+        {
+          "skill": {
+            "name": "Kubernetes"
+          }
+        },
+        {
+          "skill": {
+            "name": "Python"
+          }
+        },
+        {
+          "skill": {
+            "name": "Bash"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-03",
+    "fullName": "Angèle Nguena",
+    "email": "angele.nguena@uy1.cm",
+    "avatarUrl": "/images/avatars/intern_3.svg",
+    "internProfile": {
+      "id": "prof-03",
+      "qualification": "Master Statistiques & Data Analytics",
+      "academicLevel": "Master 2",
+      "institution": "Université de Yaoundé I (Ngoa-Ekellé)",
+      "city": "Yaoundé",
+      "targetRole": "Data Scientist & BI Analyst",
+      "readinessScore": 96,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Data Science & Applied Mathematics",
+        "slug": "data-science"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-7731",
+        "headline": "Big Data Pipeline Engineer • PowerBI & PyTorch Certified",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Python"
+          }
+        },
+        {
+          "skill": {
+            "name": "PowerBI"
+          }
+        },
+        {
+          "skill": {
+            "name": "SQL"
+          }
+        },
+        {
+          "skill": {
+            "name": "Machine Learning"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-04",
+    "fullName": "Yannick Mbarga",
+    "email": "yannick.mbarga@nahpi.cm",
+    "avatarUrl": "/images/avatars/intern_4.svg",
+    "internProfile": {
+      "id": "prof-04",
+      "qualification": "BEng Cybersecurity & Network Defense",
+      "academicLevel": "Year 4",
+      "institution": "National Higher Polytechnic Institute (NAHPI Bamenda)",
+      "city": "Bamenda",
+      "targetRole": "Cybersecurity SOC Analyst",
+      "readinessScore": 92,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Cybersecurity",
+        "slug": "cybersecurity"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-5520",
+        "headline": "Ethical Hacker (CEH) • SIEM & Threat Hunting Specialist",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Wireshark"
+          }
+        },
+        {
+          "skill": {
+            "name": "SIEM"
+          }
+        },
+        {
+          "skill": {
+            "name": "Penetration Testing"
+          }
+        },
+        {
+          "skill": {
+            "name": "Firewalls"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-05",
+    "fullName": "Diane Tchuente",
+    "email": "diane.tchuente@univ-douala.cm",
+    "avatarUrl": "/images/avatars/intern_5.svg",
+    "internProfile": {
+      "id": "prof-05",
+      "qualification": "Master Audit & Contrôle de Gestion",
+      "academicLevel": "Master 1",
+      "institution": "Université de Douala (FSEGA)",
+      "city": "Douala",
+      "targetRole": "Financial Auditor & Risk Analyst",
+      "readinessScore": 89,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Finance & Banking",
+        "slug": "finance"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-3188",
+        "headline": "IFRS & OHADA Specialist • Corporate Audit Trainee",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Financial Audit"
+          }
+        },
+        {
+          "skill": {
+            "name": "OHADA Accounting"
+          }
+        },
+        {
+          "skill": {
+            "name": "Excel Advanced"
+          }
+        },
+        {
+          "skill": {
+            "name": "SAP"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-06",
+    "fullName": "Kevin Fonkou",
+    "email": "kevin.fonkou@ubuea.cm",
+    "avatarUrl": "/images/avatars/intern_6.svg",
+    "internProfile": {
+      "id": "prof-06",
+      "qualification": "BSc Computer Science & Mobile Dev",
+      "academicLevel": "Final Year",
+      "institution": "University of Buea (Faculty of Science)",
+      "city": "Buea",
+      "targetRole": "Flutter & Android Mobile Developer",
+      "readinessScore": 93,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Computer Science",
+        "slug": "computer-science"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-9041",
+        "headline": "Cross-Platform Mobile Engineer • Silicon Mountain Active Builder",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Flutter"
+          }
+        },
+        {
+          "skill": {
+            "name": "Kotlin"
+          }
+        },
+        {
+          "skill": {
+            "name": "Firebase"
+          }
+        },
+        {
+          "skill": {
+            "name": "REST APIs"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-07",
+    "fullName": "Sandra Bih",
+    "email": "sandra.bih@catuc.cm",
+    "avatarUrl": "/images/avatars/intern_7.svg",
+    "internProfile": {
+      "id": "prof-07",
+      "qualification": "BSc Human Resource Management",
+      "academicLevel": "Year 3",
+      "institution": "Catholic University of Cameroon (CATUC Bamenda)",
+      "city": "Bamenda",
+      "targetRole": "HR Talent Acquisition Assistant",
+      "readinessScore": 88,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Human Resources",
+        "slug": "human-resources"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-6622",
+        "headline": "People Ops & Recruitment Pipeline Specialist",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Recruiting"
+          }
+        },
+        {
+          "skill": {
+            "name": "Labor Law"
+          }
+        },
+        {
+          "skill": {
+            "name": "Onboarding"
+          }
+        },
+        {
+          "skill": {
+            "name": "HRIS"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-08",
+    "fullName": "Christian Abena",
+    "email": "christian.abena@enspy.cm",
+    "avatarUrl": "/images/avatars/intern_8.svg",
+    "internProfile": {
+      "id": "prof-08",
+      "qualification": "Diplôme d’Ingénieur Électrotechnique",
+      "academicLevel": "Année 5",
+      "institution": "École Nationale Supérieure Polytechnique de Yaoundé (ENSPY)",
+      "city": "Yaoundé",
+      "targetRole": "Electrical Systems & High-Voltage Engineer",
+      "readinessScore": 97,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Electrical Engineering",
+        "slug": "electrical-engineering"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-1190",
+        "headline": "High-Voltage Power Grids & Industrial Automation Specialist",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Power Grids"
+          }
+        },
+        {
+          "skill": {
+            "name": "AutoCAD Electrical"
+          }
+        },
+        {
+          "skill": {
+            "name": "SCADA"
+          }
+        },
+        {
+          "skill": {
+            "name": "Transformers"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-09",
+    "fullName": "Vanessa Kamga",
+    "email": "vanessa.kamga@essec-douala.cm",
+    "avatarUrl": "/images/avatars/intern_9.svg",
+    "internProfile": {
+      "id": "prof-09",
+      "qualification": "Master Supply Chain & Commerce International",
+      "academicLevel": "Master 2",
+      "institution": "ESSEC de Douala",
+      "city": "Douala",
+      "targetRole": "Supply Chain & Port Logistics Coordinator",
+      "readinessScore": 90,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Logistics & Supply Chain",
+        "slug": "logistics"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-4433",
+        "headline": "Maritime Transit & Port Customs Specialist • Douala & Kribi Ports",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Maritime Customs"
+          }
+        },
+        {
+          "skill": {
+            "name": "SAP MM"
+          }
+        },
+        {
+          "skill": {
+            "name": "Inventory Control"
+          }
+        },
+        {
+          "skill": {
+            "name": "Incoterms"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-10",
+    "fullName": "Arnaud Djomo",
+    "email": "arnaud.djomo@iut-douala.cm",
+    "avatarUrl": "/images/avatars/intern_10.svg",
+    "internProfile": {
+      "id": "prof-10",
+      "qualification": "DUT Génie Informatique & Réseaux",
+      "academicLevel": "BAC+2",
+      "institution": "Institut Universitaire de Technologie (IUT de Douala)",
+      "city": "Douala",
+      "targetRole": "Backend Go & PostgreSQL Developer",
+      "readinessScore": 89,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Computer Science",
+        "slug": "computer-science"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-7821",
+        "headline": "High-Throughput Backend & Distributed APIs Builder",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Golang"
+          }
+        },
+        {
+          "skill": {
+            "name": "PostgreSQL"
+          }
+        },
+        {
+          "skill": {
+            "name": "Redis"
+          }
+        },
+        {
+          "skill": {
+            "name": "gRPC"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-11",
+    "fullName": "Esther Ndongo",
+    "email": "esther.ndongo@fmsb-uy1.cm",
+    "avatarUrl": "/images/avatars/intern_11.svg",
+    "internProfile": {
+      "id": "prof-11",
+      "qualification": "Doctorat d’État en Pharmacie (5e Année)",
+      "academicLevel": "Doctorat 5e",
+      "institution": "Faculté de Médecine et des Sciences Biomédicales (FMSB Yaoundé)",
+      "city": "Yaoundé",
+      "targetRole": "Hospital Pharmacy & Drug Safety Intern",
+      "readinessScore": 95,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Medical Sciences & Pharmacy",
+        "slug": "pharmacy"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-9932",
+        "headline": "Clinical Pharmacology & Pharmacovigilance Resident",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Clinical Pharmacology"
+          }
+        },
+        {
+          "skill": {
+            "name": "Drug Compounding"
+          }
+        },
+        {
+          "skill": {
+            "name": "Hospital Triage"
+          }
+        },
+        {
+          "skill": {
+            "name": "Good Clinical Practice"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-12",
+    "fullName": "Boris Talla",
+    "email": "boris.talla@siantou.cm",
+    "avatarUrl": "/images/avatars/intern_12.svg",
+    "internProfile": {
+      "id": "prof-12",
+      "qualification": "BTS Télécommunications & Réseaux",
+      "academicLevel": "BAC+2",
+      "institution": "Institut Supérieur Siantou (Yaoundé)",
+      "city": "Yaoundé",
+      "targetRole": "Fiber Optics & Network Field Technician",
+      "readinessScore": 87,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Telecommunications",
+        "slug": "telecom"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-2209",
+        "headline": "Certified Fiber Fusion Splicer & OTDR Field Troubleshooter",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Fiber Splicing"
+          }
+        },
+        {
+          "skill": {
+            "name": "OTDR Testing"
+          }
+        },
+        {
+          "skill": {
+            "name": "IP Routing"
+          }
+        },
+        {
+          "skill": {
+            "name": "Telecom Racks"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-13",
+    "fullName": "Christelle Eyenga",
+    "email": "christelle.eyenga@uy2.cm",
+    "avatarUrl": "/images/avatars/intern_13.svg",
+    "internProfile": {
+      "id": "prof-13",
+      "qualification": "Master Marketing Stratégique & Vente",
+      "academicLevel": "Master 1",
+      "institution": "Université de Yaoundé II (Soa)",
+      "city": "Yaoundé",
+      "targetRole": "B2B Sales & Digital Campaign Associate",
+      "readinessScore": 89,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Marketing & Sales",
+        "slug": "marketing"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-5511",
+        "headline": "Omnichannel B2B Growth Strategist • CRM & Prospecting Lead",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "B2B Sales"
+          }
+        },
+        {
+          "skill": {
+            "name": "HubSpot CRM"
+          }
+        },
+        {
+          "skill": {
+            "name": "Digital Ads"
+          }
+        },
+        {
+          "skill": {
+            "name": "Client Retention"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-14",
+    "fullName": "Franck Nana",
+    "email": "franck.nana@iut-bandjoun.cm",
+    "avatarUrl": "/images/avatars/intern_14.svg",
+    "internProfile": {
+      "id": "prof-14",
+      "qualification": "DUT Génie Mécanique & Productique",
+      "academicLevel": "BAC+2",
+      "institution": "IUT FOTSO Victor de Bandjoun (Univ. Dschang)",
+      "city": "Bafoussam",
+      "targetRole": "Industrial Plant Maintenance Apprentice",
+      "readinessScore": 91,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Mechanical Engineering",
+        "slug": "mechanical-engineering"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-7788",
+        "headline": "Precision Milling, Pneumatics & Heavy Plant Machinery Lead",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "SolidWorks"
+          }
+        },
+        {
+          "skill": {
+            "name": "Hydraulics"
+          }
+        },
+        {
+          "skill": {
+            "name": "Pneumatics"
+          }
+        },
+        {
+          "skill": {
+            "name": "Industrial Welding"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-15",
+    "fullName": "Nadine Mvondo",
+    "email": "nadine.mvondo@uy2-droit.cm",
+    "avatarUrl": "/images/avatars/intern_15.svg",
+    "internProfile": {
+      "id": "prof-15",
+      "qualification": "Master Droit des Affaires & Fiscalité OHADA",
+      "academicLevel": "Master 2",
+      "institution": "Université de Yaoundé II (Faculté des Sciences Juridiques)",
+      "city": "Yaoundé",
+      "targetRole": "Corporate Legal & Tax Compliance Officer",
+      "readinessScore": 94,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Business Law",
+        "slug": "law"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-3390",
+        "headline": "OHADA Corporate Contracts & Tax Litigation Specialist",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "OHADA Law"
+          }
+        },
+        {
+          "skill": {
+            "name": "Commercial Contracts"
+          }
+        },
+        {
+          "skill": {
+            "name": "Tax Compliance"
+          }
+        },
+        {
+          "skill": {
+            "name": "Corporate Governance"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-16",
+    "fullName": "Patrick Ebongue",
+    "email": "patrick.ebongue@enspt.cm",
+    "avatarUrl": "/images/avatars/intern_16.svg",
+    "internProfile": {
+      "id": "prof-16",
+      "qualification": "Ingénieur de Conception Génie Civil",
+      "academicLevel": "Année 4",
+      "institution": "École Nationale Supérieure des Postes et Télécoms (ENSPT)",
+      "city": "Douala",
+      "targetRole": "Civil Infrastructure & Tower Site Inspector",
+      "readinessScore": 92,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Civil Engineering",
+        "slug": "civil-engineering"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-6644",
+        "headline": "Structural Site Calculations & Telecom Tower Grounding Lead",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Robot Structural"
+          }
+        },
+        {
+          "skill": {
+            "name": "AutoCAD Civil 3D"
+          }
+        },
+        {
+          "skill": {
+            "name": "Topography"
+          }
+        },
+        {
+          "skill": {
+            "name": "Reinforced Concrete"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-17",
+    "fullName": "Carine Zang",
+    "email": "carine.zang@univ-dschang.cm",
+    "avatarUrl": "/images/avatars/intern_17.svg",
+    "internProfile": {
+      "id": "prof-17",
+      "qualification": "Master Microbiologie & Contrôle Qualité Alimentaire",
+      "academicLevel": "Master 1",
+      "institution": "Université de Dschang (Faculté des Sciences)",
+      "city": "Dschang",
+      "targetRole": "Food Quality (HACCP) & Lab Control Officer",
+      "readinessScore": 90,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Food Science & Biology",
+        "slug": "food-science"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-8899",
+        "headline": "ISO 22000 & HACCP Agro-Industrial Lab Compliance Analyst",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "HACCP"
+          }
+        },
+        {
+          "skill": {
+            "name": "Microbiological Analysis"
+          }
+        },
+        {
+          "skill": {
+            "name": "ISO 22000"
+          }
+        },
+        {
+          "skill": {
+            "name": "Quality Audits"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-18",
+    "fullName": "Alain Manga",
+    "email": "alain.manga@fasa.cm",
+    "avatarUrl": "/images/avatars/intern_18.svg",
+    "internProfile": {
+      "id": "prof-18",
+      "qualification": "Ingénieur Agronome Économie Rurale",
+      "academicLevel": "Année 5",
+      "institution": "Faculté d’Agronomie et des Sciences Agricoles (FASA Dschang)",
+      "city": "Dschang",
+      "targetRole": "Agro-Business & Rural Supply Chain Officer",
+      "readinessScore": 93,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Agronomy & Agricultural Economics",
+        "slug": "agronomy"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-1029",
+        "headline": "Cash Crop Value Chains & Sustainable Agro-Logistics Specialist",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Value Chain Analysis"
+          }
+        },
+        {
+          "skill": {
+            "name": "Agro-Project Management"
+          }
+        },
+        {
+          "skill": {
+            "name": "Data Collection Kobo"
+          }
+        },
+        {
+          "skill": {
+            "name": "Agro-Economics"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-19",
+    "fullName": "Solange Bisseck",
+    "email": "solange.bisseck@univ-douala.cm",
+    "avatarUrl": "/images/avatars/intern_19.svg",
+    "internProfile": {
+      "id": "prof-19",
+      "qualification": "Licence Communication des Organisations & Médias",
+      "academicLevel": "Licence 3",
+      "institution": "Université de Douala (FLSH)",
+      "city": "Douala",
+      "targetRole": "Corporate Communications & Social Media Strategist",
+      "readinessScore": 88,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Communications & Media",
+        "slug": "communications"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-4482",
+        "headline": "Brand Storyteller & Crisis Communications Trainee",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "Copywriting"
+          }
+        },
+        {
+          "skill": {
+            "name": "Canva / Adobe Suite"
+          }
+        },
+        {
+          "skill": {
+            "name": "Public Relations"
+          }
+        },
+        {
+          "skill": {
+            "name": "Community Management"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "cand-20",
+    "fullName": "Emmanuel Tabi",
+    "email": "emmanuel.tabi@ubuea.cm",
+    "avatarUrl": "/images/avatars/intern_20.svg",
+    "internProfile": {
+      "id": "prof-20",
+      "qualification": "BTech Electrical & Telecommunications Engineering",
+      "academicLevel": "Year 4",
+      "institution": "University of Buea (College of Technology)",
+      "city": "Buea",
+      "targetRole": "Wireless RF & Satellite Ground Station Trainee",
+      "readinessScore": 95,
+      "profileCompleted": true,
+      "fieldOfStudy": {
+        "name": "Telecommunications Engineering",
+        "slug": "telecom"
+      },
+      "passport": {
+        "passportNumber": "MN-CM-2026-7700",
+        "headline": "RF Propagation, 4G/5G Radio Planning & Microwave Transmission Specialist",
+        "isVerified": true
+      },
+      "skills": [
+        {
+          "skill": {
+            "name": "RF Planning"
+          }
+        },
+        {
+          "skill": {
+            "name": "Microwave Links"
+          }
+        },
+        {
+          "skill": {
+            "name": "Spectrum Analysis"
+          }
+        },
+        {
+          "skill": {
+            "name": "Atoll Software"
+          }
+        }
+      ]
+    }
+  }
+]

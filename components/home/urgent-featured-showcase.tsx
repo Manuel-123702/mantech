@@ -50,6 +50,14 @@ const CATALOG_TABS = [
 
 export function UrgentFeaturedShowcase({ urgentItems, trendingItems }: UrgentFeaturedShowcaseProps) {
   const [selectedCatalog, setSelectedCatalog] = useState('ALL');
+  const [urgentFilter, setUrgentFilter] = useState<'ALL' | 'JOBS' | 'INTERNSHIPS'>('ALL');
+
+  const filteredUrgent = urgentItems.filter((item) => {
+    const isInternship = item.category === 'internship' || item.type === 'INTERNSHIP';
+    if (urgentFilter === 'JOBS') return !isInternship;
+    if (urgentFilter === 'INTERNSHIPS') return isInternship;
+    return true;
+  });
 
   const filteredTrending = trendingItems.filter((item) => {
     if (selectedCatalog === 'ALL') return true;
@@ -96,9 +104,46 @@ export function UrgentFeaturedShowcase({ urgentItems, trendingItems }: UrgentFea
               </div>
             </div>
 
+            {/* Combination Filter Controls (Jobs + Internships) */}
+            <div className="flex flex-wrap items-center gap-2 mb-6">
+              <button
+                type="button"
+                onClick={() => setUrgentFilter('ALL')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  urgentFilter === 'ALL'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'
+                }`}
+              >
+                ⚡ All Urgent Combined ({urgentItems.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setUrgentFilter('JOBS')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  urgentFilter === 'JOBS'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'
+                }`}
+              >
+                💼 Urgent Jobs Only
+              </button>
+              <button
+                type="button"
+                onClick={() => setUrgentFilter('INTERNSHIPS')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  urgentFilter === 'INTERNSHIPS'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'
+                }`}
+              >
+                🎓 Urgent Internships Only
+              </button>
+            </div>
+
             {/* GOLD BADGE CARDS GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {urgentItems.map((item) => {
+              {filteredUrgent.map((item) => {
                 const isInternship = item.category === 'internship' || item.type === 'INTERNSHIP';
                 const linkHref = isInternship ? `/internships/${item.slug}` : `/jobs/${item.slug}`;
 
@@ -106,7 +151,7 @@ export function UrgentFeaturedShowcase({ urgentItems, trendingItems }: UrgentFea
                   <Link
                     key={item.id}
                     href={linkHref}
-                    className="group relative rounded-2xl border-2 border-amber-500/40 bg-gradient-to-br from-amber-950/20 via-slate-900 to-slate-900 p-5 shadow-xl hover:border-amber-400 hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 flex flex-col justify-between"
+                    className="group relative rounded-3xl border-2 border-amber-400/50 bg-gradient-to-br from-amber-950/40 via-slate-900/95 to-yellow-950/30 p-6 shadow-xl hover:border-amber-300 hover:shadow-2xl hover:shadow-amber-500/25 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
                   >
                     <div>
                       {/* Top Badges */}
@@ -126,11 +171,20 @@ export function UrgentFeaturedShowcase({ urgentItems, trendingItems }: UrgentFea
                           </div>
                         </div>
 
-                        {/* Gold Badge */}
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500/25 to-yellow-500/25 border border-amber-500/50 text-amber-300 text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm">
-                          <Sparkles className="w-2.5 h-2.5 text-amber-400" />
-                          Featured
-                        </span>
+                        {/* Gold Badge & Category pill */}
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${
+                            isInternship
+                              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                              : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                          }`}>
+                            {isInternship ? 'Stage' : 'Emploi'}
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/25 to-yellow-500/25 border border-amber-500/50 text-amber-300 text-[10px] font-black uppercase tracking-wider shadow-sm">
+                            <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                            Gold
+                          </span>
+                        </div>
                       </div>
 
                       {/* Title */}
@@ -214,7 +268,7 @@ export function UrgentFeaturedShowcase({ urgentItems, trendingItems }: UrgentFea
                 <Link
                   key={item.id}
                   href={linkHref}
-                  className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 hover:border-cyan-500/40 transition-all flex flex-col justify-between gap-3 group"
+                  className="rounded-3xl border-2 border-cyan-500/30 bg-gradient-to-br from-cyan-950/35 via-slate-900/95 to-blue-950/25 p-5 hover:border-cyan-400 hover:shadow-xl hover:shadow-cyan-500/15 hover:-translate-y-1 transition-all flex flex-col justify-between gap-3.5 group shadow-lg"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2 mb-2">

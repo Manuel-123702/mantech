@@ -92,7 +92,7 @@ export function FlyersNoticeBoard({ flyers, careerLinks }: FlyersNoticeBoardProp
                 return (
                   <div
                     key={flyer.id}
-                    className="group relative rounded-2xl border border-slate-800 bg-slate-900/70 overflow-hidden shadow-xl hover:border-cyan-500/50 hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col"
+                    className="group relative rounded-3xl border-2 border-cyan-500/35 bg-gradient-to-b from-slate-900/95 via-slate-900 to-slate-950 overflow-hidden shadow-xl hover:border-cyan-400 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
                   >
                     {/* Visual Flyer Image Container */}
                     <div
@@ -193,7 +193,7 @@ export function FlyersNoticeBoard({ flyers, careerLinks }: FlyersNoticeBoardProp
               {careerLinks.map((linkItem) => (
                 <div
                   key={linkItem.id}
-                  className="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 hover:border-blue-500/40 transition-all flex flex-col justify-between gap-3 group"
+                  className="rounded-3xl border-2 border-blue-500/30 bg-gradient-to-br from-blue-950/40 via-slate-900/95 to-indigo-950/25 p-5 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-500/15 hover:-translate-y-1 transition-all flex flex-col justify-between gap-3.5 group shadow-lg"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-2">

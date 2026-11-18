@@ -805,7 +805,11 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
           stagger={0.08}
           className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {items.map((item) => (
+          {items.map((item, idx) => {
+            const avatarFallback = `/images/avatars/intern_${(idx % 20) + 1}.svg`;
+            const displayPhoto = item.photoUrl || avatarFallback;
+
+            return (
             <MotionItem key={item.id} className="min-w-0">
               <figure
                 className={`group relative flex h-full min-w-0 flex-col rounded-2xl border backdrop-blur-xl p-6 shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl ${
@@ -853,21 +857,15 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
                 </div>
 
                 <figcaption className="mt-4 flex items-center gap-3 border-t border-slate-700/40 pt-4">
-                  {item.photoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={item.photoUrl}
-                      alt=""
-                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-slate-700/60"
-                    />
-                  ) : (
-                    <span
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${tintFor(item.name)}`}
-                      aria-hidden="true"
-                    >
-                      {item.name.charAt(0).toUpperCase()}
-                    </span>
-                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={displayPhoto}
+                    alt={item.name}
+                    className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-amber-400/40 shadow-md bg-slate-800"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = avatarFallback;
+                    }}
+                  />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-white">{item.name}</p>
                     <p className="truncate text-xs text-slate-400">
@@ -877,7 +875,8 @@ function Grid({ items, loading }: { items: Testimonial[]; loading: boolean }) {
                 </figcaption>
               </figure>
             </MotionItem>
-          ))}
+          );
+          })}
         </MotionSection>
       )}
     </section>

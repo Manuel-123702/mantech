@@ -105,6 +105,13 @@ export async function GET(request: NextRequest) {
         allowanceXAF: j.salaryMinXAF,
         requiredSkills: j.requiredSkills,
         moderationStatus: 'PUBLISHED',
+        isFeatured: Boolean(j.isFeatured),
+        isVisualFlyerOnly: Boolean(j.isVisualFlyerOnly),
+        flyerUrl: j.flyerUrl || null,
+        isLinkOnly: Boolean(j.isLinkOnly),
+        externalUrl: j.externalUrl || null,
+        contactPhone: j.contactPhone || null,
+        deadline: j.expiryDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         organization: {
           name: j.companyName,
           logoUrl: j.logoUrl,
@@ -115,17 +122,26 @@ export async function GET(request: NextRequest) {
         createdAt: new Date().toISOString(),
       }));
 
-    const combined = [...expressInternships, ...internships];
+    const method = params.get('method');
+    let combined = [...expressInternships, ...internships];
+    if (method === 'flyer') {
+      combined = combined.filter((i: any) => i.isVisualFlyerOnly || Boolean(i.flyerUrl));
+    } else if (method === 'link') {
+      combined = combined.filter((i: any) => i.isLinkOnly || Boolean(i.externalUrl) || Boolean(i.applicationUrl));
+    } else if (method === 'cards') {
+      combined = combined.filter((i: any) => !i.isVisualFlyerOnly && !i.isLinkOnly);
+    }
+
     return NextResponse.json({
       internships: combined.slice((page - 1) * limit, page * limit),
       page,
       limit,
-      total: total + expressInternships.length,
-      pages: Math.ceil((total + expressInternships.length) / limit),
+      total: combined.length,
+      pages: Math.ceil(combined.length / limit),
     });
   } catch (error) {
     logDatabaseUnavailable('internships', error);
-    const expressInternships = getExpressPostings()
+    let expressInternships = getExpressPostings()
       .filter(j => j.type === 'INTERNSHIP')
       .map(j => ({
         id: j.id,
@@ -139,6 +155,13 @@ export async function GET(request: NextRequest) {
         allowanceXAF: j.salaryMinXAF,
         requiredSkills: j.requiredSkills,
         moderationStatus: 'PUBLISHED',
+        isFeatured: Boolean(j.isFeatured),
+        isVisualFlyerOnly: Boolean(j.isVisualFlyerOnly),
+        flyerUrl: j.flyerUrl || null,
+        isLinkOnly: Boolean(j.isLinkOnly),
+        externalUrl: j.externalUrl || null,
+        contactPhone: j.contactPhone || null,
+        deadline: j.expiryDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         organization: {
           name: j.companyName,
           logoUrl: j.logoUrl,
@@ -148,6 +171,15 @@ export async function GET(request: NextRequest) {
         region: { name: j.region },
         createdAt: new Date().toISOString(),
       }));
+
+    const method = params.get('method');
+    if (method === 'flyer') {
+      expressInternships = expressInternships.filter((i) => i.isVisualFlyerOnly || Boolean(i.flyerUrl));
+    } else if (method === 'link') {
+      expressInternships = expressInternships.filter((i) => i.isLinkOnly || Boolean(i.externalUrl));
+    } else if (method === 'cards') {
+      expressInternships = expressInternships.filter((i) => !i.isVisualFlyerOnly && !i.isLinkOnly);
+    }
 
     return NextResponse.json(
       { internships: expressInternships, page, limit, total: expressInternships.length, pages: Math.ceil(expressInternships.length / limit) },

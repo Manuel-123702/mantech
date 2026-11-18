@@ -105,7 +105,10 @@ export default function InternshipsPage() {
   // Re-rank the list when the user picks "Best match", while ALWAYS pinning
   // Featured Enterprise postings to the very top (Rule §2).
   const sortedInternships = useMemo(() => {
-    return [...internships].sort((a, b) => {
+    // Representation as card is ONLY for detailed forms and WhatsApp group broadcasts
+    const cardInternships = internships.filter((i: any) => !i.isVisualFlyerOnly && !i.isLinkOnly);
+
+    return cardInternships.sort((a, b) => {
       // 1. Featured Enterprise Opportunities pinned to top
       if (Boolean(a.isFeatured) && !Boolean(b.isFeatured)) return -1;
       if (!Boolean(a.isFeatured) && Boolean(b.isFeatured)) return 1;
@@ -253,6 +256,36 @@ export default function InternshipsPage() {
               Finance, Accounting, Marketing, Human Resources, Engineering, and
               Law across all 10 regions.
             </p>
+
+            {/* Method Navigation Tabs */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs">
+              <Link
+                href="/internships"
+                className="px-4 py-2 rounded-xl bg-teal-600 text-white font-bold flex items-center gap-1.5 shadow-lg shadow-teal-600/25"
+              >
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>Structured Internships (Cards)</span>
+              </Link>
+              <Link
+                href="/internships/flyers"
+                className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center gap-1.5 font-medium transition-colors"
+              >
+                <span>🖼️ Visual Posters &amp; Flyers</span>
+              </Link>
+              <Link
+                href="/internships/links"
+                className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center gap-1.5 font-medium transition-colors"
+              >
+                <span>🔗 Official Stage Portals</span>
+              </Link>
+              <Link
+                href="/post?type=internship"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-2 text-xs font-bold text-slate-950 shadow-lg shadow-teal-500/25 hover:opacity-95 transition-opacity ml-1"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Post an Internship Free</span>
+              </Link>
+            </div>
 
             {/* Filter controls */}
             <div className="mt-8 bg-slate-900/90 p-4 rounded-2xl border border-slate-700/80 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row gap-3">

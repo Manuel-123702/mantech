@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { logDatabaseUnavailable } from '@/lib/db-health';
 import { notifyMatchingAlerts } from '@/lib/alert-delivery';
 import { syncDbUser } from '@/lib/authz';
-import { CAMEROON_MARKETPLACE_JOBS, MarketplaceJob, saveExpressPosting } from '@/lib/cameroon-marketplace-data';
+import { CAMEROON_MARKETPLACE_JOBS, MarketplaceJob, saveExpressPosting, getExpressPostings } from '@/lib/cameroon-marketplace-data';
 
 const WORK_MODE_STRINGS = ['ONSITE', 'HYBRID', 'REMOTE'];
 const APP_METHOD_STRINGS = ['MANTECH', 'COMPANY_WEBSITE', 'EXTERNAL'];
@@ -27,7 +27,12 @@ function mapMarketplaceJob(m: MarketplaceJob) {
     moderationStatus: 'PUBLISHED',
     isFeatured: Boolean(m.isFeatured),
     postingDate: new Date().toISOString(),
-    expiryDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+    expiryDate: m.expiryDate ? new Date(m.expiryDate).toISOString() : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+    isVisualFlyerOnly: Boolean(m.isVisualFlyerOnly),
+    flyerUrl: m.flyerUrl || null,
+    isLinkOnly: Boolean(m.isLinkOnly),
+    externalUrl: m.externalUrl || null,
+    contactPhone: m.contactPhone || null,
     organization: {
       name: m.companyName,
       slug: m.companySlug,
@@ -140,22 +145,42 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    const method = params.get('method');
+    let finalJobs = combined;
+    if (method === 'flyer') {
+      finalJobs = combined.filter((j: any) => j.isVisualFlyerOnly || Boolean(j.flyerUrl));
+    } else if (method === 'link') {
+      finalJobs = combined.filter((j: any) => j.isLinkOnly || Boolean(j.externalUrl) || Boolean(j.applicationUrl));
+    } else if (method === 'cards') {
+      finalJobs = combined.filter((j: any) => !j.isVisualFlyerOnly && !j.isLinkOnly);
+    }
+
     return NextResponse.json({
-      jobs: combined.slice(0, limit),
+      jobs: finalJobs.slice(0, limit),
       page,
       limit,
-      total: Math.max(totalCount, combined.length),
-      pages: Math.ceil(Math.max(totalCount, combined.length) / limit),
+      total: Math.max(totalCount, finalJobs.length),
+      pages: Math.ceil(Math.max(totalCount, finalJobs.length) / limit),
     });
   } catch (error) {
     logDatabaseUnavailable('jobs', error);
+    const method = params.get('method');
+    let fallback = filteredMarketplace;
+    if (method === 'flyer') {
+      fallback = filteredMarketplace.filter((j) => j.isVisualFlyerOnly || Boolean(j.flyerUrl));
+    } else if (method === 'link') {
+      fallback = filteredMarketplace.filter((j) => j.isLinkOnly || Boolean(j.externalUrl));
+    } else if (method === 'cards') {
+      fallback = filteredMarketplace.filter((j) => !j.isVisualFlyerOnly && !j.isLinkOnly);
+    }
+
     return NextResponse.json(
       {
-        jobs: filteredMarketplace.slice((page - 1) * limit, page * limit),
+        jobs: fallback.slice((page - 1) * limit, page * limit),
         page,
         limit,
-        total: filteredMarketplace.length,
-        pages: Math.ceil(filteredMarketplace.length / limit),
+        total: fallback.length,
+        pages: Math.ceil(fallback.length / limit),
       },
       { status: 200, headers: { 'X-Data-Source': 'catalog-fallback' } },
     );

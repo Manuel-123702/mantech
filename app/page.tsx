@@ -81,6 +81,10 @@ import { HeroInternPreviewCard } from "@/components/home/hero-intern-preview-car
 import { OrgLogo } from "@/components/shared/org-logo";
 import { FlyersNoticeBoard } from "@/components/home/flyers-notice-board";
 import { UrgentFeaturedShowcase } from "@/components/home/urgent-featured-showcase";
+import { FeaturedOpportunitiesHub } from "@/components/home/featured-opportunities-hub";
+import { RegisteredTalentPoolShowcase } from "@/components/home/registered-talent-pool-showcase";
+import AUTHENTIC_EXPRESS_POSTINGS from "@/data/express-postings.json";
+import VERIFIED_CANDIDATES from "@/data/verified-candidates.json";
 import { TOP_30_COMPANIES, TOP_30_UNIVERSITIES, VERIFIED_COMMUNITY_STORIES } from "@/lib/cameroon-directory";
 import { CAMEROON_MARKETPLACE_JOBS } from "@/lib/cameroon-marketplace-data";
 import { APP_CONFIG } from "@/lib/config";
@@ -443,7 +447,7 @@ export default function HomePage() {
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>(VERIFIED_COMMUNITY_STORIES as unknown as TestimonialItem[]);
   const [featuredJobs, setFeaturedJobs] = useState<any[]>(FALLBACK_JOBS.slice(0, 30));
   const [universities, setUniversities] = useState<any[]>(TOP_30_UNIVERSITIES);
-  const [people, setPeople] = useState<any[]>([]);
+  const [people, setPeople] = useState<any[]>(VERIFIED_CANDIDATES);
   const [loading, setLoading] = useState(true);
   const [showTestimonialModal, setShowTestimonialModal] = useState(false);
 
@@ -459,6 +463,7 @@ export default function HomePage() {
   // Memoized lists for Notice Board & Urgent Gold Badge Section
   const flyerList = useMemo(() => {
     const list: any[] = [];
+    // Collect flyers from both Jobs and Internships
     for (const j of featuredJobs) {
       if (j.flyerUrl || j.isVisualFlyerOnly) {
         list.push({
@@ -470,93 +475,124 @@ export default function HomePage() {
           city: j.city || "Douala",
           contactPhone: j.contactPhone,
           isFeatured: j.isFeatured,
-          type: j.type,
+          type: (j.type || "JOB").toUpperCase(),
         });
       }
     }
-    // High quality Cameroonian enterprise posters fallback
-    if (list.length < 4) {
+    for (const opp of featuredInternships) {
+      const o = opp as any;
+      if (o.flyerUrl || o.isVisualFlyerOnly) {
+        list.push({
+          id: o.id,
+          slug: o.slug,
+          title: o.title,
+          companyName: o.organization?.name || o.companyName || "Verified Enterprise",
+          flyerUrl: o.flyerUrl,
+          city: o.city || "Douala",
+          contactPhone: o.contactPhone,
+          isFeatured: o.isFeatured,
+          type: "INTERNSHIP",
+        });
+      }
+    }
+    // 15 authentic Cameroonian enterprise flyers (Rule §6)
+    if (list.length < 15 && Array.isArray(AUTHENTIC_EXPRESS_POSTINGS)) {
+      const seenIds = new Set(list.map((item) => item.id || item.slug));
+      for (const flyer of AUTHENTIC_EXPRESS_POSTINGS) {
+        if (!seenIds.has(flyer.id) && flyer.flyerUrl) {
+          list.push({
+            id: flyer.id,
+            slug: flyer.slug,
+            title: flyer.title,
+            companyName: flyer.companyName,
+            flyerUrl: flyer.flyerUrl,
+            city: flyer.city || "Douala",
+            contactPhone: flyer.contactPhone,
+            isFeatured: flyer.isFeatured,
+            type: flyer.type || "INTERNSHIP",
+          });
+          seenIds.add(flyer.id);
+        }
+      }
+    }
+    return list;
+  }, [featuredJobs, featuredInternships]);
+
+  const careerLinksList = useMemo(() => {
+    const list: any[] = [];
+    // Collect links from both Jobs and Internships
+    for (const j of featuredJobs) {
+      if (j.isLinkOnly || j.externalUrl || j.applicationUrl) {
+        list.push({
+          id: j.id,
+          slug: j.slug,
+          title: j.title,
+          companyName: j.organization?.name || j.companyName || "Corporate Portal",
+          externalUrl: j.externalUrl || j.applicationUrl,
+          city: j.city || "Cameroon",
+          type: (j.type || "JOB").toUpperCase(),
+          isFeatured: j.isFeatured,
+        });
+      }
+    }
+    for (const opp of featuredInternships) {
+      const o = opp as any;
+      if (o.isLinkOnly || o.externalUrl || o.applicationUrl) {
+        list.push({
+          id: o.id,
+          slug: o.slug,
+          title: o.title,
+          companyName: o.organization?.name || o.companyName || "Official Stage Portal",
+          externalUrl: o.externalUrl || o.applicationUrl,
+          city: o.city || "Cameroon",
+          type: "INTERNSHIP",
+          isFeatured: o.isFeatured,
+        });
+      }
+    }
+
+    if (list.length < 3) {
       list.push(
         {
-          id: "flyer-curated-1",
-          slug: "software-engineering-internship-mtn",
-          title: "Graduate Software & Cloud Engineering Cohort",
+          id: "link-1",
+          slug: "mtn-careers-portal",
+          title: "MTN Cameroon Official Careers & Graduate Academy",
           companyName: "MTN Cameroon",
-          flyerUrl: "/icons/icon-512.png",
-          city: "Douala",
-          contactPhone: "+237671234567",
-          isFeatured: true,
-          type: "INTERNSHIP",
+          externalUrl: "https://careers.mtn.cm",
+          city: "Douala / National",
+          type: "TELCO PORTAL",
         },
         {
-          id: "flyer-curated-2",
-          slug: "commercial-sales-orange",
-          title: "Enterprise B2B Key Account Manager",
+          id: "link-2",
+          slug: "orange-digital-center",
+          title: "Orange Digital Center & Tech Internships Cameroon",
           companyName: "Orange Cameroun",
-          flyerUrl: "/icons/icon-512.png",
+          externalUrl: "https://orangedigitalcenters.com",
           city: "Yaoundé",
-          contactPhone: "+237691234567",
-          isFeatured: true,
-          type: "FULL_TIME",
+          type: "INNOVATION HUB",
         },
         {
-          id: "flyer-curated-3",
-          slug: "finance-audit-intern-uba",
-          title: "Branch Treasury & Banking Operations",
-          companyName: "UBA Cameroon",
-          flyerUrl: "/icons/icon-512.png",
-          city: "Douala",
-          contactPhone: "+237670001122",
-          isFeatured: true,
-          type: "INTERNSHIP",
-        },
-        {
-          id: "flyer-curated-4",
-          slug: "agro-logistics-coordinator-cdc",
-          title: "Cold Chain & Export Logistics Supervisor",
-          companyName: "CDC Cameroon",
-          flyerUrl: "/icons/icon-512.png",
-          city: "Limbe",
-          contactPhone: "+237679887766",
-          isFeatured: false,
-          type: "FULL_TIME",
+          id: "link-3",
+          slug: "eneo-recrutement",
+          title: "Eneo Cameroon Power Grid Internship Program",
+          companyName: "Eneo Cameroon S.A.",
+          externalUrl: "https://eneocameroon.cm",
+          city: "Douala / Yaoundé",
+          type: "ENERGY & POWER",
         }
       );
     }
     return list;
+  }, [featuredJobs, featuredInternships]);
+
+  // Representation as card is ONLY for detailed forms and WhatsApp group text postings
+  const cardFeaturedJobs = useMemo(() => {
+    return featuredJobs.filter((j) => !j.isVisualFlyerOnly && !j.isLinkOnly);
   }, [featuredJobs]);
 
-  const careerLinksList = useMemo(() => {
-    return [
-      {
-        id: "link-1",
-        slug: "mtn-careers-portal",
-        title: "MTN Cameroon Official Careers & Graduate Academy",
-        companyName: "MTN Cameroon",
-        externalUrl: "https://careers.mtn.cm",
-        city: "Douala / National",
-        type: "TELCO PORTAL",
-      },
-      {
-        id: "link-2",
-        slug: "orange-digital-center",
-        title: "Orange Digital Center & Tech Internships Cameroon",
-        companyName: "Orange Cameroun",
-        externalUrl: "https://orangedigitalcenters.com",
-        city: "Yaoundé",
-        type: "INNOVATION HUB",
-      },
-      {
-        id: "link-3",
-        slug: "eneo-recrutement",
-        title: "Eneo Cameroon Power Grid Internship Program",
-        companyName: "Eneo Cameroon S.A.",
-        externalUrl: "https://eneocameroon.cm",
-        city: "Douala / Yaoundé",
-        type: "ENERGY & POWER",
-      },
-    ];
-  }, []);
+  const cardFeaturedInternships = useMemo(() => {
+    return featuredInternships.filter((opp: any) => !opp.isVisualFlyerOnly && !opp.isLinkOnly);
+  }, [featuredInternships]);
 
   const urgentList = useMemo(() => {
     const list: any[] = [];
@@ -1218,107 +1254,8 @@ export default function HomePage() {
 
       {/* --- THE COMPLETE INTERNSHIP LIFECYCLE (SRS Section 1, 2, 3) --- */}
 
-      {/* --- LATEST JOBS FROM THE MARKETPLACE --- */}
-      <section className="py-20 bg-slate-950 border-b border-slate-800/50">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
-                <WordReveal
-                  text="Latest Job Openings"
-                  wordClassName="font-extrabold"
-                />
-              </h2>
-              <p className="mt-2 text-slate-400 text-sm">
-                Freshly posted positions from verified employers across Cameroon.
-              </p>
-            </div>
-            <Link href="/jobs" className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
-              View All Jobs <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredJobs.length > 0 ? (
-              featuredJobs.map((job) => {
-                const jobTypeStr = (job.type || 'FULL_TIME').toUpperCase();
-                const badgeColor =
-                  jobTypeStr === 'PART_TIME'
-                    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                    : jobTypeStr === 'CONTRACT'
-                      ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                      : jobTypeStr === 'INTERNSHIP'
-                        ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
-                        : jobTypeStr === 'FREELANCE'
-                          ? 'bg-violet-500/15 text-violet-300 border-violet-500/30'
-                          : 'bg-blue-500/15 text-blue-300 border-blue-500/30';
-                const formattedType = jobTypeStr.replace('_', ' ');
-
-                return (
-                  <StaggerItem key={job.id} className="h-full">
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.01 }}
-                      transition={{ duration: 0.2 }}
-                      className="flex flex-col h-full justify-between rounded-2xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-xl p-5 hover:border-cyan-500/40 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-200 group"
-                    >
-                      <div>
-                        <div className="flex items-start justify-between gap-3 mb-3">
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <OrgLogo
-                              name={job.organization?.name || 'Verified Employer'}
-                              logoUrl={job.organization?.logoUrl}
-                              size="sm"
-                              type="COMPANY"
-                            />
-                            <div className="min-w-0">
-                              <p className="text-xs font-bold text-white truncate group-hover:text-cyan-400 transition-colors">
-                                {job.organization?.name || 'Verified Employer'}
-                              </p>
-                              <p className="text-[10px] text-slate-400">{job.city}, Cameroon</p>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className={`text-[10px] uppercase font-bold shrink-0 ${badgeColor}`}>
-                            {formattedType}
-                          </Badge>
-                        </div>
-
-                        <Link href={`/jobs/${job.slug}`}>
-                          <h3 className="text-sm sm:text-base font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors line-clamp-2 break-words min-h-[2.75rem]">
-                            {job.title}
-                          </h3>
-                        </Link>
-                        <p className="text-xs text-slate-300 line-clamp-2 mb-4 leading-relaxed">
-                          {job.description || 'Exciting career opportunity with a verified employer in Cameroon.'}
-                        </p>
-                        <div className="flex flex-wrap gap-1.5 mb-4">
-                          {(job.requiredSkills || []).slice(0, 3).map((skill: string) => (
-                            <span
-                              key={skill}
-                              className="px-2 py-0.5 rounded-md bg-slate-800 text-[10px] text-slate-300 border border-slate-700/60"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs">
-                        <span className="text-emerald-400 font-bold">
-                          {job.salaryMinXAF ? `${job.salaryMinXAF.toLocaleString()} XAF` : 'Competitive'}
-                        </span>
-                        <span className="text-slate-400 text-[11px] uppercase font-medium">{job.workMode}</span>
-                      </div>
-                    </motion.div>
-                  </StaggerItem>
-                );
-              })
-            ) : (
-              <div className="col-span-3 py-16 text-center text-slate-500">
-                No jobs posted yet. Be the first to <Link href="/post?type=job" className="text-blue-400 hover:underline">post a job</Link>.
-              </div>
-            )}
-          </StaggerContainer>
-        </div>
-      </section>
+      {/* --- UNIFIED VERIFIED OPPORTUNITIES HUB (Equal Jobs + Internships, Distinct Palettes) --- */}
+      <FeaturedOpportunitiesHub jobs={cardFeaturedJobs} internships={cardFeaturedInternships} />
 
       {/* --- INSTANT EXPRESS POSTING HUB (NO LOGIN REQUIRED) --- */}
       <section className="py-20 bg-slate-950 border-b border-slate-800/80 relative overflow-hidden">
@@ -1456,78 +1393,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- REGISTERED TALENT / INTERN COMMUNITY --- */}
-      <section className="py-20 bg-slate-950 border-b border-slate-800/50">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
-                Registered Talent Pool
-              </h2>
-              <p className="mt-2 text-slate-400 text-sm">
-                Verified interns and candidates ready for placement across Cameroon.
-              </p>
-            </div>
-            <Link href="/dashboard/intern" className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
-              View All Talent <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {people.length > 0 ? (
-              people.map((person) => (
-                <Link key={person.id} href={`/intern/${person.id}`} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 hover:border-blue-500/50 hover:bg-slate-850/90 transition-all duration-200 flex flex-col justify-between group shadow-lg">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-11 h-11 rounded-2xl bg-blue-900/40 border border-blue-500/30 flex items-center justify-center text-blue-400 overflow-hidden shrink-0">
-                        {person.avatarUrl ? (
-                          <Image src={person.avatarUrl} alt="" width={44} height={44} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-sm font-bold bg-gradient-to-tr from-blue-700 to-indigo-700 text-white">
-                            {person.fullName?.charAt(0) || "U"}
-                          </div>
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-bold text-white truncate">{person.fullName}</p>
-                        <p className="text-[10px] text-slate-400 truncate">{person.internProfile?.qualification || "Intern Candidate"}</p>
-                      </div>
-                    </div>
-                    {person.internProfile?.city && (
-                      <p className="text-[10px] text-slate-400 mb-3">{person.internProfile.city}, Cameroon</p>
-                    )}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {(person.internProfile?.skills || []).slice(0, 3).map((s: { skill: { name: string } }) => (
-                        <span key={s.skill.name} className="px-2 py-0.5 rounded-md bg-slate-800/80 text-[10px] text-slate-300 border border-slate-700/60">{s.skill.name}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                    <span className="text-emerald-400 text-[11px] font-semibold">{person.internProfile?.profileCompleted ? "Profile Complete" : "Building Profile"}</span>
-                    <span className="inline-flex items-center gap-1 font-bold text-blue-400 group-hover:text-blue-300 text-xs">
-                      View Passport <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-slate-800 bg-slate-900/60 text-center max-w-xl mx-auto">
-                <GraduationCap className="w-10 h-10 text-emerald-400 mx-auto mb-3" />
-                <h4 className="text-base font-bold text-white mb-1">Be Among the First Verified Candidates</h4>
-                <p className="text-xs text-slate-400 mb-4 max-w-md mx-auto">
-                  Create your free Intern Passport, calculate your readiness score, and get discovered by top enterprises across Cameroon.
-                </p>
-                <Link
-                  href="/register/intern"
-                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-2.5 transition-all shadow-lg shadow-emerald-900/30"
-                >
-                  <span>Register Intern Passport</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+      {/* --- REGISTERED TALENT POOL (20 Verified Candidates with Passports) --- */}
+      <RegisteredTalentPoolShowcase candidates={people} />
 
       {/* --- DASHBOARD SHOWCASE (all 4 dashboards explained visually) --- */}
       <DashboardShowcase />
@@ -1566,139 +1433,6 @@ export default function HomePage() {
                   </div>
                 </MotionItem>
               ))}
-            </div>
-          </MotionSection>
-        </div>
-      </section>
-
-      {/* --- LIVE IT INTERNSHIPS (Dynamic from Database) --- */}
-      <section className="py-24 bg-[#070e1b] border-b border-slate-800/80 relative overflow-hidden text-white">
-        {/* Backdrop tech image & ambient lighting */}
-        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
-          <Image src="/images/portal_tech_bg.jpg" alt="" fill className="object-cover" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#070e1b]/95 via-[#070e1b]/90 to-[#070e1b] pointer-events-none" />
-        <div className="absolute top-12 left-10 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-12 right-10 w-80 h-80 bg-blue-500/10 blur-[110px] rounded-full pointer-events-none" />
-
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-emerald-950/80 border border-emerald-500/30 px-3.5 py-1 text-xs font-bold text-emerald-300 tracking-wide mb-3">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span className="w-1.5 h-1.5 -ml-3.5 rounded-full bg-emerald-400" />
-                <span>Live Technical Lab Synchronized</span>
-                <span className="text-[10px] text-emerald-400/80 font-mono">· 0 Ghost Postings Policy</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
-                Featured IT Internship Opportunities
-              </h2>
-              <p className="text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
-                Directly synchronized with partner enterprise technical labs across Douala, Yaoundé, Buea, and Bafoussam. Verified stipends and mentor oversight.
-              </p>
-            </div>
-            <Link href="/internships">
-              <Button
-                variant="outline"
-                className="border-slate-700 bg-slate-800/90 text-white hover:bg-slate-700 hover:border-emerald-400 font-semibold text-sm shadow-xs gap-1.5"
-              >
-                View All Opportunities
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </div>
-
-          <MotionSection motion="slideLeft" stagger={0.1}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {featuredInternships.map((opp) => {
-                const workModeStr = String(opp.workMode || opp.work_mode || "ONSITE").toUpperCase();
-                const isPaid = opp.allowanceXAF || opp.allowance_xaf || opp.isPaid || opp.is_paid;
-                return (
-                  <MotionItem key={opp.id} motion="slideLeft" className="h-full">
-                    <div className="group flex h-full flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md p-7 shadow-xl hover:shadow-2xl hover:border-emerald-500/50 hover:bg-slate-800/90 hover:-translate-y-1.5 transition-all duration-300 relative overflow-hidden">
-                      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 opacity-60 group-hover:opacity-100 transition-opacity" />
-
-                      <div>
-                        {/* Header metadata */}
-                        <div className="flex items-center justify-between gap-2 mb-4">
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-500/30 text-[11px] font-bold text-blue-300 uppercase tracking-wider">
-                            <Cpu className="w-3 h-3 text-blue-400" />
-                            {fieldNameOf(opp as unknown as Record<string, unknown>) || "Technical Track"}
-                          </span>
-
-                          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold font-mono ${isPaid
-                            ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30"
-                            : "bg-slate-800 text-slate-300 border border-slate-700"
-                            }`}>
-                            {opp.allowanceXAF || opp.allowance_xaf
-                              ? `${(opp.allowanceXAF || opp.allowance_xaf || 0).toLocaleString()} FCFA / mo`
-                              : isPaid
-                                ? "Paid Placement"
-                                : "Accredited Experience"}
-                          </span>
-                        </div>
-
-                        {/* Opportunity Title */}
-                        <h3 className="font-heading text-lg sm:text-xl font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
-                          {opp.title}
-                        </h3>
-
-                        {/* Location and Mode row */}
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-2.5 font-medium">
-                          <span className="flex items-center gap-1">
-                            <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                            {opp.city || "Douala"}, {regionNameOf(opp as unknown as Record<string, unknown>) || "Littoral"}
-                          </span>
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-800 text-[11px] font-semibold text-slate-300 border border-slate-700">
-                            {workModeStr === "REMOTE" ? (
-                              <Globe className="w-3 h-3 text-blue-400" />
-                            ) : workModeStr === "HYBRID" ? (
-                              <Laptop className="w-3 h-3 text-indigo-400" />
-                            ) : (
-                              <Building2 className="w-3 h-3 text-amber-400" />
-                            )}
-                            {workModeStr}
-                          </span>
-                        </div>
-
-                        {/* Excerpt */}
-                        <p className="text-xs sm:text-sm text-slate-300 mt-3.5 line-clamp-2 leading-relaxed">
-                          {opp.description || opp.summary || "Professional internship opportunity with verified mentor guidance and real production exposure."}
-                        </p>
-
-                        {/* Skills Chips */}
-                        <div className="flex flex-wrap gap-1.5 mt-4">
-                          {(((opp.requiredSkills || opp.required_skills || opp.skills || []) as string[])).slice(0, 4).map((skill: string, i: number) => (
-                            <span
-                              key={i}
-                              className="px-2.5 py-0.5 rounded-lg bg-slate-800 text-[11px] text-slate-300 font-medium border border-slate-700/60"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Footer Actions */}
-                      <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
-                        <span className="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
-                          {opp.durationMonths || opp.duration_months || 3} Mos Placement
-                        </span>
-                        <Link href={`/internships/${opp.slug}`}>
-                          <Button
-                            size="sm"
-                            className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl shadow-md shadow-emerald-600/25 gap-1"
-                          >
-                            <span>Inspect & Apply</span>
-                            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </MotionItem>
-                );
-              })}
             </div>
           </MotionSection>
         </div>
@@ -2417,7 +2151,11 @@ export default function HomePage() {
 
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.length > 0 ? (
-              testimonials.map((t) => (
+              testimonials.map((t, idx) => {
+                const avatarFallback = `/images/avatars/intern_${(idx % 20) + 1}.svg`;
+                const photoSrc = t.photoUrl || avatarFallback;
+
+                return (
                 <StaggerItem key={t.id}>
                   <div className="p-8 rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md flex flex-col justify-between h-full hover:shadow-2xl hover:border-amber-400/50 hover:bg-slate-800/90 hover:-translate-y-1.5 transition-all duration-300 shadow-xl relative overflow-hidden group text-white">
                     <Quote className="absolute right-5 top-5 w-14 h-14 text-slate-800/60 group-hover:text-amber-500/10 transition-colors pointer-events-none" />
@@ -2443,18 +2181,15 @@ export default function HomePage() {
                       )}
                     </div>
                     <div className="mt-6 pt-4 border-t border-slate-800 flex items-center gap-3.5">
-                      {t.photoUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={t.photoUrl}
-                          alt={t.name}
-                          className="w-11 h-11 rounded-full object-cover shrink-0 ring-2 ring-amber-400/40 shadow-md"
-                        />
-                      ) : (
-                        <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-600 to-orange-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
-                          {t.name.charAt(0)}
-                        </div>
-                      )}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={photoSrc}
+                        alt={t.name}
+                        className="w-12 h-12 rounded-full object-cover shrink-0 ring-2 ring-amber-400/50 shadow-md bg-slate-800"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = avatarFallback;
+                        }}
+                      />
                       <div className="min-w-0">
                         <h4 className="font-bold text-xs sm:text-sm text-white truncate">{t.name}</h4>
                         <p className="text-[11px] text-slate-400 mt-0.5 truncate">
@@ -2464,18 +2199,23 @@ export default function HomePage() {
                     </div>
                   </div>
                 </StaggerItem>
-              ))
+              );
+              })
             ) : (
               <>
-                {VERIFIED_COMMUNITY_STORIES.slice(0, 3).map((t) => (
+                {VERIFIED_COMMUNITY_STORIES.slice(0, 3).map((t, idx) => {
+                  const avatarFallback = `/images/avatars/intern_${(idx % 20) + 1}.svg`;
+                  const photoSrc = t.photoUrl || avatarFallback;
+
+                  return (
                   <StaggerItem key={t.id}>
                     <div className="p-8 rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-md flex flex-col justify-between h-full hover:shadow-2xl hover:border-amber-400/50 hover:bg-slate-800/90 hover:-translate-y-1.5 transition-all duration-300 shadow-xl relative overflow-hidden group text-white">
                       <Quote className="absolute right-5 top-5 w-14 h-14 text-slate-800/60 group-hover:text-amber-500/10 transition-colors pointer-events-none" />
                       <div>
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-1 text-amber-400">
-                            {[...Array(t.rating || 5)].map((_, idx) => (
-                              <Star key={idx} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                            {[...Array(t.rating || 5)].map((_, i) => (
+                              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                             ))}
                           </div>
                           <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
@@ -2493,28 +2233,26 @@ export default function HomePage() {
                         )}
                       </div>
                       <div className="mt-6 pt-4 border-t border-slate-800 flex items-center gap-3.5">
-                        {t.photoUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={t.photoUrl}
-                            alt={t.name}
-                            className="w-11 h-11 rounded-full object-cover shrink-0 ring-2 ring-amber-400/40 shadow-md"
-                          />
-                        ) : (
-                          <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-600 to-orange-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
-                            {t.name.charAt(0)}
-                          </div>
-                        )}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={photoSrc}
+                          alt={t.name}
+                          className="w-12 h-12 rounded-full object-cover shrink-0 ring-2 ring-amber-400/50 shadow-md bg-slate-800"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = avatarFallback;
+                          }}
+                        />
                         <div className="min-w-0">
                           <h4 className="font-bold text-xs sm:text-sm text-white truncate">{t.name}</h4>
                           <p className="text-[11px] text-slate-400 mt-0.5 truncate">
-                            {t.role} • {t.company}
+                            {t.role} • {t.company || t.region}
                           </p>
                         </div>
                       </div>
                     </div>
                   </StaggerItem>
-                ))}
+                );
+                })}
               </>
             )}
           </StaggerContainer>
