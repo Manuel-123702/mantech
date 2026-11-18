@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bg_enamsvg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#450A0A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Card Base -->
+  <rect width="200" height="200" rx="36" fill="url(#bg_enamsvg)"/>
+  <rect x="4" y="4" width="192" height="192" rx="32" fill="none" stroke="#FEE2E2" stroke-width="2" stroke-opacity="0.35"/>
+  <circle cx="100" cy="85" r="54" fill="none" stroke="#FEE2E2" stroke-width="1" stroke-opacity="0.15"/>
+
+  <!-- Brand Emblem Graphic -->
+  <g transform="translate(100, 78)">
+    <path d="M 0 -22 L 0 20 M -18 -8 L 18 -8" stroke="#FEE2E2" stroke-width="4"/>
+              <circle cx="-18" cy="2" r="6" fill="#FBBF24"/>
+              <circle cx="18" cy="2" r="6" fill="#FBBF24"/>
+  </g>
+
+  <!-- Brand Initials Badge -->
+  <text x="100" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="900" fill="#FEE2E2" letter-spacing="1.5">
+    ENAM
+  </text>
+
+  <!-- Brand Subtitle / Category -->
+  <text x="100" y="168" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#FEE2E2" opacity="0.85" letter-spacing="0.5">
+    ADMINISTRATION & MAGISTRATURE
+  </text>
+</svg>

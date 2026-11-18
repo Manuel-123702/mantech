@@ -11,6 +11,7 @@ import {
 import type { University } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { regionNameOf } from "@/lib/catalog-shape";
+import { OrgLogo } from "@/components/shared/org-logo";
 
 export default function UniversityDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -92,10 +93,14 @@ export default function UniversityDetailPage() {
             transition={{ duration: 0.5 }}
             className="flex flex-col lg:flex-row gap-8 items-start"
           >
-            {/* Icon */}
-            <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-2xl shadow-2xl flex items-center justify-center shrink-0">
-              <GraduationCap className="w-12 h-12 lg:w-16 lg:h-16 text-emerald-600" />
-            </div>
+            {/* University Logo */}
+            <OrgLogo
+              name={university.name}
+              logoUrl={(university as any).logoUrl || (university as any).logo_url}
+              size="xl"
+              type="UNIVERSITY"
+              className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl shadow-2xl shrink-0"
+            />
 
             {/* Info */}
             <div className="flex-1">

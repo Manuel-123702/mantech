@@ -22,29 +22,54 @@ export default async function InternDetailPage({
 }) {
   const { id } = await params;
 
-  const person = await prisma.user.findUnique({
-    where: { id, role: "INTERN", status: "active" },
-    include: {
-      internProfile: {
-        include: {
-          skills: {
-            include: { skill: { select: { name: true } } },
-            take: 10,
+  let person: any = null;
+  try {
+    person = await prisma.user.findUnique({
+      where: { id, role: "INTERN", status: "active" },
+      include: {
+        internProfile: {
+          include: {
+            skills: {
+              include: { skill: { select: { name: true } } },
+              take: 10,
+            },
+            educations: {
+              take: 5,
+            },
+            region: true,
           },
-          educations: {
-            take: 5,
-          },
-          region: true,
         },
       },
-    },
-  });
+    });
+  } catch (err) {
+    console.warn("[intern] Database query failed, checking fallback:", err);
+  }
+
+  if (!person) {
+    try {
+      const candidates = require("@/data/verified-candidates.json");
+      const found = candidates.find((c: any) => c.id === id || c.email === id);
+      if (found) {
+        person = {
+          id: found.id,
+          fullName: found.fullName,
+          email: found.email,
+          avatarUrl: found.avatarUrl,
+          internProfile: {
+            ...found.internProfile,
+            skills: found.internProfile?.skills || [],
+            educations: found.internProfile?.educations || [],
+          },
+        };
+      }
+    } catch {}
+  }
 
   if (!person) {
     notFound();
   }
 
-  const skills = person.internProfile?.skills.map((s) => s.skill.name) ?? [];
+  const skills = (person.internProfile?.skills || []).map((s: any) => s.skill?.name || s.name || s);
   const educations = person.internProfile?.educations ?? [];
 
   return (
@@ -249,7 +274,7 @@ export default async function InternDetailPage({
                   Skills
                 </h2>
                 <div className="flex flex-wrap gap-2">
-                  {skills.map((skill) => (
+                  {skills.map((skill: any) => (
                     <span
                       key={skill}
                       className="px-3 py-1.5 rounded-md bg-slate-800 text-[11px] font-medium text-slate-300 border border-slate-700/60"
@@ -269,7 +294,7 @@ export default async function InternDetailPage({
                   Education
                 </h2>
                 <div className="space-y-4">
-                  {educations.map((edu, idx) => (
+                  {educations.map((edu: any, idx: number) => (
                     <div key={idx} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-800/50 pb-4 last:border-0 last:pb-0">
                       <div>
                         <p className="text-sm font-semibold text-white">

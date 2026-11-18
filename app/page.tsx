@@ -1279,33 +1279,27 @@ export default function HomePage() {
             </h2>
 
             <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-4 mb-8 leading-relaxed">
-              Recruiting in Cameroon has never been simpler. Upload a recruitment poster image, paste a forwarded WhatsApp announcement, share your career link, or write a detailed job description — completely free, with zero account registration friction.
+              Recruiting in Cameroon has never been simpler. Upload a recruitment poster image, share an announcement specifying your company or institute name, or provide a direct careers portal link — completely free, with zero account registration friction.
             </p>
 
-            {/* 4 Express Modes Showcase */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto mb-10 text-left">
-              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 backdrop-blur-md">
-                <div className="text-xl mb-1.5">📸</div>
-                <div className="text-xs font-bold text-white">Poster / Flyer Drop</div>
-                <p className="text-[11px] text-slate-400 mt-1">Upload an image. No department or HR forms required.</p>
+            {/* 3 Streamlined Express Modes Showcase */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-10 text-left">
+              <div className="p-5 rounded-2xl border border-cyan-500/30 bg-slate-950/70 backdrop-blur-md">
+                <div className="text-2xl mb-2">📸</div>
+                <div className="text-sm font-bold text-white">1. Poster / Flyer Drop</div>
+                <p className="text-xs text-slate-400 mt-1">Upload an image poster. Displays directly in the Notice Board gallery.</p>
               </div>
 
-              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 backdrop-blur-md">
-                <div className="text-xl mb-1.5">💬</div>
-                <div className="text-xs font-bold text-white">WhatsApp Forward</div>
-                <p className="text-[11px] text-slate-400 mt-1">Copy and paste group recruitment announcements.</p>
+              <div className="p-5 rounded-2xl border border-emerald-500/30 bg-slate-950/70 backdrop-blur-md">
+                <div className="text-2xl mb-2">📝</div>
+                <div className="text-sm font-bold text-white">2. Announcement &amp; Quick Form</div>
+                <p className="text-xs text-slate-400 mt-1">Specify your company/institute name and paste WhatsApp announcements or requirements.</p>
               </div>
 
-              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 backdrop-blur-md">
-                <div className="text-xl mb-1.5">🔗</div>
-                <div className="text-xs font-bold text-white">External Career Link</div>
-                <p className="text-[11px] text-slate-400 mt-1">Direct redirect to LinkedIn or company careers portal.</p>
-              </div>
-
-              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 backdrop-blur-md">
-                <div className="text-xl mb-1.5">📋</div>
-                <div className="text-xs font-bold text-white">Detailed HR Posting</div>
-                <p className="text-[11px] text-slate-400 mt-1">Set work mode, required skills, and salary expectations.</p>
+              <div className="p-5 rounded-2xl border border-blue-500/30 bg-slate-950/70 backdrop-blur-md">
+                <div className="text-2xl mb-2">🔗</div>
+                <div className="text-sm font-bold text-white">3. External Career Link</div>
+                <p className="text-xs text-slate-400 mt-1">Direct redirect to your verified company career page or application portal.</p>
               </div>
             </div>
 

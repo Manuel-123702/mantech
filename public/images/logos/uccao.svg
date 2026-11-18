@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bg_uccaosvg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#78350F"/>
+      <stop offset="100%" stop-color="#3B1A04"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Card Base -->
+  <rect width="200" height="200" rx="36" fill="url(#bg_uccaosvg)"/>
+  <rect x="4" y="4" width="192" height="192" rx="32" fill="none" stroke="#FDE68A" stroke-width="2" stroke-opacity="0.35"/>
+  <circle cx="100" cy="85" r="54" fill="none" stroke="#FDE68A" stroke-width="1" stroke-opacity="0.15"/>
+
+  <!-- Brand Emblem Graphic -->
+  <g transform="translate(100, 78)">
+    <ellipse cx="0" cy="0" rx="24" ry="16" fill="#92400E" stroke="#FDE68A" stroke-width="3"/>
+              <path d="M -16 0 Q 0 -8 16 0" stroke="#FDE68A" stroke-width="2.5" fill="none"/>
+              <circle cx="0" cy="0" r="5" fill="#10B981"/>
+  </g>
+
+  <!-- Brand Initials Badge -->
+  <text x="100" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="900" fill="#FDE68A" letter-spacing="1.5">
+    UCCAO
+  </text>
+
+  <!-- Brand Subtitle / Category -->
+  <text x="100" y="168" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#FDE68A" opacity="0.85" letter-spacing="0.5">
+    CAFÉIERS DE L'OUEST
+  </text>
+</svg>

@@ -55,7 +55,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_001',
     internName: 'Vanessa Kamga',
-    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_1.svg',
     institution: 'University of Buea',
     qualification: 'BSc Computer Engineering (FET)',
     region: 'South-West',
@@ -89,7 +89,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_002',
     internName: 'Armand Njoya',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_2.svg',
     institution: 'University of Yaoundé I',
     qualification: 'MSc Software Engineering',
     region: 'Centre',
@@ -124,7 +124,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_003',
     internName: 'Élodie Tchouante',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_3.svg',
     institution: 'UCAC — ICAM Douala',
     qualification: 'Master Ingénieur Généraliste',
     region: 'Littoral',
@@ -159,7 +159,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_004',
     internName: 'Samuel Ngum',
-    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_4.svg',
     institution: 'University of Bamenda (NAHPI)',
     qualification: 'B.Eng Telecommunications Engineering',
     region: 'North-West',
@@ -194,7 +194,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_005',
     internName: 'Marc-Aurèle Ebanda',
-    avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_5.svg',
     institution: 'École Polytechnique de Yaoundé (ENSPY)',
     qualification: 'Diplôme d’Ingénieur en Génie Informatique',
     region: 'Centre',
@@ -229,7 +229,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_006',
     internName: 'Ruth Folefac',
-    avatarUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_6.svg',
     institution: 'Institut Universitaire de la Côte (IUC)',
     qualification: 'Licence Pro Réseaux & Télécoms',
     region: 'Littoral',
@@ -264,7 +264,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_007',
     internName: 'Fabrice Ngankam',
-    avatarUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_7.svg',
     institution: 'University of Douala',
     qualification: 'MSc Financial Informatics & Risk',
     region: 'Littoral',
@@ -299,7 +299,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_008',
     internName: 'Laura Ndzana',
-    avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_8.svg',
     institution: 'University of Yaoundé I',
     qualification: 'BSc Computer Science',
     region: 'Centre',
@@ -334,7 +334,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_009',
     internName: 'Junior Bekolo',
-    avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_9.svg',
     institution: 'École Polytechnique de Yaoundé (ENSPY)',
     qualification: 'Master en Intelligence Artificielle',
     region: 'Centre',
@@ -368,7 +368,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_010',
     internName: 'Brenda Ewane',
-    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_10.svg',
     institution: 'University of Buea',
     qualification: 'BSc Software Engineering',
     region: 'South-West',
@@ -403,7 +403,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_011',
     internName: 'Emmanuel Mbarga',
-    avatarUrl: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_11.svg',
     institution: 'University of Dschang (IUT FOTSO Victor)',
     qualification: 'DUT Génie Télécommunications',
     region: 'West',
@@ -438,7 +438,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_012',
     internName: 'Noëlla Ayissi',
-    avatarUrl: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_12.svg',
     institution: 'University of Yaoundé II (Soa)',
     qualification: 'Master en Droit des Affaires & Conformité',
     region: 'Centre',
@@ -473,7 +473,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_013',
     internName: 'Prisca Mvondo',
-    avatarUrl: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_13.svg',
     institution: 'University of Ngaoundéré (ENSIR)',
     qualification: 'Ingénieur en Génie Électrique & Énergies Renouvelables',
     region: 'Adamawa',
@@ -508,7 +508,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_014',
     internName: 'Hervé Menye',
-    avatarUrl: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_14.svg',
     institution: 'IUT Douala — Université de Douala',
     qualification: 'Licence Pro Génie Logiciel',
     region: 'Littoral',
@@ -543,7 +543,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_015',
     internName: 'Diane Kenfack',
-    avatarUrl: 'https://images.unsplash.com/photo-1548142813-c348350df52b?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_15.svg',
     institution: 'University of Dschang',
     qualification: 'MSc Applied Statistics & Machine Learning',
     region: 'West',
@@ -577,7 +577,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_016',
     internName: 'Martial Soha',
-    avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_16.svg',
     institution: 'University of Buea',
     qualification: 'BSc Computer Science',
     region: 'South-West',
@@ -611,7 +611,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_017',
     internName: 'Reine Bihina',
-    avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_17.svg',
     institution: 'University of Maroua (ISS)',
     qualification: 'Ingénieur en Télécommunications & Réseaux',
     region: 'Far North',
@@ -646,7 +646,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_018',
     internName: 'Bernard Ndongo',
-    avatarUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80',
+    avatarUrl: '/images/avatars/intern_18.svg',
     institution: 'École Polytechnique de Yaoundé (ENSPY)',
     qualification: 'Ingénieur en Génie Électrique',
     region: 'Centre',

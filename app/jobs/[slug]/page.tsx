@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { OrgLogo } from "@/components/shared/org-logo";
 import Image from "next/image";
 import { toast } from "sonner";
 import { copyToClipboard } from "@/lib/clipboard";
@@ -263,14 +264,13 @@ export default function JobDetailPage() {
               {/* Employer Info Strip */}
               <div className="flex flex-wrap items-center gap-4 text-sm text-slate-300 pt-2 border-t border-slate-800/60 mt-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold overflow-hidden">
-                    {org?.logoUrl ? (
-                      <Image src={org.logoUrl} alt={org.name} width={32} height={32} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-xs font-black uppercase text-blue-400">{(org?.name?.[0] || job.title?.[0] || 'E').toUpperCase()}</span>
-                    )}
-                  </div>
-                  <span className="font-semibold text-white">{org?.name || "Verified Enterprise"}</span>
+                  <OrgLogo
+                    name={org?.name || (job as any)?.organizationName || "Verified Enterprise"}
+                    logoUrl={org?.logoUrl}
+                    size="sm"
+                    type="COMPANY"
+                  />
+                  <span className="font-semibold text-white">{org?.name || (job as any)?.organizationName || "Verified Enterprise"}</span>
                   <ShieldCheck className="w-4 h-4 text-blue-400" />
                 </div>
 
@@ -497,13 +497,12 @@ export default function JobDetailPage() {
             {/* About the Employer Card */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
               <div className="flex items-start gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-950 to-slate-900 border border-blue-500/30 flex items-center justify-center overflow-hidden shrink-0 shadow-md">
-                  {org?.logoUrl ? (
-                    <Image src={org.logoUrl} alt={org.name} width={48} height={48} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-lg font-black uppercase text-blue-400">{(org?.name?.[0] || 'E').toUpperCase()}</span>
-                  )}
-                </div>
+                <OrgLogo
+                  name={org?.name || (job as any)?.organizationName || "Verified Enterprise"}
+                  logoUrl={org?.logoUrl}
+                  size="md"
+                  type="COMPANY"
+                />
                 <div>
                   <h4 className="font-bold text-white text-sm">{org?.name}</h4>
                   <p className="text-xs text-slate-400">{org?.city}, Cameroon</p>

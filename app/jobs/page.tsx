@@ -367,15 +367,15 @@ export default function JobsPage() {
                     {/* Enterprise Row with Logo */}
                     <div className="flex items-center gap-2.5 mb-2.5">
                       <OrgLogo
-                        name={org?.name || "Verified Enterprise"}
-                        logoUrl={org?.logoUrl}
+                        name={org?.name || (job as any).organizationName || "Verified Enterprise"}
+                        logoUrl={org?.logoUrl || (job as any).organizationLogoUrl}
                         size="sm"
                         type="COMPANY"
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1">
                           <p className="text-xs font-bold text-slate-200 truncate group-hover:text-cyan-400 transition-colors">
-                            {org?.name || "Verified Enterprise"}
+                            {org?.name || (job as any).organizationName || "Verified Enterprise"}
                           </p>
                           <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                         </div>

@@ -26,6 +26,7 @@ import { industryNameOf, regionNameOf, fieldNameOf } from "@/lib/catalog-shape";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ResponseRateBadge } from "@/components/shared/response-rate-badge";
+import { OrgLogo } from "@/components/shared/org-logo";
 
 export default function CompanyDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -115,10 +116,14 @@ export default function CompanyDetailPage() {
             transition={{ duration: 0.5 }}
             className="flex flex-col lg:flex-row gap-8 items-start"
           >
-            {/* Logo */}
-            <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-2xl shadow-2xl flex items-center justify-center shrink-0">
-              <Building2 className="w-12 h-12 lg:w-16 lg:h-16 text-blue-600" />
-            </div>
+            {/* Enterprise Logo */}
+            <OrgLogo
+              name={company.name}
+              logoUrl={company.logoUrl || (company as any).logo_url}
+              size="xl"
+              type="COMPANY"
+              className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl shadow-2xl shrink-0"
+            />
 
             {/* Info */}
             <div className="flex-1">

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bg_hevecamsvg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#15803D"/>
+      <stop offset="100%" stop-color="#14532D"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Card Base -->
+  <rect width="200" height="200" rx="36" fill="url(#bg_hevecamsvg)"/>
+  <rect x="4" y="4" width="192" height="192" rx="32" fill="none" stroke="#FEF08A" stroke-width="2" stroke-opacity="0.35"/>
+  <circle cx="100" cy="85" r="54" fill="none" stroke="#FEF08A" stroke-width="1" stroke-opacity="0.15"/>
+
+  <!-- Brand Emblem Graphic -->
+  <g transform="translate(100, 78)">
+    <path d="M 0 -26 C 16 -12, 18 10, 0 24 C -18 10, -16 -12, 0 -26 Z" fill="#84CC16"/>
+              <line x1="0" y1="-22" x2="0" y2="24" stroke="#14532D" stroke-width="3"/>
+              <circle cx="0" cy="10" r="5" fill="#FEF08A"/>
+  </g>
+
+  <!-- Brand Initials Badge -->
+  <text x="100" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="900" fill="#FEF08A" letter-spacing="1.5">
+    HEVECAM
+  </text>
+
+  <!-- Brand Subtitle / Category -->
+  <text x="100" y="168" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#FEF08A" opacity="0.85" letter-spacing="0.5">
+    HÉVÉA DU CAMEROUN
+  </text>
+</svg>

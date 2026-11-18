@@ -27,7 +27,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
-type PostMode = 'flyer' | 'whatsapp' | 'link' | 'detailed';
+type PostMode = 'flyer' | 'text_form' | 'link';
 type PostType = 'job' | 'internship';
 
 const CAMEROON_CITIES = [
@@ -64,25 +64,20 @@ export function QuickPostClient() {
   const [flyerFile, setFlyerFile] = useState<File | null>(null);
   const [flyerPreview, setFlyerPreview] = useState<string | null>(null);
 
-  // Mode 2: WhatsApp Broadcast State
-  const [whatsappText, setWhatsappText] = useState('');
-  const [whatsappCity, setWhatsappCity] = useState('Douala');
-  const [whatsappPhone, setWhatsappPhone] = useState('+237 ');
+  // Mode 2: Joined Announcement & Quick Form State (WhatsApp + Detailed Merged)
+  const [formCompany, setFormCompany] = useState(''); // REQUIRED: Company / Institute Name
+  const [formTitle, setFormTitle] = useState(''); // OPTIONAL
+  const [formText, setFormText] = useState(''); // OPTIONAL: WhatsApp forward or details
+  const [formCity, setFormCity] = useState('Douala'); // OPTIONAL
+  const [formPhone, setFormPhone] = useState('+237 '); // OPTIONAL
+  const [formWorkMode, setFormWorkMode] = useState('ONSITE'); // OPTIONAL
+  const [formSkills, setFormSkills] = useState(''); // OPTIONAL
+  const [formSalaryMin, setFormSalaryMin] = useState(''); // OPTIONAL
+  const [formSalaryMax, setFormSalaryMax] = useState(''); // OPTIONAL
+  const [formEducation, setFormEducation] = useState('All levels welcome'); // OPTIONAL
 
   // Mode 3: External Link State
   const [externalUrl, setExternalUrl] = useState('');
-
-  // Mode 4: Detailed Form State
-  const [detailedTitle, setDetailedTitle] = useState('');
-  const [detailedCompany, setDetailedCompany] = useState('');
-  const [detailedCity, setDetailedCity] = useState('Douala');
-  const [detailedDescription, setDetailedDescription] = useState('');
-  const [workMode, setWorkMode] = useState('ONSITE');
-  const [requiredSkills, setRequiredSkills] = useState('');
-  const [salaryMin, setSalaryMin] = useState('');
-  const [salaryMax, setSalaryMax] = useState('');
-  const [educationLevel, setEducationLevel] = useState('All levels welcome');
-  const [detailedPhone, setDetailedPhone] = useState('+237 ');
 
   // Expiring Date State (Rule §5)
   const [expiryOption, setExpiryOption] = useState<string>('30');
@@ -166,26 +161,39 @@ export function QuickPostClient() {
         };
       }
 
-      // ── METHOD 2: WHATSAPP BROADCAST / TEXT ──────────────────────────────
-      else if (mode === 'whatsapp') {
-        if (!whatsappText.trim()) {
-          toast.error('Please paste your WhatsApp announcement message');
+      // ── METHOD 2: JOINED ANNOUNCEMENT & FORM (WHATSAPP + DETAILED) ────────
+      else if (mode === 'text_form') {
+        if (!formCompany.trim()) {
+          toast.error('Please specify the company or institute name');
           setSubmitting(false);
           return;
         }
 
-        const lines = whatsappText.trim().split('\n').filter(Boolean);
-        const autoTitle = lines[0]?.slice(0, 70) || `${postType === 'internship' ? 'Internship' : 'Job'} via WhatsApp Broadcast`;
+        const lines = formText.trim().split('\n').filter(Boolean);
+        const autoTitle =
+          formTitle.trim() ||
+          lines[0]?.slice(0, 70) ||
+          `${postType === 'internship' ? 'Stage' : 'Poste'} — ${formCompany.trim()}`;
+
+        const autoDescription =
+          formText.trim() ||
+          `Opportunité ${postType === 'internship' ? 'de stage' : "d'emploi"} auprès de ${formCompany.trim()}. Contactez directement l'employeur pour les modalités.`;
 
         payload = {
           title: autoTitle,
-          organizationName: 'WhatsApp Community Recruitment',
-          city: whatsappCity || 'Douala',
-          workMode: 'ONSITE',
+          organizationName: formCompany.trim(),
+          city: formCity || 'Douala',
+          workMode: formWorkMode || 'ONSITE',
           type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
           postType: postType,
-          description: whatsappText,
-          contactPhone: whatsappPhone.trim() || undefined,
+          description: autoDescription,
+          educationLevel: formEducation,
+          requiredSkills: formSkills
+            ? formSkills.split(',').map((s) => s.trim()).filter(Boolean)
+            : [],
+          salaryMinXAF: formSalaryMin ? parseInt(formSalaryMin, 10) : undefined,
+          salaryMaxXAF: formSalaryMax ? parseInt(formSalaryMax, 10) : undefined,
+          contactPhone: formPhone.trim() !== '+237' && formPhone.trim() ? formPhone.trim() : undefined,
           isFeatured: isUrgentBoosted,
           expiryDate: effectiveExpiry.toISOString(),
           isVisualFlyerOnly: false,
@@ -225,46 +233,6 @@ export function QuickPostClient() {
         };
       }
 
-      // ── METHOD 4: DETAILED HR FORM ───────────────────────────────────────
-      else if (mode === 'detailed') {
-        if (!detailedTitle.trim()) {
-          toast.error('Please enter the position title');
-          setSubmitting(false);
-          return;
-        }
-        if (!detailedCompany.trim()) {
-          toast.error('Please enter the employer or company name');
-          setSubmitting(false);
-          return;
-        }
-        if (!detailedDescription.trim()) {
-          toast.error('Please write the job/internship description');
-          setSubmitting(false);
-          return;
-        }
-
-        payload = {
-          title: detailedTitle.trim(),
-          organizationName: detailedCompany.trim(),
-          city: detailedCity,
-          workMode: workMode,
-          type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
-          postType: postType,
-          description: detailedDescription.trim(),
-          educationLevel: educationLevel,
-          requiredSkills: requiredSkills
-            ? requiredSkills.split(',').map((s) => s.trim()).filter(Boolean)
-            : [],
-          salaryMinXAF: salaryMin ? parseInt(salaryMin, 10) : undefined,
-          salaryMaxXAF: salaryMax ? parseInt(salaryMax, 10) : undefined,
-          contactPhone: detailedPhone.trim() || undefined,
-          isFeatured: isUrgentBoosted,
-          expiryDate: effectiveExpiry.toISOString(),
-          isVisualFlyerOnly: false,
-          isLinkOnly: false,
-        };
-      }
-
       // Send to jobs endpoint
       const res = await fetch('/api/jobs', {
         method: 'POST',
@@ -278,85 +246,84 @@ export function QuickPostClient() {
       }
 
       const resData = await res.json();
-      const generatedSlug = resData.job?.slug || resData.slug || 'latest';
+      const slug = resData.job?.slug || resData.slug || 'latest';
 
-      toast.success(
-        `🎉 ${postType === 'internship' ? 'Internship' : 'Job'} Published Successfully!`
-      );
       setPublishedData({
-        slug: generatedSlug,
+        slug,
         title: payload.title,
         type: postType,
         mode: mode,
       });
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Error publishing posting';
-      toast.error(message);
+
+      toast.success(
+        `${postType === 'internship' ? 'Internship' : 'Job'} published successfully!`
+      );
+    } catch (err: any) {
+      toast.error(err.message || 'Something went wrong while publishing');
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-slate-950 text-white selection:bg-cyan-500/30 selection:text-cyan-200">
-      {/* Background Graphic */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-          style={{ backgroundImage: `url('/images/portal_dash_bg.svg')` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/95 to-slate-950" />
-      </div>
+    <div className="min-h-screen bg-[#060b17] text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Lighting */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/3 right-10 w-96 h-96 bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="relative z-10 mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto relative z-10">
         {publishedData ? (
-          /* SUCCESS VIEW */
+          /* SUCCESS STATE */
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="rounded-3xl border border-emerald-500/30 bg-slate-900/90 p-8 text-center backdrop-blur-xl shadow-2xl"
+            className="rounded-3xl border border-emerald-500/40 bg-slate-900/90 p-8 sm:p-12 text-center backdrop-blur-2xl shadow-2xl space-y-6"
           >
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 mb-4 border border-emerald-500/30 shadow-lg shadow-emerald-500/20">
-              <CheckCircle2 className="h-8 w-8" />
+            <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto text-emerald-400">
+              <CheckCircle2 className="w-8 h-8" />
             </div>
-            <span className="inline-block rounded-full bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300 mb-3">
-              100% Free National Launch
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-              Opportunity is Live on MANTECH!
-            </h2>
-            <p className="mt-2 text-sm text-slate-300 max-w-lg mx-auto">
-              Your {publishedData.type} &ldquo;{publishedData.title}&rdquo; has been posted and is
-              now accessible to talent across Cameroon&apos;s 10 regions.
-            </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="space-y-2">
+              <span className="text-xs font-black uppercase tracking-widest text-emerald-400">
+                Live &amp; Synchronized Across Cameroon
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+                {publishedData.title}
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
+                Your opportunity is now actively published and discoverable on MANTECH Nexus.
+              </p>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <Link
                 href={
                   publishedData.mode === 'flyer'
-                    ? publishedData.type === 'internship' ? '/internships/flyers' : '/jobs/flyers'
+                    ? `/${publishedData.type === 'internship' ? 'internships' : 'jobs'}/flyers`
                     : publishedData.mode === 'link'
-                      ? publishedData.type === 'internship' ? '/internships/links' : '/jobs/links'
-                      : publishedData.type === 'internship'
-                        ? `/internships/${publishedData.slug}`
-                        : `/jobs/${publishedData.slug}`
+                    ? `/${publishedData.type === 'internship' ? 'internships' : 'jobs'}/links`
+                    : `/${publishedData.type === 'internship' ? 'internships' : 'jobs'}/${publishedData.slug}`
                 }
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-cyan-500/20 hover:opacity-95"
               >
-                View Your Opportunity <ArrowRight className="h-4 w-4" />
+                <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl px-6 py-5 shadow-lg shadow-emerald-600/30">
+                  <span>View Published Opportunity</span>
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
               </Link>
+
               <button
+                type="button"
                 onClick={() => {
                   setPublishedData(null);
                   setFlyerFile(null);
                   setFlyerPreview(null);
-                  setWhatsappText('');
+                  setFormCompany('');
+                  setFormTitle('');
+                  setFormText('');
                   setExternalUrl('');
-                  setDetailedTitle('');
-                  setDetailedCompany('');
-                  setDetailedDescription('');
                 }}
-                className="rounded-xl border border-slate-700 bg-slate-800/80 px-6 py-3 text-xs font-bold text-slate-200 hover:bg-slate-700"
+                className="px-6 py-3 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-xs font-bold transition-all"
               >
                 Post Another Opportunity
               </button>
@@ -369,13 +336,13 @@ export function QuickPostClient() {
             <div className="text-center space-y-3">
               <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/60 px-4 py-1.5 text-xs font-extrabold text-cyan-300 shadow-lg shadow-cyan-500/10">
                 <Sparkles className="h-4 w-4 text-cyan-400" />
-                <span>Zero Login Required · 100% Free National Rollout</span>
+                <span>Zero Login Required · 100% Free Public Posting</span>
               </div>
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white font-heading">
                 Publish a Job or Internship
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
-                Choose your preferred method: drop an image flyer, paste a WhatsApp forward, share an external portal link, or fill out a detailed HR form.
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
+                Choose your preferred method: drop a visual image poster, write an announcement specifying your company or institute name, or share an external career link.
               </p>
             </div>
 
@@ -407,62 +374,48 @@ export function QuickPostClient() {
               </button>
             </div>
 
-            {/* 4 Method Selector Tabs */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {/* 3 Streamlined Method Selector Tabs */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <button
                 type="button"
                 onClick={() => setMode('flyer')}
-                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
+                className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
                   mode === 'flyer'
-                    ? 'border-cyan-500 bg-cyan-950/50 text-cyan-300 shadow-md shadow-cyan-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                    ? 'border-cyan-500 bg-cyan-950/60 text-cyan-300 shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-500/50'
+                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-white'
                 }`}
               >
-                <ImageIcon className="h-4 w-4" />
-                <span className="text-xs font-bold">1. Poster Flyer</span>
-                <span className="text-[10px] opacity-75">Upload Image Only</span>
+                <ImageIcon className="h-5 w-5" />
+                <span className="text-xs sm:text-sm font-bold">1. Poster Flyer</span>
+                <span className="text-[11px] opacity-75">Upload Image Only</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => setMode('whatsapp')}
-                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
-                  mode === 'whatsapp'
-                    ? 'border-emerald-500 bg-emerald-950/50 text-emerald-300 shadow-md shadow-emerald-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                onClick={() => setMode('text_form')}
+                className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
+                  mode === 'text_form'
+                    ? 'border-emerald-500 bg-emerald-950/60 text-emerald-300 shadow-lg shadow-emerald-500/20 ring-1 ring-emerald-500/50'
+                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-white'
                 }`}
               >
-                <MessageSquare className="h-4 w-4" />
-                <span className="text-xs font-bold">2. WhatsApp Forward</span>
-                <span className="text-[10px] opacity-75">Paste Text Message</span>
+                <FileText className="h-5 w-5" />
+                <span className="text-xs sm:text-sm font-bold">2. Announcement &amp; Form</span>
+                <span className="text-[11px] opacity-75">Company Name + Paste/Details</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setMode('link')}
-                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
+                className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
                   mode === 'link'
-                    ? 'border-blue-500 bg-blue-950/50 text-blue-300 shadow-md shadow-blue-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
+                    ? 'border-blue-500 bg-blue-950/60 text-blue-300 shadow-lg shadow-blue-500/20 ring-1 ring-blue-500/50'
+                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-white'
                 }`}
               >
-                <LinkIcon className="h-4 w-4" />
-                <span className="text-xs font-bold">3. Career Link</span>
-                <span className="text-[10px] opacity-75">External URL Only</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setMode('detailed')}
-                className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 ${
-                  mode === 'detailed'
-                    ? 'border-indigo-500 bg-indigo-950/50 text-indigo-300 shadow-md shadow-indigo-500/20'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'
-                }`}
-              >
-                <FileText className="h-4 w-4" />
-                <span className="text-xs font-bold">4. Detailed Form</span>
-                <span className="text-[10px] opacity-75">Full Structure</span>
+                <LinkIcon className="h-5 w-5" />
+                <span className="text-xs sm:text-sm font-bold">3. Career Link</span>
+                <span className="text-[11px] opacity-75">External URL Only</span>
               </button>
             </div>
 
@@ -479,33 +432,32 @@ export function QuickPostClient() {
                   <div className="rounded-2xl border-2 border-dashed border-cyan-500/40 bg-cyan-950/10 p-6 text-center hover:border-cyan-500 transition-colors relative">
                     {flyerPreview ? (
                       <div className="space-y-4">
-                        <div className="relative mx-auto max-w-sm rounded-xl border border-slate-700 overflow-hidden shadow-2xl bg-black">
+                        <div className="relative max-w-sm mx-auto aspect-[3/4] rounded-xl overflow-hidden border border-cyan-500/40 shadow-xl bg-slate-950">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={flyerPreview}
-                            alt="Flyer preview"
-                            className="w-full h-auto max-h-96 object-contain mx-auto"
+                            alt="Flyer Preview"
+                            className="w-full h-full object-contain"
                           />
                         </div>
                         <div className="flex items-center justify-center gap-3">
-                          <span className="text-xs text-cyan-300 font-semibold truncate max-w-xs">
+                          <span className="text-xs text-slate-300 truncate font-mono">
                             {flyerFile?.name}
                           </span>
-                          <Button
+                          <button
                             type="button"
-                            variant="destructive"
-                            size="sm"
                             onClick={() => handleFlyerChange(null)}
-                            className="h-8 text-xs bg-rose-600/80 hover:bg-rose-600 text-white flex items-center gap-1"
+                            className="p-1.5 rounded-lg bg-red-900/50 text-red-400 hover:bg-red-800/80 text-xs transition-colors"
+                            title="Remove image"
                           >
-                            <Trash2 className="w-3.5 h-3.5" /> Remove
-                          </Button>
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
                     ) : (
-                      <label className="cursor-pointer flex flex-col items-center justify-center space-y-3 py-10">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-500/20 text-cyan-400 shadow-lg shadow-cyan-500/20">
-                          <Upload className="h-7 w-7" />
+                      <label className="cursor-pointer block py-8">
+                        <div className="w-14 h-14 rounded-full bg-cyan-950 border border-cyan-500/40 flex items-center justify-center mx-auto mb-3 text-cyan-400 group-hover:scale-105 transition-transform">
+                          <Upload className="w-6 h-6" />
                         </div>
                         <div className="space-y-1">
                           <p className="text-base font-bold text-white">
@@ -529,34 +481,71 @@ export function QuickPostClient() {
               )}
 
               {/* ─────────────────────────────────────────────────────────────
-                  MODE 2: WHATSAPP BROADCAST FORWARD
+                  MODE 2: JOINED ANNOUNCEMENT & QUICK FORM (WHATSAPP + DETAILS)
                   ───────────────────────────────────────────────────────────── */}
-              {mode === 'whatsapp' && (
-                <div className="space-y-4">
+              {mode === 'text_form' && (
+                <div className="space-y-5">
+                  {/* Company / Institute Name (REQUIRED) */}
                   <div className="space-y-2">
-                    <Label htmlFor="waText" className="text-xs font-bold text-slate-300">
-                      Paste WhatsApp Announcement or Group Broadcast:
+                    <Label htmlFor="formCompany" className="text-xs font-bold text-white flex items-center justify-between">
+                      <span>Company / Employer / Institute Name *:</span>
+                      <span className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">Required</span>
                     </Label>
-                    <Textarea
-                      id="waText"
-                      rows={7}
-                      value={whatsappText}
-                      onChange={(e) => setWhatsappText(e.target.value)}
-                      placeholder="Paste the recruitment message copied directly from your WhatsApp groups or chats here..."
-                      className="bg-slate-950 border-slate-800 text-white text-xs leading-relaxed"
+                    <Input
+                      id="formCompany"
+                      value={formCompany}
+                      onChange={(e) => setFormCompany(e.target.value)}
+                      placeholder="e.g. MTN Cameroon, Université de Douala, Boutique Modern, Orange, Cabinet Médical..."
+                      className="bg-slate-950 border-emerald-500/50 focus:border-emerald-400 text-white text-xs h-12 rounded-xl placeholder-slate-500"
                       required
+                    />
+                    <p className="text-[11px] text-slate-400">
+                      Specify the name of your enterprise, institution, startup, hospital, or commercial shop.
+                    </p>
+                  </div>
+
+                  {/* Position Title (OPTIONAL) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="formTitle" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                      <span>Position / Role Title (Optional):</span>
+                      <span className="text-[10px] text-slate-500 font-normal">Auto-generated if left blank</span>
+                    </Label>
+                    <Input
+                      id="formTitle"
+                      value={formTitle}
+                      onChange={(e) => setFormTitle(e.target.value)}
+                      placeholder={`e.g. ${postType === 'internship' ? 'Stagiaire Informatique, Assistant Comptable' : 'Commercial Terrain, Caissière, Développeur'}`}
+                      className="bg-slate-950 border-slate-800 text-white text-xs h-11 rounded-xl placeholder-slate-600"
                     />
                   </div>
 
+                  {/* Big Paste Announcement / Description Area (OPTIONAL) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="formText" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                      <span>Announcement Message / WhatsApp Forward / Requirements (Optional):</span>
+                      <span className="text-[10px] text-slate-500 font-normal">Paste text or type requirements</span>
+                    </Label>
+                    <Textarea
+                      id="formText"
+                      rows={6}
+                      value={formText}
+                      onChange={(e) => setFormText(e.target.value)}
+                      placeholder="Paste your WhatsApp broadcast message, job description, or requirements here..."
+                      className="bg-slate-950 border-slate-800 text-white text-xs leading-relaxed rounded-xl placeholder-slate-600"
+                    />
+                  </div>
+
+                  {/* City & WhatsApp Phone (OPTIONAL) */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="waCity" className="text-xs font-bold text-slate-300">
-                        City / Location:
+                      <Label htmlFor="formCity" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                        <span>City / Location:</span>
+                        <span className="text-[10px] text-slate-500 font-normal">Optional</span>
                       </Label>
                       <select
-                        id="waCity"
-                        value={whatsappCity}
-                        onChange={(e) => setWhatsappCity(e.target.value)}
+                        id="formCity"
+                        value={formCity}
+                        onChange={(e) => setFormCity(e.target.value)}
                         className="w-full h-11 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs px-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       >
                         {CAMEROON_CITIES.map((c) => (
@@ -566,18 +555,68 @@ export function QuickPostClient() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="waPhone" className="text-xs font-bold text-slate-300">
-                        WhatsApp Contact Phone for Applicants:
+                      <Label htmlFor="formPhone" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                        <span>WhatsApp / Contact Phone:</span>
+                        <span className="text-[10px] text-slate-500 font-normal">Optional</span>
                       </Label>
                       <Input
-                        id="waPhone"
-                        value={whatsappPhone}
-                        onChange={(e) => setWhatsappPhone(e.target.value)}
+                        id="formPhone"
+                        value={formPhone}
+                        onChange={(e) => setFormPhone(e.target.value)}
                         placeholder="+237 6XXXXXXXX"
-                        className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                        required
+                        className="bg-slate-950 border-slate-800 text-white text-xs h-11 rounded-xl placeholder-slate-600"
                       />
                     </div>
+                  </div>
+
+                  {/* Work Mode & Compensation (OPTIONAL) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="formWorkMode" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                        <span>Work Mode:</span>
+                        <span className="text-[10px] text-slate-500 font-normal">Optional</span>
+                      </Label>
+                      <select
+                        id="formWorkMode"
+                        value={formWorkMode}
+                        onChange={(e) => setFormWorkMode(e.target.value)}
+                        className="w-full h-11 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs px-3"
+                      >
+                        {WORK_MODES.map((wm) => (
+                          <option key={wm.id} value={wm.id}>{wm.label}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="formSalary" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                        <span>{postType === 'internship' ? 'Monthly Stipend (XAF):' : 'Salary (XAF):'}</span>
+                        <span className="text-[10px] text-slate-500 font-normal">Optional</span>
+                      </Label>
+                      <Input
+                        id="formSalary"
+                        type="number"
+                        value={formSalaryMin}
+                        onChange={(e) => setFormSalaryMin(e.target.value)}
+                        placeholder="e.g. 50000, 150000"
+                        className="bg-slate-950 border-slate-800 text-white text-xs h-11 rounded-xl placeholder-slate-600"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Skills (OPTIONAL) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="formSkills" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                      <span>Key Skills or Tags:</span>
+                      <span className="text-[10px] text-slate-500 font-normal">Optional</span>
+                    </Label>
+                    <Input
+                      id="formSkills"
+                      value={formSkills}
+                      onChange={(e) => setFormSkills(e.target.value)}
+                      placeholder="e.g. Vente, Comptabilité, Excel, React, Permis B (comma separated)"
+                      className="bg-slate-950 border-slate-800 text-white text-xs h-11 rounded-xl placeholder-slate-600"
+                    />
                   </div>
                 </div>
               )}
@@ -598,268 +637,110 @@ export function QuickPostClient() {
                       value={externalUrl}
                       onChange={(e) => setExternalUrl(e.target.value)}
                       placeholder="https://company.com/careers/job-123 or https://linkedin.com/jobs/..."
-                      className="bg-slate-950 border-slate-800 text-white text-xs h-11"
+                      className="bg-slate-950 border-slate-800 text-white text-xs h-11 rounded-xl"
                       required
                     />
                     <p className="text-[11px] text-slate-400">
-                      Candidates will be redirected straight to this verified portal.
+                      Candidates will be redirected straight to this verified company portal.
                     </p>
                   </div>
                 </div>
               )}
 
               {/* ─────────────────────────────────────────────────────────────
-                  MODE 4: DETAILED HR STRUCTURED FORM
+                  EXPIRY DATE SETTING (RULE §5: USER FIXES EXPIRING DATE)
                   ───────────────────────────────────────────────────────────── */}
-              {mode === 'detailed' && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="detailedTitle" className="text-xs font-bold text-slate-300">
-                        Role / Position Title *:
-                      </Label>
-                      <Input
-                        id="detailedTitle"
-                        value={detailedTitle}
-                        onChange={(e) => setDetailedTitle(e.target.value)}
-                        placeholder="e.g. Sales Associate, Registered Nurse, Fullstack Dev"
-                        className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="detailedCompany" className="text-xs font-bold text-slate-300">
-                        Company / Employer Name *:
-                      </Label>
-                      <Input
-                        id="detailedCompany"
-                        value={detailedCompany}
-                        onChange={(e) => setDetailedCompany(e.target.value)}
-                        placeholder="e.g. Boutique Modern, Orange, Cabinet Médical..."
-                        className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="detailedCity" className="text-xs font-bold text-slate-300">
-                        City / Location:
-                      </Label>
-                      <select
-                        id="detailedCity"
-                        value={detailedCity}
-                        onChange={(e) => setDetailedCity(e.target.value)}
-                        className="w-full h-11 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      >
-                        {CAMEROON_CITIES.map((c) => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="detailedWorkMode" className="text-xs font-bold text-slate-300">
-                        Work Mode:
-                      </Label>
-                      <select
-                        id="detailedWorkMode"
-                        value={workMode}
-                        onChange={(e) => setWorkMode(e.target.value)}
-                        className="w-full h-11 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs px-3"
-                      >
-                        {WORK_MODES.map((wm) => (
-                          <option key={wm.id} value={wm.id}>{wm.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-300">
-                      Minimum Education Level:
-                    </Label>
-                    <select
-                      value={educationLevel}
-                      onChange={(e) => setEducationLevel(e.target.value)}
-                      className="w-full h-11 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs px-3"
-                    >
-                      <option value="All levels welcome">All levels welcome (Tous niveaux)</option>
-                      <option value="Baccalauréat / GCE A-Level">Baccalauréat / GCE A-Level</option>
-                      <option value="Bac+2 (BTS / DUT / HND)">Bac+2 (BTS / DUT / HND)</option>
-                      <option value="Bac+3 (Licence / Bachelor)">Bac+3 (Licence / Bachelor)</option>
-                      <option value="Bac+5 (Master / Ingénieur)">Bac+5 (Master / Ingénieur)</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-300">
-                      Required Skills (Compétences séparées par des virgules):
-                    </Label>
-                    <Input
-                      value={requiredSkills}
-                      onChange={(e) => setRequiredSkills(e.target.value)}
-                      placeholder="e.g. React, Node.js, Accounting, Sales, Customer Service"
-                      className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label className="text-xs font-bold text-slate-300">
-                        Salary / Monthly Stipend Min (XAF - Optional):
-                      </Label>
-                      <Input
-                        type="number"
-                        value={salaryMin}
-                        onChange={(e) => setSalaryMin(e.target.value)}
-                        placeholder="e.g. 50000"
-                        className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-xs font-bold text-slate-300">
-                        Salary / Monthly Stipend Max (XAF - Optional):
-                      </Label>
-                      <Input
-                        type="number"
-                        value={salaryMax}
-                        onChange={(e) => setSalaryMax(e.target.value)}
-                        placeholder="e.g. 150000"
-                        className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="detailedDesc" className="text-xs font-bold text-slate-300">
-                      Job / Internship Description *:
-                    </Label>
-                    <Textarea
-                      id="detailedDesc"
-                      rows={5}
-                      value={detailedDescription}
-                      onChange={(e) => setDetailedDescription(e.target.value)}
-                      placeholder="Outline core responsibilities, team missions, daily tasks..."
-                      className="bg-slate-950 border-slate-800 text-white text-xs leading-relaxed"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="detailedPhone" className="text-xs font-bold text-slate-300">
-                      WhatsApp or Phone Contact (For applicants):
-                    </Label>
-                    <Input
-                      id="detailedPhone"
-                      value={detailedPhone}
-                      onChange={(e) => setDetailedPhone(e.target.value)}
-                      placeholder="+237 6XXXXXXXX"
-                      className="bg-slate-950 border-slate-800 text-white text-xs h-11"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* ─────────────────────────────────────────────────────────────
-                  EXPIRING DATE SELECTOR (All Modes: User sets expiry date)
-                  ───────────────────────────────────────────────────────────── */}
-              <div className="space-y-3 pt-4 border-t border-slate-800">
-                <div className="flex flex-wrap items-center justify-between gap-1">
+              <div className="pt-4 border-t border-slate-800/80 space-y-3">
+                <div className="flex items-center justify-between">
                   <Label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
                     <Calendar className="w-4 h-4 text-cyan-400" />
-                    <span>Application Deadline &amp; Expiring Date</span>
+                    <span>Listing Expiration (Auto-Archive):</span>
                   </Label>
-                  <span className="text-[11px] text-slate-400 font-medium">
-                    Shows for 1 extra week after expiry before auto-deletion
+                  <span className="text-[10px] text-slate-400">
+                    Visible for +1 week after expiring before auto-removal
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {[
-                    { label: '14 Days (2 Semaines)', val: '14' },
-                    { label: '30 Days (1 Mois)', val: '30' },
-                    { label: '60 Days (2 Mois)', val: '60' },
-                    { label: 'Custom Date', val: 'custom' },
-                  ].map((preset) => (
+                    { id: '7', label: '1 Week (Urgent)' },
+                    { id: '14', label: '2 Weeks' },
+                    { id: '30', label: '30 Days (Standard)' },
+                    { id: 'custom', label: 'Custom Date' },
+                  ].map((opt) => (
                     <button
-                      key={preset.val}
+                      key={opt.id}
                       type="button"
-                      onClick={() => setExpiryOption(preset.val)}
-                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
-                        expiryOption === preset.val
-                          ? 'border-cyan-500 bg-cyan-950/40 text-cyan-300 shadow-sm'
-                          : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
+                      onClick={() => setExpiryOption(opt.id)}
+                      className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all ${
+                        expiryOption === opt.id
+                          ? 'border-cyan-500 bg-cyan-950/60 text-cyan-300'
+                          : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700'
                       }`}
                     >
-                      {preset.label}
+                      {opt.label}
                     </button>
                   ))}
                 </div>
 
                 {expiryOption === 'custom' && (
-                  <Input
-                    type="date"
-                    value={customExpiryDate}
-                    onChange={(e) => setCustomExpiryDate(e.target.value)}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="bg-slate-950 border-slate-800 text-white text-xs h-10 mt-1"
-                    required
-                  />
+                  <div className="pt-2">
+                    <Input
+                      type="date"
+                      value={customExpiryDate}
+                      onChange={(e) => setCustomExpiryDate(e.target.value)}
+                      className="bg-slate-950 border-slate-800 text-white text-xs h-10 w-full sm:w-60"
+                      min={new Date().toISOString().split('T')[0]}
+                      required
+                    />
+                  </div>
                 )}
               </div>
 
               {/* ─────────────────────────────────────────────────────────────
-                  URGENT BOOST OPTION (FREE PROMO)
+                  GOLD BADGE BOOST TOGGLE (RULE §2)
                   ───────────────────────────────────────────────────────────── */}
-              <div className="rounded-2xl border border-amber-500/30 bg-amber-950/20 p-4 flex items-center justify-between">
-                <div className="space-y-1 pr-4">
-                  <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 fill-amber-400 text-amber-400" />
-                    <span className="text-xs font-bold text-amber-300">
-                      Apply Urgent Placement Gold Badge
-                    </span>
-                    <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-500/30">
-                      0 FCFA Launch Promo
-                    </span>
+              <div className="p-4 rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/30 via-slate-950 to-slate-950 flex items-center justify-between gap-4">
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-1.5 text-xs font-extrabold text-amber-300">
+                    <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                    <span>Featured Enterprise Gold Badge (Free Launch Promotion)</span>
                   </div>
-                  <p className="text-[11px] text-slate-300">
-                    Pins this posting at the top of listings with a glowing Gold Badge and homepage feature.
+                  <p className="text-[11px] text-slate-400">
+                    Pins your posting at the top of listings and in the Homepage Gold Badge showcase.
                   </p>
                 </div>
-                <input
-                  type="checkbox"
-                  checked={isUrgentBoosted}
-                  onChange={(e) => setIsUrgentBoosted(e.target.checked)}
-                  className="h-5 w-5 rounded border-amber-500 text-amber-500 accent-amber-500 cursor-pointer shrink-0"
-                />
+                <button
+                  type="button"
+                  onClick={() => setIsUrgentBoosted(!isUrgentBoosted)}
+                  className={`w-11 h-6 rounded-full transition-colors relative shrink-0 ${
+                    isUrgentBoosted ? 'bg-amber-500' : 'bg-slate-800'
+                  }`}
+                >
+                  <span
+                    className={`block w-4 h-4 rounded-full bg-slate-950 transition-transform ${
+                      isUrgentBoosted ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
               </div>
 
-              {/* ─────────────────────────────────────────────────────────────
-                  SUBMIT BUTTON
-                  ───────────────────────────────────────────────────────────── */}
+              {/* SUBMIT BUTTON */}
               <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full h-12 rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 hover:opacity-95 text-slate-950 font-extrabold text-sm shadow-xl shadow-cyan-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full h-13 rounded-2xl bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:opacity-95 text-white font-extrabold text-sm shadow-xl shadow-cyan-600/25 transition-all"
               >
                 {submitting ? (
-                  <span>Publishing Opportunity...</span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                    Publishing Opportunity...
+                  </span>
                 ) : (
-                  <>
-                    <span>
-                      {mode === 'flyer'
-                        ? `Publish ${postType === 'internship' ? 'Internship' : 'Job'} Flyer (Image Only)`
-                        : mode === 'link'
-                          ? `Publish Official Career Link`
-                          : mode === 'whatsapp'
-                            ? `Publish WhatsApp Announcement`
-                            : `Publish ${postType === 'internship' ? 'Internship' : 'Job'} (Detailed Form)`}
-                    </span>
-                    <ArrowRight className="h-4 w-4" />
-                  </>
+                  <span className="flex items-center gap-2">
+                    <Zap className="w-4 h-4" />
+                    Publish Now · 100% Free
+                  </span>
                 )}
               </Button>
             </form>

@@ -23,6 +23,7 @@ import { jobPostingJsonLd } from "@/lib/seo";
 import { toast } from "sonner";
 import { copyToClipboard } from "@/lib/clipboard";
 import { BoostListingModal } from "@/components/shared/boost-listing-modal";
+import { OrgLogo } from "@/components/shared/org-logo";
 const WHATSAPP_LINK = APP_CONFIG.support.whatsapp;
 import {
   MapPin,
@@ -535,18 +536,12 @@ export default function InternshipDetailPage() {
               {/* Organization & Location Meta */}
               <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-4 text-xs text-slate-600 pt-4 border-t border-slate-100">
                 <div className="flex items-center gap-2 font-medium text-slate-900">
-                  {opportunity.companyLogoUrl || organization?.logoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={opportunity.companyLogoUrl || organization?.logoUrl || ''}
-                      alt=""
-                      className="w-5 h-5 rounded-md object-cover border border-slate-200"
-                    />
-                  ) : (
-                    <span className="w-5 h-5 rounded-md bg-blue-100 text-blue-700 font-black text-[11px] flex items-center justify-center uppercase">
-                      {((opportunity.companyName || organization?.name || 'V')[0] || 'V').toUpperCase()}
-                    </span>
-                  )}
+                  <OrgLogo
+                    name={opportunity.companyName || organization?.name || "Verified Enterprise"}
+                    logoUrl={opportunity.companyLogoUrl || organization?.logoUrl}
+                    size="sm"
+                    type="COMPANY"
+                  />
                   <span>
                     {opportunity.companyName ||
                       organization?.name ||
