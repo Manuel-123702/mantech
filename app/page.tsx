@@ -836,7 +836,7 @@ export default function HomePage() {
         "Multi-tenant organizational security",
       ],
       color: "from-amber-600 to-orange-700",
-      href: "/companies",
+      href: "/post",
     },
     {
       icon: Users,
@@ -850,7 +850,7 @@ export default function HomePage() {
         "Accredited university verification badge",
       ],
       color: "from-emerald-600 to-teal-700",
-      href: "/universities",
+      href: "/post",
     },
     {
       icon: Award,
@@ -1105,147 +1105,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- SRS §20: FEATURED VERIFIED ORGANIZATIONS FROM DATABASE --- */}
-      <section className="py-24 bg-[#080d1a] border-b border-slate-800/80 relative overflow-hidden text-white">
-        {/* Subtle background image & atmospheric lighting */}
-        <div className="absolute inset-0 z-0 opacity-15 mix-blend-luminosity pointer-events-none">
-          <Image src="/images/company_tech_bg.jpg" alt="" fill className="object-cover" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#080d1a]/95 via-[#080d1a]/90 to-[#080d1a] pointer-events-none" />
-        <div className="absolute -top-24 right-1/4 w-96 h-96 bg-blue-500/15 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute -bottom-24 left-1/4 w-96 h-96 bg-indigo-500/15 blur-[120px] rounded-full pointer-events-none" />
-
-        <div className="container-mantech px-4 sm:px-6 lg:px-8 relative z-10">
-          <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-blue-950/80 border border-blue-500/30 px-3.5 py-1 text-xs font-bold text-blue-300 tracking-wide mb-3">
-                <ShieldCheck className="w-4 h-4 text-blue-400" />
-                <span>Accredited Employer Network</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                <span className="text-[10px] font-semibold text-blue-300 uppercase">MINESUP & MINPOSTEL Aligned</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
-                <WordReveal
-                  text="Verified Host Enterprises & Academic Partners"
-                  wordClassName="font-extrabold"
-                />
-              </h2>
-              <p className="text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
-                Accredited institutions actively screening technical competencies, evaluating candidates through verified Intern Passports, and hosting placements across Cameroon.
-              </p>
-            </div>
-            <Link href="/companies">
-              <Button
-                variant="outline"
-                className="text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-white border-slate-700 shadow-sm transition-all hover:border-blue-400 gap-1.5"
-              >
-                Explore All Organizations
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Button>
-            </Link>
-          </FadeIn>
-
-          {/* Trust Telemetry Ribbon */}
-          <div className="mb-8 grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { label: "Active Host Organizations", val: "240+", icon: Building2 },
-              { label: "Manual Vetting Standard", val: "100%", icon: ShieldCheck },
-              { label: "Placement Regions", val: "10 Regions", icon: MapPin },
-              { label: "Ghost Listings Permitted", val: "0 Policy", icon: Lock },
-            ].map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <div key={i} className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-sm backdrop-blur-md">
-                  <div className="w-9 h-9 rounded-xl bg-blue-950/80 text-blue-400 border border-blue-500/20 flex items-center justify-center shrink-0">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-white font-heading">{stat.val}</div>
-                    <div className="text-[11px] text-slate-400 font-medium">{stat.label}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {companies.length > 0
-              ? companies.map((org, idx) => {
-                const gradients = [
-                  "from-blue-600 to-indigo-600",
-                  "from-indigo-600 to-violet-600",
-                  "from-cyan-600 to-blue-600",
-                  "from-emerald-600 to-teal-600",
-                  "from-purple-600 to-pink-600",
-                  "from-amber-600 to-orange-600",
-                ];
-                const grad = gradients[idx % gradients.length];
-                return (
-                  <StaggerItem key={org.id}>
-                    <Link
-                      href={`/companies/${org.slug || org.id}`}
-                      className="p-5 rounded-3xl border border-slate-800 bg-slate-900/85 backdrop-blur-md hover:bg-slate-800/95 hover:border-blue-400 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 text-center group flex flex-col justify-between h-full shadow-lg relative overflow-hidden"
-                    >
-                      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-blue-500/40 to-transparent group-hover:via-blue-400 transition-colors" />
-                      <div>
-                        <OrgLogo
-                          name={org.name}
-                          logoUrl={org.logoUrl}
-                          website={org.website}
-                          size="lg"
-                          className="mx-auto mb-3.5 group-hover:scale-105 transition-transform"
-                        />
-                        <h3 className="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300 transition-colors line-clamp-1">
-                          {org.name}
-                        </h3>
-                        <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-0.5 rounded-full mt-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                          <span>Verified Host</span>
-                        </div>
-                      </div>
-                      <div className="mt-3.5 pt-3 border-t border-slate-800 flex items-center justify-center gap-1 text-[11px] text-slate-400 font-medium">
-                        <MapPin className="w-3 h-3 text-slate-500" />
-                        <span className="truncate">{org.city || org.region?.name || "Cameroon"}</span>
-                      </div>
-                    </Link>
-                  </StaggerItem>
-                );
-              })
-              : [
-                { name: "Orange Cameroun", city: "Douala", sector: "Telecom" },
-                { name: "MTN Cameroon", city: "Douala", sector: "Telecom" },
-                { name: "Camtel", city: "Yaoundé", sector: "Telecom" },
-                { name: "UBA Cameroon", city: "Douala", sector: "Fintech" },
-                { name: "Afriland First Bank", city: "Yaoundé", sector: "Banking" },
-                { name: "Université de Yaoundé I", city: "Yaoundé", sector: "Academic" },
-              ].map((item, i) => (
-                <StaggerItem key={i}>
-                  <div className="p-5 rounded-3xl border border-slate-800 bg-slate-900/85 backdrop-blur-md text-center shadow-lg flex flex-col justify-between h-full">
-                    <OrgLogo
-                      name={item.name}
-                      size="lg"
-                      className="mx-auto mb-3.5"
-                    />
-                    <div>
-                      <div className="font-bold text-xs sm:text-sm text-white truncate">
-                        {item.name}
-                      </div>
-                      <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-2 py-0.5 rounded-full mt-2">
-                        <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                        <span>Accredited</span>
-                      </div>
-                    </div>
-                    <div className="mt-3.5 pt-3 border-t border-slate-800 text-[11px] text-slate-400">
-                      {item.city}
-                    </div>
-                  </div>
-                </StaggerItem>
-              ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-
       {/* --- URGENT GOLD BADGE & TRENDING CATALOGS (Rule §2) --- */}
       <UrgentFeaturedShowcase urgentItems={urgentList} trendingItems={trendingList} />
 
@@ -1318,71 +1177,6 @@ export default function HomePage() {
                 </Button>
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* --- VERIFIED UNIVERSITIES & ACADEMIC PARTNERS --- */}
-      <section className="py-20 bg-[#080d1a] border-b border-slate-800/80">
-        <div className="container-mantech px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
-                University Partners
-              </h2>
-              <p className="mt-2 text-slate-400 text-sm">
-                Accredited institutions hosting internships and placements across Cameroon&apos;s 10 regions.
-              </p>
-            </div>
-            <Link href="/universities" className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
-              View All Universities <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {universities.length > 0 ? (
-              universities.map((uni) => (
-                <div key={uni.id} className="rounded-3xl border border-slate-800 bg-slate-900/85 backdrop-blur-md p-4 text-center hover:border-emerald-500/50 hover:bg-slate-800/90 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-lg">
-                  <div>
-                    <OrgLogo
-                      name={uni.name}
-                      logoUrl={uni.logoUrl}
-                      website={uni.website}
-                      type="UNIVERSITY"
-                      size="lg"
-                      className="mx-auto mb-3 group-hover:scale-105 transition-transform"
-                    />
-                    <h4 className="text-xs sm:text-sm font-bold text-white mb-1 truncate" title={uni.name}>{uni.name}</h4>
-                    <p className="text-[10px] text-slate-400 mb-2 truncate">{uni.city || uni.region?.name || "Cameroon"}</p>
-                    <div className="inline-flex items-center gap-1 text-[9px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-2 py-0.5 rounded-full mb-3">
-                      <span>{uni.universityProfile?.universityType || "Academic Partner"}</span>
-                    </div>
-                  </div>
-                  <div className="pt-2.5 border-t border-slate-800 flex items-center justify-between gap-1 text-[10px]">
-                    {uni.website ? (
-                      <a
-                        href={uni.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
-                        title="Visit official portal"
-                      >
-                        <Globe className="w-3 h-3" />
-                        <span>Portal</span>
-                      </a>
-                    ) : (
-                      <span className="text-slate-500">Verified</span>
-                    )}
-                    <Link href={`/universities/${uni.slug || uni.id}`} className="inline-flex items-center gap-0.5 font-bold text-blue-400 hover:text-blue-300">
-                      Explore <ArrowRight className="w-2.5 h-2.5" />
-                    </Link>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-4 py-16 text-center text-slate-500">
-                No university partners listed yet.
-              </div>
-            )}
           </div>
         </div>
       </section>

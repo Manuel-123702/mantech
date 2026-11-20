@@ -46,6 +46,10 @@ import {
   Users,
   Phone,
   Zap,
+  Image as ImageIcon,
+  Maximize2,
+  Download,
+  X,
 } from "lucide-react";
 
 export default function InternshipDetailPage() {
@@ -69,6 +73,7 @@ export default function InternshipDetailPage() {
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showBoostModal, setShowBoostModal] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     async function loadOpp() {
@@ -576,6 +581,80 @@ export default function InternshipDetailPage() {
               </div>
             </div>
 
+            {/* Visual Flyer Announcement (When posted via image flyer) */}
+            {Boolean((opportunity as any).isVisualFlyerOnly || (opportunity as any).flyerUrl) && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-cyan-500/40 bg-cyan-950/20 p-4 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">
+                      <ImageIcon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">Affiche de Recrutement Officielle</p>
+                      <p className="text-xs text-slate-500">Tous les critères et modalités de stage sont communiqués directement sur cette affiche.</p>
+                    </div>
+                  </div>
+                  <Button onClick={() => setLightboxOpen(true)} size="sm" variant="outline" className="border-cyan-500/40 text-cyan-700 hover:bg-cyan-50 shrink-0 gap-1.5">
+                    <Maximize2 className="w-4 h-4" /> Agrandir
+                  </Button>
+                </div>
+
+                <div
+                  className="relative rounded-3xl border-2 border-cyan-500/40 bg-slate-950 overflow-hidden shadow-2xl group cursor-pointer text-center p-2"
+                  onClick={() => setLightboxOpen(true)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={(opportunity as any).flyerUrl}
+                    alt={opportunity.title}
+                    className="w-full h-auto max-h-[750px] object-contain mx-auto rounded-2xl transition-transform duration-300 group-hover:scale-[1.01]"
+                  />
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                    <a
+                      href={(opportunity as any).flyerUrl}
+                      download
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-2.5 rounded-xl bg-slate-950/80 border border-white/20 text-white hover:text-cyan-300 transition-colors shadow-lg"
+                      title="Télécharger l'affiche"
+                    >
+                      <Download className="w-4 h-4" />
+                    </a>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}
+                      className="p-2.5 rounded-xl bg-slate-950/80 border border-white/20 text-white hover:text-cyan-300 transition-colors shadow-lg"
+                      title="Zoom Plein Écran"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* External Official Portal Opening (When posted via career link) */}
+            {Boolean((opportunity as any).isLinkOnly || (opportunity as any).externalUrl || opportunity.applicationUrl) && (
+              <div className="rounded-3xl border-2 border-blue-500/40 bg-gradient-to-br from-blue-950/20 via-slate-50 to-white p-6 sm:p-8 shadow-sm text-center space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-blue-600/10 border border-blue-500/30 flex items-center justify-center mx-auto text-blue-600">
+                  <ExternalLink className="w-7 h-7" />
+                </div>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">Portail Officiel de Candidature</h2>
+                <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto">
+                  Cette offre de stage s&apos;effectue directement sur le portail institutionnel de l&apos;entreprise.
+                </p>
+                <div className="pt-2">
+                  <a
+                    href={((opportunity as any).externalUrl || opportunity.applicationUrl || '').startsWith('http') ? ((opportunity as any).externalUrl || opportunity.applicationUrl) : `https://${(opportunity as any).externalUrl || opportunity.applicationUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-xl shadow-blue-600/25 transition-all hover:-translate-y-0.5"
+                  >
+                    <span>Postuler sur le Portail Officiel</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            )}
+
             {/* Description & Overview */}
             <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
               <div>
@@ -930,6 +1009,32 @@ export default function InternshipDetailPage() {
             setOpportunity((prev) => (prev ? { ...prev, isFeatured: true } : prev));
           }}
         />
+      )}
+
+      {/* Fullscreen Lightbox Modal for Flyer */}
+      {lightboxOpen && Boolean((opportunity as any)?.flyerUrl) && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] overflow-auto rounded-2xl border border-white/20 bg-slate-950 p-2 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setLightboxOpen(false)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-slate-900/90 text-white hover:text-rose-400 border border-white/20 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={(opportunity as any).flyerUrl}
+              alt={opportunity.title}
+              className="w-full h-auto object-contain max-h-[85vh] rounded-xl"
+            />
+          </div>
+        </div>
       )}
     </div>
   );

@@ -135,9 +135,31 @@ export async function GET(request: NextRequest) {
       prisma.job.count({ where }),
     ]);
 
+    // Map database jobs to restore any flyer or link attributes stored in instructions
+    const expressPostings = getExpressPostings();
+    const expressMap = new Map(expressPostings.map((e) => [e.slug, e]));
+
+    const mappedDbJobs = dbJobs.map((j: any) => {
+      const match = expressMap.get(j.slug);
+      const isFlyer = j.instructions?.startsWith('FLYER:') || match?.isVisualFlyerOnly || Boolean(match?.flyerUrl);
+      const flyerUrl = j.instructions?.startsWith('FLYER:') ? j.instructions.replace('FLYER:', '') : match?.flyerUrl;
+      const isLink = j.instructions?.startsWith('LINK:') || match?.isLinkOnly || (j.applicationMethod === 'COMPANY_WEBSITE' && Boolean(j.applicationUrl));
+      const externalUrl = j.instructions?.startsWith('LINK:') ? j.instructions.replace('LINK:', '') : (match?.externalUrl || j.applicationUrl);
+
+      return {
+        ...j,
+        companyName: j.organization?.name || match?.companyName || 'Verified Enterprise',
+        flyerUrl: flyerUrl || null,
+        isVisualFlyerOnly: Boolean(isFlyer),
+        isLinkOnly: Boolean(isLink),
+        externalUrl: externalUrl || null,
+        contactPhone: j.contactEmail || match?.contactPhone || null,
+      };
+    });
+
     // Combine database jobs and marketplace jobs, avoiding slug duplicates
-    const seenSlugs = new Set(dbJobs.map((j) => j.slug));
-    const combined = [...dbJobs];
+    const seenSlugs = new Set(mappedDbJobs.map((j) => j.slug));
+    const combined = [...mappedDbJobs];
     for (const m of filteredMarketplace) {
       if (!seenSlugs.has(m.slug)) {
         combined.push(m as any);
@@ -283,6 +305,8 @@ export async function POST(request: NextRequest) {
             workMode: (workMode || 'ONSITE') as any,
             applicationMethod: (applicationMethod || (applicationUrl ? 'COMPANY_WEBSITE' : 'MANTECH')) as any,
             applicationUrl: applicationUrl || null,
+            instructions: flyerUrl ? `FLYER:${flyerUrl}` : (applicationUrl ? `LINK:${applicationUrl}` : null),
+            contactEmail: contactPhone || null,
             salaryMinXAF: salaryMinXAF ? Number(salaryMinXAF) : null,
             salaryMaxXAF: salaryMaxXAF ? Number(salaryMaxXAF) : null,
             type: effectiveType,
@@ -331,9 +355,10 @@ export async function POST(request: NextRequest) {
       console.warn('[jobs] Database write skipped or offline — activating resilient express fallback:', dbErr);
     }
 
-    // 2. Prepare normalized job object (from DB or rich fallback)
-    const normalizedJob = dbJob || {
-      id: `job-exp-${Date.now()}`,
+    // 2. Prepare normalized job object with all rich flyer & link attributes guaranteed
+    const normalizedJob: any = {
+      ...(dbJob || {}),
+      id: dbJob?.id || `job-exp-${Date.now()}`,
       slug: generatedSlug,
       title: (title || 'New Opportunity').trim(),
       description: description || 'Opportunity posted via MANTECH Express.',
@@ -359,8 +384,8 @@ export async function POST(request: NextRequest) {
       contactPhone: contactPhone || null,
       flyerUrl: flyerUrl || null,
       isFeatured: Boolean(isFeatured),
-      isVisualFlyerOnly: Boolean(body.isVisualFlyerOnly),
-      isLinkOnly: Boolean(body.isLinkOnly),
+      isVisualFlyerOnly: Boolean(body.isVisualFlyerOnly || flyerUrl),
+      isLinkOnly: Boolean(body.isLinkOnly || applicationUrl),
       externalUrl: applicationUrl || null,
       expiryDate: effectiveExpiry.toISOString(),
       postingDate: new Date().toISOString(),

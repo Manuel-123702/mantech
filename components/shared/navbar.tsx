@@ -26,6 +26,7 @@ import {
   Star,
   Smartphone,
   Zap,
+  Plus,
 } from 'lucide-react';
 import { Logo } from '@/components/shared/logo';
 import { Button } from '@/components/ui/button';
@@ -107,18 +108,18 @@ const INTERNSHIP_MENU: NavMenuItem[] = [
 
 const ORGANIZATION_MENU: NavMenuItem[] = [
   {
-    href: '/companies',
-    label: 'Host Enterprises',
-    description: 'Recruit, evaluate, and interview matched interns & workers',
-    icon: Building2,
+    href: '/post',
+    label: 'Post an Opportunity',
+    description: 'Post via Flyer, WhatsApp text or Career link (No login needed)',
+    icon: Plus,
+    badge: 'Express',
     color: 'text-emerald-400 bg-emerald-950/60 border border-emerald-500/20',
   },
   {
-    href: '/universities',
-    label: 'Universities & Faculties',
-    description: 'Placement coordination & institutional recruiter mode',
-    icon: GraduationCap,
-    badge: 'Dual-Mode',
+    href: '/jobs/flyers',
+    label: 'Visual Notice Board',
+    description: 'Recruitment posters & communiqués gallery',
+    icon: Building2,
     color: 'text-emerald-400 bg-emerald-950/60 border border-emerald-500/20',
   },
   {
@@ -397,7 +398,7 @@ export function Navbar() {
                   onMouseLeave={scheduleNavClose}
                   className={cn(
                     'group inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-bold transition-all duration-150',
-                    pathname.startsWith('/companies') || pathname.startsWith('/universities') || pathname.startsWith('/how-it-works')
+                    pathname.startsWith('/post') || pathname.startsWith('/how-it-works')
                       ? 'text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 shadow-sm'
                       : 'text-slate-300 hover:text-white hover:bg-slate-900/60'
                   )}

@@ -25,6 +25,10 @@ import {
   Layers,
   Award,
   Zap,
+  Image as ImageIcon,
+  Maximize2,
+  Download,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -51,6 +55,7 @@ export default function JobDetailPage() {
   const [applied, setApplied] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
   const [showBoostModal, setShowBoostModal] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -179,6 +184,11 @@ export default function JobDetailPage() {
   const org = job.organization;
   const companyProfile = org?.companyProfile;
   const universityProfile = org?.universityProfile;
+  const isFlyer = Boolean((job as any)?.isVisualFlyerOnly || (job as any)?.flyerUrl);
+  const flyerUrl = (job as any)?.flyerUrl;
+  const isLink = Boolean((job as any)?.isLinkOnly || (job as any)?.externalUrl);
+  const externalUrl = (job as any)?.externalUrl;
+  const directPhone = (job as any)?.contactPhone;
 
   return (
     <div className="min-h-screen bg-slate-950 text-white pb-20 pt-28">
@@ -287,6 +297,80 @@ export default function JobDetailPage() {
                 )}
               </div>
             </div>
+
+            {/* Visual Flyer Announcement (When posted via image flyer) */}
+            {isFlyer && flyerUrl && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-cyan-500/40 bg-cyan-950/20 p-4 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">
+                      <ImageIcon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-white">Affiche de Recrutement Officielle</p>
+                      <p className="text-xs text-slate-400">Tous les critères et modalités de candidature sont communiqués directement sur cette affiche.</p>
+                    </div>
+                  </div>
+                  <Button onClick={() => setLightboxOpen(true)} size="sm" variant="outline" className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-950/40 shrink-0 gap-1.5">
+                    <Maximize2 className="w-4 h-4" /> Agrandir
+                  </Button>
+                </div>
+
+                <div
+                  className="relative rounded-3xl border-2 border-cyan-500/40 bg-slate-950 overflow-hidden shadow-2xl group cursor-pointer text-center p-2"
+                  onClick={() => setLightboxOpen(true)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={flyerUrl}
+                    alt={job.title}
+                    className="w-full h-auto max-h-[750px] object-contain mx-auto rounded-2xl transition-transform duration-300 group-hover:scale-[1.01]"
+                  />
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                    <a
+                      href={flyerUrl}
+                      download
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-2.5 rounded-xl bg-slate-950/80 border border-white/20 text-white hover:text-cyan-300 transition-colors shadow-lg"
+                      title="Télécharger l'affiche"
+                    >
+                      <Download className="w-4 h-4" />
+                    </a>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}
+                      className="p-2.5 rounded-xl bg-slate-950/80 border border-white/20 text-white hover:text-cyan-300 transition-colors shadow-lg"
+                      title="Zoom Plein Écran"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* External Official Portal Opening (When posted via career link) */}
+            {isLink && externalUrl && (
+              <div className="rounded-3xl border-2 border-blue-500/40 bg-gradient-to-br from-blue-950/40 via-slate-900 to-slate-950 p-6 sm:p-8 shadow-2xl text-center space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center mx-auto text-blue-400">
+                  <ExternalLink className="w-7 h-7" />
+                </div>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-white">Portail Officiel de Candidature</h2>
+                <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
+                  Cette offre s&apos;effectue directement sur le portail institutionnel de l&apos;entreprise.
+                </p>
+                <div className="pt-2">
+                  <a
+                    href={externalUrl.startsWith('http') ? externalUrl : `https://${externalUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-sm shadow-xl shadow-blue-600/30 transition-all hover:-translate-y-0.5"
+                  >
+                    <span>Postuler sur le Portail Officiel</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            )}
 
             {/* Quick Metrics Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
@@ -464,8 +548,32 @@ export default function JobDetailPage() {
                     )}
                   </Button>
 
+                  {/* Direct Contact Phone if provided */}
+                  {directPhone ? (
+                    <a
+                      href={`https://wa.me/${directPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                        `Bonjour, je postule à votre offre "${job.title}" vue sur MANTECH Nexus.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full"
+                    >
+                      <Button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30">
+                        <WhatsAppIcon className="w-4 h-4 mr-2" />
+                        Contacter Recruteur sur WhatsApp
+                      </Button>
+                    </a>
+                  ) : null}
+
                   {/* Method 2: Apply on Employer Website (external) */}
-                  {org?.website ? (
+                  {externalUrl ? (
+                    <a href={externalUrl.startsWith('http') ? externalUrl : `https://${externalUrl}`} target="_blank" rel="noopener noreferrer" className="block w-full">
+                      <Button className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30">
+                        <ExternalLink className="w-3.5 h-3.5 mr-2" />
+                        Postuler sur le Portail Officiel
+                      </Button>
+                    </a>
+                  ) : org?.website ? (
                     <a href={org.website} target="_blank" rel="noopener noreferrer" className="block w-full">
                       <Button className="w-full border-slate-700 bg-slate-800/50 hover:bg-slate-700 text-slate-200 font-bold text-xs">
                         Apply on Employer Website
@@ -590,6 +698,32 @@ export default function JobDetailPage() {
             setJob((prev) => (prev ? { ...prev, isFeatured: true } : prev));
           }}
         />
+      )}
+
+      {/* Fullscreen Lightbox Modal for Flyer */}
+      {lightboxOpen && flyerUrl && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] overflow-auto rounded-2xl border border-white/20 bg-slate-950 p-2 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setLightboxOpen(false)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-slate-900/90 text-white hover:text-rose-400 border border-white/20 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={flyerUrl}
+              alt={job.title}
+              className="w-full h-auto object-contain max-h-[85vh] rounded-xl"
+            />
+          </div>
+        </div>
       )}
     </div>
   );

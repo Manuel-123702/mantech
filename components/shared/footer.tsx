@@ -29,10 +29,10 @@ const footerLinks = {
     accent: 'group-hover:text-cyan-200',
     heading: 'text-cyan-300',
     links: [
+      { href: "/jobs", label: "Find Jobs" },
       { href: "/internships", label: "Find Internships" },
-      { href: "/companies", label: "Companies" },
-      { href: "/universities", label: "Universities" },
-      { href: "/mantech-internship", label: "Internship Portal" },
+      { href: "/jobs/flyers", label: "Notice Board (Flyers)" },
+      { href: "/post", label: "Post Opportunity Free" },
     ],
   },
   Resources: {

@@ -142,18 +142,26 @@ export function QuickPostClient() {
         const uploadJson = await uploadRes.json();
         const permanentFlyerUrl = uploadJson.flyerUrl;
 
-        const baseCleanName = flyerFile.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-        const flyerTitle = `${postType === 'internship' ? 'Stage' : 'Emploi'} Flyer — ${baseCleanName}`;
+        const companyName = formCompany.trim() || 'Entreprise Partenaire';
+        const flyerTitle =
+          formTitle.trim() ||
+          (formCompany.trim()
+            ? `${formCompany.trim()} — ${postType === 'internship' ? 'Avis de Stage' : 'Avis de Recrutement'}`
+            : postType === 'internship'
+            ? 'Avis de Stage (Flyer)'
+            : 'Avis de Recrutement (Flyer)');
 
         payload = {
           title: flyerTitle,
-          organizationName: 'Enterprise Announcement',
-          city: 'Cameroon',
+          organizationName: companyName,
+          companyName: companyName,
+          city: formCity || 'Douala',
           workMode: 'ONSITE',
           type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
           postType: postType,
-          description: `Visual recruitment poster published directly by employer. Review image flyer for full application requirements.`,
+          description: `Affiche de recrutement officielle publiée directement par l'employeur. Consultez le visuel pour l'intégralité des modalités.`,
           flyerUrl: permanentFlyerUrl,
+          contactPhone: formPhone.trim() !== '+237' && formPhone.trim() ? formPhone.trim() : undefined,
           isFeatured: isUrgentBoosted,
           expiryDate: effectiveExpiry.toISOString(),
           isVisualFlyerOnly: true,
@@ -182,6 +190,7 @@ export function QuickPostClient() {
         payload = {
           title: autoTitle,
           organizationName: formCompany.trim(),
+          companyName: formCompany.trim(),
           city: formCity || 'Douala',
           workMode: formWorkMode || 'ONSITE',
           type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
@@ -215,17 +224,24 @@ export function QuickPostClient() {
           domain = u.hostname.replace(/^www\./, '');
         } catch {}
 
+        const companyName = formCompany.trim() || domain;
+        const linkTitle =
+          formTitle.trim() ||
+          `${postType === 'internship' ? 'Offre de Stage' : "Offre d'Emploi"} — ${companyName}`;
+
         payload = {
-          title: `${postType === 'internship' ? 'Internship' : 'Job'} Opening (${domain})`,
-          organizationName: domain,
-          city: 'Cameroon / Remote',
+          title: linkTitle,
+          organizationName: companyName,
+          companyName: companyName,
+          city: formCity || 'Douala',
           workMode: 'ONSITE',
           type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
           postType: postType,
-          description: `Apply directly at the verified corporate portal: ${externalUrl}`,
+          description: `Postulez directement sur le portail institutionnel vérifié : ${externalUrl}`,
           applicationMethod: 'COMPANY_WEBSITE',
           applicationUrl: externalUrl,
           externalUrl: externalUrl,
+          contactPhone: formPhone.trim() !== '+237' && formPhone.trim() ? formPhone.trim() : undefined,
           isFeatured: isUrgentBoosted,
           expiryDate: effectiveExpiry.toISOString(),
           isVisualFlyerOnly: false,
@@ -477,6 +493,34 @@ export function QuickPostClient() {
                       </label>
                     )}
                   </div>
+
+                  {/* Optional Quick Fields for Flyer */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="flyerCompany" className="text-xs font-semibold text-slate-300">
+                        Company / Employer Name (Optional)
+                      </Label>
+                      <Input
+                        id="flyerCompany"
+                        placeholder="e.g. MTN, Boutique Chic, Cabinet…"
+                        value={formCompany}
+                        onChange={(e) => setFormCompany(e.target.value)}
+                        className="bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 text-xs rounded-xl"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="flyerPhone" className="text-xs font-semibold text-slate-300">
+                        WhatsApp Contact Phone (Optional)
+                      </Label>
+                      <Input
+                        id="flyerPhone"
+                        placeholder="+237 6xx xx xx xx"
+                        value={formPhone}
+                        onChange={(e) => setFormPhone(e.target.value)}
+                        className="bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 text-xs rounded-xl"
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -643,6 +687,34 @@ export function QuickPostClient() {
                     <p className="text-[11px] text-slate-400">
                       Candidates will be redirected straight to this verified company portal.
                     </p>
+                  </div>
+
+                  {/* Optional Quick Fields for Link */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="linkCompany" className="text-xs font-semibold text-slate-300">
+                        Company / Institute Name (Optional)
+                      </Label>
+                      <Input
+                        id="linkCompany"
+                        placeholder="e.g. MTN, Camtel, Orange…"
+                        value={formCompany}
+                        onChange={(e) => setFormCompany(e.target.value)}
+                        className="bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 text-xs rounded-xl"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="linkPhone" className="text-xs font-semibold text-slate-300">
+                        WhatsApp Contact Phone (Optional)
+                      </Label>
+                      <Input
+                        id="linkPhone"
+                        placeholder="+237 6xx xx xx xx"
+                        value={formPhone}
+                        onChange={(e) => setFormPhone(e.target.value)}
+                        className="bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 text-xs rounded-xl"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

@@ -18,6 +18,11 @@ const nextConfig = {
     return [
       // The internship marketplace is /internships.
       { source: '/intern-opportunities', destination: '/internships', permanent: true },
+      // Direct employer & institute requests route directly to opportunities
+      { source: '/companies', destination: '/jobs', permanent: true },
+      { source: '/companies/:path*', destination: '/jobs', permanent: true },
+      { source: '/universities', destination: '/internships', permanent: true },
+      { source: '/universities/:path*', destination: '/internships', permanent: true },
     ];
   },
 };
