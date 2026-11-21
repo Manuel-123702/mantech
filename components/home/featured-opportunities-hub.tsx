@@ -23,6 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { OrgLogo } from '@/components/shared/org-logo';
 import { StaggerContainer, StaggerItem } from '@/components/shared/section-animations';
+import { getHomepageRotatedPostings } from '@/lib/rotation-engine';
 
 interface OpportunityItem {
   id: string;
@@ -116,7 +117,7 @@ export function FeaturedOpportunitiesHub({ jobs, internships }: FeaturedOpportun
     return list;
   }, [formattedJobs, formattedInternships]);
 
-  // Current display list based on active tab & city
+  // Current display list based on active tab & city with 30-post capacity & hourly rotation loop
   const displayItems = useMemo(() => {
     let base =
       activeTab === 'INTERNSHIPS'
@@ -130,7 +131,8 @@ export function FeaturedOpportunitiesHub({ jobs, internships }: FeaturedOpportun
         (item.city || '').toLowerCase().includes(selectedCity.toLowerCase())
       );
     }
-    return base.slice(0, 9);
+    // Rotates 10 postings per hour from pool, displaying up to 30 posts on homepage
+    return getHomepageRotatedPostings(base as any, 30, 10) as unknown as (OpportunityItem & { isOutdatedGrace?: boolean })[];
   }, [activeTab, selectedCity, formattedInternships, formattedJobs, combinedList]);
 
   return (
@@ -291,16 +293,23 @@ export function FeaturedOpportunitiesHub({ jobs, internships }: FeaturedOpportun
                           </div>
                         </div>
 
-                        <Badge
-                          variant="outline"
-                          className={`text-[10px] uppercase font-black tracking-wider shrink-0 px-2.5 py-0.5 rounded-lg ${
-                            isInternship
-                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                              : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
-                          }`}
-                        >
-                          {isInternship ? 'Stage' : item.type?.replace('_', ' ')}
-                        </Badge>
+                        <div className="flex flex-col items-end gap-1.5 shrink-0">
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] uppercase font-black tracking-wider px-2.5 py-0.5 rounded-lg ${
+                              isInternship
+                                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+                            }`}
+                          >
+                            {isInternship ? 'Stage' : item.type?.replace('_', ' ')}
+                          </Badge>
+                          {item.isOutdatedGrace && (
+                            <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-black uppercase tracking-wider animate-pulse">
+                              ⚠️ Expiré (7j restants)
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       {/* Position Title */}
@@ -313,10 +322,17 @@ export function FeaturedOpportunitiesHub({ jobs, internships }: FeaturedOpportun
                       </h3>
 
                       {/* Short Description */}
-                      <p className="text-xs text-slate-200 line-clamp-2 mb-4 leading-relaxed font-normal">
+                      <p className="text-xs text-slate-300 line-clamp-2 mb-4 leading-relaxed font-normal">
                         {item.description ||
                           'Verified opportunity with real production responsibility and mentor guidance in Cameroon.'}
                       </p>
+
+                      {/* Work Mode & Location Badges */}
+                      <div className="flex flex-wrap items-center gap-1.5 mb-3">
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-purple-950/70 text-purple-200 border border-purple-700/50">
+                          {item.workMode || 'ONSITE'}
+                        </span>
+                      </div>
 
                       {/* Required Skills Badges */}
                       <div className="flex flex-wrap gap-1.5 mb-5">
@@ -325,8 +341,8 @@ export function FeaturedOpportunitiesHub({ jobs, internships }: FeaturedOpportun
                             key={skill}
                             className={`px-2 py-0.5 rounded-md text-[10px] font-semibold border ${
                               isInternship
-                                ? 'bg-emerald-950/70 text-emerald-200 border-emerald-700/50'
-                                : 'bg-blue-950/70 text-blue-200 border-blue-700/50'
+                                ? 'bg-teal-950/70 text-teal-200 border-teal-700/50'
+                                : 'bg-cyan-950/70 text-cyan-200 border-cyan-700/50'
                             }`}
                           >
                             {skill}
@@ -339,7 +355,7 @@ export function FeaturedOpportunitiesHub({ jobs, internships }: FeaturedOpportun
                     <div className="pt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
                       <div>
                         {isInternship ? (
-                          <span className="text-emerald-400 font-extrabold font-mono text-xs">
+                          <span className="text-amber-400 font-extrabold font-mono text-xs bg-amber-950/50 px-2 py-0.5 rounded border border-amber-500/30">
                             {item.allowanceXAF
                               ? `${item.allowanceXAF.toLocaleString()} XAF / mo`
                               : item.isPaid
@@ -347,7 +363,7 @@ export function FeaturedOpportunitiesHub({ jobs, internships }: FeaturedOpportun
                               : 'Convention Stage'}
                           </span>
                         ) : (
-                          <span className="text-cyan-400 font-extrabold font-mono text-xs">
+                          <span className="text-amber-400 font-extrabold font-mono text-xs bg-amber-950/50 px-2 py-0.5 rounded border border-amber-500/30">
                             {item.salaryMinXAF
                               ? `${item.salaryMinXAF.toLocaleString()} XAF`
                               : 'Competitive Salary'}

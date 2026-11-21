@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { DownloadPostButton } from '@/components/shared/download-post-button';
 
 export interface VisualFlyerItem {
   id: string;
@@ -39,6 +40,7 @@ export interface CareerLinkItem {
   title: string;
   companyName: string;
   externalUrl: string;
+  description?: string;
   city?: string;
   type?: string;
   isFeatured?: boolean;
@@ -189,35 +191,43 @@ export function FlyersNoticeBoard({ flyers, careerLinks }: FlyersNoticeBoardProp
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {careerLinks.map((linkItem) => (
                 <div
                   key={linkItem.id}
-                  className="rounded-3xl border-2 border-blue-500/30 bg-gradient-to-br from-blue-950/40 via-slate-900/95 to-indigo-950/25 p-5 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-500/15 hover:-translate-y-1 transition-all flex flex-col justify-between gap-3.5 group shadow-lg"
+                  className="rounded-3xl border-2 border-blue-500/30 bg-gradient-to-br from-blue-950/40 via-slate-900/95 to-indigo-950/25 p-5 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-500/15 hover:-translate-y-1 transition-all flex flex-col justify-between gap-4 group shadow-lg"
                 >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2">
                       <span className="text-[10px] font-black uppercase tracking-wider text-blue-400 bg-blue-950/60 border border-blue-800/60 px-2 py-0.5 rounded">
                         {linkItem.type || 'PORTAL'}
                       </span>
-                      <span className="text-[11px] text-slate-400">{linkItem.city || 'Cameroon'}</span>
+                      <span className="text-[11px] text-slate-400 font-medium">{linkItem.city || 'Cameroon'}</span>
                     </div>
 
-                    <h4 className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-2">
+                    <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors line-clamp-2">
                       {linkItem.title}
                     </h4>
-                    <p className="text-xs text-slate-400 mt-1">{linkItem.companyName}</p>
+                    <p className="text-xs font-semibold text-emerald-400">{linkItem.companyName}</p>
+
+                    {linkItem.description && (
+                      <p className="text-[11px] text-slate-300 line-clamp-3 leading-relaxed bg-slate-950/50 p-2.5 rounded-xl border border-slate-800/80">
+                        {linkItem.description}
+                      </p>
+                    )}
                   </div>
 
-                  <a
-                    href={linkItem.externalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-blue-600 text-white text-xs font-bold transition-colors border border-slate-700 hover:border-blue-500"
-                  >
-                    <span>Open Official Portal</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                  <div className="pt-2 border-t border-slate-800/60 flex items-center gap-2">
+                    <a
+                      href={linkItem.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/20"
+                    >
+                      <span>Postuler sur le Portail Officiel</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
                 </div>
               ))}
             </div>
@@ -255,30 +265,34 @@ export function FlyersNoticeBoard({ flyers, careerLinks }: FlyersNoticeBoardProp
               />
             </div>
 
-            {/* Modal Footer (Direct Contact) */}
-            <div className="p-4 border-t border-slate-800 bg-slate-950/80 flex items-center justify-between gap-3">
-              <Link href={`/jobs/${selectedFlyer.slug}`} className="text-xs text-slate-400 hover:text-white">
-                View Opportunity Page →
-              </Link>
+            {/* Modal Footer (Download with wave animation & Direct Contact) */}
+            <div className="p-4 border-t border-slate-800 bg-slate-950/90 flex flex-wrap items-center justify-between gap-3">
+              <DownloadPostButton
+                url={selectedFlyer.flyerUrl}
+                filename={`affiche-${selectedFlyer.slug}.jpg`}
+                title="Télécharger l'Affiche HD"
+              />
 
-              {selectedFlyer.contactPhone ? (
-                <a
-                  href={`https://wa.me/${selectedFlyer.contactPhone.replace(/[^0-9]/g, '')}?text=Hello,%20I%20am%20applying%20to%20your%20flyer%20on%20MANTECH%20Nexus.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-600/20"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Chat on WhatsApp ({selectedFlyer.contactPhone})
-                </a>
-              ) : (
-                <Link
-                  href={`/jobs/${selectedFlyer.slug}`}
-                  className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs"
-                >
-                  Apply Online
-                </Link>
-              )}
+              <div className="flex items-center gap-2">
+                {selectedFlyer.contactPhone ? (
+                  <a
+                    href={`https://wa.me/${selectedFlyer.contactPhone.replace(/[^0-9]/g, '')}?text=Hello,%20I%20am%20applying%20to%20your%20flyer%20on%20MANTECH%20Nexus.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>WhatsApp ({selectedFlyer.contactPhone})</span>
+                  </a>
+                ) : (
+                  <Link
+                    href={`/jobs/${selectedFlyer.slug}`}
+                    className="px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs"
+                  >
+                    Voir l&apos;Offre
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>

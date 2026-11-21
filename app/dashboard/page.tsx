@@ -28,43 +28,34 @@ import {
 const WORKSPACES = [
   {
     href: '/dashboard/intern',
-    title: 'Intern Dashboard',
+    title: 'Candidate Dashboard (Jobs & Internships)',
     description:
-      'Your applications, saved internships, profile checklist and your journey so far.',
+      'Track your job & internship applications, saved opportunities, profile status and recruiter alerts.',
     icon: Briefcase,
-    roles: ['intern', 'company', 'university', 'admin'],
+    roles: ['intern', 'admin'],
   },
   {
     href: '/dashboard/intern/passport',
-    title: 'My Passport',
+    title: 'My Talent Passport',
     description:
-      'Your professional profile, your experience, your certificates and your privacy settings.',
+      'Your verified digital professional profile, skills, academic background and shareable CV link.',
     icon: IdCard,
-    roles: ['intern', 'company', 'university', 'admin'],
+    roles: ['intern', 'admin'],
   },
   {
-    href: '/dashboard/company',
-    title: 'Company Dashboard',
+    href: '/post',
+    title: 'Post a Job or Internship',
     description:
-      'Post internships and jobs, search candidates, review CVs, arrange interviews and recruit talent across Cameroon.',
-    icon: Building2,
-    roles: ['intern', 'company', 'university', 'admin'],
-    openToAll: true,
-  },
-  {
-    href: '/dashboard/university',
-    title: 'University Dashboard',
-    description:
-      'Coordinate tripartite conventions, monitor student placements, and connect departments with accredited host enterprises.',
-    icon: GraduationCap,
-    roles: ['intern', 'company', 'university', 'admin'],
+      'Instant frictionless posting: Upload visual flyers, share career links, or paste recruitment notices directly.',
+    icon: LayoutDashboard,
+    roles: ['intern', 'admin'],
     openToAll: true,
   },
   {
     href: '/dashboard/admin',
     title: 'Admin Dashboard',
     description:
-      'Approve organizations, review listings, manage people, packages and site settings.',
+      'Platform governance, verification, user moderation, analytics and site configuration.',
     icon: ShieldCheck,
     roles: ['admin'],
   },

@@ -23,6 +23,13 @@ const nextConfig = {
       { source: '/companies/:path*', destination: '/jobs', permanent: true },
       { source: '/universities', destination: '/internships', permanent: true },
       { source: '/universities/:path*', destination: '/internships', permanent: true },
+      // Obsolete company & university dashboards redirect to post & candidate dashboard
+      { source: '/dashboard/company', destination: '/post', permanent: false },
+      { source: '/dashboard/company/:path*', destination: '/post', permanent: false },
+      { source: '/dashboard/university', destination: '/post', permanent: false },
+      { source: '/dashboard/university/:path*', destination: '/post', permanent: false },
+      { source: '/dashboard/student', destination: '/dashboard/intern', permanent: false },
+      { source: '/dashboard/student/:path*', destination: '/dashboard/intern', permanent: false },
     ];
   },
 };

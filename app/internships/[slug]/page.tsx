@@ -23,6 +23,7 @@ import { jobPostingJsonLd } from "@/lib/seo";
 import { toast } from "sonner";
 import { copyToClipboard } from "@/lib/clipboard";
 import { BoostListingModal } from "@/components/shared/boost-listing-modal";
+import { DownloadPostButton } from "@/components/shared/download-post-button";
 import { OrgLogo } from "@/components/shared/org-logo";
 const WHATSAPP_LINK = APP_CONFIG.support.whatsapp;
 import {
@@ -584,7 +585,7 @@ export default function InternshipDetailPage() {
             {/* Visual Flyer Announcement (When posted via image flyer) */}
             {Boolean((opportunity as any).isVisualFlyerOnly || (opportunity as any).flyerUrl) && (
               <div className="space-y-4">
-                <div className="rounded-2xl border border-cyan-500/40 bg-cyan-950/20 p-4 flex items-center justify-between gap-4">
+                <div className="rounded-2xl border border-cyan-500/40 bg-cyan-950/20 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">
                       <ImageIcon className="w-5 h-5" />
@@ -594,9 +595,16 @@ export default function InternshipDetailPage() {
                       <p className="text-xs text-slate-500">Tous les critères et modalités de stage sont communiqués directement sur cette affiche.</p>
                     </div>
                   </div>
-                  <Button onClick={() => setLightboxOpen(true)} size="sm" variant="outline" className="border-cyan-500/40 text-cyan-700 hover:bg-cyan-50 shrink-0 gap-1.5">
-                    <Maximize2 className="w-4 h-4" /> Agrandir
-                  </Button>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <DownloadPostButton
+                      url={(opportunity as any).flyerUrl}
+                      filename={`stage-${opportunity.slug}.jpg`}
+                      title="Télécharger l'Affiche HD"
+                    />
+                    <Button onClick={() => setLightboxOpen(true)} size="sm" variant="outline" className="border-cyan-500/40 text-cyan-700 hover:bg-cyan-50 shrink-0 gap-1.5 h-11">
+                      <Maximize2 className="w-4 h-4" /> Agrandir
+                    </Button>
+                  </div>
                 </div>
 
                 <div
@@ -610,18 +618,14 @@ export default function InternshipDetailPage() {
                     className="w-full h-auto max-h-[750px] object-contain mx-auto rounded-2xl transition-transform duration-300 group-hover:scale-[1.01]"
                   />
                   <div className="absolute top-4 right-4 flex items-center gap-2">
-                    <a
-                      href={(opportunity as any).flyerUrl}
-                      download
-                      onClick={(e) => e.stopPropagation()}
-                      className="p-2.5 rounded-xl bg-slate-950/80 border border-white/20 text-white hover:text-cyan-300 transition-colors shadow-lg"
-                      title="Télécharger l'affiche"
-                    >
-                      <Download className="w-4 h-4" />
-                    </a>
+                    <DownloadPostButton
+                      url={(opportunity as any).flyerUrl}
+                      filename={`stage-${opportunity.slug}.jpg`}
+                      title="Télécharger"
+                    />
                     <button
                       onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}
-                      className="p-2.5 rounded-xl bg-slate-950/80 border border-white/20 text-white hover:text-cyan-300 transition-colors shadow-lg"
+                      className="p-3 rounded-2xl bg-slate-950/80 border border-white/20 text-white hover:text-cyan-300 transition-colors shadow-lg"
                       title="Zoom Plein Écran"
                     >
                       <Maximize2 className="w-4 h-4" />

@@ -8,6 +8,7 @@ import { WhatsAppFloat } from '@/components/shared/whatsapp-float';
 import { ScrollToTop } from '@/components/shared/scroll-to-top';
 import { PWAInstallPrompt } from '@/components/shared/pwa-install-prompt';
 import { OfflineDetector } from '@/components/shared/offline-detector';
+import { WhatsAppToastListener } from '@/components/shared/whatsapp-toast-listener';
 import { Toaster } from '@/components/ui/sonner';
 import { SITE_URL, organizationJsonLd } from '@/lib/seo';
 
@@ -24,11 +25,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'MANTECH Nexus — Internships in Cameroon',
+    default: 'MANTECH Nexus — Jobs & Internships in Cameroon',
     template: '%s | MANTECH Nexus',
   },
   description:
-    'Find verified internships in Cameroon — Douala, Yaoundé, Buea. Verified companies, universities, real placements, Intern Passport.',
+    'Find verified jobs and internships in Cameroon — Douala, Yaoundé, Bafoussam, Garoua. Verified recruitment, visual flyers, career links, and talent placement.',
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
@@ -37,12 +38,14 @@ export const metadata: Metadata = {
   },
   keywords: [
     'MANTECH',
+    'jobs Cameroon',
     'internship Cameroon',
-    'internship Douala',
-    'internship Yaoundé',
-    'IT internships',
-    'student internships',
-    'enterprise internship platform',
+    'recruitment Cameroon',
+    'emplois Cameroun',
+    'stages Douala',
+    'jobs Yaoundé',
+    'IT jobs Cameroon',
+    'visual notice board',
   ],
   icons: {
     icon: '/favicon.ico',
@@ -50,9 +53,9 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: 'MANTECH Nexus — Internships in Cameroon',
+    title: 'MANTECH Nexus — Jobs & Internships in Cameroon',
     description:
-      'Verified internships, companies and universities across Cameroon — Douala, Yaoundé, Buea.',
+      'Verified jobs, internships, recruitment flyers and career links across Cameroon — Douala, Yaoundé, Buea, Bafoussam.',
     type: 'website',
     locale: 'en_US',
     url: SITE_URL,
@@ -60,8 +63,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MANTECH Nexus — Internships in Cameroon',
-    description: 'Verified internships & placements across Cameroon.',
+    title: 'MANTECH Nexus — Jobs & Internships in Cameroon',
+    description: 'Verified jobs, internships & recruitment across Cameroon.',
   },
   robots: { index: true, follow: true },
 };
@@ -85,6 +88,7 @@ export default function RootLayout({
           <Navbar />
           <main className="min-h-screen pt-16">{children}</main>
           <Footer />
+          <WhatsAppToastListener />
           <WhatsAppFloat />
           <ScrollToTop />
           <PWAInstallPrompt />

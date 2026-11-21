@@ -525,12 +525,12 @@ export default async function InternPassportsPage(props: PageProps) {
                       Reset filters
                     </Button>
                   </Link>
-                  <Link href="/dashboard/company/candidates">
+                  <Link href="/post">
                     <Button
                       size="sm"
                       className="bg-emerald-600 hover:bg-emerald-700 text-white"
                     >
-                      Candidate discovery
+                      Post an Opportunity
                     </Button>
                   </Link>
                 </div>
@@ -704,12 +704,12 @@ export default async function InternPassportsPage(props: PageProps) {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/dashboard/company/candidates">
+                  <Link href="/post">
                     <Button
                       size="lg"
                       className="bg-emerald-600 hover:bg-emerald-500 text-white"
                     >
-                      Advanced candidate search
+                      Post Recruitment Need
                     </Button>
                   </Link>
                   <a

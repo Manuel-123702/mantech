@@ -23,7 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-type DashboardKey = "intern" | "company" | "university" | "admin";
+type DashboardKey = "intern" | "post" | "admin";
 
 interface DashboardInfo {
   key: DashboardKey;
@@ -57,100 +57,67 @@ interface DashboardInfo {
 const DASHBOARDS: DashboardInfo[] = [
   {
     key: "intern",
-    label: "Intern & Candidate Portal",
-    badge: "Student Career Hub",
+    label: "Candidate & Talent Portal",
+    badge: "Job Seekers & Interns",
     icon: GraduationCap,
     url: "https://app.mantech-nexus.cm/dashboard/intern",
-    title: "Intern Career & Verifiable Passport Dashboard",
-    headline: "MN Intern profile preview • Ready for Placement",
+    title: "Job Seeker & Intern Career Passport Dashboard",
+    headline: "Candidate Talent Profile • Ready for Placement & Hiring",
     necessity:
-      "Essential for students and recent graduates in Cameroon to bypass traditional unvetted job boards, build a tamper-proof Intern Passport, showcase validated project competencies, and receive direct interview offers from verified employers.",
-    whoUses: "Students, HND/BSc/MSc candidates, engineering graduates across all 10 regions.",
-    primaryBenefit: "100% Free permanent digital identity, automated readiness score, and zero-trust contact privacy.",
+      "Essential for job seekers, recent graduates, and students across Cameroon to track applications, manage verified Talent Passports, showcase validated skills, and receive direct recruiter contact via WhatsApp and email.",
+    whoUses: "Job seekers, professionals, HND/BSc/MSc candidates, engineering graduates across all 10 regions.",
+    primaryBenefit: "100% Free digital career identity, WhatsApp direct hiring alerts, and verified skill badges.",
     href: "/dashboard/intern",
-    ctaText: "Open Intern Workspace",
+    ctaText: "Open Candidate Workspace",
     themeColor: "from-blue-600 to-indigo-600",
     borderColor: "border-blue-500/40",
     glowColor: "bg-blue-500/10",
     preview: {
-      badgeStatus: "Privacy controlled",
+      badgeStatus: "Active Candidate",
       avatarInitials: "MN",
-      profileTitle: "Intern profile preview",
-      profileSub: "BSc Software Engineering • UY1 (Université de Yaoundé I)",
-      stat1: { label: "Profile views", val: "32" },
-      stat2: { label: "CV access", val: "18" },
-      stat3: { label: "Shortlisted", val: "12" },
-      extraBadge: "85% Ready • Passport ID: MN-CE-2026-1041",
+      profileTitle: "Candidate Talent Profile",
+      profileSub: "Software Engineer / Data Analyst • Douala, Cameroon",
+      stat1: { label: "Profile views", val: "48" },
+      stat2: { label: "CV Downloads", val: "22" },
+      stat3: { label: "Interviews", val: "5" },
+      extraBadge: "90% Ready • Passport ID: MN-CM-2026-1041",
       highlights: [
-        "Cryptographically signed Intern Passport with permanent verification URL",
-        "Direct application tracking with real-time status transitions",
+        "Cryptographically signed Talent Passport with permanent verification link",
+        "Track job and internship applications with instant status updates",
         "WhatsApp instant alerts for newly posted opportunities matching your field",
       ],
     },
   },
   {
-    key: "company",
-    label: "Company Recruiter Workspace",
-    badge: "Enterprise Sourcing",
-    icon: Building2,
-    url: "https://app.mantech-nexus.cm/dashboard/company",
-    title: "Host Enterprise & Recruiter Management Workspace",
-    headline: "MTN Cameroon • Talent Acquisition Hub",
+    key: "post",
+    label: "Instant Opportunity Publisher",
+    badge: "0-Registration Posting",
+    icon: Sparkles,
+    url: "https://app.mantech-nexus.cm/post",
+    title: "Instant Recruiter & Employer Posting Engine",
+    headline: "Post in 30 Seconds • No Account Required",
     necessity:
-      "Empowers corporate recruiters and SME hiring leads to post verified jobs and internships across 60 professional domains, eliminate irrelevant CV spam, inspect authentic academic qualifications, and coordinate interviews seamlessly.",
-    whoUses: "HR Directors, Talent Acquisition Teams, Engineering Managers, and Founders.",
-    primaryBenefit: "0 FCFA launch access, pre-screened candidate pool, and structured candidate contact workflows.",
-    href: "/dashboard/company",
-    ctaText: "Open Recruiter Workspace",
+      "No tedious account creation or multi-page forms. Recruiters, shop owners, and HR teams can immediately post opportunities using Visual Flyers, Career Portal Links, or Quick Announcement text with direct WhatsApp apply.",
+    whoUses: "Enterprises, SMEs, startups, shops, HR leads, and recruiters across Cameroon.",
+    primaryBenefit: "Instant live publication, direct WhatsApp applicants, and multi-channel notice board reach.",
+    href: "/post",
+    ctaText: "Post an Opportunity Now",
     themeColor: "from-emerald-600 to-teal-600",
     borderColor: "border-emerald-500/40",
     glowColor: "bg-emerald-500/10",
     preview: {
-      badgeStatus: "Accredited Enterprise",
-      avatarInitials: "MTN",
-      profileTitle: "MTN Cameroon Corporate Workspace",
-      profileSub: "Telecommunications & Cloud Services • Douala, Littoral",
-      stat1: { label: "Active Roles", val: "14" },
-      stat2: { label: "Applicants", val: "124" },
-      stat3: { label: "Shortlisted", val: "28" },
-      extraBadge: "Zero-Spam Filtered • 60 Professional Domains",
+      badgeStatus: "Frictionless Posting",
+      avatarInitials: "HR",
+      profileTitle: "Instant Recruitment Publisher",
+      profileSub: "Flyer • WhatsApp Broadcast • Career Portal Link",
+      stat1: { label: "Post Modes", val: "3" },
+      stat2: { label: "Time to Post", val: "30s" },
+      stat3: { label: "Live Reach", val: "10 Reg." },
+      extraBadge: "Zero Login Required • Direct WhatsApp Contact",
       highlights: [
-        "Post full-time jobs, graduate contracts, and specialized internships in minutes",
-        "Search pre-screened candidates filtered by exact skills and university",
-        "Send verified Contact Requests respecting candidate privacy",
-      ],
-    },
-  },
-  {
-    key: "university",
-    label: "University Placement Portal",
-    badge: "Academic Oversight",
-    icon: Users,
-    url: "https://app.mantech-nexus.cm/dashboard/university",
-    title: "University & Higher Institute Placement Directorate",
-    headline: "ENSPY Yaoundé • Academic Directorate",
-    necessity:
-      "Transforms how Cameroon higher education institutions manage student internships: digitizes tripartite academic conventions, assigns faculty supervisors, tracks student placements, and lets universities recruit their own interns.",
-    whoUses: "University Deans, Faculty Placement Coordinators, and Department Heads.",
-    primaryBenefit: "Tripartite convention digital validation and Dual-Mode (Placement Assistance + Internal Recruiting).",
-    href: "/dashboard/university",
-    ctaText: "Open University Portal",
-    themeColor: "from-amber-600 to-orange-600",
-    borderColor: "border-amber-500/40",
-    glowColor: "bg-amber-500/10",
-    preview: {
-      badgeStatus: "Institutional Partner",
-      avatarInitials: "ENS",
-      profileTitle: "ENSPY Placement Directorate",
-      profileSub: "Engineering & Applied Sciences • Yaoundé, Centre",
-      stat1: { label: "Students Placed", val: "340" },
-      stat2: { label: "Conventions", val: "128" },
-      stat3: { label: "Partner Hosts", val: "45" },
-      extraBadge: "Dual-Mode: Coordination & Campus Recruitment",
-      highlights: [
-        "Supervise tripartite conventions without physical paper back-and-forth",
-        "Monitor student internship logbooks, faculty supervisor reviews, and completions",
-        "Mode B: Recruit student interns directly for campus labs and IT services",
+        "Upload high-res visual recruitment posters and flyers",
+        "Paste WhatsApp group broadcasts with auto-extracted details",
+        "Share company careers portal links with full descriptive context",
       ],
     },
   },
@@ -163,7 +130,7 @@ const DASHBOARDS: DashboardInfo[] = [
     title: "MANTECH Nexus Central Security & Governance Console",
     headline: "MANTECH Central Governance Console",
     necessity:
-      "Protects the integrity of Cameroon's recruitment ecosystem by validating legal business registrations, moderating published opportunities against scams, auditing access logs, and maintaining taxonomy across 60 professional fields.",
+      "Protects the integrity of Cameroon's recruitment ecosystem by moderating published opportunities against scams, auditing access logs, and maintaining taxonomy across 60 professional fields.",
     whoUses: "MANTECH platform moderators, compliance officers, and system administrators.",
     primaryBenefit: "Zero-tolerance scam prevention, audit trail accountability, and national placement telemetry.",
     href: "/dashboard/admin",
@@ -176,14 +143,14 @@ const DASHBOARDS: DashboardInfo[] = [
       avatarInitials: "MN",
       profileTitle: "Platform Moderation & Security Console",
       profileSub: "ACID Relational Core • 10 Administrative Regions",
-      stat1: { label: "Verified Orgs", val: "180" },
+      stat1: { label: "Verified Posts", val: "240" },
       stat2: { label: "Active Fields", val: "60" },
       stat3: { label: "Live Listings", val: "210" },
       extraBadge: "Enterprise ACID Database • 99.8% Uptime",
       highlights: [
-        "Review organization accreditation documents (tax IDs & commercial registry)",
-        "Audit trail tracking every profile view, contact request, and status change",
-        "Real-time regional telemetry monitoring placements from Maroua to Douala",
+        "Scam detection and compliance moderation for all incoming postings",
+        "Audit trail tracking every opportunity and application transition",
+        "Real-time national telemetry monitoring jobs and internships across Cameroon",
       ],
     },
   },
@@ -204,15 +171,15 @@ export function DashboardShowcase() {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 rounded-full bg-blue-950/80 border border-blue-500/30 px-3.5 py-1 text-xs font-bold text-blue-300 tracking-wide mb-3">
             <Laptop className="w-3.5 h-3.5 text-blue-400" />
-            <span>Interactive Platform Architecture</span>
+            <span>Unified Platform Ecosystem</span>
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-            <span className="text-[10px] text-blue-400 font-mono">4 Specialized Workspaces</span>
+            <span className="text-[10px] text-blue-400 font-mono">Dedicated Candidate & Recruiter Engine</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading tracking-tight">
-            Explore Dedicated Dashboards Built for Every Stakeholder
+            Streamlined Portals for Candidates, Recruiters & Governance
           </h2>
           <p className="text-slate-300 text-sm sm:text-base mt-3 leading-relaxed">
-            MANTECH Nexus isolates each user type into a specialized, secure workspace. Preview each dashboard before entering to understand its necessity and capabilities.
+            MANTECH Nexus pairs an intelligent candidate portal with instant frictionless recruiter posting and central governance. Direct access, zero friction.
           </p>
 
           {/* Interactive Tab Switcher */}

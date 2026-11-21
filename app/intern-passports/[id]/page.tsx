@@ -139,7 +139,7 @@ export default async function InternPassportDetailPage({
               <p className="mt-4 text-sm text-slate-300">
                 Your package allows {packageLimits.monthlyCandidateViews} candidate views per month.
               </p>
-              <Link href="/dashboard/company/billing" className="mt-4 inline-block">
+              <Link href="/post" className="mt-4 inline-block">
                 <Button
                   variant="outline"
                   className="border-slate-600 text-slate-300 bg-slate-800/60 hover:bg-slate-700 hover:text-white"

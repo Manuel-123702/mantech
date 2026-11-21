@@ -551,37 +551,27 @@ export default function HomePage() {
       }
     }
 
-    if (list.length < 3) {
-      list.push(
-        {
-          id: "link-1",
-          slug: "mtn-careers-portal",
-          title: "MTN Cameroon Official Careers & Graduate Academy",
-          companyName: "MTN Cameroon",
-          externalUrl: "https://careers.mtn.cm",
-          city: "Douala / National",
-          type: "TELCO PORTAL",
-        },
-        {
-          id: "link-2",
-          slug: "orange-digital-center",
-          title: "Orange Digital Center & Tech Internships Cameroon",
-          companyName: "Orange Cameroun",
-          externalUrl: "https://orangedigitalcenters.com",
-          city: "Yaoundé",
-          type: "INNOVATION HUB",
-        },
-        {
-          id: "link-3",
-          slug: "eneo-recrutement",
-          title: "Eneo Cameroon Power Grid Internship Program",
-          companyName: "Eneo Cameroon S.A.",
-          externalUrl: "https://eneocameroon.cm",
-          city: "Douala / Yaoundé",
-          type: "ENERGY & POWER",
+    // Pull authentic Career Links from express postings
+    if (Array.isArray(AUTHENTIC_EXPRESS_POSTINGS)) {
+      const seenIds = new Set(list.map((item) => item.id || item.slug));
+      for (const item of AUTHENTIC_EXPRESS_POSTINGS) {
+        if ((item.isLinkOnly || item.externalUrl) && !seenIds.has(item.id)) {
+          list.push({
+            id: item.id,
+            slug: item.slug,
+            title: item.title,
+            companyName: item.companyName,
+            externalUrl: item.externalUrl,
+            description: item.description,
+            city: item.city || "Cameroon",
+            type: item.type || "JOB",
+            isFeatured: item.isFeatured,
+          });
+          seenIds.add(item.id);
         }
-      );
+      }
     }
+
     return list;
   }, [featuredJobs, featuredInternships]);
 

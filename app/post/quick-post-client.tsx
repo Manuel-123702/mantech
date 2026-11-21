@@ -26,6 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { broadcastNewOpportunity } from '@/lib/notification-sound';
 
 type PostMode = 'flyer' | 'text_form' | 'link';
 type PostType = 'job' | 'internship';
@@ -75,9 +76,12 @@ export function QuickPostClient() {
   const [formSalaryMin, setFormSalaryMin] = useState(''); // OPTIONAL
   const [formSalaryMax, setFormSalaryMax] = useState(''); // OPTIONAL
   const [formEducation, setFormEducation] = useState('All levels welcome'); // OPTIONAL
+  const [logoFile, setLogoFile] = useState<File | null>(null); // OPTIONAL logo/brand upload
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   // Mode 3: External Link State
   const [externalUrl, setExternalUrl] = useState('');
+  const [linkDetails, setLinkDetails] = useState(''); // REQUIRED details/description of the link
 
   // Expiring Date State (Rule §5)
   const [expiryOption, setExpiryOption] = useState<string>('30');
@@ -177,6 +181,25 @@ export function QuickPostClient() {
           return;
         }
 
+        // Upload logo if provided
+        let uploadedLogoUrl = null;
+        if (logoFile) {
+          try {
+            const logoFormData = new FormData();
+            logoFormData.append('flyer', logoFile);
+            const logoRes = await fetch('/api/jobs/upload-flyer', {
+              method: 'POST',
+              body: logoFormData,
+            });
+            if (logoRes.ok) {
+              const logoData = await logoRes.json();
+              uploadedLogoUrl = logoData.url;
+            }
+          } catch (e) {
+            console.warn('Optional logo upload failed:', e);
+          }
+        }
+
         const lines = formText.trim().split('\n').filter(Boolean);
         const autoTitle =
           formTitle.trim() ||
@@ -191,6 +214,7 @@ export function QuickPostClient() {
           title: autoTitle,
           organizationName: formCompany.trim(),
           companyName: formCompany.trim(),
+          logoUrl: uploadedLogoUrl,
           city: formCity || 'Douala',
           workMode: formWorkMode || 'ONSITE',
           type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
@@ -218,6 +242,12 @@ export function QuickPostClient() {
           return;
         }
 
+        if (!linkDetails.trim() || linkDetails.trim().length < 10) {
+          toast.error('Please provide details about the opportunity or requirements for this link (Required).');
+          setSubmitting(false);
+          return;
+        }
+
         let domain = 'Company Portal';
         try {
           const u = new URL(externalUrl.startsWith('http') ? externalUrl : `https://${externalUrl}`);
@@ -229,6 +259,8 @@ export function QuickPostClient() {
           formTitle.trim() ||
           `${postType === 'internship' ? 'Offre de Stage' : "Offre d'Emploi"} — ${companyName}`;
 
+        const fullDescription = `${linkDetails.trim()}\n\n🔗 Portail Officiel de Recrutement : ${externalUrl}`;
+
         payload = {
           title: linkTitle,
           organizationName: companyName,
@@ -237,7 +269,7 @@ export function QuickPostClient() {
           workMode: 'ONSITE',
           type: postType === 'internship' ? 'INTERNSHIP' : 'FULL_TIME',
           postType: postType,
-          description: `Postulez directement sur le portail institutionnel vérifié : ${externalUrl}`,
+          description: fullDescription,
           applicationMethod: 'COMPANY_WEBSITE',
           applicationUrl: externalUrl,
           externalUrl: externalUrl,
@@ -270,6 +302,21 @@ export function QuickPostClient() {
         type: postType,
         mode: mode,
       });
+
+      // Play WhatsApp chime and broadcast alert
+      broadcastNewOpportunity({
+        title: payload.title,
+        companyName: payload.companyName || payload.organizationName || 'Entreprise Vérifiée',
+        city: payload.city || 'Douala',
+        type: postType,
+        slug,
+        timestamp: Date.now(),
+      });
+
+      // Move view UPWARD smoothly so user sees success and choices
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
 
       toast.success(
         `${postType === 'internship' ? 'Internship' : 'Job'} published successfully!`
@@ -311,21 +358,14 @@ export function QuickPostClient() {
               </p>
             </div>
 
-            {/* Quick Actions */}
+            {/* Quick Actions (Direct Clickable Links) */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <Link
-                href={
-                  publishedData.mode === 'flyer'
-                    ? `/${publishedData.type === 'internship' ? 'internships' : 'jobs'}/flyers`
-                    : publishedData.mode === 'link'
-                    ? `/${publishedData.type === 'internship' ? 'internships' : 'jobs'}/links`
-                    : `/${publishedData.type === 'internship' ? 'internships' : 'jobs'}/${publishedData.slug}`
-                }
+                href={`/${publishedData.type === 'internship' ? 'internships' : 'jobs'}/${publishedData.slug}`}
+                className="inline-flex items-center justify-center bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl px-6 py-4 shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02] cursor-pointer"
               >
-                <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl px-6 py-5 shadow-lg shadow-emerald-600/30">
-                  <span>View Published Opportunity</span>
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                <span>View Published Opportunity</span>
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
 
               <button
@@ -334,15 +374,28 @@ export function QuickPostClient() {
                   setPublishedData(null);
                   setFlyerFile(null);
                   setFlyerPreview(null);
+                  setLogoFile(null);
+                  setLogoPreview(null);
                   setFormCompany('');
                   setFormTitle('');
                   setFormText('');
+                  setLinkDetails('');
                   setExternalUrl('');
+                  if (typeof window !== 'undefined') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
                 }}
-                className="px-6 py-3 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-xs font-bold transition-all"
+                className="px-6 py-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-700 text-xs font-bold transition-all cursor-pointer"
               >
                 Post Another Opportunity
               </button>
+
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center px-6 py-4 rounded-xl border border-slate-700 bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 text-xs font-semibold transition-all cursor-pointer"
+              >
+                Go to Homepage
+              </Link>
             </div>
           </motion.div>
         ) : (
@@ -548,6 +601,53 @@ export function QuickPostClient() {
                     </p>
                   </div>
 
+                  {/* Optional Company Logo or Brand Image */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <ImageIcon className="w-4 h-4 text-emerald-400" />
+                        <span>Company Logo / Brand Image (Optional):</span>
+                      </span>
+                      <span className="text-[10px] text-slate-500">PNG, JPG, WEBP</span>
+                    </Label>
+                    {logoPreview ? (
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950 border border-emerald-500/40">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={logoPreview}
+                          alt="Logo Preview"
+                          className="w-12 h-12 rounded-lg object-contain bg-slate-900 border border-slate-800"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-white font-medium truncate">{logoFile?.name}</p>
+                          <p className="text-[10px] text-emerald-400">Attached to posting</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => { setLogoFile(null); setLogoPreview(null); }}
+                          className="p-1.5 rounded-lg bg-red-950/60 text-red-400 hover:bg-red-900/80"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="flex items-center justify-center gap-2 p-3.5 rounded-xl border border-dashed border-slate-700 hover:border-emerald-500/50 bg-slate-950/60 hover:bg-slate-950 cursor-pointer transition-colors text-xs text-slate-400 hover:text-white">
+                        <Upload className="w-4 h-4 text-emerald-400" />
+                        <span>Upload Logo or Brand Image (Optional)</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const f = e.target.files?.[0] || null;
+                            setLogoFile(f);
+                            if (f) setLogoPreview(URL.createObjectURL(f));
+                          }}
+                        />
+                      </label>
+                    )}
+                  </div>
+
                   {/* Position Title (OPTIONAL) */}
                   <div className="space-y-2">
                     <Label htmlFor="formTitle" className="text-xs font-bold text-slate-300 flex items-center justify-between">
@@ -689,17 +789,40 @@ export function QuickPostClient() {
                     </p>
                   </div>
 
-                  {/* Optional Quick Fields for Link */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  {/* Opportunity Details (REQUIRED per user instructions) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="linkDetails" className="text-xs font-bold text-white flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <FileText className="w-4 h-4 text-cyan-400" />
+                        <span>Opportunity Details &amp; Requirements *:</span>
+                      </span>
+                      <span className="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Required</span>
+                    </Label>
+                    <Textarea
+                      id="linkDetails"
+                      rows={5}
+                      value={linkDetails}
+                      onChange={(e) => setLinkDetails(e.target.value)}
+                      placeholder="Give clear details about this link: role responsibilities, qualifications, deadline, who can apply, and instructions. Candidates read this before opening the external portal."
+                      className="bg-slate-950 border-cyan-500/50 focus:border-cyan-400 text-white text-xs leading-relaxed rounded-xl placeholder-slate-500"
+                      required
+                    />
+                    <p className="text-[11px] text-slate-400">
+                      Candidates will read these details on MANTECH Nexus before clicking through to the external portal.
+                    </p>
+                  </div>
+
+                  {/* Quick Fields for Link: Title & WhatsApp Phone */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                     <div className="space-y-1.5">
-                      <Label htmlFor="linkCompany" className="text-xs font-semibold text-slate-300">
-                        Company / Institute Name (Optional)
+                      <Label htmlFor="linkTitle" className="text-xs font-semibold text-slate-300">
+                        Position / Role Title (Optional)
                       </Label>
                       <Input
-                        id="linkCompany"
-                        placeholder="e.g. MTN, Camtel, Orange…"
-                        value={formCompany}
-                        onChange={(e) => setFormCompany(e.target.value)}
+                        id="linkTitle"
+                        placeholder="e.g. Senior Data Analyst, Mécanicien…"
+                        value={formTitle}
+                        onChange={(e) => setFormTitle(e.target.value)}
                         className="bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 text-xs rounded-xl"
                       />
                     </div>

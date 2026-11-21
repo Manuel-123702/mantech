@@ -135,7 +135,7 @@ const RESOURCE_MENU: NavMenuItem[] = [
   {
     href: '/pricing',
     label: 'Pricing & Launch Access',
-    description: '100% Free National Launch Access for interns, companies & universities',
+    description: '100% Free National Launch Access for candidates, job seekers & recruiters',
     icon: CreditCard,
     color: 'text-violet-400 bg-violet-950/60 border border-violet-500/20',
   },
@@ -214,11 +214,7 @@ export function Navbar() {
   const dashboardLink =
     userRole === 'ADMIN'
       ? '/dashboard/admin'
-      : userRole === 'COMPANY'
-        ? '/dashboard/company'
-        : userRole === 'UNIVERSITY'
-          ? '/dashboard/university'
-          : '/dashboard/intern';
+      : '/dashboard/intern';
 
   const canBrowsePassports = isLoaded && !!user && userRole !== 'INTERN';
 

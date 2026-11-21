@@ -75,8 +75,6 @@ export default async function SettingsPage() {
 
   if (!user) redirect("/sign-in");
 
-  if (user.role === "COMPANY") redirect("/dashboard/company/settings");
-  if (user.role === "UNIVERSITY") redirect("/dashboard/university/settings");
   if (user.role === "ADMIN") redirect("/dashboard/admin/configuration");
 
   const profile = (user as any).internProfile;
