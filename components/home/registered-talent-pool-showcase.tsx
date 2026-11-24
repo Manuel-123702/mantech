@@ -134,7 +134,7 @@ export function RegisteredTalentPoolShowcase({ candidates }: RegisteredTalentPoo
                     <div className="relative">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={person.avatarUrl || '/images/avatars/intern_1.svg'}
+                        src={person.avatarUrl || '/images/candidates/intern_1.jpg'}
                         alt={person.fullName}
                         width={56}
                         height={56}

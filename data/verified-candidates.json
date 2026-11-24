@@ -3,7 +3,7 @@
     "id": "cand-01",
     "fullName": "Brenda Mengue",
     "email": "brenda.mengue@enspy.cm",
-    "avatarUrl": "/images/avatars/intern_1.svg",
+    "avatarUrl": "/images/candidates/intern_1.jpg",
     "internProfile": {
       "id": "prof-01",
       "qualification": "BSc Software Engineering & Cloud",
@@ -50,7 +50,7 @@
     "id": "cand-02",
     "fullName": "Cyrille Fotso",
     "email": "cyrille.fotso@iuc-univ.cm",
-    "avatarUrl": "/images/avatars/intern_2.svg",
+    "avatarUrl": "/images/candidates/intern_2.jpg",
     "internProfile": {
       "id": "prof-02",
       "qualification": "Licence Réseaux & Systèmes Télécom",
@@ -97,7 +97,7 @@
     "id": "cand-03",
     "fullName": "Angèle Nguena",
     "email": "angele.nguena@uy1.cm",
-    "avatarUrl": "/images/avatars/intern_3.svg",
+    "avatarUrl": "/images/candidates/intern_3.jpg",
     "internProfile": {
       "id": "prof-03",
       "qualification": "Master Statistiques & Data Analytics",
@@ -144,7 +144,7 @@
     "id": "cand-04",
     "fullName": "Yannick Mbarga",
     "email": "yannick.mbarga@nahpi.cm",
-    "avatarUrl": "/images/avatars/intern_4.svg",
+    "avatarUrl": "/images/candidates/intern_4.jpg",
     "internProfile": {
       "id": "prof-04",
       "qualification": "BEng Cybersecurity & Network Defense",
@@ -191,7 +191,7 @@
     "id": "cand-05",
     "fullName": "Diane Tchuente",
     "email": "diane.tchuente@univ-douala.cm",
-    "avatarUrl": "/images/avatars/intern_5.svg",
+    "avatarUrl": "/images/candidates/intern_5.jpg",
     "internProfile": {
       "id": "prof-05",
       "qualification": "Master Audit & Contrôle de Gestion",
@@ -238,7 +238,7 @@
     "id": "cand-06",
     "fullName": "Kevin Fonkou",
     "email": "kevin.fonkou@ubuea.cm",
-    "avatarUrl": "/images/avatars/intern_6.svg",
+    "avatarUrl": "/images/candidates/intern_6.jpg",
     "internProfile": {
       "id": "prof-06",
       "qualification": "BSc Computer Science & Mobile Dev",
@@ -285,7 +285,7 @@
     "id": "cand-07",
     "fullName": "Sandra Bih",
     "email": "sandra.bih@catuc.cm",
-    "avatarUrl": "/images/avatars/intern_7.svg",
+    "avatarUrl": "/images/candidates/intern_7.jpg",
     "internProfile": {
       "id": "prof-07",
       "qualification": "BSc Human Resource Management",
@@ -332,7 +332,7 @@
     "id": "cand-08",
     "fullName": "Christian Abena",
     "email": "christian.abena@enspy.cm",
-    "avatarUrl": "/images/avatars/intern_8.svg",
+    "avatarUrl": "/images/candidates/intern_8.jpg",
     "internProfile": {
       "id": "prof-08",
       "qualification": "Diplôme d’Ingénieur Électrotechnique",
@@ -379,7 +379,7 @@
     "id": "cand-09",
     "fullName": "Vanessa Kamga",
     "email": "vanessa.kamga@essec-douala.cm",
-    "avatarUrl": "/images/avatars/intern_9.svg",
+    "avatarUrl": "/images/candidates/intern_9.jpg",
     "internProfile": {
       "id": "prof-09",
       "qualification": "Master Supply Chain & Commerce International",
@@ -426,7 +426,7 @@
     "id": "cand-10",
     "fullName": "Arnaud Djomo",
     "email": "arnaud.djomo@iut-douala.cm",
-    "avatarUrl": "/images/avatars/intern_10.svg",
+    "avatarUrl": "/images/candidates/intern_10.jpg",
     "internProfile": {
       "id": "prof-10",
       "qualification": "DUT Génie Informatique & Réseaux",
@@ -473,7 +473,7 @@
     "id": "cand-11",
     "fullName": "Esther Ndongo",
     "email": "esther.ndongo@fmsb-uy1.cm",
-    "avatarUrl": "/images/avatars/intern_11.svg",
+    "avatarUrl": "/images/candidates/intern_11.jpg",
     "internProfile": {
       "id": "prof-11",
       "qualification": "Doctorat d’État en Pharmacie (5e Année)",
@@ -520,7 +520,7 @@
     "id": "cand-12",
     "fullName": "Boris Talla",
     "email": "boris.talla@siantou.cm",
-    "avatarUrl": "/images/avatars/intern_12.svg",
+    "avatarUrl": "/images/candidates/intern_12.jpg",
     "internProfile": {
       "id": "prof-12",
       "qualification": "BTS Télécommunications & Réseaux",
@@ -567,7 +567,7 @@
     "id": "cand-13",
     "fullName": "Christelle Eyenga",
     "email": "christelle.eyenga@uy2.cm",
-    "avatarUrl": "/images/avatars/intern_13.svg",
+    "avatarUrl": "/images/candidates/intern_13.jpg",
     "internProfile": {
       "id": "prof-13",
       "qualification": "Master Marketing Stratégique & Vente",
@@ -614,7 +614,7 @@
     "id": "cand-14",
     "fullName": "Franck Nana",
     "email": "franck.nana@iut-bandjoun.cm",
-    "avatarUrl": "/images/avatars/intern_14.svg",
+    "avatarUrl": "/images/candidates/intern_14.jpg",
     "internProfile": {
       "id": "prof-14",
       "qualification": "DUT Génie Mécanique & Productique",
@@ -661,7 +661,7 @@
     "id": "cand-15",
     "fullName": "Nadine Mvondo",
     "email": "nadine.mvondo@uy2-droit.cm",
-    "avatarUrl": "/images/avatars/intern_15.svg",
+    "avatarUrl": "/images/candidates/intern_15.jpg",
     "internProfile": {
       "id": "prof-15",
       "qualification": "Master Droit des Affaires & Fiscalité OHADA",
@@ -708,7 +708,7 @@
     "id": "cand-16",
     "fullName": "Patrick Ebongue",
     "email": "patrick.ebongue@enspt.cm",
-    "avatarUrl": "/images/avatars/intern_16.svg",
+    "avatarUrl": "/images/candidates/intern_16.jpg",
     "internProfile": {
       "id": "prof-16",
       "qualification": "Ingénieur de Conception Génie Civil",
@@ -755,7 +755,7 @@
     "id": "cand-17",
     "fullName": "Carine Zang",
     "email": "carine.zang@univ-dschang.cm",
-    "avatarUrl": "/images/avatars/intern_17.svg",
+    "avatarUrl": "/images/candidates/intern_17.jpg",
     "internProfile": {
       "id": "prof-17",
       "qualification": "Master Microbiologie & Contrôle Qualité Alimentaire",
@@ -802,7 +802,7 @@
     "id": "cand-18",
     "fullName": "Alain Manga",
     "email": "alain.manga@fasa.cm",
-    "avatarUrl": "/images/avatars/intern_18.svg",
+    "avatarUrl": "/images/candidates/intern_18.jpg",
     "internProfile": {
       "id": "prof-18",
       "qualification": "Ingénieur Agronome Économie Rurale",
@@ -849,7 +849,7 @@
     "id": "cand-19",
     "fullName": "Solange Bisseck",
     "email": "solange.bisseck@univ-douala.cm",
-    "avatarUrl": "/images/avatars/intern_19.svg",
+    "avatarUrl": "/images/candidates/intern_19.jpg",
     "internProfile": {
       "id": "prof-19",
       "qualification": "Licence Communication des Organisations & Médias",
@@ -896,7 +896,7 @@
     "id": "cand-20",
     "fullName": "Emmanuel Tabi",
     "email": "emmanuel.tabi@ubuea.cm",
-    "avatarUrl": "/images/avatars/intern_20.svg",
+    "avatarUrl": "/images/candidates/intern_20.jpg",
     "internProfile": {
       "id": "prof-20",
       "qualification": "BTech Electrical & Telecommunications Engineering",

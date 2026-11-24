@@ -55,7 +55,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_001',
     internName: 'Vanessa Kamga',
-    avatarUrl: '/images/avatars/intern_1.svg',
+    avatarUrl: '/images/candidates/intern_1.jpg',
     institution: 'University of Buea',
     qualification: 'BSc Computer Engineering (FET)',
     region: 'South-West',
@@ -89,7 +89,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_002',
     internName: 'Armand Njoya',
-    avatarUrl: '/images/avatars/intern_2.svg',
+    avatarUrl: '/images/candidates/intern_2.jpg',
     institution: 'University of Yaoundé I',
     qualification: 'MSc Software Engineering',
     region: 'Centre',
@@ -124,7 +124,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_003',
     internName: 'Élodie Tchouante',
-    avatarUrl: '/images/avatars/intern_3.svg',
+    avatarUrl: '/images/candidates/intern_3.jpg',
     institution: 'UCAC — ICAM Douala',
     qualification: 'Master Ingénieur Généraliste',
     region: 'Littoral',
@@ -159,7 +159,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_004',
     internName: 'Samuel Ngum',
-    avatarUrl: '/images/avatars/intern_4.svg',
+    avatarUrl: '/images/candidates/intern_4.jpg',
     institution: 'University of Bamenda (NAHPI)',
     qualification: 'B.Eng Telecommunications Engineering',
     region: 'North-West',
@@ -194,7 +194,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_005',
     internName: 'Marc-Aurèle Ebanda',
-    avatarUrl: '/images/avatars/intern_5.svg',
+    avatarUrl: '/images/candidates/intern_5.jpg',
     institution: 'École Polytechnique de Yaoundé (ENSPY)',
     qualification: 'Diplôme d’Ingénieur en Génie Informatique',
     region: 'Centre',
@@ -229,7 +229,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_006',
     internName: 'Ruth Folefac',
-    avatarUrl: '/images/avatars/intern_6.svg',
+    avatarUrl: '/images/candidates/intern_6.jpg',
     institution: 'Institut Universitaire de la Côte (IUC)',
     qualification: 'Licence Pro Réseaux & Télécoms',
     region: 'Littoral',
@@ -264,7 +264,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_007',
     internName: 'Fabrice Ngankam',
-    avatarUrl: '/images/avatars/intern_7.svg',
+    avatarUrl: '/images/candidates/intern_7.jpg',
     institution: 'University of Douala',
     qualification: 'MSc Financial Informatics & Risk',
     region: 'Littoral',
@@ -299,7 +299,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_008',
     internName: 'Laura Ndzana',
-    avatarUrl: '/images/avatars/intern_8.svg',
+    avatarUrl: '/images/candidates/intern_8.jpg',
     institution: 'University of Yaoundé I',
     qualification: 'BSc Computer Science',
     region: 'Centre',
@@ -334,7 +334,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_009',
     internName: 'Junior Bekolo',
-    avatarUrl: '/images/avatars/intern_9.svg',
+    avatarUrl: '/images/candidates/intern_9.jpg',
     institution: 'École Polytechnique de Yaoundé (ENSPY)',
     qualification: 'Master en Intelligence Artificielle',
     region: 'Centre',
@@ -368,7 +368,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_010',
     internName: 'Brenda Ewane',
-    avatarUrl: '/images/avatars/intern_10.svg',
+    avatarUrl: '/images/candidates/intern_10.jpg',
     institution: 'University of Buea',
     qualification: 'BSc Software Engineering',
     region: 'South-West',
@@ -403,7 +403,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_011',
     internName: 'Emmanuel Mbarga',
-    avatarUrl: '/images/avatars/intern_11.svg',
+    avatarUrl: '/images/candidates/intern_11.jpg',
     institution: 'University of Dschang (IUT FOTSO Victor)',
     qualification: 'DUT Génie Télécommunications',
     region: 'West',
@@ -438,7 +438,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_012',
     internName: 'Noëlla Ayissi',
-    avatarUrl: '/images/avatars/intern_12.svg',
+    avatarUrl: '/images/candidates/intern_12.jpg',
     institution: 'University of Yaoundé II (Soa)',
     qualification: 'Master en Droit des Affaires & Conformité',
     region: 'Centre',
@@ -473,7 +473,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_013',
     internName: 'Prisca Mvondo',
-    avatarUrl: '/images/avatars/intern_13.svg',
+    avatarUrl: '/images/candidates/intern_13.jpg',
     institution: 'University of Ngaoundéré (ENSIR)',
     qualification: 'Ingénieur en Génie Électrique & Énergies Renouvelables',
     region: 'Adamawa',
@@ -508,7 +508,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_014',
     internName: 'Hervé Menye',
-    avatarUrl: '/images/avatars/intern_14.svg',
+    avatarUrl: '/images/candidates/intern_14.jpg',
     institution: 'IUT Douala — Université de Douala',
     qualification: 'Licence Pro Génie Logiciel',
     region: 'Littoral',
@@ -543,7 +543,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_015',
     internName: 'Diane Kenfack',
-    avatarUrl: '/images/avatars/intern_15.svg',
+    avatarUrl: '/images/candidates/intern_15.jpg',
     institution: 'University of Dschang',
     qualification: 'MSc Applied Statistics & Machine Learning',
     region: 'West',
@@ -577,7 +577,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_016',
     internName: 'Martial Soha',
-    avatarUrl: '/images/avatars/intern_16.svg',
+    avatarUrl: '/images/candidates/intern_16.jpg',
     institution: 'University of Buea',
     qualification: 'BSc Computer Science',
     region: 'South-West',
@@ -611,7 +611,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_017',
     internName: 'Reine Bihina',
-    avatarUrl: '/images/avatars/intern_17.svg',
+    avatarUrl: '/images/candidates/intern_17.jpg',
     institution: 'University of Maroua (ISS)',
     qualification: 'Ingénieur en Télécommunications & Réseaux',
     region: 'Far North',
@@ -646,7 +646,7 @@ const SUCCESS_STORIES: SuccessStory[] = [
   {
     id: 'ss_018',
     internName: 'Bernard Ndongo',
-    avatarUrl: '/images/avatars/intern_18.svg',
+    avatarUrl: '/images/candidates/intern_18.jpg',
     institution: 'École Polytechnique de Yaoundé (ENSPY)',
     qualification: 'Ingénieur en Génie Électrique',
     region: 'Centre',
