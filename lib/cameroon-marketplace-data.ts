@@ -538,6 +538,21 @@ export function getExpressPostings(): MarketplaceJob[] {
   const now = Date.now();
   const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
+  if (typeof window === 'undefined') {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const filePath = path.join(process.cwd(), 'data', 'express-postings.json');
+      if (fs.existsSync(filePath)) {
+        const raw = fs.readFileSync(filePath, 'utf-8');
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          inMemoryExpressPostings = parsed;
+        }
+      }
+    } catch {}
+  }
+
   // Filter out any posting that expired more than 1 week ago (Auto-Purged)
   return inMemoryExpressPostings
     .filter((j) => {

@@ -186,14 +186,14 @@ export function QuickPostClient() {
         if (logoFile) {
           try {
             const logoFormData = new FormData();
-            logoFormData.append('flyer', logoFile);
-            const logoRes = await fetch('/api/jobs/upload-flyer', {
+            logoFormData.append('file', logoFile);
+            const logoRes = await fetch('/api/postings/upload-flyer', {
               method: 'POST',
               body: logoFormData,
             });
             if (logoRes.ok) {
               const logoData = await logoRes.json();
-              uploadedLogoUrl = logoData.url;
+              uploadedLogoUrl = logoData.flyerUrl;
             }
           } catch (e) {
             console.warn('Optional logo upload failed:', e);

@@ -495,10 +495,9 @@ export default function HomePage() {
         });
       }
     }
-    // 15 authentic Cameroonian enterprise flyers (Rule §6)
-    if (list.length < 15 && Array.isArray(AUTHENTIC_EXPRESS_POSTINGS)) {
+    if (Array.isArray(AUTHENTIC_EXPRESS_POSTINGS) && (AUTHENTIC_EXPRESS_POSTINGS as any[]).length > 0) {
       const seenIds = new Set(list.map((item) => item.id || item.slug));
-      for (const flyer of AUTHENTIC_EXPRESS_POSTINGS) {
+      for (const flyer of (AUTHENTIC_EXPRESS_POSTINGS as any[])) {
         if (!seenIds.has(flyer.id) && flyer.flyerUrl) {
           list.push({
             id: flyer.id,
@@ -552,9 +551,9 @@ export default function HomePage() {
     }
 
     // Pull authentic Career Links from express postings
-    if (Array.isArray(AUTHENTIC_EXPRESS_POSTINGS)) {
+    if (Array.isArray(AUTHENTIC_EXPRESS_POSTINGS) && (AUTHENTIC_EXPRESS_POSTINGS as any[]).length > 0) {
       const seenIds = new Set(list.map((item) => item.id || item.slug));
-      for (const item of AUTHENTIC_EXPRESS_POSTINGS) {
+      for (const item of (AUTHENTIC_EXPRESS_POSTINGS as any[])) {
         if ((item.isLinkOnly || item.externalUrl) && !seenIds.has(item.id)) {
           list.push({
             id: item.id,

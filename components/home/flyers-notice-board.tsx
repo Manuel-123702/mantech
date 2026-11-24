@@ -16,6 +16,7 @@ import {
   Building2,
   ArrowRight,
   Maximize2,
+  Upload,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -162,10 +163,22 @@ export function FlyersNoticeBoard({ flyers, careerLinks }: FlyersNoticeBoardProp
               })}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-slate-800 p-8 text-center bg-slate-900/40">
-              <ImageIcon className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-              <p className="text-sm font-semibold text-slate-300">No image flyers published today.</p>
-              <p className="text-xs text-slate-500 mt-1">Be the first to publish your hiring poster free!</p>
+            <div className="rounded-3xl border-2 border-dashed border-cyan-500/30 bg-gradient-to-b from-slate-900/60 to-slate-950/80 p-8 sm:p-12 text-center max-w-2xl mx-auto backdrop-blur-xl">
+              <div className="w-16 h-16 rounded-2xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center mx-auto mb-4 text-cyan-400 shadow-xl shadow-cyan-950">
+                <ImageIcon className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
+                Aucune affiche de recrutement pour le moment
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-400 mb-6 max-w-md mx-auto leading-relaxed">
+                Vous êtes un employeur, une boutique, un atelier, une PME ou un cabinet au Cameroun ? Déposez votre affiche de recrutement ou communiqué officiel en 30 secondes sans créer de compte.
+              </p>
+              <Link href="/post?mode=flyer">
+                <Button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white font-bold text-xs rounded-xl px-6 py-5 shadow-lg shadow-cyan-600/25">
+                  <Upload className="w-4 h-4 mr-2" />
+                  <span>Publier la Première Affiche Gratuitement</span>
+                </Button>
+              </Link>
             </div>
           )}
         </div>
