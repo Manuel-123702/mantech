@@ -32,8 +32,8 @@ const WORDS: WordConfig[] = [
     accentColor: '#22d3ee',
   },
   {
-    id: 'internship',
-    text: 'Internship',
+    id: 'jobs-internships',
+    text: 'Jobs & Internships',
     className:
       'bg-gradient-to-r from-amber-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(245,158,11,0.7)]',
     glowColor: 'rgba(245,158,11,0.85)',
@@ -196,7 +196,7 @@ export function HeroKineticHeadline() {
           <span className="inline-block w-2 sm:w-3" />
         </span>
 
-        {/* ── WORDS 2, 3, 4: ENTERPRISE, INTERNSHIP, MARKETPLACE ── */}
+        {/* ── WORDS 2, 3, 4: ENTERPRISE, JOBS & INTERNSHIPS, MARKETPLACE ── */}
         {WORDS.slice(1).map((word, wIdx) => {
           // Word reveals cascade right after Cameroon's completes
           const wordBaseDelay = CAMEROON_FINISH_TIME + 0.35 + wIdx * 0.45;
