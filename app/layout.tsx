@@ -1,15 +1,6 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import { AuthProvider } from '@/lib/clerk';
-import { Navbar } from '@/components/shared/navbar';
-import { Footer } from '@/components/shared/footer';
-import { LoadingScreen } from '@/components/shared/loading-screen';
-import { WhatsAppFloat } from '@/components/shared/whatsapp-float';
-import { ScrollToTop } from '@/components/shared/scroll-to-top';
-import { PWAInstallPrompt } from '@/components/shared/pwa-install-prompt';
-import { OfflineDetector } from '@/components/shared/offline-detector';
-import { WhatsAppToastListener } from '@/components/shared/whatsapp-toast-listener';
-import { Toaster } from '@/components/ui/sonner';
+import { AppProviders } from './providers';
 import { SITE_URL, organizationJsonLd } from '@/lib/seo';
 
 const inter = { variable: 'font-sans' };
@@ -83,18 +74,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-slate-950 text-foreground">
-        <AuthProvider>
-          <LoadingScreen />
-          <Navbar />
-          <main className="min-h-screen pt-16">{children}</main>
-          <Footer />
-          <WhatsAppToastListener />
-          <WhatsAppFloat />
-          <ScrollToTop />
-          <PWAInstallPrompt />
-          <OfflineDetector />
-          <Toaster position="top-center" richColors closeButton />
-        </AuthProvider>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

@@ -100,7 +100,7 @@ export function LoadingScreen({ onComplete, minDuration = 2600 }: LoadingScreenP
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
             </span>
-            <span className="font-mono uppercase tracking-wider text-[11px] text-slate-300 font-semibold">
+            <span className="font-mono uppercase tracking-wider text-[11px] text-blue-600 font-semibold">
               MANTECH Nexus // National Core
             </span>
           </div>
@@ -131,8 +131,8 @@ export function LoadingScreen({ onComplete, minDuration = 2600 }: LoadingScreenP
 
           {/* Heading */}
           <div className="space-y-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-heading text-white">
-              MANTECH Nexus
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-heading text-6lue-500">
+              MANTECH <span className='text-orange-600'>Nexus</span>
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-normal tracking-wide">
               Cameroon&apos;s National Enterprise Internship Management Platform

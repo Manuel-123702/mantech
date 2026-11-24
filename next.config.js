@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  experimental: {
-    cpus: 1,
-  },
+  // Transpile and optimize modern package exports
+  transpilePackages: ['lucide-react'],
   images: { unoptimized: true },
 
   /**
