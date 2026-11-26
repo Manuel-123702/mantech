@@ -234,8 +234,8 @@ export function Navbar() {
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'border-b border-slate-800/80 bg-slate-950/90 shadow-2xl backdrop-blur-2xl'
-          : 'border-b border-slate-800/40 bg-slate-950/75 backdrop-blur-xl'
+          ? 'border-b border-slate-800/90 bg-slate-950/98 sm:bg-slate-950/90 shadow-2xl backdrop-blur-2xl'
+          : 'border-b border-slate-800/80 bg-slate-950/95 sm:bg-slate-950/80 shadow-lg sm:shadow-none backdrop-blur-2xl sm:backdrop-blur-xl'
       )}
     >
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent pointer-events-none" />
@@ -678,7 +678,7 @@ export function Navbar() {
             />
 
             <motion.div
-              className={`fixed inset-x-0 ${scrolled ? 'top-16' : 'top-20'} z-50 flex flex-col border-b border-slate-800 bg-slate-950/98 shadow-2xl backdrop-blur-2xl lg:hidden max-h-[85vh] overflow-y-auto text-white`}
+              className={`fixed inset-x-0 ${scrolled ? 'top-16' : 'top-20'} z-50 flex flex-col border-b border-slate-800/90 bg-slate-950 shadow-2xl backdrop-blur-3xl lg:hidden max-h-[85vh] overflow-y-auto text-white`}
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
