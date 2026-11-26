@@ -131,7 +131,7 @@ export function LoadingScreen({ onComplete, minDuration = 2600 }: LoadingScreenP
 
           {/* Heading */}
           <div className="space-y-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-heading text-6lue-500">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-heading text-blue-500">
               MANTECH <span className='text-orange-600'>Nexus</span>
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-normal tracking-wide">
