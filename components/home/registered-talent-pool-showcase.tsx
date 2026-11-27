@@ -68,13 +68,13 @@ export function RegisteredTalentPoolShowcase({ candidates }: RegisteredTalentPoo
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-xs font-bold uppercase tracking-wider mb-3">
               <Users className="w-3.5 h-3.5 text-purple-400" />
-              Verified Talent Pool · 20 Live Candidate Passports
+              Verified Talent Pool · Live Candidate Passports
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold font-heading text-white tracking-tight">
-              Pre-Screened Students &amp; Young Graduates
+              Pre-Screened Job Seekers &amp; Interns
             </h2>
             <p className="mt-2 text-slate-300 text-sm max-w-2xl leading-relaxed">
-              Every candidate holds an accredited MINESUP university profile with verified competencies, academic transcripts, and bilingual ATS CVs ready for direct enterprise placement.
+              Every candidate holds an accredited profile with verified competencies, academic qualifications, and bilingual ATS CVs ready for direct job and internship placement across Cameroon.
             </p>
           </div>
 
@@ -85,7 +85,7 @@ export function RegisteredTalentPoolShowcase({ candidates }: RegisteredTalentPoo
                 className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-purple-600/20"
               >
                 <QrCode className="w-3.5 h-3.5 mr-1.5" />
-                Claim Your Intern Passport Free
+                Claim Your Talent Passport Free
               </Button>
             </Link>
           </div>

@@ -7,7 +7,7 @@ import { requireAdminUser } from '@/lib/admin-dashboard';
 import { notifyMatchingAlerts } from '@/lib/alert-delivery';
 
 const schema = z.object({
-  action: z.enum(['approve', 'publish', 'reject', 'suspend', 'restore', 'archive']),
+  action: z.enum(['approve', 'publish', 'reject', 'suspend', 'restore', 'archive', 'delete']),
   reason: z.string().max(2000).optional(),
 });
 
@@ -32,6 +32,20 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     });
     if (!opportunity) {
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
+    }
+
+    if (body.action === 'delete') {
+      await prisma.internshipOpportunity.delete({ where: { id: opportunity.id } });
+      await writeAudit({
+        actorId: admin.id,
+        actorRole: admin.role,
+        action: 'OPPORTUNITY_DELETED',
+        entityType: 'InternshipOpportunity',
+        entityId: opportunity.id,
+        details: { action: 'delete', reason: body.reason },
+        request,
+      });
+      return NextResponse.json({ success: true, deleted: true });
     }
 
     const nextStatus = STATUS_BY_ACTION[body.action];

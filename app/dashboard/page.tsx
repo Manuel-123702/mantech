@@ -30,32 +30,15 @@ const WORKSPACES = [
     href: '/dashboard/intern',
     title: 'Candidate Dashboard (Jobs & Internships)',
     description:
-      'Track your job & internship applications, saved opportunities, profile status and recruiter alerts.',
+      'Manage your career journey: track job & internship applications, saved vacancies, verified digital talent passport, CV file and recruiter alerts.',
     icon: Briefcase,
     roles: ['intern', 'admin'],
-  },
-  {
-    href: '/dashboard/intern/passport',
-    title: 'My Talent Passport',
-    description:
-      'Your verified digital professional profile, skills, academic background and shareable CV link.',
-    icon: IdCard,
-    roles: ['intern', 'admin'],
-  },
-  {
-    href: '/post',
-    title: 'Post a Job or Internship',
-    description:
-      'Instant frictionless posting: Upload visual flyers, share career links, or paste recruitment notices directly.',
-    icon: LayoutDashboard,
-    roles: ['intern', 'admin'],
-    openToAll: true,
   },
   {
     href: '/dashboard/admin',
     title: 'Admin Dashboard',
     description:
-      'Platform governance, verification, user moderation, analytics and site configuration.',
+      'Platform governance: verify organizations, moderate incoming jobs/internships across all 3 posting methods, review candidate passports and site analytics.',
     icon: ShieldCheck,
     roles: ['admin'],
   },
