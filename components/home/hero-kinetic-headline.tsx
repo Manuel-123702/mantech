@@ -128,20 +128,20 @@ export function HeroKineticHeadline() {
           {/* Outer Breathing Aurora Halo */}
           <motion.span
             animate={{
-              opacity: [0.35, 0.75, 0.35],
-              scale: [0.97, 1.03, 0.97],
+              opacity: [0.3, 0.65, 0.3],
+              scale: [0.97, 1.02, 0.97],
             }}
             transition={{
               duration: 2.8,
               repeat: Infinity,
               ease: 'easeInOut',
             }}
-            className="absolute -inset-1.5 rounded-2xl bg-gradient-to-r from-amber-500/25 via-orange-500/35 to-yellow-400/25 blur-lg pointer-events-none"
+            className="absolute -inset-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/30 to-yellow-400/20 blur-md pointer-events-none"
           />
 
-          {/* Glowing Badge Capsule Container */}
-          <span className="relative inline-flex items-center gap-1.5 px-3 py-0.5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900/90 to-orange-950/70 border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.25)] overflow-hidden">
-            {/* Luminous High-Speed Laser Sweep Wave passing across "Jobs & Internships" */}
+          {/* Glowing Badge Capsule Container (Compact & Refined) */}
+          <span className="relative inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-gradient-to-r from-amber-950/70 via-slate-900/90 to-orange-950/70 border border-amber-500/35 shadow-[0_0_18px_rgba(245,158,11,0.2)] overflow-hidden">
+            {/* Luminous Laser Sweep Wave */}
             <motion.span
               animate={{
                 x: ['-140%', '240%'],
@@ -152,26 +152,26 @@ export function HeroKineticHeadline() {
                 repeatDelay: 1.5,
                 ease: [0.4, 0, 0.2, 1],
               }}
-              className="absolute inset-y-0 w-28 -skew-x-20 bg-gradient-to-r from-transparent via-amber-200/40 via-white/50 to-transparent pointer-events-none mix-blend-overlay z-20"
+              className="absolute inset-y-0 w-20 -skew-x-20 bg-gradient-to-r from-transparent via-amber-200/40 via-white/50 to-transparent pointer-events-none mix-blend-overlay z-20"
             />
 
-            {/* Glowing Golden Flame / Opportunity Pulse Icon */}
+            {/* Glowing Golden Flame Icon */}
             <motion.span
               animate={{
-                scale: [1, 1.22, 1],
-                rotate: [0, -6, 6, 0],
+                scale: [1, 1.18, 1],
+                rotate: [0, -5, 5, 0],
               }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
                 ease: 'easeInOut',
               }}
-              className="inline-flex items-center text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]"
+              className="inline-flex items-center text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.85)]"
             >
-              <Flame className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-400" />
+              <Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-amber-400" />
             </motion.span>
 
-            {/* Animated Text with Radiant Chromatic Gradient */}
+            {/* Scaled-down text font */}
             <motion.span
               animate={{
                 backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
@@ -185,7 +185,7 @@ export function HeroKineticHeadline() {
                 backgroundImage: 'linear-gradient(90deg, #fef08a, #f59e0b, #fbbf24, #f97316, #fef08a)',
                 backgroundSize: '250% 100%',
               }}
-              className="bg-clip-text text-transparent font-black drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]"
+              className="bg-clip-text text-transparent font-black text-[0.88em] leading-tight drop-shadow-[0_0_16px_rgba(245,158,11,0.55)]"
             >
               Jobs &amp; Internships
             </motion.span>
@@ -194,7 +194,7 @@ export function HeroKineticHeadline() {
             <motion.span
               animate={{
                 opacity: [0, 1, 0],
-                scale: [0.6, 1.3, 0.6],
+                scale: [0.6, 1.2, 0.6],
               }}
               transition={{
                 duration: 1.8,
@@ -202,9 +202,9 @@ export function HeroKineticHeadline() {
                 ease: 'easeInOut',
                 delay: 0.6,
               }}
-              className="inline-flex text-yellow-300 drop-shadow-[0_0_10px_rgba(254,240,138,1)]"
+              className="inline-flex text-yellow-300 drop-shadow-[0_0_8px_rgba(254,240,138,1)]"
             >
-              <Sparkles className="w-3.5 h-3.5 fill-yellow-300" />
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-yellow-300" />
             </motion.span>
           </span>
         </span>
