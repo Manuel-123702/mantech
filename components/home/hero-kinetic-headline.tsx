@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Flame, Briefcase } from 'lucide-react';
 
 const CAMEROON_TEXT = "CAMEROON'S";
 
@@ -53,12 +53,9 @@ export function HeroKineticHeadline() {
     <div className="relative group inline-block select-none">
       <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.18] tracking-tight flex flex-wrap items-baseline gap-x-3 gap-y-2">
         {/* ── WORD 1: CAMEROON'S (Snug-Fit Pharmacy Marquee Band) ── */}
-        {/* Fixed exact snug width accommodates the word + cursor snugly with no awkward empty gap */}
         <span className="inline-flex items-center whitespace-nowrap relative px-2 sm:px-2.5 py-0.5 rounded-xl sm:rounded-2xl bg-slate-900/90 border border-emerald-500/35 shadow-[0_0_20px_rgba(16,185,129,0.22)] w-[190px] sm:w-[225px] md:w-[270px] lg:w-[318px] h-[40px] sm:h-[46px] md:h-[54px] lg:h-[62px] shrink-0 overflow-hidden">
-          {/* Subtle neon ambient under-glow */}
           <span className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-emerald-500/10 pointer-events-none blur-sm" />
 
-          {/* Letter container with calibrated readable sizing */}
           <span className="relative flex items-center font-mono tracking-tight text-[1.4rem] sm:text-[1.75rem] md:text-[2.2rem] lg:text-[2.65rem] leading-none">
             {currentLetters.map((char, index) => {
               const isLastTyped = index === currentLetters.length - 1;
@@ -68,7 +65,6 @@ export function HeroKineticHeadline() {
                   key={`cameroon-letter-${index}`}
                   className="relative inline-flex items-center justify-center min-w-[0.58em]"
                 >
-                  {/* Glowing light halo rounding around each letter */}
                   <motion.span
                     initial={{ scale: 0.4, opacity: 0 }}
                     animate={{
@@ -79,7 +75,6 @@ export function HeroKineticHeadline() {
                     className="absolute -inset-0.5 rounded-full bg-emerald-400/25 blur-[3px] pointer-events-none"
                   />
 
-                  {/* Individual letter with LED luminous glow */}
                   <motion.span
                     initial={{ y: -4, opacity: 0, scale: 0.7 }}
                     animate={{ y: 0, opacity: 1, scale: 1 }}
@@ -95,7 +90,6 @@ export function HeroKineticHeadline() {
               );
             })}
 
-            {/* Glowing vertical cursor "|" that blinks continuously */}
             <motion.span
               animate={{ opacity: [1, 0, 1] }}
               transition={{
@@ -108,7 +102,6 @@ export function HeroKineticHeadline() {
               |
             </motion.span>
 
-            {/* Sparkle emblem that shines when full word is displayed */}
             <AnimatePresence>
               {isFullWord && (
                 <motion.span
@@ -125,15 +118,98 @@ export function HeroKineticHeadline() {
           </span>
         </span>
 
-        {/* ── REMAINING TITLE WORDS (100% Fixed in Place, Never Shifted) ── */}
+        {/* ── WORD 2: ENTERPRISE (Static, Clean) ── */}
         <span className="whitespace-nowrap bg-gradient-to-r from-cyan-300 via-teal-300 to-emerald-300 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(6,182,212,0.4)]">
           Enterprise
         </span>
 
-        <span className="whitespace-nowrap bg-gradient-to-r from-amber-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(245,158,11,0.4)]">
-          Jobs &amp; Internships
+        {/* ── WORD 3: JOBS & INTERNSHIPS (Dynamic Holographic Aurora Shimmer + Pulse Wave Motion) ── */}
+        <span className="relative inline-flex items-center whitespace-nowrap group/jobs cursor-pointer">
+          {/* Outer Breathing Aurora Halo */}
+          <motion.span
+            animate={{
+              opacity: [0.35, 0.75, 0.35],
+              scale: [0.97, 1.03, 0.97],
+            }}
+            transition={{
+              duration: 2.8,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="absolute -inset-1.5 rounded-2xl bg-gradient-to-r from-amber-500/25 via-orange-500/35 to-yellow-400/25 blur-lg pointer-events-none"
+          />
+
+          {/* Glowing Badge Capsule Container */}
+          <span className="relative inline-flex items-center gap-1.5 px-3 py-0.5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900/90 to-orange-950/70 border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.25)] overflow-hidden">
+            {/* Luminous High-Speed Laser Sweep Wave passing across "Jobs & Internships" */}
+            <motion.span
+              animate={{
+                x: ['-140%', '240%'],
+              }}
+              transition={{
+                duration: 2.4,
+                repeat: Infinity,
+                repeatDelay: 1.5,
+                ease: [0.4, 0, 0.2, 1],
+              }}
+              className="absolute inset-y-0 w-28 -skew-x-20 bg-gradient-to-r from-transparent via-amber-200/40 via-white/50 to-transparent pointer-events-none mix-blend-overlay z-20"
+            />
+
+            {/* Glowing Golden Flame / Opportunity Pulse Icon */}
+            <motion.span
+              animate={{
+                scale: [1, 1.22, 1],
+                rotate: [0, -6, 6, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="inline-flex items-center text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]"
+            >
+              <Flame className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-400" />
+            </motion.span>
+
+            {/* Animated Text with Radiant Chromatic Gradient */}
+            <motion.span
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+              style={{
+                backgroundImage: 'linear-gradient(90deg, #fef08a, #f59e0b, #fbbf24, #f97316, #fef08a)',
+                backgroundSize: '250% 100%',
+              }}
+              className="bg-clip-text text-transparent font-black drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]"
+            >
+              Jobs &amp; Internships
+            </motion.span>
+
+            {/* Micro Live Sparkle */}
+            <motion.span
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0.6, 1.3, 0.6],
+              }}
+              transition={{
+                duration: 1.8,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: 0.6,
+              }}
+              className="inline-flex text-yellow-300 drop-shadow-[0_0_10px_rgba(254,240,138,1)]"
+            >
+              <Sparkles className="w-3.5 h-3.5 fill-yellow-300" />
+            </motion.span>
+          </span>
         </span>
 
+        {/* ── WORD 4: MARKETPLACE (Static, Clean) ── */}
         <span className="whitespace-nowrap bg-gradient-to-r from-blue-400 via-indigo-300 to-violet-400 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(129,140,248,0.5)]">
           Marketplace
         </span>
