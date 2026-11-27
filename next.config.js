@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  // Transpile and optimize modern package exports
-  transpilePackages: ['lucide-react'],
   images: { unoptimized: true },
+  webpack(config, { dev }) {
+    if (dev) {
+      config.output.chunkLoadTimeout = 300000;
+    }
+    return config;
+  },
 
   /**
    * Addresses that have been renamed.
