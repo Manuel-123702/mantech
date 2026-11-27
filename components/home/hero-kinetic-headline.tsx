@@ -7,11 +7,6 @@ import { Sparkles } from 'lucide-react';
 const CAMEROON_TEXT = "CAMEROON'S";
 
 export function HeroKineticHeadline() {
-  // Pharmacy marquee loop:
-  // Phase 'typing': letters reveal one by one with glowing light
-  // Phase 'hold': full word displayed with blinking cursor '|'
-  // Phase 'deleting': letters retract one by one
-  // Phase 'pause': brief pause before looping again
   const [displayedCount, setDisplayedCount] = useState(0);
   const [phase, setPhase] = useState<'typing' | 'hold' | 'deleting' | 'pause'>('typing');
 
@@ -22,9 +17,8 @@ export function HeroKineticHeadline() {
       if (displayedCount < CAMEROON_TEXT.length) {
         timer = setTimeout(() => {
           setDisplayedCount((prev) => prev + 1);
-        }, 130); // 130ms per letter typing
+        }, 130);
       } else {
-        // Full word typed out: hold for 2.2 seconds with blinking '|'
         timer = setTimeout(() => {
           setPhase('hold');
         }, 100);
@@ -37,7 +31,7 @@ export function HeroKineticHeadline() {
       if (displayedCount > 0) {
         timer = setTimeout(() => {
           setDisplayedCount((prev) => prev - 1);
-        }, 75); // 75ms per letter retracting
+        }, 75);
       } else {
         timer = setTimeout(() => {
           setPhase('pause');
@@ -58,31 +52,31 @@ export function HeroKineticHeadline() {
   return (
     <div className="relative group inline-block select-none">
       <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.18] tracking-tight flex flex-wrap items-baseline gap-x-3 gap-y-2">
-        {/* ── WORD 1: CAMEROON'S (Fixed-Width Pharmacy Marquee Band) ── */}
-        {/* Fixed min-width and width reservation prevents "Enterprise" or any following word from shifting! */}
-        <span className="inline-flex items-center justify-between whitespace-nowrap relative py-1 px-2.5 rounded-2xl bg-slate-900/85 border border-emerald-500/35 shadow-[0_0_22px_rgba(16,185,129,0.2)] w-[215px] sm:w-[245px] md:w-[285px] lg:w-[325px] h-[44px] sm:h-[50px] md:h-[56px] lg:h-[62px] shrink-0 overflow-hidden">
+        {/* ── WORD 1: CAMEROON'S (Snug-Fit Pharmacy Marquee Band) ── */}
+        {/* Fixed exact snug width accommodates the word + cursor snugly with no awkward empty gap */}
+        <span className="inline-flex items-center whitespace-nowrap relative px-2 sm:px-2.5 py-0.5 rounded-xl sm:rounded-2xl bg-slate-900/90 border border-emerald-500/35 shadow-[0_0_20px_rgba(16,185,129,0.22)] w-[190px] sm:w-[225px] md:w-[270px] lg:w-[318px] h-[40px] sm:h-[46px] md:h-[54px] lg:h-[62px] shrink-0 overflow-hidden">
           {/* Subtle neon ambient under-glow */}
-          <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-emerald-500/10 pointer-events-none blur-sm" />
+          <span className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-emerald-500/10 pointer-events-none blur-sm" />
 
-          {/* Letter container with slightly smaller, compact font size */}
-          <span className="relative flex items-center font-mono tracking-wider text-xl sm:text-2xl md:text-3xl lg:text-4xl">
+          {/* Letter container with calibrated readable sizing */}
+          <span className="relative flex items-center font-mono tracking-tight text-[1.4rem] sm:text-[1.75rem] md:text-[2.2rem] lg:text-[2.65rem] leading-none">
             {currentLetters.map((char, index) => {
               const isLastTyped = index === currentLetters.length - 1;
 
               return (
                 <span
                   key={`cameroon-letter-${index}`}
-                  className="relative inline-flex items-center justify-center min-w-[0.62em]"
+                  className="relative inline-flex items-center justify-center min-w-[0.58em]"
                 >
                   {/* Glowing light halo rounding around each letter */}
                   <motion.span
                     initial={{ scale: 0.4, opacity: 0 }}
                     animate={{
-                      scale: isLastTyped ? [1, 1.4, 1.1] : 1,
+                      scale: isLastTyped ? [1, 1.35, 1.05] : 1,
                       opacity: isLastTyped ? [0.4, 0.9, 0.4] : 0.25,
                     }}
-                    transition={{ duration: 0.35, ease: 'easeOut' }}
-                    className="absolute -inset-1 rounded-full bg-emerald-400/25 blur-[3px] pointer-events-none"
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    className="absolute -inset-0.5 rounded-full bg-emerald-400/25 blur-[3px] pointer-events-none"
                   />
 
                   {/* Individual letter with LED luminous glow */}
@@ -109,14 +103,12 @@ export function HeroKineticHeadline() {
                 repeat: Infinity,
                 ease: 'easeInOut',
               }}
-              className="inline-block font-mono font-black text-emerald-400 text-2xl sm:text-3xl md:text-4xl ml-1 leading-none drop-shadow-[0_0_12px_rgba(52,211,153,1)] select-none"
+              className="inline-block font-mono font-black text-emerald-400 text-[1.3rem] sm:text-[1.65rem] md:text-[2.1rem] lg:text-[2.5rem] leading-none drop-shadow-[0_0_12px_rgba(52,211,153,1)] select-none ml-0.5"
             >
               |
             </motion.span>
-          </span>
 
-          {/* Sparkle emblem that shines when full word is displayed */}
-          <span className="w-5 h-5 flex items-center justify-center shrink-0">
+            {/* Sparkle emblem that shines when full word is displayed */}
             <AnimatePresence>
               {isFullWord && (
                 <motion.span
@@ -124,7 +116,7 @@ export function HeroKineticHeadline() {
                   animate={{ scale: 1, opacity: 1, rotate: 0 }}
                   exit={{ scale: 0, opacity: 0 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-                  className="inline-flex items-center text-amber-300 drop-shadow-[0_0_12px_rgba(252,211,77,0.95)]"
+                  className="inline-flex items-center text-amber-300 drop-shadow-[0_0_12px_rgba(252,211,77,0.95)] ml-1"
                 >
                   <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-amber-300" />
                 </motion.span>
