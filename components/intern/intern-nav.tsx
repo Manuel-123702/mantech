@@ -62,7 +62,7 @@ export function InternNav() {
   };
 
   return (
-    <nav className="space-y-1">
+    <nav className="flex flex-row lg:flex-col gap-1.5 lg:gap-1 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
       {links.map((link) => {
         const active = isActive(link.href);
         const Icon = link.icon;
@@ -71,14 +71,14 @@ export function InternNav() {
             key={link.href}
             href={link.href}
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
+              "flex items-center gap-2.5 lg:gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0",
               active
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 font-bold"
-                : "text-slate-300 hover:bg-slate-800/80 hover:text-white",
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 font-bold hover:bg-blue-500 hover:text-white"
+                : "bg-slate-800/40 lg:bg-transparent text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/50 lg:border-0",
             )}
           >
-            <Icon className="h-4 w-4" />
-            {link.label}
+            <Icon className="h-4 w-4 shrink-0" />
+            <span>{link.label}</span>
           </Link>
         );
       })}

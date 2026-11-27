@@ -8,10 +8,10 @@ import { Rocket } from 'lucide-react';
 import { BOOST_STATUSES, BOOST_STATUS_LABELS, type BoostStatus } from '@/lib/boost-rules';
 
 const STATUS_CLASS: Record<BoostStatus, string> = {
-  REQUESTED: 'bg-amber-100 text-amber-700 border-amber-200',
-  APPROVED: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  REJECTED: 'bg-red-100 text-red-700 border-red-200',
-  EXPIRED: 'bg-slate-100 text-slate-600 border-slate-200',
+  REQUESTED: 'bg-amber-950/70 text-amber-300 border-amber-500/30',
+  APPROVED: 'bg-emerald-950/70 text-emerald-300 border-emerald-500/30',
+  REJECTED: 'bg-rose-950/70 text-rose-300 border-rose-500/30',
+  EXPIRED: 'bg-slate-800 text-slate-300 border-slate-700',
 };
 
 export default async function AdminBoostsPage({
@@ -20,7 +20,6 @@ export default async function AdminBoostsPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   await requireAdminDashboard();
-  // Lazily expire boosts whose window elapsed before showing the queue.
   await expireDueBoosts();
 
   const { status } = await searchParams;
@@ -47,8 +46,8 @@ export default async function AdminBoostsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-bold text-orange-500">Boost requests</h2>
-        <p className="mt-1 text-xs text-slate-500">
+        <h2 className="text-lg font-bold text-amber-400 break-words">Boost requests</h2>
+        <p className="mt-1 text-xs text-slate-300 break-words">
           Companies request a time-boxed featured placement for a published opportunity. Approving
           sorts the posting first in listings until the window ends; the organization&apos;s package
           featured-badge limit is enforced on approval. Every decision lands in the audit trail.
@@ -60,10 +59,11 @@ export default async function AdminBoostsPage({
           <Link
             key={value}
             href={`/dashboard/admin/boosts?status=${value}`}
-            className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition-colors ${activeStatus === value
-              ? 'bg-slate-900 text-white'
-              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-              }`}
+            className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition-colors ${
+              activeStatus === value
+                ? 'bg-amber-600 text-white hover:bg-amber-500'
+                : 'bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:text-white'
+            }`}
           >
             {BOOST_STATUS_LABELS[value]} ({countFor(value)})
           </Link>
@@ -71,39 +71,39 @@ export default async function AdminBoostsPage({
       </div>
 
       {boosts.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <p className="text-sm font-semibold text-slate-700">
+        <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-8 text-center shadow-lg">
+          <p className="text-sm font-semibold text-slate-300">
             No {BOOST_STATUS_LABELS[activeStatus].toLowerCase()} boosts.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
           {boosts.map((boost) => (
-            <div key={boost.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="min-w-0 space-y-1.5">
+            <div key={boost.id} className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 sm:p-5 shadow-lg">
+              <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                <div className="min-w-0 flex-1 space-y-1.5">
                   <div className="flex flex-wrap items-center gap-2">
                     <Link
                       href={`/internships/${boost.opportunity.slug ?? boost.opportunity.id}`}
-                      className="text-sm font-bold text-slate-900 hover:text-blue-700"
+                      className="text-sm font-bold text-white hover:text-amber-300 break-words"
                     >
                       {boost.opportunity.title}
                     </Link>
-                    <Badge className={`${STATUS_CLASS[boost.status]} text-[10px]`}>
+                    <Badge className={`${STATUS_CLASS[boost.status]} border text-[10px]`}>
                       {BOOST_STATUS_LABELS[boost.status]}
                     </Badge>
                     {boost.status === 'APPROVED' && boost.opportunity.isFeatured && (
-                      <Badge variant="outline" className="text-[10px] uppercase">
+                      <Badge className="bg-amber-950/70 text-amber-300 border border-amber-500/30 text-[10px] uppercase">
                         Featured
                       </Badge>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500">
-                    <span>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-400">
+                    <span className="break-words">
                       {boost.organization.name} ({boost.organization.packageCode} package)
                     </span>
-                    <span>{boost.days}-day boost</span>
-                    <span>
+                    <span className="text-slate-200 font-semibold">{boost.days}-day boost</span>
+                    <span className="break-words">
                       Requested by {boost.requestedBy.fullName} on{' '}
                       {boost.createdAt.toISOString().slice(0, 10)}
                     </span>
@@ -114,36 +114,36 @@ export default async function AdminBoostsPage({
                       </span>
                     )}
                   </div>
-                  {boost.note && <p className="max-w-2xl text-xs text-slate-600">{boost.note}</p>}
+                  {boost.note && <p className="max-w-2xl text-xs text-slate-300 break-words">{boost.note}</p>}
                   {boost.resolution && (
-                    <p className="text-[11px] font-medium text-slate-500">
+                    <p className="text-[11px] font-medium text-emerald-300 break-words">
                       Resolution: {boost.resolution}
                     </p>
                   )}
                 </div>
 
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-wrap lg:flex-col items-start lg:items-end gap-2 shrink-0">
                   {boost.status === 'REQUESTED' && (
                     <>
                       <AdminActionButton
                         endpoint={`/api/admin/boosts/${boost.id}`}
                         payload={{ action: 'approve' }}
                         label="Approve boost"
-                        className="bg-emerald-600 text-white hover:bg-emerald-700"
+                        className="bg-emerald-600 text-white hover:bg-emerald-500 hover:text-white"
                       />
                       <AdminActionButton
                         endpoint={`/api/admin/boosts/${boost.id}`}
                         payload={{ action: 'reject' }}
                         label="Reject"
-                        variant="outline"
+                        className="bg-rose-600 text-white hover:bg-rose-500 hover:text-white"
                         reasonLabel="Why is this request rejected? (optional)"
                         reasonField="resolution"
                       />
                     </>
                   )}
                   {boost.status !== 'REQUESTED' && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">
-                      <Rocket className="h-3 w-3" />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-800 border border-slate-700 px-2.5 py-0.5 text-[10px] font-semibold text-slate-300">
+                      <Rocket className="h-3 w-3 text-amber-400" />
                       {BOOST_STATUS_LABELS[boost.status]}
                     </span>
                   )}

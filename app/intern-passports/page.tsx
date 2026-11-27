@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
+import { CandidateAvatar } from "@/components/shared/candidate-avatar";
 import {
   Search,
   Filter,
@@ -555,19 +556,12 @@ export default async function InternPassportsPage(props: PageProps) {
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3 min-w-0">
-                          {avatar ? (
-                            <Image
-                              src={avatar}
-                              alt={fullName}
-                              width={52}
-                              height={52}
-                              className="w-[52px] h-[52px] rounded-xl object-cover shadow-sm border border-slate-700/60 ring-1 ring-slate-600/40"
-                            />
-                          ) : (
-                            <div className="w-[52px] h-[52px] rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
-                              {fullName.charAt(0)}
-                            </div>
-                          )}
+                          <CandidateAvatar
+                            src={avatar}
+                            name={fullName}
+                            size={52}
+                            className="border border-slate-700/60 ring-1 ring-slate-600/40"
+                          />
                           <div className="min-w-0">
                             <h3 className="font-bold text-white truncate">
                               {fullName}

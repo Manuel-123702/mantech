@@ -18,7 +18,8 @@ import {
   MessageCircle,
   ArrowLeft,
 } from "lucide-react";
-import { CvDownloadButton } from "@/components/cv-download-button";
+import { CvViewButton } from "@/components/shared/cv-viewer-modal";
+import { CandidateAvatar } from "@/components/shared/candidate-avatar";
 import { ShareButton } from "@/components/shared/share-button";
 import { ReportButton } from "@/components/shared/report-button";
 import { waSharePassportLink } from "@/lib/whatsapp";
@@ -104,7 +105,7 @@ export default async function InternPassportDetailPage({
       },
       educations: true,
       cvFiles: {
-        select: { id: true, fileName: true, fileSize: true, uploadedAt: true },
+        select: { id: true, fileName: true, fileSize: true, fileUrl: true, uploadedAt: true },
         orderBy: { uploadedAt: "desc" },
       },
     },
@@ -264,21 +265,15 @@ export default async function InternPassportDetailPage({
           {/* Hero identity card */}
           <div className="mb-8 rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-              <div className="flex items-center gap-5">
-                {profileUser.avatarUrl ? (
-                  <Image
-                    src={profileUser.avatarUrl}
-                    alt={profileUser.fullName}
-                    width={80}
-                    height={80}
-                    className="w-20 h-20 rounded-full object-cover border-4 border-slate-700/60 shadow-lg"
-                  />
-                ) : (
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-2xl border-4 border-slate-700/60 shadow-lg">
-                    {profileUser.fullName.charAt(0)}
-                  </div>
-                )}
-                <div>
+              <div className="flex items-center gap-4 sm:gap-5 min-w-0">
+                <CandidateAvatar
+                  src={profileUser.avatarUrl}
+                  name={profileUser.fullName}
+                  size={80}
+                  className="rounded-full border-4 border-slate-700/60 shadow-lg"
+                  priority
+                />
+                <div className="min-w-0">
                   <h1 className="text-3xl font-bold text-white">
                     {profileUser.fullName}
                   </h1>
@@ -448,50 +443,64 @@ export default async function InternPassportDetailPage({
             </div>
           </div>
 
-          {/* CV Access */}
+          {/* CV Access (Read-Only View for Logged-In Users) */}
           <div className="mb-6 rounded-2xl border border-slate-700/60 bg-slate-900/80 backdrop-blur-xl p-6">
             <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <Download className="w-5 h-5 text-slate-400" />
-              CV Access
+              <Eye className="w-5 h-5 text-blue-400" />
+              CV &amp; Resume (Read-Only Preview)
             </h2>
-            {!isVerified ? (
-              <div className="rounded-xl border border-amber-600/40 bg-amber-950/30 p-4">
-                <p className="text-sm text-amber-300">
-                  <strong className="text-amber-200">Recruiters only:</strong> this passport is open to
-                  all signed-in members, but CV downloads are limited to
-                  verified recruiters. Recruiters: contact MANTECH on WhatsApp
-                  to complete your organization verification.
-                </p>
-              </div>
-            ) : cvFiles.length === 0 ? (
+            {cvFiles.length === 0 && !internProfile.cvUrl ? (
               <p className="text-sm text-slate-400">
-                No CV uploaded by this intern.
+                No CV uploaded by this candidate yet.
               </p>
             ) : (
               <div className="space-y-3">
-                {cvFiles.map((cv) => (
-                  <div
-                    key={cv.id}
-                    className="flex items-center justify-between p-3 rounded-xl border border-slate-700/50 bg-slate-800/50"
-                  >
-                    <div>
-                      <p className="font-medium text-white">
-                        {cv.fileName}
+                {cvFiles.length > 0 ? (
+                  cvFiles.map((cv) => (
+                    <div
+                      key={cv.id}
+                      className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-700/50 bg-slate-800/50"
+                    >
+                      <div className="min-w-0">
+                        <p className="font-medium text-white break-words">
+                          {cv.fileName}
+                        </p>
+                        <p className="text-xs text-slate-400">
+                          {(cv.fileSize / 1024).toFixed(2)} KB • Uploaded{" "}
+                          {new Date(cv.uploadedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <CvViewButton
+                        cvUrl={cv.fileUrl || internProfile.cvUrl}
+                        candidateName={profileUser.fullName}
+                        fileName={cv.fileName}
+                        label="View CV"
+                        className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0"
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-700/50 bg-slate-800/50">
+                    <div className="min-w-0">
+                      <p className="font-medium text-white break-words">
+                        {internProfile.cvFileName || "Curriculum Vitae.pdf"}
                       </p>
                       <p className="text-xs text-slate-400">
-                        {(cv.fileSize / 1024).toFixed(2)} KB • Uploaded{" "}
-                        {new Date(cv.uploadedAt).toLocaleDateString()}
+                        Verified Candidate CV
                       </p>
                     </div>
-                    <CvDownloadButton
-                      cvId={cv.id}
-                      internProfileId={internProfileId}
+                    <CvViewButton
+                      cvUrl={internProfile.cvUrl}
+                      candidateName={profileUser.fullName}
+                      fileName={internProfile.cvFileName || "Curriculum Vitae.pdf"}
+                      label="View CV"
+                      className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0"
                     />
                   </div>
-                ))}
-                <p className="text-xs text-slate-500 mt-2">
-                  <Eye className="w-3 h-3 inline mr-1" />
-                  CV access is logged and audited for security purposes.
+                )}
+                <p className="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
+                  <Eye className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  Read-only online preview enabled for all signed-in members. Direct downloads are disabled to protect candidate privacy.
                 </p>
               </div>
             )}

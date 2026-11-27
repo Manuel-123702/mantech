@@ -39,8 +39,8 @@ export default async function AdminOrganizationsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-bold text-slate-900">Organization registry</h2>
-        <p className="mt-1 text-xs text-slate-500">
+        <h2 className="text-lg font-bold text-white break-words">Organization registry</h2>
+        <p className="mt-1 text-xs text-slate-300 break-words">
           {total} registered organization(s). Suspending an organization immediately blocks its recruiter privileges
           and is recorded in the audit trail.
         </p>
@@ -52,117 +52,106 @@ export default async function AdminOrganizationsPage({
             key={value}
             href={`/dashboard/admin/organizations?type=${value}${query ? `&q=${encodeURIComponent(query)}` : ''}`}
             className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition-colors ${
-              activeType === value ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+              activeType === value
+                ? 'bg-amber-600 text-white hover:bg-amber-500'
+                : 'bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:text-white'
             }`}
           >
             {value === 'ALL' ? 'All types' : value === 'COMPANY' ? 'Companies' : 'Universities'}
           </Link>
         ))}
-        <form action="/dashboard/admin/organizations" className="ml-auto flex items-center gap-2">
+        <form action="/dashboard/admin/organizations" className="w-full sm:w-auto sm:ml-auto flex items-center gap-2 mt-2 sm:mt-0">
           <input type="hidden" name="type" value={activeType} />
           <input
             type="search"
             name="q"
             defaultValue={query}
             placeholder="Search by name..."
-            className="w-56 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            className="flex-1 sm:w-56 rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
-          <button type="submit" className="rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white">
+          <button
+            type="submit"
+            className="rounded-xl bg-amber-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-amber-500 shrink-0"
+          >
             Search
           </button>
         </form>
       </div>
 
       {organizations.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <p className="text-sm font-semibold text-slate-700">No organizations match this filter.</p>
+        <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-8 text-center shadow-lg">
+          <p className="text-sm font-semibold text-slate-300">No organizations match this filter.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                  <th className="px-4 py-3">Organization</th>
-                  <th className="px-4 py-3">Location</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Package</th>
-                  <th className="px-4 py-3">Members</th>
-                  <th className="px-4 py-3">Opps</th>
-                  <th className="px-4 py-3">Placements</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {organizations.map((organization) => {
-                  const Icon = organization.type === 'UNIVERSITY' ? Landmark : Building2;
-                  return (
-                    <tr key={organization.id} className="hover:bg-slate-50">
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-                          <div>
-                            <p className="font-semibold text-slate-900">{organization.name}</p>
-                            <p className="text-[10px] text-slate-500">
-                              {organization.type}
-                              {organization.industry?.name ? ` · ${organization.industry.name}` : ''}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-slate-600">
-                        <span className="inline-flex items-center gap-1">
-                          <MapPin className="h-3 w-3 text-slate-400" />
-                          {[organization.city, organization.region?.name].filter(Boolean).join(', ') || 'Cameroon'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge
-                          variant={
-                            organization.verificationStatus === 'VERIFIED'
-                              ? 'default'
-                              : organization.verificationStatus === 'SUSPENDED'
-                                ? 'destructive'
-                                : 'secondary'
-                          }
-                        >
-                          {organization.verificationStatus}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge variant="outline">{organization.packageCode}</Badge>
-                      </td>
-                      <td className="px-4 py-3 font-mono text-slate-700">{organization._count.members}</td>
-                      <td className="px-4 py-3 font-mono text-slate-700">{organization._count.opportunities}</td>
-                      <td className="px-4 py-3 font-mono text-slate-700">{organization._count.placements}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex flex-wrap items-center justify-end gap-2">
-                          {organization.verificationStatus !== 'VERIFIED' && (
-                            <AdminActionButton
-                              endpoint={`/api/admin/verifications/${organization.id}`}
-                              payload={{ action: 'approve' }}
-                              label="Verify"
-                              className="bg-emerald-600 text-white hover:bg-emerald-700"
-                            />
-                          )}
-                          {organization.verificationStatus !== 'SUSPENDED' && (
-                            <AdminActionButton
-                              endpoint={`/api/admin/verifications/${organization.id}`}
-                              payload={{ action: 'suspend' }}
-                              label="Suspend"
-                              variant="outline"
-                              reasonLabel="Suspension reason (shared with the organization)"
-                              reasonField="note"
-                            />
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+        <div className="space-y-3">
+          {organizations.map((organization) => {
+            const Icon = organization.type === 'UNIVERSITY' ? Landmark : Building2;
+            return (
+              <div
+                key={organization.id}
+                className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 sm:p-5 shadow-lg hover:border-slate-600 transition-colors"
+              >
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Icon className="h-4 w-4 shrink-0 text-amber-400" />
+                      <p className="text-sm font-bold text-white break-words">{organization.name}</p>
+                      <Badge
+                        className={
+                          organization.verificationStatus === 'VERIFIED'
+                            ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/30'
+                            : organization.verificationStatus === 'SUSPENDED'
+                              ? 'bg-rose-950/70 text-rose-300 border border-rose-500/30'
+                              : 'bg-amber-950/70 text-amber-300 border border-amber-500/30'
+                        }
+                      >
+                        {organization.verificationStatus}
+                      </Badge>
+                      <Badge className="bg-slate-800 text-slate-200 border border-slate-700">
+                        {organization.packageCode}
+                      </Badge>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400">
+                      <span>
+                        {organization.type}
+                        {organization.industry?.name ? ` · ${organization.industry.name}` : ''}
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
+                        {[organization.city, organization.region?.name].filter(Boolean).join(', ') || 'Cameroon'}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-300 pt-1">
+                      <span><strong className="font-mono text-white">{organization._count.members}</strong> Members</span>
+                      <span><strong className="font-mono text-white">{organization._count.opportunities}</strong> Opps</span>
+                      <span><strong className="font-mono text-white">{organization._count.placements}</strong> Placements</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    {organization.verificationStatus !== 'VERIFIED' && (
+                      <AdminActionButton
+                        endpoint={`/api/admin/verifications/${organization.id}`}
+                        payload={{ action: 'approve' }}
+                        label="Verify"
+                        className="bg-emerald-600 text-white hover:bg-emerald-500 hover:text-white"
+                      />
+                    )}
+                    {organization.verificationStatus !== 'SUSPENDED' && (
+                      <AdminActionButton
+                        endpoint={`/api/admin/verifications/${organization.id}`}
+                        payload={{ action: 'suspend' }}
+                        label="Suspend"
+                        className="bg-rose-600 text-white hover:bg-rose-500 hover:text-white"
+                        reasonLabel="Suspension reason (shared with the organization)"
+                        reasonField="note"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

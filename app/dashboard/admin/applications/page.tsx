@@ -85,8 +85,8 @@ export default async function AdminApplicationsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-bold text-slate-900">Application monitoring</h2>
-        <p className="mt-1 text-xs text-slate-500">
+        <h2 className="text-lg font-bold text-white break-words">Application monitoring</h2>
+        <p className="mt-1 text-xs text-slate-300 break-words">
           {total} application(s) in this view. Read-only oversight — recruiters manage pipelines in their own
           dashboards; admins only observe platform-wide activity.
         </p>
@@ -97,13 +97,15 @@ export default async function AdminApplicationsPage({
           <Link
             key={value}
             href={buildHref(value, activeMethod)}
-            className={`rounded-xl px-3 py-2 text-xs font-semibold transition-colors ${
-              activeStatus === value ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors ${
+              activeStatus === value
+                ? 'bg-amber-600 text-white hover:bg-amber-500'
+                : 'bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:text-white'
             }`}
           >
             {value === 'ALL' ? 'All' : value.replace(/_/g, ' ')}
             {value !== 'ALL' && countByStatus.get(value as never) ? (
-              <span className="ml-1.5 text-[10px] opacity-70">{countByStatus.get(value as never)}</span>
+              <span className="ml-1.5 text-[10px] opacity-80">{countByStatus.get(value as never)}</span>
             ) : null}
           </Link>
         ))}
@@ -114,8 +116,10 @@ export default async function AdminApplicationsPage({
           <Link
             key={value}
             href={buildHref(activeStatus, value)}
-            className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition-colors ${
-              activeMethod === value ? 'bg-slate-700 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+            className={`rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+              activeMethod === value
+                ? 'bg-blue-600 text-white hover:bg-blue-500'
+                : 'bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:text-white'
             }`}
           >
             {value === 'ALL' ? 'All methods' : METHOD_LABELS[value]}
@@ -124,65 +128,51 @@ export default async function AdminApplicationsPage({
       </div>
 
       {applications.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <p className="text-sm font-semibold text-slate-700">No applications match this filter.</p>
+        <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-8 text-center shadow-lg">
+          <p className="text-sm font-semibold text-slate-300">No applications match this filter.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                  <th className="px-4 py-3">Candidate</th>
-                  <th className="px-4 py-3">Opportunity</th>
-                  <th className="px-4 py-3">Organization</th>
-                  <th className="px-4 py-3">Method</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Applied</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {applications.map((application) => {
-                  const listing = application.opportunity ?? application.job;
-                  const orgRow = listing?.organization;
-                  return (
-                  <tr key={application.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3">
-                      <p className="font-semibold text-slate-900">{application.internProfile.user.fullName}</p>
-                      <p className="text-[10px] text-slate-500">
-                        {application.internProfile.fieldOfStudy?.name || application.internProfile.user.email}
+        <div className="space-y-3">
+          {applications.map((application) => {
+            const listing = application.opportunity ?? application.job;
+            const orgRow = listing?.organization;
+            return (
+              <div
+                key={application.id}
+                className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 shadow-lg"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-sm font-bold text-white break-words">
+                        {application.internProfile.user.fullName}
                       </p>
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      <p className="max-w-[240px] truncate font-medium">{listing?.title ?? "—"}</p>
-                      <p className="text-[10px] text-slate-400">{application.job ? "Job" : "Internship"}</p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="text-slate-700">{orgRow?.name ?? "—"}</p>
-                      <p className="text-[10px] text-slate-500">
-                        {orgRow?.type}
-                        {orgRow && orgRow.verificationStatus !== 'VERIFIED' && (
-                          <span className="ml-1 text-amber-600">
-                            · {orgRow.verificationStatus}
-                          </span>
-                        )}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">{METHOD_LABELS[application.applicationMethod]}</td>
-                    <td className="px-4 py-3">
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-700">
+                      <span className="rounded-full bg-amber-950/70 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold uppercase text-amber-300">
                         {application.status.replace(/_/g, ' ')}
                       </span>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-[10px] text-slate-500">
-                      {application.createdAt.toISOString().slice(0, 10)}
-                    </td>
-                  </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      <span className="rounded-full bg-slate-800 border border-slate-700 px-2.5 py-0.5 text-[10px] font-semibold text-slate-300">
+                        {METHOD_LABELS[application.applicationMethod]}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-400 break-words">
+                      {application.internProfile.fieldOfStudy?.name || application.internProfile.user.email}
+                    </p>
+                    <p className="text-xs text-slate-200 break-words">
+                      <span className="font-semibold text-white">{listing?.title ?? '—'}</span>{' '}
+                      <span className="text-slate-400">({application.job ? 'Job' : 'Internship'})</span> ·{' '}
+                      <span className="text-slate-300">{orgRow?.name ?? '—'}</span>
+                      {orgRow && orgRow.verificationStatus !== 'VERIFIED' && (
+                        <span className="ml-1 text-amber-400">· {orgRow.verificationStatus}</span>
+                      )}
+                    </p>
+                  </div>
+                  <div className="shrink-0 font-mono text-[11px] text-slate-400">
+                    Applied {application.createdAt.toISOString().slice(0, 10)}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

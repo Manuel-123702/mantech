@@ -45,7 +45,7 @@ export function AdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="space-y-1">
+    <nav className="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-1 lg:pb-0">
       {links.map((link) => {
         const active =
           link.href === '/dashboard/admin' ? pathname === link.href : pathname.startsWith(link.href);
@@ -55,13 +55,13 @@ export function AdminNav() {
             key={link.href}
             href={link.href}
             className={cn(
-              'flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold transition-all',
+              'flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold transition-all whitespace-nowrap shrink-0',
               active
                 ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30 font-bold'
                 : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
             )}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-4 w-4 shrink-0" />
             {link.label}
           </Link>
         );

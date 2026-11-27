@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { CandidateAvatar } from '@/components/shared/candidate-avatar';
 import {
   Users,
   CheckCircle2,
@@ -131,16 +132,14 @@ export function RegisteredTalentPoolShowcase({ candidates }: RegisteredTalentPoo
                 <div>
                   {/* Avatar + Readiness Score Row */}
                   <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="relative">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                    <div className="relative shrink-0 flex-shrink-0">
+                      <CandidateAvatar
                         src={person.avatarUrl || '/images/candidates/intern_1.jpg'}
-                        alt={person.fullName}
-                        width={56}
-                        height={56}
-                        className="w-14 h-14 rounded-2xl object-cover ring-2 ring-indigo-400/40 group-hover:ring-purple-400 transition-all shadow-md bg-slate-900 shrink-0"
+                        name={person.fullName}
+                        size={56}
+                        className="ring-2 ring-indigo-400/40 group-hover:ring-purple-400 transition-all shadow-md shrink-0"
                       />
-                      <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center text-white shadow" title="Verified Candidate">
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center text-white shadow z-10" title="Verified Candidate">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                       </div>
                     </div>

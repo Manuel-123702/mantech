@@ -113,10 +113,10 @@ export function AdminActionButton({
           onChange={(event) => setReason(event.target.value)}
           placeholder={reasonPlaceholder || reasonLabel}
           rows={2}
-          className="w-64 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300"
+          className="w-full sm:w-64 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
         />
       )}
-      {error && <p className="text-[11px] font-medium text-red-600">{error}</p>}
+      {error && <p className="text-[11px] font-medium text-rose-400">{error}</p>}
     </div>
   );
 }
@@ -152,11 +152,11 @@ export function AdminRoleForm({ userId, currentRole }: { userId: string; current
 
   return (
     <div className="flex flex-col items-end gap-1">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <select
           value={role}
           onChange={(event) => setRole(event.target.value)}
-          className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700"
+          className="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
         >
           {roles.map((option) => (
             <option key={option} value={option}>
@@ -164,11 +164,17 @@ export function AdminRoleForm({ userId, currentRole }: { userId: string; current
             </option>
           ))}
         </select>
-        <Button type="button" size="sm" variant="outline" disabled={pending || role === currentRole} onClick={apply}>
+        <Button
+          type="button"
+          size="sm"
+          className="bg-amber-600 text-white hover:bg-amber-500 hover:text-white font-semibold"
+          disabled={pending || role === currentRole}
+          onClick={apply}
+        >
           {pending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Update role'}
         </Button>
       </div>
-      {error && <p className="text-[11px] font-medium text-red-600">{error}</p>}
+      {error && <p className="text-[11px] font-medium text-rose-400">{error}</p>}
     </div>
   );
 }

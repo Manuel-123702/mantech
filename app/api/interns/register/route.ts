@@ -329,22 +329,28 @@ export async function POST(request: Request) {
 }
 
 const profilePatchSchema = z.object({
+  fullName: z.string().min(1).max(200).optional(),
+  avatarUrl: z.string().nullable().optional(),
   phone: phoneSchema().optional(),
   bio: z.string().max(4000).optional(),
   headline: z.string().max(200).optional(),
   availability: z.string().max(120).optional(),
   workMode: z.string().optional(),
   preferredWorkMode: z.enum(['ONSITE', 'HYBRID', 'REMOTE']).optional(),
+  regionId: z.string().max(120).optional(),
   city: z.string().max(120).optional(),
   isPhonePublic: z.boolean().optional(),
   isCvSearchable: z.boolean().optional(),
-  cvUrl: z.string().url().optional(),
+  cvUrl: z.string().min(1).optional(),
   cvFileKey: z.string().optional(),
   cvFileName: z.string().max(500).optional(),
   cvFileSize: z.number().int().min(0).optional(),
   qualification: z.string().max(200).optional(),
   academicLevel: z.string().max(80).optional(),
   institution: z.string().max(200).optional(),
+  fieldOfStudy: z.string().max(200).optional(),
+  specialization: z.string().max(200).optional(),
+  skills: z.array(z.string().min(1).max(80)).optional(),
   targetRole: z.string().max(200).optional(),
   targetIndustries: z.string().max(300).optional(),
   careerGoals: z.string().max(2000).optional(),
@@ -383,12 +389,66 @@ export async function PATCH(request: Request) {
     const isReplacingCv =
       typeof body.cvFileKey === 'string' && body.cvFileKey.length > 0;
 
+    // Update User fullName and/or avatarUrl (including explicit null to remove photo)
+    if (body.fullName !== undefined || body.avatarUrl !== undefined) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          ...(body.fullName !== undefined ? { fullName: body.fullName.trim() } : {}),
+          ...(body.avatarUrl !== undefined ? { avatarUrl: body.avatarUrl } : {}),
+        },
+      });
+    }
+
+    // Resolve optional taxonomy fields
+    let resolvedFieldId: string | undefined;
+    if (body.fieldOfStudy) {
+      const f = await prisma.field.findFirst({
+        where: {
+          OR: [
+            { id: body.fieldOfStudy },
+            { slug: body.fieldOfStudy },
+            { name: body.fieldOfStudy },
+          ],
+        },
+      });
+      if (f) resolvedFieldId = f.id;
+    }
+
+    let resolvedSpecId: string | undefined;
+    if (body.specialization) {
+      const s = await prisma.specialization.findFirst({
+        where: {
+          OR: [
+            { id: body.specialization },
+            { name: body.specialization },
+          ],
+        },
+      });
+      if (s) resolvedSpecId = s.id;
+    }
+
+    let resolvedRegionId: string | undefined;
+    if (body.regionId) {
+      const r = await prisma.region.findFirst({
+        where: {
+          OR: [
+            { id: body.regionId },
+            { code: body.regionId },
+            { name: body.regionId },
+          ],
+        },
+      });
+      if (r) resolvedRegionId = r.id;
+    }
+
     await prisma.internProfile.update({
       where: { id: profile.id },
       data: {
         ...(body.phone !== undefined ? { phone: body.phone } : {}),
         ...(body.availability !== undefined ? { availability: body.availability } : {}),
         ...(preferredWorkMode ? { preferredWorkMode } : {}),
+        ...(resolvedRegionId ? { regionId: resolvedRegionId } : {}),
         ...(body.city !== undefined ? { city: body.city } : {}),
         ...(body.isPhonePublic !== undefined ? { isPhonePublic: body.isPhonePublic } : {}),
         ...(body.isCvSearchable !== undefined ? { isCvSearchable: body.isCvSearchable } : {}),
@@ -399,12 +459,88 @@ export async function PATCH(request: Request) {
         ...(body.qualification !== undefined ? { qualification: body.qualification } : {}),
         ...(body.academicLevel !== undefined ? { academicLevel: body.academicLevel } : {}),
         ...(body.institution !== undefined ? { institution: body.institution } : {}),
+        ...(resolvedFieldId ? { fieldOfStudyId: resolvedFieldId } : {}),
+        ...(resolvedSpecId ? { specializationId: resolvedSpecId } : {}),
         ...(body.targetRole !== undefined ? { targetRole: body.targetRole } : {}),
         ...(body.targetIndustries !== undefined ? { targetIndustries: body.targetIndustries } : {}),
         ...(body.careerGoals !== undefined ? { careerGoals: body.careerGoals } : {}),
         ...(body.skillsToImprove !== undefined ? { skillsToImprove: body.skillsToImprove } : {}),
       },
     });
+
+    // Update skills if supplied
+    if (body.skills !== undefined) {
+      await prisma.internProfileSkill.deleteMany({
+        where: { internProfileId: profile.id },
+      });
+      for (const skillName of body.skills) {
+        const cleanName = skillName.trim();
+        if (!cleanName) continue;
+        const skillSlug = cleanName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '') || `skill-${Date.now()}`;
+        let skill = await prisma.skill.findFirst({
+          where: {
+            OR: [
+              { name: { equals: cleanName, mode: 'insensitive' } },
+              { slug: skillSlug },
+            ],
+          },
+        });
+        if (!skill) {
+          skill = await prisma.skill.create({
+            data: {
+              name: cleanName,
+              slug: skillSlug,
+              category: 'General',
+            },
+          });
+        }
+        await prisma.internProfileSkill.create({
+          data: {
+            internProfileId: profile.id,
+            skillId: skill.id,
+            proficiency: 'intermediate',
+          },
+        });
+      }
+    }
+
+    // Mirror edits to data/verified-candidates.json for live homepage/directory sync
+    try {
+      const candidatesPath = path.join(process.cwd(), 'data', 'verified-candidates.json');
+      if (fs.existsSync(candidatesPath)) {
+        const raw = fs.readFileSync(candidatesPath, 'utf8');
+        const list = JSON.parse(raw);
+        if (Array.isArray(list)) {
+          const idx = list.findIndex((c: any) => c.id === user.id || c.email === user.email);
+          if (idx >= 0) {
+            const entry = list[idx];
+            if (body.fullName !== undefined) entry.fullName = body.fullName.trim();
+            if (body.avatarUrl !== undefined) entry.avatarUrl = body.avatarUrl;
+            if (entry.internProfile) {
+              if (body.qualification !== undefined) entry.internProfile.qualification = body.qualification;
+              if (body.academicLevel !== undefined) entry.internProfile.academicLevel = body.academicLevel;
+              if (body.institution !== undefined) entry.internProfile.institution = body.institution;
+              if (body.city !== undefined) entry.internProfile.city = body.city;
+              if (body.availability !== undefined) entry.internProfile.availability = body.availability;
+              if (body.targetRole !== undefined) entry.internProfile.targetRole = body.targetRole;
+              if (body.skills !== undefined) {
+                entry.internProfile.skills = body.skills.map((s) => ({ skill: { name: s } }));
+              }
+              if (entry.internProfile.passport) {
+                if (body.headline !== undefined) entry.internProfile.passport.headline = body.headline;
+              }
+            }
+            list[idx] = entry;
+            fs.writeFileSync(candidatesPath, JSON.stringify(list, null, 2), 'utf8');
+          }
+        }
+      }
+    } catch (mirrorErr) {
+      console.warn('[PATCH register] Mirror update skipped:', mirrorErr);
+    }
 
     // When a new CV is uploaded, replace the secure CV metadata so the
     // Download button (which reads CVFileMetadata, not InternProfile.cvUrl)

@@ -65,23 +65,23 @@ export default async function AdminInternsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-bold text-slate-900">Interns &amp; Intern Passports</h2>
-        <p className="mt-1 text-xs text-slate-500">
+        <h2 className="text-lg font-bold text-white break-words">Candidates &amp; Talent Passports</h2>
+        <p className="mt-1 text-xs text-slate-300 break-words">
           {total} profile(s) in this view. CV metadata is shown for moderation only — CV contents are never displayed
-          here and remain accessible exclusively through audited recruiter flows.
+          here and remain accessible exclusively through audited flows.
         </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: 'Intern profiles', value: profileCount },
+          { label: 'Candidate profiles', value: profileCount },
           { label: 'Passports issued', value: passportCount },
           { label: 'Passports unverified', value: unverifiedCount },
           { label: 'CVs discoverable', value: searchableCount },
         ].map((item) => (
-          <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{item.label}</p>
-            <p className="mt-1 text-xl font-bold text-slate-900">{item.value}</p>
+          <div key={item.label} className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 shadow-lg">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 break-words">{item.label}</p>
+            <p className="mt-1 font-mono text-xl font-bold text-white">{item.value}</p>
           </div>
         ))}
       </div>
@@ -92,153 +92,133 @@ export default async function AdminInternsPage({
             key={value}
             href={buildHref(value)}
             className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition-colors ${
-              activePassport === value ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+              activePassport === value
+                ? 'bg-amber-600 text-white hover:bg-amber-500'
+                : 'bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:text-white'
             }`}
           >
             {value === 'ALL' ? 'All passports' : value === 'verified' ? 'Verified' : 'Unverified'}
           </Link>
         ))}
-        <form action="/dashboard/admin/interns" className="ml-auto flex items-center gap-2">
+        <form action="/dashboard/admin/interns" className="w-full sm:w-auto sm:ml-auto flex items-center gap-2 mt-2 sm:mt-0">
           <input type="hidden" name="passport" value={activePassport} />
           <input
             type="search"
             name="q"
             defaultValue={query}
             placeholder="Search name, email or passport no..."
-            className="w-64 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            className="flex-1 sm:w-64 rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
-          <button type="submit" className="rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white">
+          <button
+            type="submit"
+            className="rounded-xl bg-amber-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-amber-500 shrink-0"
+          >
             Search
           </button>
         </form>
       </div>
 
       {profiles.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <p className="text-sm font-semibold text-slate-700">No intern profiles match this filter.</p>
+        <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-8 text-center shadow-lg">
+          <p className="text-sm font-semibold text-slate-300">No candidate profiles match this filter.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                  <th className="px-4 py-3">Intern</th>
-                  <th className="px-4 py-3">Field &amp; location</th>
-                  <th className="px-4 py-3">Readiness</th>
-                  <th className="px-4 py-3">Intern Passport</th>
-                  <th className="px-4 py-3">CV metadata</th>
-                  <th className="px-4 py-3 text-right">Passport moderation</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {profiles.map((profile) => (
-                  <tr key={profile.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3">
-                      <p className="font-semibold text-slate-900">
-                        {profile.user.fullName}
-                        {profile.user.status === 'suspended' && (
-                          <span className="ml-2 rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold uppercase text-red-700">
-                            suspended
-                          </span>
-                        )}
+        <div className="space-y-3">
+          {profiles.map((profile) => (
+            <div
+              key={profile.id}
+              className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 sm:p-5 shadow-lg hover:border-slate-600 transition-colors"
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-sm font-bold text-white break-words">{profile.user.fullName}</p>
+                    {profile.user.status === 'suspended' && (
+                      <span className="rounded-full bg-rose-950/70 border border-rose-500/30 px-2 py-0.5 text-[10px] font-bold uppercase text-rose-300">
+                        suspended
+                      </span>
+                    )}
+                    {profile.passport && (
+                      <span
+                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase ${
+                          profile.passport.isVerified
+                            ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/30'
+                            : 'bg-amber-950/70 text-amber-300 border border-amber-500/30'
+                        }`}
+                      >
+                        {profile.passport.isVerified ? 'verified' : 'unverified'} · {profile.passport.passportNumber}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-400 break-all">{profile.user.email}</p>
+
+                  <div className="grid gap-2 sm:grid-cols-3 text-xs pt-1">
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/60 p-2.5">
+                      <p className="text-[10px] uppercase tracking-wider text-slate-400">Field & Location</p>
+                      <p className="font-semibold text-slate-200 mt-0.5 break-words">
+                        {profile.fieldOfStudy?.name || profile.qualification}
                       </p>
-                      <p className="text-[10px] text-slate-500">{profile.user.email}</p>
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">
-                      <p>{profile.fieldOfStudy?.name || profile.qualification}</p>
-                      <p className="text-[10px] text-slate-500">
-                        {[profile.specialization?.name, profile.city, profile.region?.name].filter(Boolean).join(' · ') ||
-                          'No location set'}
+                      <p className="text-[11px] text-slate-400 break-words">
+                        {[profile.specialization?.name, profile.city, profile.region?.name].filter(Boolean).join(' · ') || 'No location set'}
                       </p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100">
+                    </div>
+
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/60 p-2.5">
+                      <p className="text-[10px] uppercase tracking-wider text-slate-400">Readiness & Activity</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-700">
                           <div
-                            className="h-full rounded-full bg-slate-900"
+                            className="h-full rounded-full bg-amber-500"
                             style={{ width: `${Math.min(100, profile.readinessScore)}%` }}
                           />
                         </div>
-                        <span className="font-mono text-[10px] text-slate-500">{profile.readinessScore}%</span>
+                        <span className="font-mono text-xs font-bold text-white">{profile.readinessScore}%</span>
                       </div>
-                      <p className="mt-1 text-[10px] text-slate-500">
-                        {profile._count.applications} application(s) · {profile._count.placements} placement(s)
+                      <p className="mt-1 text-[11px] text-slate-400">
+                        {profile._count.applications} app(s) · {profile._count.placements} placement(s)
                       </p>
-                    </td>
-                    <td className="px-4 py-3">
-                      {profile.passport ? (
-                        <>
-                          <p className="font-mono text-[11px] font-semibold text-slate-800">
-                            {profile.passport.passportNumber}
-                          </p>
-                          <p className="mt-0.5">
-                            <span
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                                profile.passport.isVerified
-                                  ? 'bg-emerald-100 text-emerald-800'
-                                  : 'bg-amber-100 text-amber-800'
-                              }`}
-                            >
-                              {profile.passport.isVerified ? 'verified' : 'unverified'}
-                            </span>
-                          </p>
-                          <p className="mt-1 text-[10px] text-slate-500">
-                            {profile.passport.viewCount} view(s) · {profile.passport.totalHoursCompleted}h logged
-                          </p>
-                        </>
-                      ) : (
-                        <span className="text-[10px] text-slate-400">No passport issued</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      {profile.cvFileName ? (
-                        <>
-                          <p className="max-w-[160px] truncate text-[11px] text-slate-700">{profile.cvFileName}</p>
-                          <p className="text-[10px] text-slate-500">
-                            {profile.cvFileSize ? `${Math.round(profile.cvFileSize / 1024)} KB · ` : ''}
-                            {profile.cvUploadedAt ? profile.cvUploadedAt.toISOString().slice(0, 10) : 'date unknown'}
-                          </p>
-                        </>
-                      ) : (
-                        <p className="text-[10px] text-slate-500">CV on file (no metadata)</p>
-                      )}
-                      <p className="mt-0.5 text-[10px] text-slate-500">
-                        {profile.isCvSearchable ? 'Discoverable by verified recruiters' : 'Hidden from search'}
+                    </div>
+
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/60 p-2.5">
+                      <p className="text-[10px] uppercase tracking-wider text-slate-400">CV Metadata</p>
+                      <p className="font-semibold text-slate-200 mt-0.5 break-all">
+                        {profile.cvFileName || 'No CV file name'}
                       </p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex justify-end">
-                        {profile.passport ? (
-                          profile.passport.isVerified ? (
-                            <AdminActionButton
-                              endpoint={`/api/admin/passports/${profile.passport.id}`}
-                              payload={{ isVerified: false }}
-                              label="Remove verification"
-                              method="PATCH"
-                              variant="outline"
-                              className="border-red-200 text-red-600 hover:bg-red-50"
-                              confirmText="Remove verification from this Intern Passport? The intern will be notified."
-                            />
-                          ) : (
-                            <AdminActionButton
-                              endpoint={`/api/admin/passports/${profile.passport.id}`}
-                              payload={{ isVerified: true }}
-                              label="Verify passport"
-                              method="PATCH"
-                              className="bg-emerald-600 text-white hover:bg-emerald-700"
-                            />
-                          )
-                        ) : (
-                          <span className="text-[10px] text-slate-400">—</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <p className="text-[11px] text-slate-400">
+                        {profile.isCvSearchable ? 'Discoverable' : 'Hidden'}
+                        {profile.cvFileSize ? ` · ${Math.round(profile.cvFileSize / 1024)} KB` : ''}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-start lg:justify-end shrink-0">
+                  {profile.passport ? (
+                    profile.passport.isVerified ? (
+                      <AdminActionButton
+                        endpoint={`/api/admin/passports/${profile.passport.id}`}
+                        payload={{ isVerified: false }}
+                        label="Remove verification"
+                        method="PATCH"
+                        className="bg-rose-600 text-white hover:bg-rose-500 hover:text-white"
+                        confirmText="Remove verification from this Talent Passport? The candidate will be notified."
+                      />
+                    ) : (
+                      <AdminActionButton
+                        endpoint={`/api/admin/passports/${profile.passport.id}`}
+                        payload={{ isVerified: true }}
+                        label="Verify passport"
+                        method="PATCH"
+                        className="bg-emerald-600 text-white hover:bg-emerald-500 hover:text-white"
+                      />
+                    )
+                  ) : (
+                    <span className="text-xs text-slate-500">No passport</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

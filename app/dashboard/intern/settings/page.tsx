@@ -1,16 +1,10 @@
 import { requireUser } from "@/lib/authz";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { APP_CONFIG } from "@/lib/config";
 import { WhatsAppIcon } from "@/components/shared/whatsapp-icon";
+import { CandidateAvatar } from "@/components/shared/candidate-avatar";
 import {
   User,
   Shield,
@@ -44,39 +38,42 @@ export default async function InternSettingsDashboardPage() {
   const profile = user.internProfile;
 
   return (
-    <div className="space-y-8">
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
-            {user.fullName?.charAt?.(0) || user.email?.charAt?.(0) || "I"}
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-slate-900">
+    <div className="space-y-6">
+      <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-5 sm:p-6 shadow-lg">
+        <div className="flex flex-wrap items-center gap-4">
+          <CandidateAvatar
+            src={user.avatarUrl}
+            name={user.fullName || user.email || "Candidate"}
+            size="lg"
+            priority
+          />
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-bold text-white break-words">
                 Account Settings
               </h1>
-              <Badge className="bg-blue-100 text-blue-800 capitalize">
-                Intern
+              <Badge className="bg-blue-950/70 text-blue-300 border border-blue-500/30 capitalize">
+                Candidate
               </Badge>
             </div>
-            <p className="text-sm text-slate-500 mt-1">{user.email}</p>
+            <p className="text-sm text-slate-400 mt-1 break-all">{user.email}</p>
           </div>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg inline-flex items-center gap-2">
-                <User className="h-5 w-5 text-slate-500" />
+          <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-5 sm:p-6 shadow-lg">
+            <div className="mb-4">
+              <h2 className="text-lg font-bold text-white inline-flex items-center gap-2">
+                <User className="h-5 w-5 text-blue-400 shrink-0" />
                 Profile information
-              </CardTitle>
-              <CardDescription>
+              </h2>
+              <p className="text-xs text-slate-400 mt-1">
                 Update your contact details and discoverability preferences.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="rounded-xl bg-white p-4 sm:p-5 text-slate-900">
               <InternSettingsClient
                 mode="profile"
                 user={{
@@ -113,20 +110,20 @@ export default async function InternSettingsDashboardPage() {
                     : null
                 }
               />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg inline-flex items-center gap-2">
-                <Bell className="h-5 w-5 text-slate-500" />
+          <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-5 sm:p-6 shadow-lg">
+            <div className="mb-4">
+              <h2 className="text-lg font-bold text-white inline-flex items-center gap-2">
+                <Bell className="h-5 w-5 text-blue-400 shrink-0" />
                 Notification preferences
-              </CardTitle>
-              <CardDescription>
+              </h2>
+              <p className="text-xs text-slate-400 mt-1">
                 Control what updates you receive from MANTECH.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="rounded-xl bg-white p-4 sm:p-5 text-slate-900">
               <InternSettingsClient
                 mode="notifications"
                 user={{
@@ -137,102 +134,90 @@ export default async function InternSettingsDashboardPage() {
                 }}
                 profile={null}
               />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base inline-flex items-center gap-2">
-                <Shield className="h-4 w-4 text-slate-500" />
-                Security &amp; authentication
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div className="rounded-lg bg-slate-50 p-3">
-                <p className="font-semibold text-slate-900 inline-flex items-center gap-1.5">
-                  <Lock className="h-3.5 w-3.5" />
+          <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-5 shadow-lg">
+            <h2 className="text-base font-bold text-white inline-flex items-center gap-2 mb-4">
+              <Shield className="h-4 w-4 text-blue-400 shrink-0" />
+              Security &amp; authentication
+            </h2>
+            <div className="space-y-3 text-xs sm:text-sm">
+              <div className="rounded-xl border border-slate-700/60 bg-slate-800/60 p-3">
+                <p className="font-semibold text-white inline-flex items-center gap-1.5">
+                  <Lock className="h-3.5 w-3.5 text-blue-400 shrink-0" />
                   Password &amp; sign-in
                 </p>
-                <p className="text-slate-600 mt-1">
+                <p className="text-slate-300 mt-1 break-words text-xs">
                   Managed via Clerk secure authentication. Password resets and
                   2FA are available in your Clerk account.
                 </p>
               </div>
-              <div className="rounded-lg bg-slate-50 p-3">
-                <p className="font-semibold text-slate-900 inline-flex items-center gap-1.5">
-                  <FileText className="h-3.5 w-3.5" />
+              <div className="rounded-xl border border-slate-700/60 bg-slate-800/60 p-3">
+                <p className="font-semibold text-white inline-flex items-center gap-1.5">
+                  <FileText className="h-3.5 w-3.5 text-blue-400 shrink-0" />
                   CV privacy
                 </p>
-                <p className="text-slate-600 mt-1">
-                  CVs are never public. Only verified organizations may request
-                  access. All access is audit-logged.
+                <p className="text-slate-300 mt-1 break-words text-xs">
+                  CVs are view-only for logged-in members and cannot be downloaded directly. All access is audit-logged.
                 </p>
               </div>
-              <div className="rounded-lg bg-slate-50 p-3">
-                <p className="font-semibold text-slate-900 inline-flex items-center gap-1.5">
-                  <Eye className="h-3.5 w-3.5" />
+              <div className="rounded-xl border border-slate-700/60 bg-slate-800/60 p-3">
+                <p className="font-semibold text-white inline-flex items-center gap-1.5">
+                  <Eye className="h-3.5 w-3.5 text-blue-400 shrink-0" />
                   Phone visibility
                 </p>
-                <p className="text-slate-600 mt-1">
+                <p className="text-slate-300 mt-1 break-words text-xs">
                   {profile?.isPhonePublic
                     ? "Your phone is visible to verified organizations viewing your Passport."
                     : "Your phone number is hidden. Organizations must contact you via MANTECH first."}
                 </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base inline-flex items-center gap-2">
-                <History className="h-4 w-4 text-slate-500" />
-                Recent notifications
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p className="text-xs text-slate-500">
-                Application and interview status changes will appear here. See{" "}
-                <a
-                  href="/dashboard/intern/notifications"
-                  className="font-semibold text-blue-600 hover:underline"
-                >
-                  Notifications
-                </a>{" "}
-                for the full list.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base inline-flex items-center gap-2">
-                <Briefcase className="h-4 w-4 text-slate-500" />
-                MANTECH support
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm">
+          <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-5 shadow-lg">
+            <h2 className="text-base font-bold text-white inline-flex items-center gap-2 mb-3">
+              <History className="h-4 w-4 text-blue-400 shrink-0" />
+              Recent notifications
+            </h2>
+            <p className="text-xs text-slate-300 break-words">
+              Application and interview status changes will appear here. See{" "}
               <a
-                href={APP_CONFIG.contacts.whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-lg bg-emerald-50 border border-emerald-200 p-3 hover:bg-emerald-100 transition"
+                href="/dashboard/intern/notifications"
+                className="font-semibold text-blue-400 hover:text-blue-300 hover:underline"
               >
-                <p className="font-semibold text-emerald-900 inline-flex items-center gap-1.5">
-                  <WhatsAppIcon
-                    className="h-4 w-4 text-[#25D366]"
-                    title="WhatsApp"
-                  />
-                  WhatsApp concierge
-                </p>
-                <p className="text-emerald-800 text-xs">
-                  Get help with your profile or applications
-                </p>
-              </a>
+                Notifications
+              </a>{" "}
+              for the full list.
+            </p>
+          </div>
 
-            </CardContent>
-          </Card>
+          <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-5 shadow-lg">
+            <h2 className="text-base font-bold text-white inline-flex items-center gap-2 mb-3">
+              <Briefcase className="h-4 w-4 text-blue-400 shrink-0" />
+              MANTECH support
+            </h2>
+            <a
+              href={APP_CONFIG.contacts.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-xl bg-emerald-950/50 border border-emerald-500/30 p-3.5 hover:bg-emerald-950/80 transition"
+            >
+              <p className="font-semibold text-emerald-300 inline-flex items-center gap-1.5 text-sm">
+                <WhatsAppIcon
+                  className="h-4 w-4 text-[#25D366]"
+                  title="WhatsApp"
+                />
+                WhatsApp concierge
+              </p>
+              <p className="text-emerald-200/80 text-xs mt-1">
+                Get help with your profile or applications
+              </p>
+            </a>
+          </div>
         </div>
       </div>
     </div>

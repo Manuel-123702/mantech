@@ -13,7 +13,7 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
       {/* Dark overlay with backdrop blur */}
       <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[3px]" />
 
-      <div className="relative z-10 container-mantech px-4 py-8">
+      <div className="relative z-10 container-mantech px-3 sm:px-4 py-4 sm:py-8 overflow-x-hidden">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 p-5 rounded-3xl bg-slate-900/80 border border-slate-700/80 backdrop-blur-xl shadow-2xl">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-[11px] font-bold uppercase tracking-wider mb-2">

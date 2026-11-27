@@ -99,17 +99,17 @@ function TaxonomyTable({
   rows: TaxonRow[];
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 sm:p-5 shadow-lg">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h3 className="text-sm font-bold text-slate-900">{label}</h3>
-          <p className="mt-1 text-[11px] text-slate-500">{description}</p>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-bold text-white break-words">{label}</h3>
+          <p className="mt-1 text-[11px] text-slate-400 break-words">{description}</p>
         </div>
-        <Badge variant="outline">{rows.length} entries</Badge>
+        <Badge className="bg-slate-800 text-slate-200 border border-slate-700 shrink-0">{rows.length} entries</Badge>
       </div>
 
       {rows.length === 0 ? (
-        <p className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-center text-xs text-slate-500">
+        <p className="mt-4 rounded-xl border border-dashed border-slate-700 bg-slate-800/40 p-4 text-center text-xs text-slate-400">
           No {label.toLowerCase()} entries yet. Seed values through the
           database.
         </p>
@@ -118,26 +118,26 @@ function TaxonomyTable({
           {rows.map((row) => (
             <div
               key={row.id}
-              className={`flex flex-wrap items-center justify-between gap-2 rounded-xl border px-3 py-2 ${
+              className={`flex flex-wrap items-center justify-between gap-2 rounded-xl border px-3 py-2.5 ${
                 row.isActive
-                  ? "border-emerald-100 bg-emerald-50/40"
-                  : "border-slate-200 bg-slate-50 opacity-70"
+                  ? "border-emerald-500/30 bg-emerald-950/30"
+                  : "border-slate-700/80 bg-slate-800/40 opacity-75"
               }`}
             >
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   {row.isActive ? (
-                    <Check className="h-3.5 w-3.5 text-emerald-600" />
+                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                   ) : (
-                    <X className="h-3.5 w-3.5 text-slate-400" />
+                    <X className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                   )}
                   <span
-                    className={`truncate text-xs font-semibold ${row.isActive ? "text-slate-900" : "text-slate-500"}`}
+                    className={`text-xs font-semibold break-words ${row.isActive ? "text-white" : "text-slate-400"}`}
                   >
                     {row.name}
                   </span>
                 </div>
-                <p className="mt-0.5 pl-5 text-[10px] text-slate-500">
+                <p className="mt-0.5 pl-5 text-[10px] text-slate-400">
                   {typeof row.count === "number"
                     ? `${row.count} reference(s)`
                     : "0 references"}
@@ -148,7 +148,11 @@ function TaxonomyTable({
                 payload={{ type, id: row.id, isActive: !row.isActive }}
                 label={row.isActive ? "Disable" : "Enable"}
                 method="PATCH"
-                variant="ghost"
+                className={
+                  row.isActive
+                    ? "bg-slate-700 text-white hover:bg-slate-600 hover:text-white"
+                    : "bg-emerald-600 text-white hover:bg-emerald-500 hover:text-white"
+                }
                 size="sm"
                 confirmText={`${row.isActive ? "Disable" : "Enable"} "${row.name}" in ${label} taxonomy?`}
               />
@@ -175,11 +179,11 @@ export default async function AdminConfigurationPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-bold text-slate-900">
-          <Settings2 className="mr-1.5 inline h-4 w-4 text-slate-500" />
+        <h2 className="text-lg font-bold text-white inline-flex items-center gap-2 break-words">
+          <Settings2 className="h-4 w-4 text-amber-400 shrink-0" />
           Platform configuration
         </h2>
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-slate-300 break-words">
           Administrators run the marketplace through the application (SRS §14) —
           never edit source code to change operational parameters. Toggle
           taxonomy entries and manage package definitions from here.
@@ -191,37 +195,32 @@ export default async function AdminConfigurationPage() {
           {
             label: "Fields active",
             value: `${activeCounts.fields}/${taxonomy.fields.length}`,
-            total: taxonomy.fields.length,
           },
           {
             label: "Skills active",
             value: `${activeCounts.skills}/${taxonomy.skills.length}`,
-            total: taxonomy.skills.length,
           },
           {
             label: "Industries active",
             value: `${activeCounts.industries}/${taxonomy.industries.length}`,
-            total: taxonomy.industries.length,
           },
           {
             label: "Qualifications active",
             value: `${activeCounts.qualifications}/${taxonomy.qualifications.length}`,
-            total: taxonomy.qualifications.length,
           },
           {
             label: "Regions active",
             value: `${activeCounts.regions}/${taxonomy.regions.length}`,
-            total: taxonomy.regions.length,
           },
         ].map((item) => (
           <div
             key={item.label}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+            className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 shadow-lg"
           >
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 break-words">
               {item.label}
             </p>
-            <p className="mt-1 font-mono text-xl font-bold text-slate-900">
+            <p className="mt-1 font-mono text-xl font-bold text-white">
               {item.value}
             </p>
           </div>
@@ -229,11 +228,11 @@ export default async function AdminConfigurationPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 className="text-sm font-bold text-slate-900">
+        <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 sm:p-5 shadow-lg">
+          <h3 className="text-sm font-bold text-white">
             Public editorial content
           </h3>
-          <p className="mt-1 text-[11px] text-slate-500">
+          <p className="mt-1 text-[11px] text-slate-300 break-words">
             Editorial content (blog, case studies, policy pages, testimonials)
             is maintained as reviewed, version-controlled application content.
             Content updates are released with the application; this platform
@@ -242,14 +241,14 @@ export default async function AdminConfigurationPage() {
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Link
               href="/resources"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-700"
             >
               View published resource guides
               <ExternalLink className="h-3.5 w-3.5" />
             </Link>
             <Link
               href="/success-stories"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-700"
             >
               View public success stories
               <ExternalLink className="h-3.5 w-3.5" />
@@ -257,43 +256,43 @@ export default async function AdminConfigurationPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 className="text-sm font-bold text-slate-900">
+        <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 p-4 sm:p-5 shadow-lg">
+          <h3 className="text-sm font-bold text-white">
             Monetization &amp; support channels
           </h3>
-          <p className="mt-1 text-[11px] text-slate-500">
+          <p className="mt-1 text-[11px] text-slate-300 break-words">
             Per SRS §16, package upgrades are manual. Organizations click{" "}
             <em>Upgrade</em> → contact MANTECH WhatsApp concierge →
             administrator confirms receipt of funds and activates the
             subscription on the{" "}
             <Link
               href="/dashboard/admin/packages"
-              className="font-semibold text-blue-600 hover:underline"
+              className="font-semibold text-amber-400 hover:underline"
             >
               Packages
             </Link>{" "}
             page.
           </p>
-          <ul className="mt-3 space-y-1.5 text-[11px] text-slate-600">
+          <ul className="mt-3 space-y-1.5 text-[11px] text-slate-300">
             <li>
               • WhatsApp concierge:{" "}
               <a
                 href={APP_CONFIG.support.whatsapp}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 font-semibold text-emerald-700 hover:underline"
+                className="inline-flex items-center gap-1 font-semibold text-emerald-400 hover:underline"
               >
                 <WhatsAppIcon className="h-3 w-3 text-[#25D366]" title="WhatsApp" />
                 Open chat
               </a>
             </li>
             <li>
-              • WhatsApp support:
+              • WhatsApp support:{" "}
               <a
                 href={APP_CONFIG.support.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-emerald-600 hover:underline"
+                className="font-semibold text-emerald-400 hover:underline"
               >
                 {APP_CONFIG.support.phoneDisplay}
               </a>
@@ -305,7 +304,7 @@ export default async function AdminConfigurationPage() {
 
       <TaxonomyTable
         label="Fields of study"
-        description="Primary field labels offered to interns (e.g. Computer Science, Accounting). Disabling a field hides it from the registration wizard and field browsing but preserves existing records."
+        description="Primary field labels offered to candidates (e.g. Computer Science, Accounting). Disabling a field hides it from the registration wizard and field browsing but preserves existing records."
         type="field"
         rows={taxonomy.fields}
       />
@@ -323,7 +322,7 @@ export default async function AdminConfigurationPage() {
       />
       <TaxonomyTable
         label="Qualifications"
-        description="Educational attainment levels (e.g. Bachelor's Degree, HND, GCE A/L). Referenced during Intern Passport issuance and recruiter shortlist criteria."
+        description="Educational attainment levels (e.g. Bachelor's Degree, HND, GCE A/L). Referenced during Talent Passport issuance and recruiter shortlist criteria."
         type="qualification"
         rows={taxonomy.qualifications}
       />
